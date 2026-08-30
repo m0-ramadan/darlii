@@ -1,0 +1,9 @@
+<?php
+namespace Database\Seeders; use App\Models\Amenity; use App\Models\Currency; use App\Models\Language; use App\Models\PropertyCategory; use App\Models\PropertyType; use Illuminate\Database\Seeder;
+class CoreSeeder extends Seeder {public function run():void{
+ foreach([['en','English','English','ltr',1],['ar','Arabic','العربية','rtl',0],['fr','French','Français','ltr',0],['id','Indonesian','Bahasa Indonesia','ltr',0],['vi','Vietnamese','Tiếng Việt','ltr',0]] as $i=>$l)Language::updateOrCreate(['code'=>$l[0]],['name'=>$l[1],'native_name'=>$l[2],'direction'=>$l[3],'is_default'=>(bool)$l[4],'is_active'=>true,'sort_order'=>$i]);
+ foreach([['USD','US Dollar','$',1],['EUR','Euro','€',0],['VND','Vietnamese Dong','₫',0]] as $c)Currency::updateOrCreate(['code'=>$c[0]],['name'=>$c[1],'symbol'=>$c[2],'exchange_rate'=>1,'decimal_places'=>$c[0]==='VND'?0:2,'symbol_position'=>'before','is_default'=>(bool)$c[3],'is_active'=>true]);
+ $locales=['en','ar','fr','id','vi']; foreach(['Apartment','House','Villa','Condo','Land','Commercial'] as $name){$m=PropertyCategory::firstOrCreate(['key'=>strtolower(str_replace(' ','-',$name))]);foreach($locales as $loc)$m->translations()->updateOrCreate(['locale'=>$loc],['name'=>$name,'slug'=>strtolower(str_replace(' ','-',$name))]);}
+ foreach(['residential','commercial','land'] as $key){$m=PropertyType::firstOrCreate(['key'=>$key]);foreach($locales as $loc)$m->translations()->updateOrCreate(['locale'=>$loc],['name'=>ucfirst($key)]);}
+ foreach(['Wifi','Parking','Swimming Pool','Balcony','Garden','Security','Fitness Center','Air Conditioning','Central Heating','Laundry Room','Pets Allowed','Spa & Massage'] as $name){$m=Amenity::firstOrCreate(['key'=>strtolower(preg_replace('/[^a-z0-9]+/i','-',$name))]);foreach($locales as $loc)$m->translations()->updateOrCreate(['locale'=>$loc],['name'=>$name]);}
+ }}

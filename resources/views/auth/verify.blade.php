@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('content')<div class="container page-section"><div class="alert alert-info">Please verify your email address.</div><form method="post" action="{{ route('verification.send',['locale'=>app()->getLocale()]) }}">@csrf<button class="btn btn-primary">Resend verification email</button></form></div>@endsection

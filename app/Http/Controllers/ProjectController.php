@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Controllers; use App\Models\Project; use Illuminate\Http\Request;
+class ProjectController {public function index(Request $request){$projects=Project::with(['translations','location'])->where('status','published')->latest('published_at')->paginate(12);return view('projects.index',compact('projects'));} public function show(string $locale,string $slug){$project=Project::with(['translations','amenities.translations','units'])->whereHas('translations',fn($q)=>$q->where('locale',$locale)->where('slug',$slug))->firstOrFail();return view('projects.show',compact('project'));}}

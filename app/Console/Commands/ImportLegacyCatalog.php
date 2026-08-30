@@ -1,0 +1,3 @@
+<?php
+namespace App\Console\Commands; use Database\Seeders\RecoveredCatalogSeeder; use Illuminate\Console\Command;
+class ImportLegacyCatalog extends Command {protected $signature='legacy:import-catalog {--fresh : Remove recovered entities is intentionally NOT automatic; flag reserved for future use}'; protected $description='Import the recovered static Homzen catalog idempotently'; public function handle(RecoveredCatalogSeeder $seeder):int{$this->info('Importing recovered catalog...');$seeder->run();$this->info('Import complete. Re-running is designed to avoid duplicate business references/translations.');return self::SUCCESS;}}

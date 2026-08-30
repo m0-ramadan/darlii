@@ -1,0 +1,85 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: ${HOST_UID:-1000}
+        GID: ${HOST_GID:-1000}
+    container_name: homzen_app
+    working_dir: /var/www/html
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    ports:
+      - "${APP_PORT:-8001}:8000"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:${APP_PORT:-8001}
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: homzen_laravel
+      DB_USERNAME: homzen
+      DB_PASSWORD: homzen_secret
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    container_name: homzen_db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: homzen_laravel
+      MYSQL_USER: homzen
+      MYSQL_PASSWORD: homzen_secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    volumes:
+      - homzen_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot_secret"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: homzen_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - homzen_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  node:
+    image: node:22-bookworm
+    container_name: homzen_node
+    working_dir: /var/www/html
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/html
+      - homzen_node_modules:/var/www/html/node_modules
+    restart: unless-stopped
+
+volumes:
+  homzen_mysql:
+  homzen_redis:
+  homzen_node_modules:

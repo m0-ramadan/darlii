@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss
+    version="2.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+>
+    <channel>
+        <atom:link
+            type="application/rss+xml"
+            href="https://homzen.botble.com/feed/properties"
+            rel="self"
+        />
+        <title><![CDATA[Properties feed]]></title>
+        <link><![CDATA[https://homzen.botble.com/feed/properties]]></link>
+                <description><![CDATA[Latest posts from Homzen]]></description>
+        <language>en_US</language>
+        <pubDate>2025-12-17T07:31:20+00:00</pubDate>
+
+                    <item>
+                <title><![CDATA[Private Estate Magnificent Views]]></title>
+                <link>https://homzen.botble.com/properties/private-estate-magnificent-views</link>
+                <description><![CDATA[Stunning property offering panoramic views and luxurious finishes. Every detail has been carefully considered in this exceptional home.]]></description>
+                                    <author><![CDATA[Amanda Smith <amanda.smith8@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/private-estate-magnificent-views</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Villa</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Brand New 1 Bedroom Apartment In First Class Location]]></title>
+                <link>https://homzen.botble.com/properties/brand-new-1-bedroom-apartment-in-first-class-location</link>
+                <description><![CDATA[Elegant home with timeless architecture and thoughtful design elements. Perfect for families seeking comfort and style.]]></description>
+                                    <author><![CDATA[Jessica Williams <jessica.williams10@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/brand-new-1-bedroom-apartment-in-first-class-location</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/2.jpg"
+                    length="40122"
+                />
+                                    <category>Condo</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Elegant family home presents premium modern living]]></title>
+                <link>https://homzen.botble.com/properties/elegant-family-home-presents-premium-modern-living</link>
+                <description><![CDATA[Contemporary living at its finest. This property boasts state-of-the-art amenities and a sleek, modern aesthetic throughout.]]></description>
+                                    <author><![CDATA[Michael Garcia <michael.garcia1@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/elegant-family-home-presents-premium-modern-living</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/2.jpg"
+                    length="40122"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[5 room luxury penthouse for sale in Kuala Lumpur]]></title>
+                <link>https://homzen.botble.com/properties/5-room-luxury-penthouse-for-sale-in-kuala-lumpur</link>
+                <description><![CDATA[Beautiful property featuring modern design and premium finishes throughout. This stunning home offers an open floor plan perfect for entertaining.]]></description>
+                                    <author><![CDATA[Amanda Smith <amanda.smith8@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/5-room-luxury-penthouse-for-sale-in-kuala-lumpur</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Villa</category>
+                            </item>
+                    <item>
+                <title><![CDATA[2 Floor house in Compound Pejaten Barat Kemang]]></title>
+                <link>https://homzen.botble.com/properties/2-floor-house-in-compound-pejaten-barat-kemang</link>
+                <description><![CDATA[Contemporary living at its finest. This property boasts state-of-the-art amenities and a sleek, modern aesthetic throughout.]]></description>
+                                    <author><![CDATA[John Smith <john.smith@botble.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/2-floor-house-in-compound-pejaten-barat-kemang</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/2.jpg"
+                    length="40122"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Apartment Muiderstraatweg in Diemen]]></title>
+                <link>https://homzen.botble.com/properties/apartment-muiderstraatweg-in-diemen</link>
+                <description><![CDATA[Beautiful property featuring modern design and premium finishes throughout. This stunning home offers an open floor plan perfect for entertaining.]]></description>
+                                    <author><![CDATA[William Johnson <william.johnson9@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/apartment-muiderstraatweg-in-diemen</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Condo</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Sunnybrook Villas]]></title>
+                <link>https://homzen.botble.com/properties/sunnybrook-villas</link>
+                <description><![CDATA[Stunning property offering panoramic views and luxurious finishes. Every detail has been carefully considered in this exceptional home.]]></description>
+                                    <author><![CDATA[John Smith <john.smith@botble.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/sunnybrook-villas</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Lakeside Retreat]]></title>
+                <link>https://homzen.botble.com/properties/lakeside-retreat</link>
+                <description><![CDATA[Prime real estate opportunity in a desirable neighborhood. This property combines location, quality, and value perfectly.]]></description>
+                                    <author><![CDATA[David Davis <david.davis3@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/lakeside-retreat</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Land</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Willow Creek Homes]]></title>
+                <link>https://homzen.botble.com/properties/willow-creek-homes</link>
+                <description><![CDATA[Elegant home with timeless architecture and thoughtful design elements. Perfect for families seeking comfort and style.]]></description>
+                                    <author><![CDATA[Jessica Williams <jessica.williams10@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/willow-creek-homes</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Villa</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Forest Glen Cottages]]></title>
+                <link>https://homzen.botble.com/properties/forest-glen-cottages</link>
+                <description><![CDATA[Spacious and bright residence with an excellent layout for modern living. Move-in ready with all appliances included.]]></description>
+                                    <author><![CDATA[Michael Garcia <michael.garcia1@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/forest-glen-cottages</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Villa</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Harborview Towers]]></title>
+                <link>https://homzen.botble.com/properties/harborview-towers</link>
+                <description><![CDATA[Spacious and bright residence with an excellent layout for modern living. Move-in ready with all appliances included.]]></description>
+                                    <author><![CDATA[James Anderson <james.anderson7@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/harborview-towers</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>House</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Meadowlands Estates]]></title>
+                <link>https://homzen.botble.com/properties/meadowlands-estates</link>
+                <description><![CDATA[Spacious and bright residence with an excellent layout for modern living. Move-in ready with all appliances included.]]></description>
+                                    <author><![CDATA[Jessica Williams <jessica.williams10@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/meadowlands-estates</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/2.jpg"
+                    length="40122"
+                />
+                                    <category>House</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Highland Meadows]]></title>
+                <link>https://homzen.botble.com/properties/highland-meadows</link>
+                <description><![CDATA[Charming property with spacious rooms and abundant natural light. The well-maintained garden adds to the appeal of this lovely home.]]></description>
+                                    <author><![CDATA[Michael Garcia <michael.garcia1@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/highland-meadows</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Silverwood Villas]]></title>
+                <link>https://homzen.botble.com/properties/silverwood-villas</link>
+                <description><![CDATA[Beautiful property featuring modern design and premium finishes throughout. This stunning home offers an open floor plan perfect for entertaining.]]></description>
+                                    <author><![CDATA[David Davis <david.davis3@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/silverwood-villas</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/3.jpg"
+                    length="29330"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Evergreen Terrace]]></title>
+                <link>https://homzen.botble.com/properties/evergreen-terrace</link>
+                <description><![CDATA[Beautiful property featuring modern design and premium finishes throughout. This stunning home offers an open floor plan perfect for entertaining.]]></description>
+                                    <author><![CDATA[Jessica Williams <jessica.williams10@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/evergreen-terrace</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Golden Gate Residences]]></title>
+                <link>https://homzen.botble.com/properties/golden-gate-residences</link>
+                <description><![CDATA[Elegant home with timeless architecture and thoughtful design elements. Perfect for families seeking comfort and style.]]></description>
+                                    <author><![CDATA[Emily Miller <emily.miller2@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/golden-gate-residences</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/2.jpg"
+                    length="40122"
+                />
+                                    <category>Villa</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Horizon Pointe]]></title>
+                <link>https://homzen.botble.com/properties/horizon-pointe</link>
+                <description><![CDATA[Stunning property offering panoramic views and luxurious finishes. Every detail has been carefully considered in this exceptional home.]]></description>
+                                    <author><![CDATA[James Anderson <james.anderson7@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/horizon-pointe</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/3.jpg"
+                    length="29330"
+                />
+                                    <category>Condo</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Whispering Pines Lodge]]></title>
+                <link>https://homzen.botble.com/properties/whispering-pines-lodge</link>
+                <description><![CDATA[Contemporary living at its finest. This property boasts state-of-the-art amenities and a sleek, modern aesthetic throughout.]]></description>
+                                    <author><![CDATA[James Anderson <james.anderson7@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/whispering-pines-lodge</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Sunset Ridge]]></title>
+                <link>https://homzen.botble.com/properties/sunset-ridge</link>
+                <description><![CDATA[Meticulously maintained property with upgrades throughout. Features include hardwood floors, granite countertops, and stainless appliances.]]></description>
+                                    <author><![CDATA[William Johnson <william.johnson9@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/sunset-ridge</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Apartment</category>
+                            </item>
+                    <item>
+                <title><![CDATA[Timberline Estates]]></title>
+                <link>https://homzen.botble.com/properties/timberline-estates</link>
+                <description><![CDATA[Contemporary living at its finest. This property boasts state-of-the-art amenities and a sleek, modern aesthetic throughout.]]></description>
+                                    <author><![CDATA[Jennifer Rodriguez <jennifer.rodriguez4@example.com>]]></author>
+                                <guid>https://homzen.botble.com/properties/timberline-estates</guid>
+                <pubDate>Wed, 17 Dec 2025 07:31:20 +0000</pubDate>
+                <enclosure
+                    type="image/jpeg"
+                    url="http://homzen.botble.com/storage/properties/1.jpg"
+                    length="35213"
+                />
+                                    <category>Apartment</category>
+                            </item>
+            </channel>
+</rss>

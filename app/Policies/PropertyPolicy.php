@@ -1,0 +1,3 @@
+<?php
+namespace App\Policies; use App\Models\Property; use App\Models\User;
+class PropertyPolicy {public function viewAny(?User $user):bool{return true;} public function view(?User $user,Property $property):bool{return $property->status?->value==='published'||($user&&($property->owner_id===$user->id||$user->hasPermission('property.update-any')));} public function create(User $user):bool{return $user->hasPermission('property.create');} public function update(User $user,Property $property):bool{return $user->hasPermission('property.update-any')||($property->owner_id===$user->id&&$user->hasPermission('property.update-own'));} public function approve(User $user):bool{return $user->hasPermission('property.approve');}}

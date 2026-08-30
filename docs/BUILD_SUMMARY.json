@@ -1,0 +1,26 @@
+{
+  "project": "HomzenLaravel",
+  "framework": "Laravel 13 source scaffold",
+  "php_files": 142,
+  "all_files": 285,
+  "recovered": {
+    "properties": 62,
+    "projects": 18,
+    "agents": 12,
+    "posts": 24,
+    "careers": 6,
+    "locales": [
+      "en",
+      "ar",
+      "fr",
+      "id",
+      "vi"
+    ]
+  },
+  "validation": {
+    "php_syntax_errors": 0,
+    "property_image_references": 500,
+    "missing_property_original_images": 0,
+    "runtime_dependency_install": "must be run by user with Composer"
+  }
+}

@@ -1,0 +1,3 @@
+<?php
+namespace App\Modules\Property\Application\Actions; use App\Models\Property; use Illuminate\Support\Facades\DB;
+class CreatePropertyAction {public function execute(array $data,int $ownerId):Property{return DB::transaction(function()use($data,$ownerId){$translations=$data['translations']??[];unset($data['translations']);$data['owner_id']=$ownerId;$data['status']='draft';$data['reference_code']=$data['reference_code']??('PROP-'.now()->format('Y').'-'.strtoupper(\Illuminate\Support\Str::random(8)));$data['uuid']=$data['uuid']??(string)\Illuminate\Support\Str::uuid();$property=Property::create($data);foreach($translations as $locale=>$tr){$property->translations()->create($tr+['locale'=>$locale]);}return $property;});}}

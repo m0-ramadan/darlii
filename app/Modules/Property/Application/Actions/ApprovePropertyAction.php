@@ -1,0 +1,3 @@
+<?php
+namespace App\Modules\Property\Application\Actions; use App\Models\Property; use Illuminate\Support\Facades\DB;
+class ApprovePropertyAction {public function execute(Property $property,int $adminId):Property{return DB::transaction(function()use($property,$adminId){$old=$property->status?->value??(string)$property->status;$property->update(['status'=>'published','published_at'=>now()]);DB::table('property_status_histories')->insert(['property_id'=>$property->id,'old_status'=>$old,'new_status'=>'published','changed_by'=>$adminId,'reason'=>'Approved by admin','created_at'=>now(),'updated_at'=>now()]);return $property->refresh();});}}

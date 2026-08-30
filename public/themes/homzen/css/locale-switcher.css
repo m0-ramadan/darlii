@@ -1,0 +1,66 @@
+.homzen-footer-languages {
+    background: #161e2d;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.homzen-footer-languages__inner {
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    min-height: 64px;
+    padding-block: 14px;
+}
+
+.homzen-footer-languages__label {
+    color: #fff;
+    flex: 0 0 auto;
+    font-weight: 600;
+}
+
+.homzen-footer-languages__links {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    justify-content: flex-end;
+}
+
+.homzen-footer-languages__link {
+    border-bottom: 2px solid transparent;
+    color: #a3abb0;
+    padding-block: 5px;
+}
+
+.homzen-footer-languages__link:hover,
+.homzen-footer-languages__link:focus-visible,
+.homzen-footer-languages__link.is-active {
+    color: #fff;
+}
+
+.homzen-footer-languages__link.is-active {
+    border-bottom-color: var(--primary-color, #f1913d);
+    font-weight: 600;
+}
+
+.native-app footer .homzen-footer-languages {
+    margin-bottom: 28px;
+}
+
+html[data-theme="dark"] .native-app footer .homzen-footer-languages {
+    background: #111827;
+}
+
+@media (max-width: 767px) {
+    .homzen-footer-languages__inner {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .homzen-footer-languages__links {
+        gap: 4px 16px;
+        justify-content: flex-start;
+    }
+}

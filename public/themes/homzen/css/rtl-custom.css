@@ -1,0 +1,95 @@
+@font-face {
+    font-family: "Almarai";
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url("../fonts/almarai/almarai-300.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Almarai";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("../fonts/almarai/almarai-400.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Almarai";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("../fonts/almarai/almarai-700.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Almarai";
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url("../fonts/almarai/almarai-800.ttf") format("truetype");
+}
+
+html[lang="ar"],
+html[lang="ar"] body {
+    --primary-font: "Almarai", "Almarai Fallback", sans-serif;
+    --heading-font: "Almarai", "Almarai Fallback", sans-serif;
+    font-family: "Almarai", "Almarai Fallback", sans-serif;
+    font-style: normal;
+}
+
+html[lang="ar"] :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    option,
+    label,
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .dropdown-menu,
+    .modal,
+    .card
+) {
+    font-family: "Almarai", "Almarai Fallback", sans-serif;
+    font-style: normal;
+}
+
+html[lang="ar"] :where([class^="icon-"], [class*=" icon-"], .icon) {
+    font-family: "icomoon" !important;
+}
+
+html[lang="ar"] .navigation,
+html[lang="ar"] .top-header-right,
+html[lang="ar"] .d-flex {
+    direction: rtl;
+}
+
+html[lang="ar"] :where(.text-start, .form-control, .dropdown-menu, .modal-content) {
+    text-align: right !important;
+}
+
+html[lang="ar"] :where(.text-end) {
+    text-align: left !important;
+}
+
+html[lang="ar"] :where(.swiper-button-next, .swiper-button-prev, .icon-arrow-right, .icon-arrow-left) {
+    transform: scaleX(-1);
+}
+
+html[lang="ar"] .my-wishlist-link {
+    margin-inline: 0;
+}
+
+html[lang="ar"] .leaflet-control-container,
+html[lang="ar"] .leaflet-popup-content {
+    direction: rtl;
+    text-align: right;
+}

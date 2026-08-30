@@ -1,0 +1,2 @@
+<?php
+namespace App\Http\Controllers\Api\V1; use App\Models\Project; class ProjectController {public function index(){return response()->json(['success'=>true,'data'=>Project::with('translations')->where('status','published')->paginate(20)]);} public function show(Project $project){return response()->json(['success'=>true,'data'=>$project->load(['translations','units','amenities.translations'])]);}}

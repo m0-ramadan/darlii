@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers; use App\Models\Property; use App\Modules\Search\Application\Queries\PropertySearchQuery; use Illuminate\Http\Request;
+class PropertyController {public function index(Request $request,PropertySearchQuery $search){$properties=$search->build($request->only(['q','purpose','category_id','location_id','min_price','max_price','bedrooms','sort']))->paginate(12)->withQueryString();return view('properties.index',compact('properties'));}
+ public function show(string $locale,string $slug){$property=Property::with(['translations','currency','media','amenities.translations','project.translations'])->whereHas('translations',fn($q)=>$q->where('locale',$locale)->where('slug',$slug))->firstOrFail();abort_unless($property->status?->value==='published'||auth()->id()===$property->owner_id,404);return view('properties.show',compact('property'));}}

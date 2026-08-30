@@ -1,0 +1,3 @@
+<?php
+namespace App\Models; use Illuminate\Database\Eloquent\Model; use Illuminate\Database\Eloquent\SoftDeletes;
+class Post extends Model {use SoftDeletes;protected $guarded=[];protected function casts():array{return ['published_at'=>'datetime'];} public function translations(){return $this->hasMany(PostTranslation::class);} public function translation(?string $locale=null){return $this->translations->firstWhere('locale',$locale?:app()->getLocale())??$this->translations->firstWhere('locale',config('app.fallback_locale'))??$this->translations->first();} public function author(){return $this->belongsTo(User::class,'author_id');}}

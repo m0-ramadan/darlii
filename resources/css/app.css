@@ -1,0 +1,35 @@
+:root{--brand:#1563df;--ink:#161e2d;--muted:#6b7280;--surface:#f7f8fa}
+body{background:#fff;color:var(--ink)}
+.hero-shell{background:linear-gradient(135deg,#f4f7fb,#eef3ff);border-radius:24px;padding:4rem 2rem}
+.card-property{height:100%;border:1px solid #e8eaee;border-radius:18px;overflow:hidden;background:#fff;transition:.2s}
+.card-property:hover{transform:translateY(-3px);box-shadow:0 14px 35px rgba(0,0,0,.08)}
+.card-property img{width:100%;height:230px;object-fit:cover}
+.badge-purpose{position:absolute;top:14px;left:14px}
+[dir=rtl] .badge-purpose{left:auto;right:14px}
+.page-section{padding:56px 0}
+.admin-stat{border:1px solid #e8eaee;border-radius:16px;padding:22px;background:#fff}
+body.native-app{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;min-height:100vh}
+.native-app :where(h1,h2,h3,h4,h5,h6,.navbar-brand,.btn,label,input,select,textarea,table){font-family:inherit;letter-spacing:0}
+.native-app h1{font-size:48px;line-height:1.15}
+.native-app h2{font-size:36px;line-height:1.2}
+.native-app h3{font-size:30px;line-height:1.25}
+.native-app h4{font-size:24px;line-height:1.3}
+.native-app h5{font-size:20px;line-height:1.35}
+.native-app .btn{min-height:38px;padding:7px 14px}
+.native-app .d-flex.justify-content-between>.btn{align-self:center}
+.native-app .navbar-brand{font-size:20px}
+.native-app footer{margin-top:auto}
+.darli-pagination-wrap{align-items:center;display:flex;flex-direction:column;gap:10px;margin-top:32px}
+.darli-pagination{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;justify-content:center;margin:0;padding:0}
+.darli-page-item{list-style:none}
+.darli-page-link{align-items:center;background:#fff;border:1px solid #dfe3ea;border-radius:8px;color:var(--ink);display:inline-flex;font-size:14px;font-weight:600;justify-content:center;min-height:40px;min-width:42px;padding:8px 14px;text-decoration:none;transition:.2s}
+.darli-page-link:hover{border-color:var(--brand);color:var(--brand)}
+.darli-page-item.active .darli-page-link{background:var(--brand);border-color:var(--brand);color:#fff}
+.darli-page-item.disabled .darli-page-link{background:#f6f7f9;color:#98a1b2;cursor:not-allowed;pointer-events:none}
+.darli-pagination-summary{color:var(--muted);font-size:14px;text-align:center}
+html[data-theme="dark"] .darli-page-link{background:#171c26;border-color:#2f3747;color:#e5e7eb}
+html[data-theme="dark"] .darli-page-link:hover{background:#1f2633;border-color:#5b7cff;color:#fff}
+html[data-theme="dark"] .darli-page-item.active .darli-page-link{background:#4f46e5;border-color:#6d64ff;color:#fff}
+html[data-theme="dark"] .darli-page-item.disabled .darli-page-link{background:#11151d;border-color:#252c3a;color:#6b7280}
+html[data-theme="dark"] .darli-pagination-summary{color:#9ca3af}
+@media(max-width:767px){.native-app h1{font-size:34px}.native-app h2{font-size:28px}.native-app .page-section{padding:36px 0}}

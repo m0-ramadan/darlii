@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Controllers; use App\Http\Requests\StoreLeadRequest; use App\Models\Lead; use Illuminate\Http\RedirectResponse; use Illuminate\Support\Str;
+class LeadController {public function store(StoreLeadRequest $request):RedirectResponse{$data=$request->validated();$data['reference_code']='LEAD-'.now()->format('Y').'-'.strtoupper(Str::random(8));$data['status']='new';$data['user_id']=$request->user()?->id;$data['ip_hash']=hash('sha256',(string)$request->ip().config('app.key'));$lead=Lead::create($data);$lead->activities()->create(['type'=>'created','description'=>'Lead created from website','metadata'=>['source'=>$data['source']??'web']]);return back()->with('success',__('messages.lead_sent'));}}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <?xml-stylesheet href="https://homzen.botble.com/vendor/core/packages/sitemap/styles/sitemapindex.xsl" type="text/xsl"?>
+
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/pages.xml</loc>
+                            <lastmod>2025-04-17T00:00:00+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/blog-posts-2025-12.xml</loc>
+                            <lastmod>2025-12-17T07:31:24+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/blog-categories.xml</loc>
+                            <lastmod>2025-12-17T07:31:24+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/blog-tags.xml</loc>
+                            <lastmod>2025-12-17T07:31:24+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/careers.xml</loc>
+                            <lastmod>2025-12-17T07:31:34+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/properties-2026-01.xml</loc>
+                            <lastmod>2026-01-07T17:23:00+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/properties-2025-12.xml</loc>
+                            <lastmod>2025-12-17T07:31:20+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/projects-2025-12.xml</loc>
+                            <lastmod>2025-12-17T07:31:19+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/agents.xml</loc>
+                            <lastmod>2026-01-07T13:00:22+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/properties-city.xml</loc>
+                            <lastmod>2026-01-05T23:28:29+00:00</lastmod>
+                    </sitemap>
+            <sitemap>
+            <loc>https://homzen.botble.com/fr/projects-city.xml</loc>
+                            <lastmod>2026-01-05T23:28:29+00:00</lastmod>
+                    </sitemap>
+    </sitemapindex>

@@ -1,0 +1,1 @@
+@extends('layouts.app') @php($tr=$post->translation()) @section('title',$tr?->title) @section('content')<article class="container page-section" style="max-width:900px"><h1>{{ $tr?->title }}</h1><p class="text-muted">{{ $post->published_at?->format('Y-m-d') }}</p><div class="fs-5">{!! nl2br(e($tr?->content)) !!}</div></article>@endsection

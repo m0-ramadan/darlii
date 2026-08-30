@@ -1,0 +1,1 @@
+@extends('layouts.app') @php($tr=$career->translation()) @section('title',$tr?->title) @section('content')<div class="container page-section" style="max-width:900px"><h1>{{ $tr?->title }}</h1><p class="lead text-muted">{{ $tr?->summary }}</p><div>{!! nl2br(e($tr?->description)) !!}</div></div>@endsection

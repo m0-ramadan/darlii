@@ -1,0 +1,3 @@
+<?php
+namespace App\Http\Controllers\Api\V1; use App\Models\Property; use App\Modules\Search\Application\Queries\PropertySearchQuery; use Illuminate\Http\Request;
+class PropertyController {public function index(Request $r,PropertySearchQuery $search){$p=$search->build($r->all())->paginate(min((int)$r->input('per_page',20),100));return response()->json(['success'=>true,'data'=>$p->items(),'meta'=>['current_page'=>$p->currentPage(),'last_page'=>$p->lastPage(),'total'=>$p->total()]]);} public function show(Property $property){$property->load(['translations','currency','media','amenities.translations']);return response()->json(['success'=>true,'data'=>$property]);}}

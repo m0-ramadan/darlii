@@ -74,3 +74,4 @@ docker compose exec app php artisan storage:link
 ```
 
 Open `http://localhost:8000`. Full Arabic guide: `docs/DOCKER_AR.md`.
+# darlii

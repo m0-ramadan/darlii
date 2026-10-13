@@ -16,6 +16,9 @@
                                         <h2 class="section-title mt-4"><?php echo e($attributes['title'] ?? ''); ?></h2>
                                     </div>
                                     <ul class="box-tag">
+                                        <?php if($property['is_sold'] ?? false): ?>
+                                            <span class="flag-tag success status-badge-sold" style="background-color: #10b981 !important; color: #fff !important; font-weight: 700;"><?php echo e($locale === 'ar' ? 'تم البيع' : 'Sold'); ?></span>
+                                        <?php endif; ?>
                                         <?php if($property['featured']): ?>
                                             <span class="flag-tag success"><?php echo e($locale === 'ar' ? 'مميز' : 'Featured'); ?></span>
                                         <?php endif; ?>
@@ -70,6 +73,9 @@
                                 <div class="images-style"><img width="400" height="260" src="<?php echo e($property['image']); ?>" data-bb-lazy="true" loading="lazy" alt="<?php echo e($property['name']); ?>"></div>
                                 <div class="top">
                                     <div class="d-flex gap-8">
+                                        <?php if($property['is_sold'] ?? false): ?>
+                                            <span class="flag-tag success status-badge-sold" style="background-color: #10b981 !important; color: #fff !important; font-weight: 700;"><?php echo e($locale === 'ar' ? 'تم البيع' : 'Sold'); ?></span>
+                                        <?php endif; ?>
                                         <?php if($property['featured']): ?><span class="flag-tag success"><?php echo e($locale === 'ar' ? 'مميز' : 'Featured'); ?></span><?php endif; ?>
                                         <span class="flag-tag primary status-badge-<?php echo e($property['purpose_class']); ?>"><?php echo e($property['purpose']); ?></span>
                                     </div>

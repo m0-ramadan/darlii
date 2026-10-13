@@ -1,0 +1,1996 @@
+/* ==========================================================================
+   DARLI — UNIFIED THEME LAYER  (darli-unified.css)
+   ==========================================================================
+   Single source of truth for the site header, footer and brand colours.
+
+   Loaded LAST inside <head> on every page by
+   App\Services\LegacyFrontend\LegacyFrontendRenderer::injectCustomAssets(),
+   so it wins the cascade against style.css, dark-mode.css and the
+   per-page generated `.page_speed_*` inline rules.
+
+   Palette is taken from the Darli logo:
+       navy  #0B1F3A   (logotype + "D" emblem)
+       gold  #C99A45   (Arabic tagline + building highlights)
+       deep  #0B1320   (footer surface, matches the new homepage footer)
+
+   The original Homzen theme shipped a red accent (#db1d23). Every legacy
+   page still carries that value in an inline `:root` block, which is why
+   the header/footer accents used to clash with the logo. Re-mapping the
+   theme tokens below fixes every `var(--primary-color)` consumer at once.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. BRAND TOKENS + HOMZEN TOKEN REMAP
+   -------------------------------------------------------------------------- */
+:root {
+    /* Brand palette */
+    --darli-navy: #0B1F3A;
+    --darli-navy-deep: #071527;
+    --darli-navy-light: #162D4D;
+    --darli-gold: #C99A45;
+    --darli-gold-dark: #B38636;
+    --darli-gold-soft: #FBF7EE;
+    --darli-gold-border: rgba(201, 154, 69, 0.35);
+
+    /* Footer surfaces */
+    --darli-footer-bg: #0B1320;
+    --darli-footer-border: #152238;
+    --darli-footer-text: #94A3B8;
+    --darli-footer-muted: #64748B;
+
+    /* Surfaces / text */
+    --darli-surface: #FFFFFF;
+    --darli-surface-subtle: #F8FAFC;
+    --darli-border: #E2E8F0;
+    --darli-border-light: #EEF2F6;
+
+    /* ---- Homzen theme tokens (previously #db1d23 red) ---- */
+    --primary-color: #C99A45;
+    --hover-color: #B38636;
+
+    /* dark-mode.css falls back to a red when --primary-color is missing;
+       point that fallback at the brand too. */
+    --hz-red: #C99A45;
+
+    /* ---- Header tokens ---- */
+    --top-header-background-color: #FFFFFF;
+    --top-header-text-color: #0B1F3A;
+    --main-header-background-color: #FFFFFF;
+    --main-header-text-color: #0B1F3A;
+    --main-header-border-color: #EEF2F6;
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL ACCENT HARMONISATION
+   Small helpers so no stray red survives anywhere on the site.
+   -------------------------------------------------------------------------- */
+
+/* Text links keep the brand navy and warm up to gold on interaction. */
+a:hover,
+a:focus-visible {
+    color: var(--darli-gold);
+}
+
+/* Form focus rings follow the brand instead of the browser default. */
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--darli-gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 154, 69, 0.18) !important;
+}
+
+/* Primary action buttons: gold gradient, exactly like the new homepage CTA. */
+.tf-btn.primary,
+.tf-btn-primary,
+button.tf-btn.primary {
+    background: linear-gradient(135deg, #C99A45 0%, #B38636 100%) !important;
+    border-color: transparent !important;
+    color: #FFFFFF !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 14px rgba(201, 154, 69, 0.28);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.tf-btn.primary:hover,
+.tf-btn-primary:hover {
+    background: linear-gradient(135deg, #B38636 0%, #9B722C 100%) !important;
+    border-color: transparent !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(201, 154, 69, 0.38);
+}
+
+/* Secondary buttons stay neutral navy-on-white. */
+.tf-btn:not(.primary):hover {
+    background-color: var(--darli-navy) !important;
+    border-color: var(--darli-navy) !important;
+    color: #FFFFFF !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. HEADER
+   -------------------------------------------------------------------------- */
+
+/* --- 3a. Top bar: white surface, navy type, gold hover --- */
+.top-header,
+.top-header * {
+    --top-header-background-color: #FFFFFF;
+    --top-header-text-color: #0B1F3A;
+}
+
+.top-header {
+    background-color: #FFFFFF !important;
+    color: var(--darli-navy) !important;
+    border-bottom: 1px solid var(--darli-border-light);
+}
+
+.top-header a,
+.top-header .ae-anno-announcement__text,
+.top-header .ae-anno-announcement__arrow {
+    color: var(--darli-navy) !important;
+}
+
+.top-header a:hover,
+.top-header .ae-anno-announcement__arrow:hover {
+    color: var(--darli-gold) !important;
+}
+
+/* Announcement Bar in Top Header */
+.top-header .ae-anno-announcement-wrapper {
+    background-color: transparent !important;
+    padding: 0 !important;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+}
+
+.top-header .ae-anno-announcement__items {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.top-header .ae-anno-announcement {
+    animation: none !important;
+    opacity: 1 !important;
+    position: relative;
+}
+
+/* Fallback: show the first announcement before JS initializes */
+.top-header .ae-anno-announcement-wrapper:not([data-initialized="true"]) .ae-anno-announcement:first-of-type {
+    display: block !important;
+}
+
+.top-header .ae-anno-announcement__controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-inline-end: 6px;
+    flex-shrink: 0;
+}
+
+.top-header .ae-anno-announcement__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: var(--darli-navy) !important;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.top-header .ae-anno-announcement__arrow:hover {
+    background-color: rgba(201, 154, 69, 0.15) !important;
+    color: var(--darli-gold) !important;
+}
+
+.top-header .ae-anno-announcement__arrow svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2;
+}
+
+.top-header .ae-anno-announcement__content {
+    display: flex;
+    align-items: center;
+    margin-inline-end: 10px;
+}
+
+.top-header .ae-anno-announcement__text {
+    font-size: 13px !important;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--darli-navy) !important;
+    margin: 0;
+}
+
+.top-header .ae-anno-announcement__text a {
+    color: var(--darli-gold) !important;
+    text-decoration: underline;
+}
+
+/* --- 3b. Main navigation bar: white, sticky, soft brand shadow --- */
+header.main-header,
+.main-header {
+    background-color: #FFFFFF !important;
+    color: var(--darli-navy) !important;
+    border-bottom: 1px solid var(--darli-border-light) !important;
+    box-shadow: 0 2px 8px rgba(11, 31, 58, 0.04);
+}
+
+.main-header .header-lower {
+    height: 100%;
+    padding-block: 0;
+}
+
+/* Keep the whole second header on one continuous, full-viewport surface.
+   The legacy theme gives .main-menu its own background, which used to leave
+   a darker rectangle behind the centred navigation in dark mode. */
+.main-header,
+.main-header .header-lower,
+.main-header .header-lower > .row,
+.main-header .header-lower > .row > [class*="col-"],
+.main-header .inner-container,
+.main-header .nav-outer {
+    background-color: var(--main-header-background-color) !important;
+}
+
+/* Navigation must not paint a second panel over the header. */
+.main-header .main-menu,
+.main-header .navbar-collapse,
+.main-header .main-menu .navigation {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.main-header .header-lower,
+.main-header .header-lower > .row,
+.main-header .header-lower > .row > [class*="col-"],
+.main-header .inner-container {
+    height: 100%;
+    width: 100%;
+    max-width: none;
+}
+
+.main-header .header-lower > .row {
+    margin-inline: 0;
+}
+
+.main-header .header-lower > .row > [class*="col-"] {
+    padding-inline: 0;
+}
+
+/* Nav links: navy, bold — gold when active or hovered. */
+.main-header .main-menu .navigation > li > a {
+    color: var(--darli-navy) !important;
+    font-weight: 700;
+    transition: color 0.2s ease;
+}
+
+.main-header .main-menu .navigation > li.current > a,
+.main-header .main-menu .navigation > li:hover > a,
+.main-header .main-menu .navigation > li > a:hover {
+    color: var(--darli-gold) !important;
+}
+
+/* The active underline is drawn with an :after bar — make it gold + rounded. */
+.main-header .main-menu .navigation li > a {
+    position: relative;
+}
+
+.main-header .main-menu .navigation li.current > a,
+.main-header .main-menu .navigation li:hover > a,
+.main-header .main-menu li.current > a {
+    color: var(--darli-gold) !important;
+}
+
+.main-header .main-menu .navigation li.current > a::after,
+.main-header .main-menu li.current > a::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Dropdown panels */
+.main-header .main-menu .navigation > li > ul {
+    border-top: 3px solid var(--darli-gold) !important;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 12px 30px rgba(11, 31, 58, 0.12) !important;
+}
+
+.main-header .main-menu .navigation > li > ul a:hover,
+.main-header .main-menu .navigation > li > ul > .current > a {
+    color: var(--darli-gold) !important;
+}
+
+/* Header CTA ("إضافة عقار") mirrors the homepage "أضف عقارك" button. */
+.header-account .tf-btn,
+.header-account .tf-btn.primary,
+.header-account .flat-bt-top a {
+    background: linear-gradient(135deg, #C99A45 0%, #B38636 100%) !important;
+    border-color: transparent !important;
+    color: #FFFFFF !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(201, 154, 69, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.header-account .tf-btn:hover,
+.header-account .flat-bt-top a:hover {
+    background: linear-gradient(135deg, #B38636 0%, #9B722C 100%) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(201, 154, 69, 0.4);
+}
+
+/* Language / currency switcher pills in the top bar */
+.darli-fixed-currency {
+  color: inherit;
+  display: inline-block;
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 26px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.top-header .language-switcher a.active,
+.language-switcher .active {
+    color: var(--darli-gold) !important;
+}
+
+/* Mobile slide-in menu structural drawer & styling */
+.mobile-menu {
+    position: fixed !important;
+    top: 0 !important;
+    inset-inline-start: 0 !important;
+    width: 320px !important;
+    max-width: 85vw !important;
+    height: 100% !important;
+    z-index: 999999 !important;
+    visibility: hidden !important;
+}
+.mobile-menu-visible {
+    overflow: hidden !important;
+}
+.mobile-menu-visible .mobile-menu {
+    visibility: visible !important;
+}
+.mobile-menu .menu-backdrop {
+    position: fixed !important;
+    right: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(15, 23, 42, 0.5) !important;
+    backdrop-filter: blur(3px) !important;
+    -webkit-backdrop-filter: blur(3px) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all .3s ease !important;
+    z-index: 1 !important;
+}
+.mobile-menu-visible .mobile-menu .menu-backdrop {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.mobile-menu .menu-box {
+    position: absolute !important;
+    top: 0 !important;
+    inset-inline-start: -340px !important;
+    width: 320px !important;
+    max-width: 85vw !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    background-color: var(--darli-navy) !important;
+    transition: inset-inline-start 0.35s ease, transform 0.35s ease !important;
+    z-index: 5 !important;
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: auto !important;
+}
+.mobile-menu-visible .mobile-menu .menu-box {
+    inset-inline-start: 0 !important;
+}
+
+/* Complete mobile drawer: the extracted legacy header does not carry the
+   original runtime-generated navigation, so this layer owns its presentation. */
+.mobile-menu .nav-logo {
+    align-items: center !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .12) !important;
+    display: flex !important;
+    height: 60px !important;
+    justify-content: center !important;
+    padding: 10px 20px !important;
+}
+.mobile-menu .nav-logo img {
+    height: 50px !important;
+    max-height: 50px !important;
+    max-width: 190px !important;
+    object-fit: contain !important;
+}
+.mobile-menu .bottom-canvas {
+    background: linear-gradient(180deg, #09213f 0%, #061a33 100%) !important;
+    height: calc(100vh - 60px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 22px 16px 60px !important;
+}
+.mobile-menu .bottom-canvas {
+    display: flex !important;
+    flex-direction: column !important;
+}
+.mobile-menu .login-box { order: 1 !important; }
+.mobile-menu .button-mobi-sell { order: 2 !important; }
+.mobile-menu .menu-outer { order: 3 !important; }
+.mobile-menu .mobi-icon-box { order: 4 !important; }
+.mobile-menu .login-box {
+    align-items: center !important;
+    border-bottom: 1px solid rgba(202, 215, 231, .5) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    font-size: 14px !important;
+    gap: 4px !important;
+    margin-bottom: 14px !important;
+    min-height: 64px !important;
+    padding: 0 50px 16px 0 !important;
+    position: relative !important;
+}
+[dir="ltr"] .mobile-menu .login-box {
+    padding-left: 50px !important;
+    padding-right: 0 !important;
+}
+.mobile-menu .login-box::before {
+    align-items: center !important;
+    background:
+        radial-gradient(circle at 50% 34%, #ffffff 0 5px, transparent 5.5px),
+        radial-gradient(ellipse at 50% 80%, #ffffff 0 10px, transparent 10.5px),
+        rgba(255, 255, 255, .18) !important;
+    border-radius: 50% !important;
+    color: #ffffff !important;
+    content: "" !important;
+    display: flex !important;
+    font-size: 21px !important;
+    height: 38px !important;
+    inset-inline-start: 0 !important;
+    justify-content: center !important;
+    position: absolute !important;
+    top: 3px !important;
+    width: 38px !important;
+}
+.mobile-menu .login-box a,
+.mobile-menu .login-box span {
+    color: #ffffff !important;
+    font-size: 14px !important;
+    line-height: 22px !important;
+}
+.mobile-menu .login-box a:first-of-type {
+    flex-basis: 100% !important;
+    font-weight: 700 !important;
+}
+.mobile-menu .login-box a svg {
+    display: none !important;
+}
+.mobile-menu .button-mobi-sell {
+    border-bottom: 1px solid rgba(202, 215, 231, .5) !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 14px !important;
+}
+.mobile-menu .button-mobi-sell .tf-btn {
+    align-items: center !important;
+    background: linear-gradient(135deg, #e7ae3c, #c78f25) !important;
+    border: 0 !important;
+    border-radius: 11px !important;
+    box-shadow: 0 4px 12px rgba(201, 154, 69, .28) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    height: 48px !important;
+    justify-content: center !important;
+    position: relative !important;
+    width: 100% !important;
+}
+.mobile-menu .button-mobi-sell .tf-btn::after {
+    align-items: center !important;
+    background: #ffffff !important;
+    border-radius: 50% !important;
+    color: #c78f25 !important;
+    content: "+" !important;
+    display: flex !important;
+    font-size: 23px !important;
+    font-weight: 800 !important;
+    height: 25px !important;
+    inset-inline-end: 12px !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    position: absolute !important;
+    width: 25px !important;
+}
+.mobile-menu .menu-outer {
+    border: 0 !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+}
+.mobile-menu .darli-mobile-navigation,
+.mobile-menu .darli-mobile-navigation li {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+.mobile-menu .darli-mobile-navigation li > a {
+    align-items: center !important;
+    border-bottom: 1px solid rgba(202, 215, 231, .32) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    display: flex !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    gap: 11px !important;
+    height: 47px !important;
+    line-height: 1 !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+.mobile-menu .darli-mobile-navigation li.current > a {
+    background: rgba(25, 54, 87, .9) !important;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .22) !important;
+    color: #e5ad3e !important;
+}
+.mobile-menu .darli-mobile-nav-icon {
+    align-items: center !important;
+    color: #aebdd0 !important;
+    display: flex !important;
+    flex: 0 0 23px !important;
+    justify-content: center !important;
+}
+.mobile-menu .current .darli-mobile-nav-icon {
+    color: #e5ad3e !important;
+}
+.mobile-menu .darli-mobile-nav-icon svg {
+    fill: none !important;
+    height: 22px !important;
+    stroke: currentColor !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    stroke-width: 1.8 !important;
+    width: 22px !important;
+}
+.mobile-menu .darli-mobile-chevron {
+    color: #9dadc0 !important;
+    font-size: 25px !important;
+    font-weight: 300 !important;
+    margin-inline-start: auto !important;
+}
+.mobile-menu .mobi-icon-box {
+    border-top: 1px solid rgba(202, 215, 231, .36) !important;
+    margin-top: 8px !important;
+}
+.mobile-menu .darli-mobile-theme,
+.mobile-menu .darli-mobile-tool {
+    align-items: center !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(202, 215, 231, .36) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    display: flex !important;
+    height: 58px !important;
+    margin: 0 !important;
+    padding: 0 7px !important;
+    position: relative !important;
+    width: 100% !important;
+}
+.mobile-menu .darli-mobile-theme::before {
+    color: #ffffff !important;
+    content: "الوضع الليلي" !important;
+    font-size: 13px !important;
+    inset-inline-start: 40px !important;
+    position: absolute !important;
+}
+[lang="en"] .mobile-menu .darli-mobile-theme::before {
+    content: "Dark mode" !important;
+}
+.mobile-menu .darli-mobile-theme::after {
+    background: #738196 !important;
+    border-radius: 20px !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12) !important;
+    content: "" !important;
+    height: 23px !important;
+    inset-inline-end: 2px !important;
+    position: absolute !important;
+    width: 38px !important;
+}
+.mobile-menu .darli-mobile-theme svg {
+    color: #d8e1ec !important;
+    height: 22px !important;
+    inset-inline-start: 7px !important;
+    position: absolute !important;
+    width: 22px !important;
+}
+.mobile-menu .darli-mobile-theme .theme-icon-sun {
+    display: none !important;
+}
+.mobile-menu .darli-mobile-theme .theme-icon-moon {
+    display: block !important;
+}
+.mobile-menu .darli-mobile-tool {
+    gap: 10px !important;
+    text-decoration: none !important;
+}
+.mobile-menu .darli-tool-icon {
+    color: #b8c5d6 !important;
+    display: inline-flex !important;
+    flex: 0 0 22px !important;
+}
+.mobile-menu .darli-tool-icon svg {
+    fill: none !important;
+    height: 21px !important;
+    stroke: currentColor !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    stroke-width: 1.7 !important;
+    width: 21px !important;
+}
+.mobile-menu .darli-tool-title {
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+}
+.mobile-menu .darli-tool-value {
+    color: #aab7c7 !important;
+    font-size: 11px !important;
+    margin-inline-start: auto !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+.mobile-menu .darli-tool-arrow {
+    color: #afbdcd !important;
+    font-size: 18px !important;
+}
+.mobile-menu .darli-mobile-help .darli-mobile-chevron {
+    margin-inline-start: auto !important;
+}
+.mobile-menu .mobi-icon-box .box {
+    align-items: center !important;
+    border-bottom: 1px solid rgba(202, 215, 231, .36) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    margin: 0 !important;
+    min-height: 58px !important;
+    padding: 12px 5px !important;
+}
+.mobile-menu .mobi-icon-box .box,
+.mobile-menu .mobi-icon-box .box a,
+.mobile-menu .mobi-icon-box .box span,
+.mobile-menu .mobi-icon-box .dropdown-toggle {
+    color: #ffffff !important;
+    font-size: 13px !important;
+}
+.mobile-menu .mobi-icon-box .dropdown {
+    width: 100% !important;
+}
+.mobile-menu .mobi-icon-box .dropdown-toggle {
+    align-items: center !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+.close-btn {
+    background: rgba(7, 27, 51, .55) !important;
+    border-radius: 50% !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .2) !important;
+    position: fixed !important;
+    top: 18px !important;
+    inset-inline-end: 20px !important;
+    width: 38px !important;
+    height: 38px !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all .3s ease !important;
+    z-index: 9999999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+.close-btn svg {
+    width: 28px !important;
+    height: 28px !important;
+    stroke-width: 2.2 !important;
+    color: #ffffff !important;
+}
+.mobile-menu-visible .close-btn {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+@media only screen and (max-width: 991px) {
+    .mobile-button,
+    .mobile-nav-toggler {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        background: transparent !important;
+        border: none !important;
+        isolation: isolate !important;
+        pointer-events: auto !important;
+        position: relative !important;
+        touch-action: manipulation !important;
+        z-index: 2147483000 !important;
+    }
+    .mobile-button svg,
+    .mobile-nav-toggler svg {
+        width: 28px !important;
+        height: 28px !important;
+        color: var(--darli-navy) !important;
+    }
+    html[data-theme="dark"] .mobile-button svg,
+    html[data-theme="dark"] .mobile-nav-toggler svg {
+        color: #f8fafc !important;
+    }
+}
+.canvas-menu {
+    background-color: var(--darli-navy) !important;
+}
+
+.mobile-menu .navigation li > a,
+.mobile-menu .menu-outer .nav-link {
+    color: #FFFFFF !important;
+}
+
+.mobile-menu .navigation li.current > a,
+.mobile-menu .navigation li > a:hover,
+.mobile-menu .menu-outer .nav-link.current {
+    color: var(--darli-gold) !important;
+}
+
+.mobile-menu .login-box a {
+    color: #CBD5E1 !important;
+}
+
+.mobile-menu .login-box a:hover {
+    color: var(--darli-gold) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. FOOTER
+   -------------------------------------------------------------------------- */
+
+/* Flat brand navy replaces the busy diagonal banner image. */
+footer.footer,
+.footer {
+    background-color: var(--darli-footer-bg) !important;
+    background-image: none !important;
+    color: var(--darli-footer-text) !important;
+    border-top: 3px solid var(--darli-gold) !important;
+}
+
+/* Any generated per-page background class is neutralised too. */
+footer[class*="page_speed_"] {
+    background-image: none !important;
+}
+
+/* --- 4a. Footer headings --- */
+.footer h1, .footer h2, .footer h3,
+.footer h4, .footer h5, .footer h6,
+.footer .title,
+.footer-cl-2 .title,
+.footer-cl-3 .title,
+.footer-cl-4 .title {
+    color: #FFFFFF !important;
+    font-weight: 800;
+}
+
+/* --- 4b. Footer body copy and links --- */
+.footer p,
+.footer span,
+.footer li,
+.footer .text-variant-2 {
+    color: var(--darli-footer-text) !important;
+}
+
+.footer a {
+    color: var(--darli-footer-text) !important;
+    transition: color 0.2s ease;
+}
+
+.footer a:hover,
+.footer a:focus-visible {
+    color: #FFFFFF !important;
+}
+
+/* Contact rows keep the white value text from the original markup. */
+.footer .text-white,
+.footer p.text-white {
+    color: #FFFFFF !important;
+}
+
+.footer .icon {
+    color: var(--darli-gold) !important;
+}
+
+/* --- 4c. Social buttons --- */
+.footer .wd-social span {
+    color: #FFFFFF !important;
+    display: inline-block;
+}
+
+.footer .wd-social .box-icon,
+.footer .box-icon.social {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: #FFFFFF !important;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.footer .wd-social .box-icon:hover,
+.footer .box-icon.social:hover {
+    background-color: var(--darli-gold) !important;
+    transform: translateY(-2px);
+}
+
+.footer .wd-social .box-icon:hover svg,
+.footer .box-icon.social:hover svg {
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
+
+/* --- 4d. Newsletter form --- */
+.footer .subscribe-form input,
+.footer .subscribe-form .form-control,
+.footer-cl-4 .subscribe-form input {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid var(--darli-footer-border) !important;
+    border-radius: 10px !important;
+    color: #FFFFFF !important;
+}
+
+.footer .subscribe-form input::placeholder {
+    color: var(--darli-footer-muted) !important;
+}
+
+.footer .subscribe-form input:focus {
+    border-color: var(--darli-gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 154, 69, 0.2) !important;
+}
+
+.footer .subscribe-form button,
+.footer .subscribe-form .tf-btn {
+    background: linear-gradient(135deg, #C99A45 0%, #B38636 100%) !important;
+    border-color: transparent !important;
+    color: #FFFFFF !important;
+    border-radius: 10px !important;
+}
+
+.footer .subscribe-form .icon-left {
+    color: var(--darli-gold) !important;
+}
+
+.footer .subscribe-form button .icon,
+.footer .subscribe-form button .icon-send,
+.footer .subscribe-form button svg,
+.footer-cl-4 .subscribe-form button .icon,
+.footer-cl-4 .subscribe-form button .icon-send,
+.footer-cl-4 .subscribe-form button svg,
+.darli-btn-newsletter svg,
+.darli-btn-newsletter i {
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    fill: #FFFFFF !important;
+}
+
+/* --- 4e. Bottom bar --- */
+.footer .bottom-footer {
+    background-color: transparent !important;
+    border-top: 1px solid var(--darli-footer-border) !important;
+}
+
+.footer .bottom-footer,
+.footer .bottom-footer a,
+.footer .bottom-footer .copyright,
+.footer .menu-bottom a {
+    color: var(--darli-footer-muted) !important;
+}
+
+.footer .bottom-footer a:hover {
+    color: #FFFFFF !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. INJECTED FOOTER LANGUAGE SWITCHER
+   (overrides the hard-coded #161e2d in locale-switcher.css)
+   -------------------------------------------------------------------------- */
+.homzen-footer-languages {
+    background: var(--darli-footer-bg) !important;
+    border-top: 1px solid var(--darli-footer-border) !important;
+    color: #FFFFFF !important;
+}
+
+.homzen-footer-languages__label {
+    color: #FFFFFF !important;
+}
+
+.homzen-footer-languages__link {
+    color: var(--darli-footer-text) !important;
+}
+
+.homzen-footer-languages__link:hover,
+.homzen-footer-languages__link:focus-visible,
+.homzen-footer-languages__link.is-active {
+    color: #FFFFFF !important;
+}
+
+.homzen-footer-languages__link.is-active {
+    border-bottom-color: var(--darli-gold) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5b. REMAINING HARD-CODED THEME ACCENTS
+   style.css carries a few literal red/orange washes that no CSS variable can
+   reach, plus two third-party widgets that paint themselves.
+   -------------------------------------------------------------------------- */
+
+/* Mobile sub-menus used a 10% red wash. */
+.mobile-menu .navigation li > ul,
+.mobile-menu .navigation li > ul > li > ul,
+.canvas-menu .menu-outer .sub-nav-menu {
+    background: rgba(201, 154, 69, 0.10) !important;
+}
+
+/* Service icon chips used a 10% orange wash. */
+.box-service.style-4 .icon-box {
+    background-color: rgba(201, 154, 69, 0.12) !important;
+}
+
+/* Mortgage calculator widget — its accent comes from a JS config object
+   (`primaryColor`), so the stylesheet has to win it back. */
+.mortgage-calculator__modal-stat-value--interest,
+.mortgage-calculator__result-value--large {
+    color: var(--darli-gold) !important;
+}
+
+.mortgage-calculator__modal-tab--active {
+    background-color: var(--darli-gold) !important;
+    border-color: var(--darli-gold) !important;
+    color: #FFFFFF !important;
+}
+
+.mortgage-calculator__details-btn,
+.mortgage-calculator__empty-state-title {
+    color: var(--darli-navy) !important;
+}
+
+html[data-theme="dark"] .mortgage-calculator__details-btn,
+html[data-theme="dark"] .mortgage-calculator__empty-state-title {
+    color: #FFFFFF !important;
+}
+
+/* Third-party sign-in buttons: the old Google red is off-brand, so use a
+   neutral surface. The provider's "G" mark keeps its own colours. */
+.btn-login-social,
+a.google,
+.flat-account .btn-login-social {
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--darli-border) !important;
+    color: var(--darli-navy) !important;
+}
+
+.btn-login-social:hover,
+a.google:hover,
+.flat-account .btn-login-social:hover {
+    background-color: var(--darli-surface-subtle) !important;
+    border-color: var(--darli-gold) !important;
+    color: var(--darli-navy) !important;
+}
+
+/* Active wishlist heart keeps the brand accent. */
+[data-bb-toggle="add-to-wishlist"].active {
+    color: var(--darli-gold) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. DARK THEME
+   The homepage already has a dark palette; the legacy pages get the same.
+   -------------------------------------------------------------------------- */
+html[data-theme="dark"] {
+    --primary-color: #D6AE64;
+    --hover-color: #C99A45;
+    --top-header-background-color: #0B192C;
+    --top-header-text-color: #CBD5E1;
+    --main-header-background-color: #0A1728;
+    --main-header-text-color: #F1F5F9;
+    --main-header-border-color: #162B46;
+}
+
+html[data-theme="dark"] .top-header {
+    background-color: #0B192C !important;
+    color: #CBD5E1 !important;
+    border-bottom-color: #172B45 !important;
+}
+
+html[data-theme="dark"] .top-header a,
+html[data-theme="dark"] .top-header .ae-anno-announcement__text,
+html[data-theme="dark"] .top-header .ae-anno-announcement__arrow {
+    color: #F1F5F9 !important;
+}
+
+html[data-theme="dark"] .top-header a:hover,
+html[data-theme="dark"] .top-header .ae-anno-announcement__arrow:hover {
+    background-color: rgba(214, 174, 100, 0.2) !important;
+    color: #D6AE64 !important;
+}
+
+html[data-theme="dark"] header.main-header,
+html[data-theme="dark"] .main-header,
+html[data-theme="dark"] .main-header .header-lower,
+html[data-theme="dark"] .main-header .inner-container,
+html[data-theme="dark"] .main-header .nav-outer {
+    background-color: #0A1728 !important;
+    border-bottom-color: #162B46 !important;
+}
+
+.main-header .logo img,
+.logo-box .logo img {
+    content: normal !important;
+}
+
+html[data-theme="dark"] .main-header .logo img,
+html[data-theme="dark"] .logo-box .logo img {
+    content: url('/themes/homzen/images/logo/darli-logo-ar-dark.png') !important;
+}
+
+html[data-theme="dark"] .main-header .main-menu,
+html[data-theme="dark"] .main-header .navbar-collapse,
+html[data-theme="dark"] .main-header .main-menu .navigation {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+html[data-theme="dark"] .main-header .main-menu .navigation > li > a {
+    color: #F1F5F9 !important;
+}
+
+html[data-theme="dark"] .main-header .main-menu .navigation > li.current > a,
+html[data-theme="dark"] .main-header .main-menu .navigation > li:hover > a {
+    color: #D6AE64 !important;
+}
+
+html[data-theme="dark"] footer.footer,
+html[data-theme="dark"] .footer {
+    background-color: #08111F !important;
+    background-image: none !important;
+}
+
+/* The new homepage footer uses .darli-footer; dark-mode.css repainted it a
+   neutral grey, which broke parity with the rest of the site. */
+html[data-theme="dark"] .darli-footer {
+    background-color: #08111F !important;
+    border-top-color: #C99A45 !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. RESPONSIVE
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+    .top-header {
+        padding-inline: 16px;
+    }
+
+    .main-header {
+        padding-inline: 15px;
+    }
+}
+
+@media (max-width: 767px) {
+    .header-account .tf-btn,
+    .header-account .flat-bt-top a {
+        font-size: 14px !important;
+        padding: 8px 16px !important;
+    }
+
+    .footer .wd-social {
+        flex-wrap: wrap;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8. REDUCED MOTION
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .tf-btn.primary,
+    .header-account .tf-btn,
+    .footer .wd-social .box-icon {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   9. LUXURY DARK MAP & FLOATING FILTER BAR (TARGET SCREENSHOT 1 DESIGN)
+   -------------------------------------------------------------------------- */
+
+/* Map container */
+.flat-map {
+    position: relative !important;
+    background-color: #0B1118 !important;
+    overflow: visible !important;
+}
+
+.flat-map #map {
+    height: 560px !important;
+    width: 100% !important;
+    background: #0B1118 !important;
+    z-index: 1 !important;
+}
+
+/* Floating Filter Search Wrapper */
+.flat-map .search-box-offcanvas,
+.flat-map .container {
+    position: static !important;
+}
+
+.flat-map .wrap-filter-search {
+    position: absolute !important;
+    bottom: 32px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 48px) !important;
+    max-width: 1240px !important;
+    z-index: 999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.flat-map .flat-tab-form,
+.flat-map .form-sl {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Hide tab bar above the card to match Screenshot 1 */
+.flat-map .nav-tab-form {
+    display: none !important;
+}
+
+/* The Floating Luxury Pill Card */
+.flat-map .wd-find-select {
+    background: linear-gradient(105deg, rgba(15, 25, 38, 0.97), rgba(12, 22, 34, 0.94)) !important;
+    backdrop-filter: blur(22px) saturate(115%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(115%) !important;
+    border: 1px solid rgba(221, 176, 91, 0.5) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.025) !important;
+    padding: 16px 24px !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    margin: 0 !important;
+}
+
+/* Inner group contains the 4 form groups */
+.flat-map .wd-find-select .inner-group {
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 0 !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    margin: 0 !important;
+}
+
+/* Form Groups: 1 (Keyword), 2 (Location), 3 (Category) */
+.flat-map .form-group-1 {
+    flex: 1.35 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+.flat-map .form-group-2 {
+    flex: 1.08 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+.flat-map .form-group-3 {
+    flex: 0.95 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+.flat-map .form-group-4 {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+
+/* A single continuous panel: legacy styles painted each group separately. */
+.flat-map .wd-find-select .form-style,
+.flat-map .wd-find-select .form-group-1,
+.flat-map .wd-find-select .form-group-2,
+.flat-map .wd-find-select .form-group-3,
+.flat-map .wd-find-select .form-group-4 {
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.flat-map .form-group-1,
+.flat-map .form-group-2,
+.flat-map .form-group-3,
+.flat-map .form-group-4 {
+    padding-inline: 14px !important;
+}
+
+.flat-map .form-group-1 {
+    padding-inline-start: 0 !important;
+}
+
+.flat-map .form-group-2,
+.flat-map .form-group-3,
+.flat-map .form-group-4 {
+    border-inline-start: 1px solid rgba(148, 163, 184, 0.13) !important;
+}
+
+/* Header Labels with Gold Accents */
+.flat-map .form-style label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    color: #AEB8C7 !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.flat-map .form-style label .label-gold-icon {
+    color: #E5B158 !important;
+    stroke: #E5B158 !important;
+    width: 15px !important;
+    height: 15px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+}
+
+/* Inputs & Selects: Dark Pill Boxes */
+.flat-map .form-control,
+.flat-map .form-style input[type="text"],
+.flat-map .form-style select,
+.flat-map .group-select select {
+    background-color: rgba(18, 30, 46, 0.92) !important;
+    border: 1px solid #2B3B50 !important;
+    border-radius: 10px !important;
+    color: #FFFFFF !important;
+    height: 44px !important;
+    font-size: 0.875rem !important;
+    padding: 0 14px !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+.flat-map .form-group-3 .nice-select {
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    background: rgba(18, 30, 46, 0.92) !important;
+    border: 1px solid #2B3B50 !important;
+    border-radius: 10px !important;
+    color: #F8FAFC !important;
+    font-size: 0.875rem !important;
+    line-height: 1 !important;
+}
+
+.flat-map .form-control:focus,
+.flat-map .form-style input:focus,
+.flat-map .form-style select:focus {
+    border-color: #E5B158 !important;
+    box-shadow: 0 0 0 2px rgba(229, 177, 88, 0.25) !important;
+    outline: none !important;
+}
+
+.flat-map .form-control::placeholder,
+.flat-map input::placeholder {
+    color: #64748B !important;
+    color: #697789 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Keyword & Location inner icons */
+.flat-map .form-group-1 .position-relative,
+.flat-map .form-group-2 .position-relative {
+    position: relative !important;
+}
+
+/* Suggestions float below their field instead of stretching the flex row. */
+.flat-map .form-group-1:focus-within,
+.flat-map .form-group-2:focus-within {
+    position: relative !important;
+    z-index: 1010 !important;
+}
+
+.flat-map .form-group-1 [data-bb-toggle="data-suggestion"],
+.flat-map .form-group-2 [data-bb-toggle="data-suggestion"] {
+    position: absolute !important;
+    inset-block-start: calc(100% + 6px) !important;
+    inset-inline: 0 !important;
+    width: 100% !important;
+    max-height: 220px !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    z-index: 1020 !important;
+    border: 1px solid rgba(201, 154, 69, 0.34) !important;
+    border-radius: 10px !important;
+    background: #111C2B !important;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.48) !important;
+}
+
+.flat-map [data-bb-toggle="data-suggestion"]:empty {
+    display: none !important;
+}
+
+.flat-map [data-bb-toggle="data-suggestion"] .search-suggestion {
+    position: static !important;
+    width: 100% !important;
+    max-height: inherit !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.flat-map .search-suggestion-item {
+    display: block !important;
+    padding: 9px 12px !important;
+    color: #D7DEE8 !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+}
+
+.flat-map .search-suggestion-item:last-child {
+    border-bottom: 0 !important;
+}
+
+.flat-map .search-suggestion-item:hover {
+    color: #FFFFFF !important;
+    background: rgba(201, 154, 69, 0.14) !important;
+}
+
+body[dir="rtl"] .flat-map .form-group-1 input {
+    padding-right: 38px !important;
+    padding-left: 14px !important;
+}
+
+body[dir="ltr"] .flat-map .form-group-1 input {
+    padding-left: 38px !important;
+    padding-right: 14px !important;
+}
+
+.flat-map .form-group-1 .input-inner-search-icon {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #64748B !important;
+    stroke: #64748B !important;
+    width: 16px !important;
+    height: 16px !important;
+    pointer-events: none !important;
+}
+
+body[dir="rtl"] .flat-map .form-group-1 .input-inner-search-icon {
+    right: 12px !important;
+    left: auto !important;
+}
+
+body[dir="ltr"] .flat-map .form-group-1 .input-inner-search-icon {
+    left: 12px !important;
+    right: auto !important;
+}
+
+.flat-map .group-ip {
+    position: relative !important;
+}
+
+body[dir="rtl"] .flat-map .form-group-2 input {
+    padding-right: 38px !important;
+    padding-left: 14px !important;
+}
+
+body[dir="ltr"] .flat-map .form-group-2 input {
+    padding-left: 38px !important;
+    padding-right: 14px !important;
+}
+
+.flat-map .form-group-2 .svg-icon-ti-ti-current-location,
+.flat-map .form-group-2 .icon {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #64748B !important;
+    stroke: #64748B !important;
+    width: 17px !important;
+    height: 17px !important;
+    pointer-events: none !important;
+}
+
+body[dir="rtl"] .flat-map .form-group-2 .svg-icon-ti-ti-current-location,
+body[dir="rtl"] .flat-map .form-group-2 .icon {
+    right: 12px !important;
+    left: auto !important;
+}
+
+body[dir="ltr"] .flat-map .form-group-2 .svg-icon-ti-ti-current-location,
+body[dir="ltr"] .flat-map .form-group-2 .icon {
+    left: 12px !important;
+    right: auto !important;
+}
+
+/* Category dropdown */
+.flat-map .form-group-3 .group-select {
+    position: relative !important;
+}
+
+.flat-map .form-group-3 select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    cursor: pointer !important;
+}
+
+body[dir="rtl"] .flat-map .form-group-3 select {
+    padding-left: 32px !important;
+    padding-right: 14px !important;
+}
+
+body[dir="ltr"] .flat-map .form-group-3 select {
+    padding-right: 32px !important;
+    padding-left: 14px !important;
+}
+
+.flat-map .form-group-3 .group-select::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 4px solid transparent !important;
+    border-right: 4px solid transparent !important;
+    border-top: 5px solid #94A3B8 !important;
+    pointer-events: none !important;
+}
+
+body[dir="rtl"] .flat-map .form-group-3 .group-select::after {
+    left: 14px !important;
+    right: auto !important;
+}
+
+body[dir="ltr"] .flat-map .form-group-3 .group-select::after {
+    right: 14px !important;
+    left: auto !important;
+}
+
+/* Advanced Button: Dark Rounded Pill */
+.flat-map .form-group-4.box-filter a,
+.flat-map .filter-advanced {
+    background: #162438 !important;
+    border: 1px solid #233754 !important;
+    border-radius: 10px !important;
+    color: #FFFFFF !important;
+    height: 44px !important;
+    padding: 0 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+}
+
+.flat-map .form-group-4.box-filter a:hover,
+.flat-map .filter-advanced:hover {
+    background: #1C2E47 !important;
+    border-color: #E5B158 !important;
+    color: #E5B158 !important;
+}
+
+.flat-map .filter-advanced svg {
+    color: #E5B158 !important;
+    stroke: #E5B158 !important;
+    width: 17px !important;
+    height: 17px !important;
+}
+
+/* Submit Search Button: Glowing Golden Gradient */
+.flat-map .wd-find-select > button[type="submit"],
+.flat-map .wd-find-select .tf-btn.primary,
+.flat-map .tf-btn.primary[type="submit"] {
+    background: linear-gradient(135deg, #E5B158 0%, #C9933B 100%) !important;
+    color: #0B1422 !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    border: none !important;
+    border-radius: 10px !important;
+    height: 44px !important;
+    padding: 0 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    box-shadow: 0 10px 30px rgba(229, 177, 88, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
+    flex: 0 0 auto !important;
+}
+
+.flat-map .darli-google-map {
+    height: 560px !important;
+    width: 100% !important;
+    background: #0B1118 !important;
+}
+
+.flat-map .gm-style .gm-style-iw-c {
+    border-radius: 14px !important;
+    padding: 0 !important;
+}
+
+.flat-map .gm-style .gm-style-iw-d {
+    overflow: auto !important;
+}
+
+.flat-map .darli-place-autocomplete {
+    display: block !important;
+    width: 100% !important;
+    height: 44px !important;
+    color-scheme: dark !important;
+    border: 1px solid #2B3B50 !important;
+    border-radius: 10px !important;
+    background: rgba(18, 30, 46, 0.92) !important;
+    overflow: hidden !important;
+}
+
+.flat-map .darli-route-button {
+    width: calc(100% - 24px);
+    margin: 10px 12px 12px;
+    min-height: 42px;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #E5B158 0%, #C9933B 100%);
+    color: #0B1422;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.flat-map .darli-route-button:disabled {
+    cursor: wait;
+    opacity: 0.75;
+}
+
+/* Light map/search treatment. Dark mode keeps the luxury navy rules above. */
+html[data-theme="light"] .flat-map,
+html[data-theme="light"] .flat-map #map,
+html[data-theme="light"] .flat-map .darli-google-map {
+    background-color: #E9EDF2 !important;
+}
+
+html[data-theme="light"] .flat-map .wd-find-select {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-color: rgba(181, 132, 49, 0.42) !important;
+    box-shadow: 0 20px 44px rgba(31, 41, 55, 0.18), inset 0 1px 0 #FFFFFF !important;
+}
+
+html[data-theme="light"] .flat-map .form-group-2,
+html[data-theme="light"] .flat-map .form-group-3,
+html[data-theme="light"] .flat-map .form-group-4 {
+    border-inline-start-color: rgba(71, 85, 105, 0.18) !important;
+}
+
+html[data-theme="light"] .flat-map .form-style label {
+    color: #334155 !important;
+    text-shadow: none !important;
+}
+
+html[data-theme="light"] .flat-map .form-control,
+html[data-theme="light"] .flat-map .form-style input[type="text"],
+html[data-theme="light"] .flat-map .form-style select,
+html[data-theme="light"] .flat-map .group-select select,
+html[data-theme="light"] .flat-map .form-group-3 .nice-select,
+html[data-theme="light"] .flat-map .darli-place-autocomplete {
+    color: #172033 !important;
+    background: #F8FAFC !important;
+    border-color: #CBD5E1 !important;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    color-scheme: light !important;
+}
+
+html[data-theme="light"] .flat-map .form-control::placeholder,
+html[data-theme="light"] .flat-map input::placeholder {
+    color: #8491A3 !important;
+}
+
+html[data-theme="light"] .flat-map .form-group-1 .input-inner-search-icon,
+html[data-theme="light"] .flat-map .form-group-2 .svg-icon-ti-ti-current-location,
+html[data-theme="light"] .flat-map .form-group-2 .icon {
+    color: #64748B !important;
+    stroke: #64748B !important;
+}
+
+html[data-theme="light"] .flat-map .form-group-4.box-filter a,
+html[data-theme="light"] .flat-map .filter-advanced {
+    color: #263449 !important;
+    background: #F8FAFC !important;
+    border-color: #CBD5E1 !important;
+}
+
+html[data-theme="light"] .flat-map .form-group-4.box-filter a:hover,
+html[data-theme="light"] .flat-map .filter-advanced:hover {
+    color: #9A6B1F !important;
+    background: #FFF9EC !important;
+    border-color: #C99A45 !important;
+}
+
+html[data-theme="light"] .flat-map .form-group-1 [data-bb-toggle="data-suggestion"],
+html[data-theme="light"] .flat-map .form-group-2 [data-bb-toggle="data-suggestion"] {
+    color: #172033 !important;
+    background: #FFFFFF !important;
+    border-color: #D6B875 !important;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16) !important;
+}
+
+html[data-theme="light"] .flat-map .search-suggestion-item {
+    color: #334155 !important;
+    border-bottom-color: #E2E8F0 !important;
+}
+
+html[data-theme="light"] .flat-map .search-suggestion-item:hover {
+    color: #172033 !important;
+    background: #FFF7E6 !important;
+}
+
+html[data-theme="light"] .leaflet-control-zoom a {
+    color: #263449 !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-color: #D7DEE8 !important;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .flat-map .wrap-filter-search {
+        width: calc(100% - 32px) !important;
+    }
+
+    .flat-map .wd-find-select {
+        padding: 14px !important;
+        gap: 10px !important;
+    }
+
+    .flat-map .wd-find-select .inner-group {
+        gap: 8px !important;
+    }
+
+    .flat-map .form-group-4.box-filter a,
+    .flat-map .filter-advanced,
+    .flat-map .wd-find-select > button[type="submit"] {
+        padding-inline: 16px !important;
+    }
+}
+
+.flat-map .wd-find-select > button[type="submit"]:hover,
+.flat-map .wd-find-select .tf-btn.primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 22px rgba(229, 177, 88, 0.6) !important;
+    background: linear-gradient(135deg, #EDB960 0%, #D49C42 100%) !important;
+}
+
+.flat-map .wd-find-select > button[type="submit"] svg,
+.flat-map .wd-find-select .tf-btn.primary svg {
+    color: #0B1422 !important;
+    stroke: #0B1422 !important;
+    width: 17px !important;
+    height: 17px !important;
+}
+
+/* Advanced Search Dropdown Drawer (when clicked) */
+.flat-map .wd-search-form {
+    background: rgba(14, 23, 38, 0.98) !important;
+    border: 1px solid rgba(201, 154, 69, 0.3) !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-top: 10px !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+}
+
+.flat-map .wd-search-form .title-price,
+.flat-map .wd-search-form label {
+    color: #E2E8F0 !important;
+}
+
+/* Advanced filter follows the active light theme instead of retaining the map's dark panel. */
+html[data-theme="light"] .flat-map .wd-search-form {
+    background: #ffffff !important;
+    border-color: rgba(201, 154, 69, 0.42) !important;
+    color: #172033 !important;
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16) !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form .title-price,
+html[data-theme="light"] .flat-map .wd-search-form .caption-price,
+html[data-theme="light"] .flat-map .wd-search-form .text-1,
+html[data-theme="light"] .flat-map .wd-search-form .text-cb-amenities,
+html[data-theme="light"] .flat-map .wd-search-form label,
+html[data-theme="light"] .flat-map .wd-search-form .title-select { color: #334155 !important; }
+html[data-theme="light"] .flat-map .wd-search-form .caption-price span { color: #64748b !important; }
+html[data-theme="light"] .flat-map .wd-search-form .nice-select,
+html[data-theme="light"] .flat-map .wd-search-form select,
+html[data-theme="light"] .flat-map .wd-search-form input[type="text"],
+html[data-theme="light"] .flat-map .wd-search-form .form-control {
+    background: #f8fafc !important; border: 1px solid #cbd5e1 !important; color: #172033 !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form .nice-select .current,
+html[data-theme="light"] .flat-map .wd-search-form .nice-select .option { color: #172033 !important; }
+html[data-theme="light"] .flat-map .wd-search-form .nice-select .list {
+    background: #ffffff !important; border: 1px solid #dbe2ea !important;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12) !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form .nice-select .option:hover,
+html[data-theme="light"] .flat-map .wd-search-form .nice-select .option.focus {
+    background: #fff7e6 !important; color: #172033 !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form .noUi-target,
+html[data-theme="light"] .flat-map .wd-search-form .noUi-connects {
+    background: #e2e8f0 !important; border-color: #cbd5e1 !important; box-shadow: none !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form .noUi-connect { background: #c99a45 !important; }
+html[data-theme="light"] .flat-map .wd-search-form .noUi-horizontal .noUi-handle {
+    background: #ffffff !important; border: 2px solid #c99a45 !important;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2) !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form [data-bb-toggle="data-suggestion"] {
+    background: #ffffff !important; border-color: #dbe2ea !important; color: #334155 !important;
+}
+html[data-theme="light"] .flat-map .wd-search-form .tf-checkbox { accent-color: #c99a45 !important; }
+html[data-theme="light"] .flat-map .wd-search-form .form-search-box-offcanvas-button {
+    box-shadow: 0 8px 18px rgba(201, 154, 69, 0.24) !important; color: #172033 !important;
+}
+
+/* Leaflet Zoom Controls (Top Left) */
+.leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin-top: 18px !important;
+    margin-left: 18px !important;
+}
+
+.leaflet-control-zoom a {
+    background-color: rgba(14, 23, 38, 0.88) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 32px !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    text-align: center !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: rgba(22, 36, 56, 0.95) !important;
+    color: #E5B158 !important;
+}
+
+.leaflet-control-zoom-in {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    border-bottom: none !important;
+}
+
+.leaflet-control-zoom-out {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+/* Cairo Pulsing Golden Marker */
+.darli-cairo-pulse-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+.darli-cairo-pulse-wrapper {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.darli-cairo-dot {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    background: #E5B158;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    box-shadow: 0 0 14px #E5B158;
+    z-index: 2;
+}
+
+.darli-cairo-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    background: radial-gradient(circle, rgba(229, 177, 88, 0.5) 0%, rgba(229, 177, 88, 0.15) 50%, rgba(229, 177, 88, 0) 75%);
+    border-radius: 50%;
+    animation: darli-cairo-pulse 2.2s infinite ease-out;
+}
+
+.darli-cairo-label {
+    position: absolute;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 13px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    line-height: 1.2;
+    z-index: 3;
+}
+
+.darli-cairo-label span {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #CBD5E1;
+}
+
+@keyframes darli-cairo-pulse {
+    0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.9; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.35; }
+    100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; }
+}
+
+/* Mobile Responsiveness for Floating Search Card */
+@media (max-width: 991px) {
+    .flat-map #map,
+    .flat-map .darli-google-map {
+        height: 700px !important;
+    }
+
+    .flat-map .wrap-filter-search {
+        bottom: 16px !important;
+        width: calc(100% - 24px) !important;
+    }
+
+    .flat-map .wd-find-select {
+        padding: 20px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+    .flat-map .wd-find-select .inner-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+    .flat-map .form-group-1,
+    .flat-map .form-group-2,
+    .flat-map .form-group-3,
+    .flat-map .form-group-4 {
+        width: 100% !important;
+        padding-inline: 0 !important;
+        border-inline-start: 0 !important;
+    }
+    .flat-map .form-group-4.box-filter a,
+    .flat-map .filter-advanced {
+        width: 100% !important;
+    }
+    .flat-map .wd-find-select > button[type="submit"] {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .flat-map #map,
+    .flat-map .darli-google-map {
+        height: 760px !important;
+    }
+
+    .flat-map .wd-find-select {
+        border-radius: 16px !important;
+        padding: 14px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   10. EGYPTIAN POUND CURRENCY & DROPDOWN STYLING
+   -------------------------------------------------------------------------- */
+.darli-currency-icon {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    width: 18px !important;
+    height: 18px !important;
+    margin-inline-end: 6px !important;
+    flex-shrink: 0 !important;
+}
+
+.top-header .dropdown-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+}
+
+.top-header .dropdown-item {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 13px !important;
+    padding: 8px 14px !important;
+}
+
+.top-header .dropdown-item svg {
+    margin-inline-end: 6px !important;
+    vertical-align: middle !important;
+}
+
+.darli-card-price .darli-currency-icon {
+    margin-inline-end: 4px !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. HERO SEARCH OVERLAY RESETS
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+    html .darli-mobile-control input,
+    html .darli-mobile-control select {
+        font-size: 16px !important;
+        max-width: 100% !important;
+        transform: none !important;
+        touch-action: manipulation !important;
+    }
+}
+

@@ -1,3 +1,64 @@
 <?php
-namespace Database\Seeders; use App\Models\Permission; use App\Models\Role; use App\Models\User; use Illuminate\Database\Seeder;
-class RolePermissionSeeder extends Seeder {public function run():void{$permissions=['property.view','property.create','property.update-own','property.update-any','property.approve','property.delete','project.manage','lead.view-own','lead.view-all','lead.assign','review.moderate','content.manage','settings.manage','users.manage','roles.manage','payment.view'];$ps=[];foreach($permissions as $p)$ps[$p]=Permission::firstOrCreate(['slug'=>$p],['name'=>$p]);$roles=['super-admin','admin','property-manager','content-manager','agent','agency-manager','customer','support','finance'];foreach($roles as $r)Role::firstOrCreate(['slug'=>$r],['name'=>ucwords(str_replace('-',' ',$r))]);Role::where('slug','super-admin')->first()->permissions()->sync(Permission::pluck('id'));Role::where('slug','admin')->first()->permissions()->sync(Permission::pluck('id'));Role::where('slug','property-manager')->first()->permissions()->sync(Permission::whereIn('slug',['property.view','property.update-any','property.approve','property.delete'])->pluck('id'));Role::where('slug','agent')->first()->permissions()->sync(Permission::whereIn('slug',['property.view','property.create','property.update-own','lead.view-own'])->pluck('id'));$admin=User::firstOrCreate(['email'=>'admin@example.com'],['name'=>'System Admin','password'=>'ChangeMe123!','status'=>'active','email_verified_at'=>now()]);$admin->roles()->syncWithoutDetaching([Role::where('slug','super-admin')->value('id')]);}}
+
+namespace Database\Seeders;
+
+use App\Models\Permission;
+use App\Models\Role;
+use App\Support\PermissionCatalog;
+use Illuminate\Database\Seeder;
+
+/**
+ * Syncs the permission catalogue and the role matrix (with Arabic labels and
+ * hierarchy levels). Safe to re-run: roles/permissions are upserted and system
+ * roles keep the permissions declared in PermissionCatalog.
+ */
+class RolePermissionSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // ------------------------------------------------------------ permissions
+        $permissions = PermissionCatalog::all();
+
+        foreach ($permissions as $slug => $meta) {
+            Permission::query()->updateOrCreate(
+                ['slug' => $slug],
+                ['name' => $slug, 'label_ar' => $meta['label'], 'group' => $meta['group']]
+            );
+        }
+
+        // Keep the old "property-manager" slug alive as an alias of "manager".
+        if (! Role::query()->where('slug', 'property-manager')->exists()) {
+            Role::query()->where('slug', 'manager')->first()?->replicate()->fill([
+                'slug' => 'property-manager',
+                'name' => 'Property Manager',
+                'label_ar' => 'مسؤول عقارات',
+            ])->save();
+        }
+
+        foreach (PermissionCatalog::roles() as $slug => $definition) {
+            $role = Role::query()->updateOrCreate(
+                ['slug' => $slug],
+                [
+                    'name' => $definition['name'],
+                    'label_ar' => $definition['label_ar'],
+                    'description' => $definition['description'],
+                    'level' => $definition['level'],
+                    'is_system' => true,
+                ]
+            );
+
+            $slugs = $definition['permissions'] === '*'
+                ? Permission::query()->pluck('id')->all()
+                : Permission::query()->whereIn('slug', $definition['permissions'])->pluck('id')->all();
+
+            $role->permissions()->sync($slugs);
+        }
+
+        // The legacy property-manager alias mirrors the manager matrix.
+        if ($alias = Role::query()->where('slug', 'property-manager')->first()) {
+            $alias->permissions()->sync(
+                Permission::query()->whereIn('slug', PermissionCatalog::roles()['manager']['permissions'])->pluck('id')->all()
+            );
+        }
+    }
+}

@@ -70,7 +70,7 @@ class HomepageBlockRenderer
         $limit = min(max((int) ($attributes['limit'] ?? 6), 1), 12);
         $query = Property::query()
             ->with(['translations', 'currency', 'media', 'category.translations', 'owner.agentProfile'])
-            ->where('status', 'published')
+            ->whereIn('status', ['published', 'sold'])
             ->where(fn ($builder) => $builder->whereNull('expires_at')->orWhere('expires_at', '>', now()));
 
         if (! empty($attributes['is_featured'])) {
@@ -109,6 +109,7 @@ class HomepageBlockRenderer
                     'purpose' => $purpose['label'],
                     'purpose_class' => $purpose['class'],
                     'featured' => (bool) $property->is_featured,
+                    'is_sold' => $property->isSold(),
                     'bedrooms' => $property->bedrooms ?? 0,
                     'bathrooms' => $property->bathrooms ?? 0,
                     'area' => $property->area ? rtrim(rtrim(number_format((float) $property->area, 2, '.', ''), '0'), '.') . ' ' . $areaUnit : '',
@@ -267,7 +268,12 @@ class HomepageBlockRenderer
         $targetRate = (float) ($target?->exchange_rate ?: 1);
         $amount = (float) $property->price / $sourceRate * $targetRate;
         $number = number_format($amount, $target?->decimal_places ?? 0);
-        $symbol = $target?->symbol ?? $property->currency?->symbol ?? '$';
+        $locale = app()->getLocale();
+        if ($target?->code === 'EGP') {
+            $symbol = $locale === 'ar' ? 'ج.م' : 'EGP';
+        } else {
+            $symbol = $target?->symbol ?? $property->currency?->symbol ?? '$';
+        }
 
         return ($target?->symbol_position ?? 'before') === 'after' ? $number . ' ' . $symbol : $symbol . $number;
     }
@@ -317,7 +323,9 @@ class HomepageBlockRenderer
     private function mediaUrl(?string $path): string
     {
         if (! is_string($path) || trim($path) === '') {
-            return '/storage/general/placeholder.png';
+            return app()->getLocale() === 'ar'
+                ? '/themes/homzen/images/darli-placeholder.png'
+                : '/themes/homzen/images/darli-placeholder-en.png';
         }
 
         return '/' . ltrim($path, '/');

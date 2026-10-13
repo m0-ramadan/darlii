@@ -1,51 +1,55 @@
 :root {
-    color-scheme: light;
+  color-scheme: light;
 }
 
 html[data-theme="dark"] {
-    color-scheme: dark;
-    --homzen-dark-bg: #121417;
-    --homzen-dark-surface: #1b1f24;
-    --homzen-dark-raised: #242a31;
-    --homzen-dark-text: #f4f5f6;
-    --homzen-dark-muted: #aeb6c2;
-    --homzen-dark-border: #343b45;
-    --body-bg: var(--homzen-dark-bg);
-    --text-color: var(--homzen-dark-text);
-    --border-color: var(--homzen-dark-border);
-    --hz-bg: var(--homzen-dark-bg);
-    --hz-bg-secondary: #171a20;
-    --hz-bg-card: var(--homzen-dark-surface);
-    --hz-bg-input: var(--homzen-dark-raised);
-    --hz-bg-hover: #2a3038;
-    --hz-text: var(--homzen-dark-text);
-    --hz-text-secondary: var(--homzen-dark-muted);
-    --hz-text-muted: #8e96a3;
-    --hz-border: var(--homzen-dark-border);
-    --hz-red: #ef1414;
+  color-scheme: dark;
+  --homzen-dark-bg: #121417;
+  --homzen-dark-surface: #1b1f24;
+  --homzen-dark-raised: #242a31;
+  --homzen-dark-text: #f4f5f6;
+  --homzen-dark-muted: #aeb6c2;
+  --homzen-dark-border: #343b45;
+  --body-bg: var(--homzen-dark-bg);
+  --text-color: var(--homzen-dark-text);
+  --border-color: var(--homzen-dark-border);
+  --hz-bg: var(--homzen-dark-bg);
+  --hz-bg-secondary: #171a20;
+  --hz-bg-card: var(--homzen-dark-surface);
+  --hz-bg-input: var(--homzen-dark-raised);
+  --hz-bg-hover: #2a3038;
+  --hz-text: var(--homzen-dark-text);
+  --hz-text-secondary: var(--homzen-dark-muted);
+  --hz-text-muted: #8e96a3;
+  --hz-border: var(--homzen-dark-border);
+  --hz-red: #ef1414;
 }
 
 html[data-theme="dark"] body,
 html[data-theme="dark"] #wrapper,
 html[data-theme="dark"] .clearfix,
 html[data-theme="dark"] .main-content {
-    background-color: var(--homzen-dark-bg);
-    color: var(--homzen-dark-text);
+  background-color: var(--homzen-dark-bg);
+  color: var(--homzen-dark-text);
 }
 
-html[data-theme="dark"] :where(h1, h2, h3, h4, h5, h6, .title, .name, .price, a) {
-    color: var(--homzen-dark-text);
+html[data-theme="dark"]
+  :where(h1, h2, h3, h4, h5, h6, .title, .name, .price, a) {
+  color: var(--homzen-dark-text);
 }
 
-html[data-theme="dark"] :where(.text-variant-1, .text-variant-2, .caption-1, .description, p) {
-    color: var(--homzen-dark-muted);
+html[data-theme="dark"]
+  :where(.text-variant-1, .text-variant-2, .caption-1, .description, p) {
+  color: var(--homzen-dark-muted);
 }
 
 html[data-theme="dark"] :where(.text-primary, .text-primary-new, .text-red) {
-    color: var(--primary-color, var(--hz-red)) !important;
+  color: var(--primary-color, var(--hz-red)) !important;
 }
 
-html[data-theme="dark"] :where(.top-header,
+html[data-theme="dark"]
+  :where(
+    .top-header,
     .main-header,
     .header-lower,
     .sticky-header,
@@ -66,13 +70,16 @@ html[data-theme="dark"] :where(.top-header,
     .leaflet-popup-content-wrapper,
     .leaflet-popup-tip,
     .mortgage-calculator__modal,
-    .mortgage-calculator__results-panel) {
-    background-color: var(--homzen-dark-surface) !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text);
+    .mortgage-calculator__results-panel
+  ) {
+  background-color: var(--homzen-dark-surface) !important;
+  border-color: var(--homzen-dark-border) !important;
+  color: var(--homzen-dark-text);
 }
 
-html[data-theme="dark"] :where(.flat-section,
+html[data-theme="dark"]
+  :where(
+    .flat-section,
     .flat-section-v3,
     .flat-section-v5,
     .flat-recommended,
@@ -80,12 +87,15 @@ html[data-theme="dark"] :where(.flat-section,
     .flat-latest-new,
     .flat-agents,
     .flat-testimonial-v4,
-    .bg-surface) {
-    background-color: var(--homzen-dark-bg) !important;
-    border-color: var(--homzen-dark-border) !important;
+    .bg-surface
+  ) {
+  background-color: var(--homzen-dark-bg) !important;
+  border-color: var(--homzen-dark-border) !important;
 }
 
-html[data-theme="dark"] :where(.wrap-filter-search,
+html[data-theme="dark"]
+  :where(
+    .wrap-filter-search,
     .flat-tab-form,
     .form-sl,
     .wd-find-select,
@@ -98,55 +108,82 @@ html[data-theme="dark"] :where(.wrap-filter-search,
     .flat-filter-search,
     .form-search,
     .search-suggestion,
-    [data-bb-toggle="data-suggestion"]) {
-    background-color: var(--homzen-dark-surface) !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text) !important;
+    [data-bb-toggle="data-suggestion"]
+  ) {
+  background-color: var(--homzen-dark-surface) !important;
+  border-color: var(--homzen-dark-border) !important;
+  color: var(--homzen-dark-text) !important;
 }
 
-html[data-theme="dark"] :where(.wrap-filter-search label,
+html[data-theme="dark"]
+  :where(
+    .wrap-filter-search label,
     .search-box label,
     .search-form label,
     .search-panel label,
-    .form-search label) {
-    color: var(--homzen-dark-muted) !important;
+    .form-search label
+  ) {
+  color: var(--homzen-dark-muted) !important;
 }
 
-html[data-theme="dark"] :where(.bg-white, .bg-body-tertiary, .form-control, .form-select, .nice-select, .select2-selection, textarea, input) {
-    background-color: var(--homzen-dark-raised) !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text) !important;
+html[data-theme="dark"]
+  :where(
+    .bg-white,
+    .bg-body-tertiary,
+    .form-control,
+    .form-select,
+    .nice-select,
+    .select2-selection,
+    textarea,
+    input:not(.hero-overlay-input)
+  ) {
+  background-color: var(--homzen-dark-raised) !important;
+  border-color: var(--homzen-dark-border) !important;
+  color: var(--homzen-dark-text) !important;
 }
 
-html[data-theme="dark"] :where(.nice-select .list,
+html[data-theme="dark"]
+  :where(
+    .nice-select .list,
     .select2-dropdown,
     .select2-container--default .select2-selection--single,
-    .select2-results__option) {
-    background-color: var(--homzen-dark-surface) !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text) !important;
+    .select2-results__option
+  ) {
+  background-color: var(--homzen-dark-surface) !important;
+  border-color: var(--homzen-dark-border) !important;
+  color: var(--homzen-dark-text) !important;
 }
 
-html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: var(--homzen-dark-text) !important;
+html[data-theme="dark"]
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+  color: var(--homzen-dark-text) !important;
 }
 
-html[data-theme="dark"] :where(.form-control, .form-select, textarea, input)::placeholder {
-    color: var(--homzen-dark-muted);
+html[data-theme="dark"]
+  :where(.form-control, .form-select, textarea, input:not(.hero-overlay-input))::placeholder {
+  color: var(--homzen-dark-muted);
 }
 
-html[data-theme="dark"] :where(.dropdown-item:hover, .dropdown-item:focus, .nice-select .option:hover, .nice-select .option.focus) {
-    background-color: var(--homzen-dark-raised) !important;
+html[data-theme="dark"]
+  :where(
+    .dropdown-item:hover,
+    .dropdown-item:focus,
+    .nice-select .option:hover,
+    .nice-select .option.focus
+  ) {
+  background-color: var(--homzen-dark-raised) !important;
 }
 
-html[data-theme="dark"] :where(.nice-select .option,
-    .dropdown-menu a,
-    .main-menu a,
-    .navigation a) {
-    color: var(--homzen-dark-text) !important;
+html[data-theme="dark"]
+  :where(.nice-select .option, .dropdown-menu a, .main-menu a, .navigation a) {
+  color: var(--homzen-dark-text) !important;
 }
 
-html[data-theme="dark"] :where(.homeya-box,
+html[data-theme="dark"]
+  :where(
+    .homeya-box,
     .property-item,
     .property-item .archive-bottom,
     .content-property,
@@ -157,135 +194,190 @@ html[data-theme="dark"] :where(.homeya-box,
     .wrap-banner,
     .card,
     .project-card,
-    .property-card) {
-    background-color: var(--homzen-dark-surface) !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text);
+    .property-card
+  ) {
+  background-color: var(--homzen-dark-surface) !important;
+  border-color: var(--homzen-dark-border) !important;
+  color: var(--homzen-dark-text);
 }
 
-html[data-theme="dark"] :where(.property-card img,
+html[data-theme="dark"]
+  :where(
+    .property-card img,
     .project-card img,
     .property-item img,
     .homeya-box img,
     .box-house img,
     .box-agent img,
     .flat-blog-item img,
-    .leaflet-tile) {
-    filter: none !important;
+    .leaflet-tile
+  ) {
+  filter: none !important;
 }
 
-html[data-theme="dark"] :where(.border, .border-top, .border-bottom, .border-start, .border-end) {
-    border-color: var(--homzen-dark-border) !important;
+html[data-theme="dark"]
+  :where(.border, .border-top, .border-bottom, .border-start, .border-end) {
+  border-color: var(--homzen-dark-border) !important;
 }
 
 html[data-theme="dark"] :where(.footer, footer, .bottom-footer) {
-    background-color: #0d0f12 !important;
-    border-color: var(--homzen-dark-border) !important;
+  background-color: #0d0f12 !important;
+  border-color: var(--homzen-dark-border) !important;
 }
 
 html[data-theme="dark"] .leaflet-control-zoom a,
 html[data-theme="dark"] .leaflet-control-layers {
-    background: var(--homzen-dark-surface);
-    border-color: var(--homzen-dark-border);
-    color: var(--homzen-dark-text);
+  background: var(--homzen-dark-surface);
+  border-color: var(--homzen-dark-border);
+  color: var(--homzen-dark-text);
 }
 
 html[data-theme="dark"] .leaflet-container {
-    background: #20242a;
+  background: #20242a;
 }
 
-html[data-theme="dark"] :where(.modal-header, .modal-footer, hr, .table > :not(caption) > * > *) {
-    border-color: var(--homzen-dark-border) !important;
+html[data-theme="dark"]
+  :where(.modal-header, .modal-footer, hr, .table > :not(caption) > * > *) {
+  border-color: var(--homzen-dark-border) !important;
 }
 
 html[data-theme="dark"] :where(table, .table) {
-    color: var(--homzen-dark-text) !important;
+  color: var(--homzen-dark-text) !important;
 }
 
-html[data-theme="dark"] .table> :not(caption)>*>* {
-    background-color: var(--homzen-dark-surface);
+html[data-theme="dark"] .table > :not(caption) > * > * {
+  background-color: var(--homzen-dark-surface);
 }
 
-html[data-theme="dark"] :where(.pagination a, .page-link) {
-    background-color: var(--homzen-dark-surface) !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text) !important;
+html[data-theme="dark"]
+  :where(
+    .pagination a,
+    .page-link,
+    .flat-pagination .page-numbers,
+    .pagination li a,
+    .pagination li span
+  ) {
+  background-color: var(--homzen-dark-surface, #1b1f24) !important;
+  border-color: var(--homzen-dark-border, #343b45) !important;
+  color: var(--homzen-dark-text, #f4f5f6) !important;
 }
 
-html[data-theme="dark"] :where(.site-notice, .site-notice-body, .cookie-consent, .cookie-wrapper, .js-cookie-consent) {
-    background-color: #181b21 !important;
-    border-color: var(--homzen-dark-border) !important;
-    color: var(--homzen-dark-text) !important;
+html[data-theme="dark"]
+  :where(.flat-pagination .page-numbers svg, .pagination svg) {
+  color: var(--homzen-dark-text, #f4f5f6) !important;
+  stroke: var(--homzen-dark-text, #f4f5f6) !important;
+}
+
+html[data-theme="dark"]
+  :where(
+    .flat-pagination .page-numbers.current,
+    .flat-pagination .page-numbers:hover,
+    .page-link.active,
+    .active > .page-link,
+    .pagination .active a,
+    .pagination .active span
+  ) {
+  background-color: var(--darli-gold, #c99a45) !important;
+  border-color: var(--darli-gold, #c99a45) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"]
+  :where(
+    .flat-pagination .page-numbers.current svg,
+    .flat-pagination .page-numbers:hover svg
+  ) {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+html[data-theme="dark"]
+  :where(
+    .site-notice,
+    .site-notice-body,
+    .cookie-consent,
+    .cookie-wrapper,
+    .js-cookie-consent
+  ) {
+  background-color: #181b21 !important;
+  border-color: var(--homzen-dark-border) !important;
+  color: var(--homzen-dark-text) !important;
 }
 
 .homzen-theme-toggle,
 .darli-theme-toggle {
-    align-items: center;
-    border-radius: 50%;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    padding: 0;
-    width: 28px;
-    height: 28px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .homzen-theme-toggle svg,
 .darli-theme-toggle svg {
-    height: 14px;
-    width: 14px;
+  height: 14px;
+  width: 14px;
 }
 
 [data-bb-toggle="add-to-wishlist"].active {
-    color: var(--primary-color, #db1d23);
+  color: var(--primary-color, #db1d23);
 }
 
 .homzen-theme-toggle .theme-icon-sun,
 .darli-theme-toggle .theme-icon-sun,
 html[data-theme="dark"] .homzen-theme-toggle .theme-icon-moon,
 html[data-theme="dark"] .darli-theme-toggle .theme-icon-moon {
-    display: none !important;
+  display: none !important;
 }
 
 html[data-theme="dark"] .homzen-theme-toggle .theme-icon-sun,
 html[data-theme="dark"] .darli-theme-toggle .theme-icon-sun {
-    display: block !important;
+  display: block !important;
 }
 
 @media (max-width: 767px) {
-    .top-header-right>.homzen-theme-toggle {
-        display: none;
-    }
+  .top-header-right > .homzen-theme-toggle {
+    display: none;
+  }
 }
 
 @media (max-width: 991px) {
-    html[data-theme="dark"] :where(.mobile-menu, .mobile-nav, .offcanvas, .menu-box) {
-        background-color: var(--homzen-dark-surface) !important;
-    }
+  html[data-theme="dark"]
+    :where(.mobile-menu, .mobile-nav, .offcanvas, .menu-box) {
+    background-color: var(--homzen-dark-surface) !important;
+  }
 }
 
 @media (min-width: 768px) {
-    .mobi-icon-box .homzen-theme-toggle {
-        display: none;
-    }
+  .mobi-icon-box .homzen-theme-toggle {
+    display: none;
+  }
 }
 
 /* Homzen navigation, tabs and interactive controls. */
-html[data-theme="dark"] :where(.main-header.header-style-2.is-fixed,
+html[data-theme="dark"]
+  :where(
+    .main-header.header-style-2.is-fixed,
     .main-menu,
     .main-header .main-menu .navigation > li > ul,
     .main-header .main-menu .navigation > li > ul > li > ul,
     .mobile-menu .nav-logo,
     .offcanvas.canvas-menu .offcanvas-header,
     .box-navigation .navigation,
-    .progress-wrap) {
-    background-color: var(--hz-bg-card) !important;
-    border-color: var(--hz-border) !important;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
+    .progress-wrap
+  ) {
+  background-color: var(--hz-bg-card) !important;
+  border-color: var(--hz-border) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
 }
 
-html[data-theme="dark"] :where(.main-header.header-style-2.is-fixed .header-account ul li a,
+html[data-theme="dark"]
+  :where(
+    .main-header.header-style-2.is-fixed .header-account ul li a,
     .main-header.header-style-2.is-fixed .navigation > li > a,
     .main-header .main-menu .navigation > li > a,
     .main-header .main-menu .navigation > li > ul a,
@@ -293,139 +385,212 @@ html[data-theme="dark"] :where(.main-header.header-style-2.is-fixed .header-acco
     .mobile-menu .navigation li.dropdown2 .dropdown2-btn::before,
     .mobile-menu .mobi-icon-box .icon,
     .canvas-menu .menu-outer .sub-nav-menu .sub-nav-link,
-    .box-navigation .navigation .icon) {
-    color: var(--hz-text) !important;
+    .box-navigation .navigation .icon
+  ) {
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] .main-header .main-menu .navigation>li>ul>li>a {
-    border-bottom-color: var(--hz-border) !important;
+html[data-theme="dark"] .main-header .main-menu .navigation > li > ul > li > a {
+  border-bottom-color: var(--hz-border) !important;
 }
 
-html[data-theme="dark"] .mobile-menu .navigation li.dropdown2 .dropdown2-btn::before {
-    color: var(--hz-text) !important;
+html[data-theme="dark"]
+  .mobile-menu
+  .navigation
+  li.dropdown2
+  .dropdown2-btn::before {
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.flat-tab-form .nav-tab-form .nav-link-item,
+html[data-theme="dark"]
+  :where(
+    .flat-tab-form .nav-tab-form .nav-link-item,
     .nav-tab-recommended .nav-link-item,
-    .widget-filter-search .nav-tab-form .nav-link-item) {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text-secondary) !important;
+    .widget-filter-search .nav-tab-form .nav-link-item
+  ) {
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text-secondary) !important;
 }
 
-html[data-theme="dark"] :where(.flat-tab-form .nav-tab-form .nav-link-item.active,
+html[data-theme="dark"]
+  :where(
+    .flat-tab-form .nav-tab-form .nav-link-item.active,
     .flat-tab-form .nav-tab-form .nav-link-item:hover,
     .nav-tab-recommended .nav-link-item.active,
     .nav-tab-recommended .nav-link-item:hover,
-    .widget-filter-search .nav-tab-form .nav-link-item.active) {
-    background-color: var(--primary-color, var(--hz-red)) !important;
-    border-color: var(--primary-color, var(--hz-red)) !important;
-    color: #fff !important;
+    .widget-filter-search .nav-tab-form .nav-link-item.active
+  ) {
+  background-color: var(--primary-color, var(--hz-red)) !important;
+  border-color: var(--primary-color, var(--hz-red)) !important;
+  color: #fff !important;
 }
 
-html[data-theme="dark"] :where(.tf-btn:not(.primary),
+html[data-theme="dark"]
+  :where(
+    .tf-btn:not(.primary),
     .btn-light,
     .btn-outline-dark,
     .btn-outline-secondary,
-    .box-icon.social.square) {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+    .box-icon.social.square
+  ) {
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.site-notice__customize,
-    .site-notice__reject,
-    .site-notice__approve) {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+html[data-theme="dark"]
+  :where(.site-notice__customize, .site-notice__reject, .site-notice__approve) {
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.btn-view .text,
+html[data-theme="dark"]
+  :where(
+    .btn-view .text,
     .btn-read-more,
     .filter-advanced,
     .text-advanced,
     .search-box .right-icon,
     .wd-find-select .inner-group .box-filter .filter-advanced,
-    .wd-filter-select .filter-advanced .icon) {
-    color: var(--hz-text) !important;
-    border-color: var(--hz-text) !important;
+    .wd-filter-select .filter-advanced .icon
+  ) {
+  color: var(--hz-text) !important;
+  border-color: var(--hz-text) !important;
 }
 
 /* Search, filters and form widgets. */
-html[data-theme="dark"] :where(.wd-filter-select,
+html[data-theme="dark"]
+  :where(
+    .wd-filter-select,
     .widget-filter-search .inner-group .form-btn-fixed,
     .offcanvas.canvas-filter-mb .nav-tab-form,
     .nice-select .nice-select-search-wrapper,
     .nice-select .nice-select-loader,
-    .search-box-offcanvas .search-box-offcanvas-content .search-box-offcanvas-header) {
-    background-color: var(--hz-bg-card) !important;
-    border-color: var(--hz-border) !important;
+    .search-box-offcanvas
+      .search-box-offcanvas-content
+      .search-box-offcanvas-header
+  ) {
+  background-color: var(--hz-bg-card) !important;
+  border-color: var(--hz-border) !important;
 }
 
-html[data-theme="dark"] :where(.dashboard,
+html[data-theme="dark"]
+  :where(
+    .dashboard,
     .wd-find-select.style-3 .form-control,
     .wd-find-select.style-3 .nice-select,
     .wd-find-select.style-3 .inner-group,
     .offcanvas.canvas-filter-mb,
     .offcanvas.canvas-filter-mb .canvas-content,
     .offcanvas.canvas-filter-mb .wd-find-select,
-    .search-box-offcanvas .search-box-offcanvas-content) {
-    background-color: var(--hz-bg-secondary) !important;
-    border-color: var(--hz-border) !important;
+    .search-box-offcanvas .search-box-offcanvas-content
+  ) {
+  background-color: var(--hz-bg-secondary) !important;
+  border-color: var(--hz-border) !important;
 }
 
-html[data-theme="dark"] :where(.wd-find-select .form-control,
+html[data-theme="dark"]
+  :where(
+    .wd-find-select .form-control,
     .wd-find-select .nice-select,
     .wd-find-select .current,
     .wd-filter-select .form-control,
     .wd-filter-select .nice-select,
+    .box-title-listing .nice-select,
+    .box-filter-tab .nice-select,
+    .nice-select,
+    .nice-select .current,
     .nice-select .option,
     .nice-select .nice-select-search,
-    .search-box .search-field) {
-    color: var(--hz-text) !important;
+    .search-box .search-field
+  ) {
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.wd-find-select .form-control,
+html[data-theme="dark"] .nice-select:after {
+  border-bottom-color: var(--hz-text) !important;
+  border-right-color: var(--hz-text) !important;
+}
+
+html[data-theme="dark"]
+  :where(
+    .nav-tab-filter .nav-link-item,
+    .nav-tab-filter .nav-link-item .icon,
+    .nav-tab-filter .nav-link-item svg
+  ) {
+  color: #8e96a3 !important;
+  stroke: #8e96a3 !important;
+}
+
+html[data-theme="dark"]
+  :where(
+    .nav-tab-filter .nav-link-item.active,
+    .nav-tab-filter .nav-link-item.active .icon,
+    .nav-tab-filter .nav-link-item.active svg
+  ) {
+  color: var(--darli-gold, #c99a45) !important;
+  stroke: var(--darli-gold, #c99a45) !important;
+}
+
+html[data-theme="dark"] :where(.reset-filter-btn, .reset-filter-btn svg) {
+  color: #aeb6c2 !important;
+  stroke: #aeb6c2 !important;
+}
+
+html[data-theme="dark"] .btn-filter-mobile svg {
+  stroke: var(--hz-text) !important;
+}
+
+html[data-theme="dark"]
+  :where(
+    .wd-find-select .form-control,
     .wd-filter-select .form-control,
-    .search-box .search-field)::placeholder {
-    color: var(--hz-text-muted) !important;
-    opacity: 1;
+    .search-box .search-field
+  )::placeholder {
+  color: var(--hz-text-muted) !important;
+  opacity: 1;
 }
 
-html[data-theme="dark"] :where(.wd-find-select label,
+html[data-theme="dark"]
+  :where(
+    .wd-find-select label,
     .wd-filter-select label,
     .wd-search-form .title-price,
     .wd-search-form .text-cb-amenities,
     .widget-filter-search .title-select,
-    .widget-filter-search .widget-price .title-price) {
-    color: var(--hz-text-secondary) !important;
+    .widget-filter-search .widget-price .title-price
+  ) {
+  color: var(--hz-text-secondary) !important;
 }
 
 html[data-theme="dark"] .nice-select .list::-webkit-scrollbar-track {
-    background: var(--hz-bg-card);
+  background: var(--hz-bg-card);
 }
 
 html[data-theme="dark"] .nice-select .list::-webkit-scrollbar-thumb {
-    background: #596271;
+  background: #596271;
 }
 
 html[data-theme="dark"] :where(.noUi-target, .noUi-connects) {
-    background-color: var(--hz-border) !important;
-    border-color: var(--hz-border) !important;
+  background-color: var(--hz-border) !important;
+  border-color: var(--hz-border) !important;
 }
 
 html[data-theme="dark"] .noUi-connect {
-    background-color: var(--primary-color, var(--hz-red)) !important;
+  background-color: var(--primary-color, var(--hz-red)) !important;
 }
 
 html[data-theme="dark"] .noUi-horizontal .noUi-handle {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-text) !important;
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-text) !important;
 }
 
 /* Content sections and every repeated Homzen component. */
-html[data-theme="dark"] :where(.flat-slider.home-2,
+html[data-theme="dark"]
+  :where(
+    .flat-slider.home-2,
     .flat-title-page,
     .flat-quote,
     .blog-tag,
@@ -445,13 +610,16 @@ html[data-theme="dark"] :where(.flat-slider.home-2,
     .box-pricing,
     .contact-info,
     .agent-detail-section .agent-header,
-    .bd-callout) {
-    background-color: var(--hz-bg-secondary) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+    .bd-callout
+  ) {
+  background-color: var(--hz-bg-secondary) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.info-box,
+html[data-theme="dark"]
+  :where(
+    .info-box,
     .mortgage-calculator,
     .mortgage-calculator__input-wrapper,
     .mortgage-calculator__results,
@@ -476,13 +644,16 @@ html[data-theme="dark"] :where(.info-box,
     .widget-box-single,
     .box-contact-v2,
     .flat-account .btn-login-social,
-    .search-suggestion) {
-    background-color: var(--hz-bg-card) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+    .search-suggestion
+  ) {
+  background-color: var(--hz-bg-card) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.flat-slider-detail-v1 .icon-box .item,
+html[data-theme="dark"]
+  :where(
+    .flat-slider-detail-v1 .icon-box .item,
     .header-property-detail .content-bottom .icon-box .item,
     .single-property-video .img-video .btn-video,
     .single-property-explore .box-img .box-icon,
@@ -490,13 +661,16 @@ html[data-theme="dark"] :where(.flat-slider-detail-v1 .icon-box .item,
     .single-property-gallery .box-navigation .navigation,
     .contact-info .box .box-social .item,
     .box-agent .content .icon-phone,
-    .homeya-categories.style-1 .box-icon) {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+    .homeya-categories.style-1 .box-icon
+  ) {
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.single-property-info .inner-box,
+html[data-theme="dark"]
+  :where(
+    .single-property-info .inner-box,
     .single-property-feature .box-feature,
     .single-property-nearby .item-nearby,
     .single-property-attachments .attachments-item,
@@ -504,11 +678,14 @@ html[data-theme="dark"] :where(.single-property-info .inner-box,
     .career-list .career-item,
     .post-navigation,
     .list-review-item,
-    .sidebar-blog .categories .categories-item) {
-    border-color: var(--hz-border) !important;
+    .sidebar-blog .categories .categories-item
+  ) {
+  border-color: var(--hz-border) !important;
 }
 
-html[data-theme="dark"] :where(.single-detail.ck-content i:not([class]),
+html[data-theme="dark"]
+  :where(
+    .single-detail.ck-content i:not([class]),
     .single-detail.ck-content ol li:not([class]),
     .single-detail.ck-content p:not([class]),
     .single-detail.ck-content table td:not([class]),
@@ -518,27 +695,35 @@ html[data-theme="dark"] :where(.single-detail.ck-content i:not([class]),
     .flat-quote .quote,
     .sidebar-blog .recent .title,
     .career-list .career-title,
-    .career-single .career-content) {
-    color: var(--hz-text) !important;
+    .career-single .career-content
+  ) {
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.text-black,
+html[data-theme="dark"]
+  :where(
+    .text-black,
     .text-dark,
     .header-property-detail .meta-item,
     .wrap-property-v2 .list-info .item,
     .box-location .content .title,
     .homeya-categories .content,
     .flat-title-page h2,
-    .flat-title-page .h2) {
-    color: var(--hz-text) !important;
+    .flat-title-page .h2
+  ) {
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.text-muted, .career-meta-item, .career-description) {
-    color: var(--hz-text-secondary) !important;
+html[data-theme="dark"]
+  :where(.text-muted, .career-meta-item, .career-description) {
+  color: var(--hz-text-secondary) !important;
 }
 
 /* Bootstrap and the native Laravel pages. */
-html[data-theme="dark"] body.native-app :where(.navbar,
+html[data-theme="dark"]
+  body.native-app
+  :where(
+    .navbar,
     footer,
     .card-property,
     .admin-stat,
@@ -546,185 +731,210 @@ html[data-theme="dark"] body.native-app :where(.navbar,
     article.border,
     aside .border,
     .mx-auto.border,
-    .row > [class*="col-"] > .border) {
-    background-color: var(--hz-bg-card) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+    .row > [class*="col-"] > .border
+  ) {
+  background-color: var(--hz-bg-card) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] body.native-app :where(.bg-light, form.bg-light, .alert-light, .hero-shell) {
-    background: var(--hz-bg-secondary) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+html[data-theme="dark"]
+  body.native-app
+  :where(.bg-light, form.bg-light, .alert-light, .hero-shell) {
+  background: var(--hz-bg-secondary) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] body.native-app :where(.navbar-brand,
+html[data-theme="dark"]
+  body.native-app
+  :where(
+    .navbar-brand,
     .navbar-nav .nav-link,
     .card-property a,
     .list-group-item,
     dt,
     dd,
     label,
-    strong) {
-    color: var(--hz-text) !important;
+    strong
+  ) {
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] body.native-app .navbar-collapse {
-    background-color: var(--hz-bg-card);
+  background-color: var(--hz-bg-card);
 }
 
 html[data-theme="dark"] body.native-app .navbar-toggler {
-    background-color: var(--hz-bg-input);
-    border-color: var(--hz-border);
+  background-color: var(--hz-bg-input);
+  border-color: var(--hz-border);
 }
 
 html[data-theme="dark"] body.native-app .navbar-toggler-icon {
-    filter: invert(1) grayscale(1);
+  filter: invert(1) grayscale(1);
 }
 
-html[data-theme="dark"] :where(.bg-light, .bg-white, .text-bg-light, .badge.text-bg-light) {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+html[data-theme="dark"]
+  :where(.bg-light, .bg-white, .text-bg-light, .badge.text-bg-light) {
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.flag-tag.style-2,
+html[data-theme="dark"]
+  :where(
+    .flag-tag.style-2,
     .mortgage-calculator__input-suffix,
-    .card-header.bg-body-tertiary) {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+    .card-header.bg-body-tertiary
+  ) {
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] .flag-tag.style-2,
 html[data-theme="dark"] .mortgage-calculator .mortgage-calculator__input-suffix,
 html[data-theme="dark"] .auth-card .card-header.bg-body-tertiary,
 html[data-theme="dark"] button.box-icon[data-bb-toggle="add-to-wishlist"] {
-    background-color: var(--hz-bg-input) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+  background-color: var(--hz-bg-input) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.flat-title-page .page-title,
+html[data-theme="dark"]
+  :where(
+    .flat-title-page .page-title,
     [style*="color: #161e2d"],
-    [style*="color:#161e2d"]) {
-    color: var(--hz-text) !important;
+    [style*="color:#161e2d"]
+  ) {
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] :where(.alert, .list-group-item, .dropdown-menu) {
-    border-color: var(--hz-border) !important;
+  border-color: var(--hz-border) !important;
 }
 
 html[data-theme="dark"] :where(.alert-info, .alert-light) {
-    background-color: #172735 !important;
-    color: #b9dcf5 !important;
+  background-color: #172735 !important;
+  color: #b9dcf5 !important;
 }
 
 html[data-theme="dark"] :where(.alert-success) {
-    background-color: #122c23 !important;
-    color: #aee8cc !important;
+  background-color: #122c23 !important;
+  color: #aee8cc !important;
 }
 
 html[data-theme="dark"] :where(.alert-danger) {
-    background-color: #35191c !important;
-    color: #ffb9bf !important;
+  background-color: #35191c !important;
+  color: #ffb9bf !important;
 }
 
 html[data-theme="dark"] :where(.table, .table-responsive) {
-    --bs-table-bg: var(--hz-bg-card);
-    --bs-table-color: var(--hz-text);
-    --bs-table-border-color: var(--hz-border);
-    color: var(--hz-text) !important;
+  --bs-table-bg: var(--hz-bg-card);
+  --bs-table-color: var(--hz-text);
+  --bs-table-border-color: var(--hz-border);
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] :where(.table thead th, .table tbody td) {
-    background-color: var(--hz-bg-card) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+  background-color: var(--hz-bg-card) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.page-link.active, .active > .page-link, .pagination .active span) {
-    background-color: var(--primary-color, var(--hz-red)) !important;
-    border-color: var(--primary-color, var(--hz-red)) !important;
-    color: #fff !important;
+html[data-theme="dark"]
+  :where(.page-link.active, .active > .page-link, .pagination .active span) {
+  background-color: var(--primary-color, var(--hz-red)) !important;
+  border-color: var(--primary-color, var(--hz-red)) !important;
+  color: #fff !important;
 }
 
 /* Leaflet uses a real dark tile set, with matching controls, clusters and popups. */
 html[data-theme="dark"] .leaflet-container {
-    background: #0d1117 !important;
-    color: var(--hz-text) !important;
+  background: #0d1117 !important;
+  color: var(--hz-text) !important;
 }
 
-html[data-theme="dark"] :where(.leaflet-bar,
+html[data-theme="dark"]
+  :where(
+    .leaflet-bar,
     .leaflet-control-zoom,
     .leaflet-control-layers,
-    .leaflet-control-attribution) {
-    background: rgba(27, 31, 36, 0.96) !important;
-    border-color: var(--hz-border) !important;
-    color: var(--hz-text-secondary) !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+    .leaflet-control-attribution
+  ) {
+  background: rgba(27, 31, 36, 0.96) !important;
+  border-color: var(--hz-border) !important;
+  color: var(--hz-text-secondary) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
 html[data-theme="dark"] .leaflet-control-zoom a {
-    background: var(--hz-bg-card) !important;
-    border-bottom-color: var(--hz-border) !important;
-    color: var(--hz-text) !important;
+  background: var(--hz-bg-card) !important;
+  border-bottom-color: var(--hz-border) !important;
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] .leaflet-control-zoom a:hover {
-    background: var(--hz-bg-hover) !important;
+  background: var(--hz-bg-hover) !important;
 }
 
 html[data-theme="dark"] .leaflet-control-attribution a {
-    color: #8fc7ff !important;
+  color: #8fc7ff !important;
 }
 
-html[data-theme="dark"] :where(.leaflet-popup-content-wrapper, .leaflet-popup-tip) {
-    background: var(--hz-bg-card) !important;
-    color: var(--hz-text) !important;
+html[data-theme="dark"]
+  :where(.leaflet-popup-content-wrapper, .leaflet-popup-tip) {
+  background: var(--hz-bg-card) !important;
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] .leaflet-popup-close-button {
-    color: var(--hz-text-secondary) !important;
+  color: var(--hz-text-secondary) !important;
 }
 
-html[data-theme="dark"] :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) {
-    background-color: rgba(239, 20, 20, 0.28) !important;
+html[data-theme="dark"]
+  :where(.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large) {
+  background-color: rgba(239, 20, 20, 0.28) !important;
 }
 
-html[data-theme="dark"] :where(.marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div) {
-    background-color: var(--primary-color, var(--hz-red)) !important;
-    color: #fff !important;
+html[data-theme="dark"]
+  :where(
+    .marker-cluster-small div,
+    .marker-cluster-medium div,
+    .marker-cluster-large div
+  ) {
+  background-color: var(--primary-color, var(--hz-red)) !important;
+  color: #fff !important;
 }
 
 html[data-theme="dark"] .map-listing-item {
-    background-color: var(--hz-bg-card) !important;
-    color: var(--hz-text) !important;
+  background-color: var(--hz-bg-card) !important;
+  color: var(--hz-text) !important;
 }
 
 html[data-theme="dark"] .leaflet-tile {
-    filter: none !important;
+  filter: none !important;
 }
 
 html[data-theme="dark"] ::selection {
-    background: var(--primary-color, var(--hz-red));
-    color: #fff;
+  background: var(--primary-color, var(--hz-red));
+  color: #fff;
 }
 
 html[data-theme="dark"] {
-    scrollbar-color: #596271 var(--hz-bg);
+  scrollbar-color: #596271 var(--hz-bg);
 }
 
 @media (max-width: 991px) {
-    body.native-app .native-nav-actions {
-        align-items: stretch !important;
-        flex-wrap: wrap;
-        padding: 12px 0;
-    }
+  body.native-app .native-nav-actions {
+    align-items: stretch !important;
+    flex-wrap: wrap;
+    padding: 12px 0;
+  }
 
-    html[data-theme="dark"] body.native-app .navbar-collapse {
-        border-top: 1px solid var(--hz-border);
-        margin-top: 10px;
-        padding-top: 10px;
-    }
+  html[data-theme="dark"] body.native-app .navbar-collapse {
+    border-top: 1px solid var(--hz-border);
+    margin-top: 10px;
+    padding-top: 10px;
+  }
 }

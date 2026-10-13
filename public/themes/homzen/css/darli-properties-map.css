@@ -1,0 +1,1251 @@
+/* ==========================================================================
+   DARLI PROPERTIES SPLIT SCREEN & INTERACTIVE MAP STYLES
+   Exact implementation of the split map + 3-col listing design
+   ========================================================================== */
+
+:root {
+  --darli-gold: #c9933b;
+  --darli-gold-hover: #b5802a;
+  --darli-gold-light: #fef8ee;
+  --darli-gold-border: #f9e2b8;
+  --darli-navy: #0f2b46;
+  --darli-navy-dark: #0a1c2e;
+  --darli-navy-soft: #1e3a5f;
+  --darli-text-dark: #0d1b3e;
+  --darli-text-muted: #64748b;
+  --darli-bg-page: #f8fafc;
+  --darli-card-bg: #ffffff;
+  --darli-card-border: #edf2f7;
+  --darli-card-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+/* Page Container */
+.darli-properties-page {
+  background-color: var(--darli-bg-page);
+  min-height: 100vh;
+  padding-top: 18px;
+  padding-bottom: 50px;
+  font-family: "Cairo", sans-serif;
+  color: var(--darli-text-dark);
+}
+
+.darli-properties-split-container {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 22px;
+  align-items: flex-start;
+}
+
+/* RTL handling: 
+   Content pane is 1st in DOM, in RTL it sits on the RIGHT (~58%).
+   Map pane is 2nd in DOM, in RTL it sits on the LEFT (~42%).
+*/
+.darli-split-content-pane {
+  flex: 1 1 58%;
+  min-width: 0;
+}
+
+.darli-split-map-pane {
+  flex: 0 0 42%;
+  width: 42%;
+  min-width: 380px;
+  position: sticky;
+  top: 86px;
+  height: calc(100vh - 180px);
+  max-height: 660px;
+  min-height: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--darli-card-border);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+  background: #e2e8f0;
+  z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT CONTENT PANE
+   -------------------------------------------------------------------------- */
+
+/* Breadcrumb */
+.darli-prop-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+.darli-prop-breadcrumb a {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.darli-prop-breadcrumb a:hover {
+  color: var(--darli-gold);
+}
+.darli-prop-breadcrumb span.sep {
+  color: #cbd5e1;
+  font-size: 11px;
+}
+
+/* Header row */
+.darli-prop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 16px;
+}
+
+.darli-prop-title-box {
+  flex: 1;
+}
+
+.darli-prop-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.darli-prop-subtitle {
+  font-size: 13px;
+  color: var(--darli-text-muted);
+  margin: 0;
+}
+
+/* City Badge Card */
+.darli-city-badge-card {
+  background: var(--darli-card-bg);
+  border: 1px solid var(--darli-card-border);
+  border-radius: 12px;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--darli-card-shadow);
+  flex-shrink: 0;
+}
+
+.darli-city-badge-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--darli-gold-light);
+  border: 1px solid var(--darli-gold-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--darli-gold);
+  flex-shrink: 0;
+}
+
+.darli-city-badge-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.darli-city-badge-name {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+  line-height: 1.2;
+}
+
+.darli-city-badge-count {
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   HORIZONTAL FILTER BAR
+   -------------------------------------------------------------------------- */
+.darli-prop-filter-card {
+  background: var(--darli-card-bg);
+  border: 1px solid var(--darli-card-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: var(--darli-card-shadow);
+  margin-bottom: 18px;
+}
+
+.darli-filter-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.darli-filter-field {
+  flex: 1 1 0;
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.darli-filter-field.search-field {
+  flex: 1.4 1 0;
+  min-width: 140px;
+}
+
+.darli-filter-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--darli-text-dark);
+  margin: 0;
+}
+
+.darli-input-icon-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.darli-input-icon-wrap .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.darli-filter-input {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0 10px 0 28px;
+  font-size: 12.5px;
+  font-family: "Cairo", sans-serif;
+  color: var(--darli-text-dark);
+  background: #ffffff;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.darli-filter-input:focus {
+  border-color: var(--darli-gold);
+  box-shadow: 0 0 0 3px rgba(201, 147, 59, 0.12);
+}
+
+.darli-filter-select {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0 22px 0 8px;
+  font-size: 12.5px;
+  font-family: "Cairo", sans-serif;
+  color: var(--darli-text-dark);
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 8px center;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.darli-filter-select:focus {
+  border-color: var(--darli-gold);
+  box-shadow: 0 0 0 3px rgba(201, 147, 59, 0.12);
+}
+
+.darli-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.darli-filter-btn-reset {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.darli-filter-btn-reset:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.darli-filter-btn-submit {
+  height: 38px;
+  padding: 0 14px;
+  border: none;
+  background: var(--darli-gold);
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+
+.darli-filter-btn-submit:hover {
+  background: var(--darli-gold-hover);
+}
+
+.darli-filter-btn-submit:active {
+  transform: scale(0.98);
+}
+
+.darli-filter-btn-submit:hover {
+  background: var(--darli-gold-hover);
+}
+
+.darli-filter-btn-submit:active {
+  transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   SUB-BAR: Count + Layout Switcher + Sort Dropdown
+   -------------------------------------------------------------------------- */
+.darli-prop-subbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.darli-prop-count-badge {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+}
+
+.darli-prop-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.darli-view-toggles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.darli-view-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.darli-view-btn:hover {
+  border-color: #cbd5e1;
+  color: var(--darli-text-dark);
+}
+
+.darli-view-btn.active {
+  background: var(--darli-gold);
+  border-color: var(--darli-gold);
+  color: #ffffff;
+}
+
+.darli-sort-select {
+  height: 32px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0 24px 0 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 8px center;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  outline: none;
+  font-family: "Cairo", sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   PROPERTIES GRID & CARDS (3 Columns)
+   -------------------------------------------------------------------------- */
+.darli-props-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.darli-props-grid.view-list {
+  grid-template-columns: 1fr;
+}
+
+.darli-props-grid.view-list .darli-prop-card {
+  flex-direction: row;
+  height: 190px;
+}
+
+.darli-props-grid.view-list .darli-prop-card-media {
+  width: 260px;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* Individual Card */
+.darli-prop-card {
+  background: var(--darli-card-bg);
+  border: 1px solid var(--darli-card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--darli-card-shadow);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.darli-prop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.09);
+  border-color: #e2e8f0;
+}
+
+.darli-prop-card.active-marker {
+  border-color: var(--darli-gold);
+  box-shadow:
+    0 0 0 2px var(--darli-gold),
+    0 10px 26px rgba(201, 147, 59, 0.2);
+}
+
+/* Card Media / Thumbnail */
+.darli-prop-card-media {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.darli-prop-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  display: block;
+}
+
+.darli-prop-card:hover .darli-prop-card-media img {
+  transform: scale(1.05);
+}
+
+/* Badges on Image */
+/* Top-left: Container for Badges */
+.darli-badges-top-left {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.darli-badge-sold {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffffff !important;
+  background: #10b981 !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+}
+
+/* Purpose Badge (للبيع / للإيجار) */
+.darli-badge-purpose {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffffff;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.darli-badges-top-left .darli-badge-purpose {
+  position: static;
+  top: auto;
+  left: auto;
+}
+
+.darli-badge-purpose.sale {
+  background: var(--darli-gold);
+}
+
+.darli-badge-purpose.rent {
+  background: var(--darli-navy);
+}
+
+/* Top-right: Wishlist Heart */
+.darli-badge-wishlist {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  border: none;
+  transition:
+    background-color 0.2s,
+    transform 0.15s;
+  padding: 0;
+}
+
+.darli-badge-wishlist:hover {
+  background: #e11d48;
+  transform: scale(1.1);
+}
+
+.darli-badge-wishlist.active {
+  background: #e11d48;
+}
+
+/* Bottom-left: Category Pill */
+.darli-badge-category {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--darli-text-dark);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
+/* Card Body */
+.darli-prop-card-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.darli-prop-card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+  text-decoration: none;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.darli-prop-card-title:hover {
+  color: var(--darli-gold);
+}
+
+.darli-prop-card-loc {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--darli-text-muted);
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.darli-prop-loc-pin {
+  color: var(--darli-gold);
+  flex-shrink: 0;
+}
+
+.darli-prop-card-price {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--darli-gold);
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.darli-prop-card-price .rent-period {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--darli-text-muted);
+}
+
+.darli-prop-card-divider {
+  border-top: 1px solid #f1f5f9;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.darli-prop-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.darli-prop-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.darli-prop-meta-item svg {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT PANE: INTERACTIVE MAP & FLOATING ELEMENTS
+   -------------------------------------------------------------------------- */
+#darli-properties-map {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: #e5e9f0;
+}
+
+/* Top Floating Purpose Card */
+.darli-map-purpose-card {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 6px 14px;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #edf2f7;
+  white-space: nowrap;
+}
+
+.darli-map-purpose-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition:
+    background-color 0.2s,
+    opacity 0.2s;
+  user-select: none;
+}
+
+.darli-map-purpose-item:hover {
+  background: #f8fafc;
+}
+
+.darli-map-purpose-item.active {
+  background: #f1f5f9;
+}
+
+.darli-map-purpose-item.inactive {
+  opacity: 0.45;
+}
+
+.darli-map-purpose-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.darli-map-purpose-icon.sale {
+  background: var(--darli-gold);
+}
+
+.darli-map-purpose-icon.rent {
+  background: var(--darli-navy);
+}
+
+.darli-map-purpose-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.darli-map-purpose-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+  line-height: 1.2;
+}
+
+.darli-map-purpose-sub {
+  font-size: 10.5px;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+.darli-map-purpose-divider {
+  width: 1px;
+  height: 30px;
+  background: #e2e8f0;
+}
+
+/* Bottom Floating Controls */
+.darli-map-btn-type-wrap {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1050;
+}
+
+.darli-map-btn-type {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 14px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--darli-text-dark);
+  transition: background-color 0.2s;
+  user-select: none;
+}
+
+.darli-map-btn-type:hover {
+  background: #f8fafc;
+}
+
+.darli-map-layer-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  z-index: 1060;
+}
+
+.darli-map-layer-menu.open {
+  display: flex;
+}
+
+.darli-map-layer-item {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--darli-text-dark);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.darli-map-layer-item:hover,
+.darli-map-layer-item.active {
+  background: #f1f5f9;
+  color: var(--darli-gold);
+}
+
+.darli-map-btn-area {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1050;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--darli-text-dark);
+  transition: background-color 0.2s;
+  user-select: none;
+}
+
+.darli-map-btn-area:hover {
+  background: #f8fafc;
+  color: var(--darli-gold);
+}
+
+/* --------------------------------------------------------------------------
+   CUSTOM LEAFLET MARKERS
+   -------------------------------------------------------------------------- */
+.darli-custom-marker {
+  background: transparent;
+  border: none;
+}
+
+.darli-marker-wrapper {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.25));
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.darli-marker-wrapper:hover,
+.darli-marker-wrapper.active {
+  transform: scale(1.12);
+  z-index: 1000 !important;
+  filter: drop-shadow(0 8px 20px rgba(15, 23, 42, 0.35));
+}
+
+.darli-marker-wrapper.is-compact .darli-marker-badge {
+  display: none;
+}
+
+.darli-marker-wrapper.is-compact:hover .darli-marker-badge,
+.darli-marker-wrapper.is-compact.active .darli-marker-badge {
+  display: flex;
+}
+
+/* Teardrop Pin on Left */
+.darli-marker-pin {
+  width: 38px;
+  height: 38px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  border: 2px solid #ffffff;
+}
+
+.darli-marker-pin.sale {
+  background: linear-gradient(135deg, #d49b3d 0%, #b57f2a 100%);
+}
+
+.darli-marker-pin.rent {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0d1b3e 100%);
+}
+
+.darli-marker-pin.center {
+  background: linear-gradient(135deg, #e5a842 0%, #c9933b 100%);
+}
+
+.darli-marker-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transform: rotate(45deg);
+  background-size: cover;
+  background-position: center;
+  background-color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* Speech Badge on Right */
+.darli-marker-badge {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 3px 8px;
+  margin-right: -6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: nowrap;
+  border: 1px solid #f1f5f9;
+}
+
+.darli-marker-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.darli-marker-tag.sale {
+  background: var(--darli-gold);
+}
+
+.darli-marker-tag.rent {
+  background: var(--darli-navy);
+}
+
+.darli-marker-price {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   CUSTOM LEAFLET POPUP CARD
+   -------------------------------------------------------------------------- */
+.leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.18) !important;
+  border: 1px solid #eef2f6 !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-tip-container {
+  display: none !important;
+}
+
+.darli-popup-card {
+  width: 290px;
+  background: #ffffff;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  position: relative;
+  font-family: "Cairo", sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+.darli-popup-close {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 50%;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 10;
+}
+
+.darli-popup-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.darli-popup-thumb {
+  width: 78px;
+  height: 78px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e2e8f0;
+  flex-shrink: 0;
+}
+
+.darli-popup-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.darli-popup-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.darli-popup-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.darli-popup-badge.sale {
+  background: var(--darli-gold);
+}
+
+.darli-popup-badge.rent {
+  background: var(--darli-navy);
+}
+
+.darli-popup-badge.sold {
+  background: #10b981;
+}
+
+.darli-popup-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--darli-text-dark);
+  text-decoration: none;
+  margin-bottom: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.darli-popup-title:hover {
+  color: var(--darli-gold);
+}
+
+.darli-popup-loc {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--darli-text-muted);
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.darli-popup-price {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--darli-gold);
+  margin-top: auto;
+}
+
+/* --------------------------------------------------------------------------
+   DARK MODE ADAPTATIONS
+   -------------------------------------------------------------------------- */
+html[data-theme="dark"] .darli-properties-page {
+  background-color: #0b0f19;
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .darli-split-map-pane {
+  border-color: #1e293b;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .darli-prop-title {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .darli-prop-subtitle {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .darli-city-badge-card,
+html[data-theme="dark"] .darli-prop-filter-card,
+html[data-theme="dark"] .darli-prop-card,
+html[data-theme="dark"] .darli-map-purpose-card,
+html[data-theme="dark"] .darli-map-btn-type,
+html[data-theme="dark"] .darli-map-btn-area,
+html[data-theme="dark"] .darli-map-layer-menu,
+html[data-theme="dark"] .darli-popup-card {
+  background: #141b2d;
+  border-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .darli-city-badge-name,
+html[data-theme="dark"] .darli-filter-label,
+html[data-theme="dark"] .darli-prop-count-badge,
+html[data-theme="dark"] .darli-prop-card-title,
+html[data-theme="dark"] .darli-map-purpose-title,
+html[data-theme="dark"] .darli-map-btn-type,
+html[data-theme="dark"] .darli-map-btn-area,
+html[data-theme="dark"] .darli-map-layer-item,
+html[data-theme="dark"] .darli-popup-title {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .darli-filter-input,
+html[data-theme="dark"] .darli-filter-select,
+html[data-theme="dark"] .darli-sort-select {
+  background-color: #0d121f;
+  border-color: #1e293b;
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .darli-filter-btn-reset {
+  background: #0d121f;
+  border-color: #1e293b;
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .darli-view-btn {
+  background: #0d121f;
+  border-color: #1e293b;
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .darli-view-btn.active {
+  background: var(--darli-gold);
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .darli-prop-card-divider {
+  border-color: #1e293b;
+}
+
+html[data-theme="dark"] .darli-prop-card-meta {
+  color: #94a3b8;
+}
+
+html[data-theme="dark"] .darli-marker-badge {
+  background: #141b2d;
+  border-color: #1e293b;
+}
+
+html[data-theme="dark"] .darli-marker-price {
+  color: #f8fafc;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN (Tablets & Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .darli-props-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .darli-properties-split-container {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+
+  .darli-split-content-pane {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .darli-split-map-pane {
+    width: 100%;
+    flex: 1 1 100%;
+    position: relative;
+    top: 0;
+    height: 460px;
+    min-height: 460px;
+  }
+
+  .darli-filter-form {
+    flex-wrap: wrap;
+  }
+
+  .darli-filter-field {
+    flex: 1 1 calc(50% - 10px);
+  }
+
+  .darli-filter-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 640px) {
+  .darli-properties-split-container {
+    padding: 0 12px;
+  }
+
+  .darli-props-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .darli-prop-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .darli-filter-field {
+    flex: 1 1 100%;
+  }
+}

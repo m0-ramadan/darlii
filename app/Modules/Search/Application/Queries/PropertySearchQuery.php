@@ -1,6 +1,6 @@
 <?php
 namespace App\Modules\Search\Application\Queries; use App\Models\Property; use Illuminate\Database\Eloquent\Builder;
-class PropertySearchQuery {public function build(array $filters):Builder{$q=Property::query()->with(['translations','currency','media','amenities.translations'])->where('status','published');
+class PropertySearchQuery {public function build(array $filters):Builder{$q=Property::query()->with(['translations','currency','media','amenities.translations'])->whereIn('status',['published','sold']);
  if(!empty($filters['q']))$q->whereHas('translations',fn($t)=>$t->where('name','like','%'.$filters['q'].'%')->orWhere('description','like','%'.$filters['q'].'%'));
  if(!empty($filters['purpose']))$q->where('purpose',$filters['purpose']); if(!empty($filters['category_id']))$q->where('category_id',$filters['category_id']); if(!empty($filters['location_id']))$q->where('location_id',$filters['location_id']); if(isset($filters['min_price'])&&$filters['min_price']!=='')$q->where('price','>=',$filters['min_price']); if(isset($filters['max_price'])&&$filters['max_price']!=='')$q->where('price','<=',$filters['max_price']); if(!empty($filters['bedrooms']))$q->where('bedrooms','>=',$filters['bedrooms']);
  return match($filters['sort']??'newest'){'price_asc'=>$q->orderBy('price'),'price_desc'=>$q->orderByDesc('price'),'popular'=>$q->orderByDesc('views_count'),default=>$q->orderByDesc('published_at')};}}

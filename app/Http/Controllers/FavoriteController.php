@@ -103,7 +103,7 @@ class FavoriteController extends Controller
             'name' => $translation?->name ?? $property->reference_code,
             'slug' => $translation?->slug,
             'url' => url('/' . $locale . '/properties/' . ($translation?->slug ?? $property->id)),
-            'image' => $image ? url('/' . ltrim($image, '/')) : url('/storage/general/placeholder.png'),
+            'image' => $image ? url('/' . ltrim($image, '/')) : $property->placeholderUrl($locale),
             'address' => $translation?->address_text,
             'bedrooms' => $property->bedrooms,
             'bathrooms' => $property->bathrooms,

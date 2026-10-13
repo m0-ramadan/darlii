@@ -21,14 +21,15 @@ class LocalizedUrlResolver
 
         $segments = array_values(array_filter(
             explode('/', trim($path, '/')),
-            static fn (string $segment): bool => $segment !== ''
+            static fn(string $segment): bool => $segment !== ''
         ));
 
         if ($segments === []) {
             return $locale;
         }
 
-        if (in_array(strtolower($segments[0]), $supported, true)) {
+        $known = array_unique(array_merge($supported, ['ar', 'en', 'fr', 'id', 'vi']));
+        if (in_array(strtolower($segments[0]), $known, true)) {
             $segments[0] = $locale;
         } else {
             array_unshift($segments, $locale);
@@ -102,7 +103,12 @@ class LocalizedUrlResolver
         };
 
         try {
-            $entityId = $model::where('slug', $slug)->value($foreignKey);
+            if (is_numeric($slug)) {
+                $entityId = (int) $slug;
+            } else {
+                $entityId = $model::where('slug', $slug)->value($foreignKey);
+            }
+
             $englishSlug = $entityId
                 ? $model::where($foreignKey, $entityId)->where('locale', 'en')->value('slug')
                 : null;

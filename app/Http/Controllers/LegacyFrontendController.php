@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Admin\PageViewTracker;
 use App\Services\LegacyFrontend\LegacyFrontendRenderer;
 use App\Services\Localization\LocalizedUrlResolver;
 use App\Services\Preferences\VisitorPreferences;
@@ -27,11 +28,15 @@ class LegacyFrontendController extends Controller
 
         abort_if($html === null, 404);
 
+        PageViewTracker::track('home');
+
         return response($html)->header('Content-Type', 'text/html; charset=UTF-8');
     }
 
     public function page(Request $request, string $locale, string $path = ''): Response
     {
+        $segments = array_values(array_filter(explode('/', trim($path, '/'))));
+
         $resolved = trim($locale . '/' . $path, '/');
         $html = $this->renderer->render($request, $resolved);
 
@@ -48,6 +53,8 @@ class LegacyFrontendController extends Controller
         }
 
         abort_if($html === null, 404);
+
+        PageViewTracker::track($segments[0] ?? 'home', array_slice($segments, 1));
 
         return response($html)->header('Content-Type', 'text/html; charset=UTF-8');
     }

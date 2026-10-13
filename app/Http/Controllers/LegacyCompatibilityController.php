@@ -209,10 +209,23 @@ class LegacyCompatibilityController extends Controller
         ]);
     }
 
+    public function feed(Request $request, ?string $type = 'properties'): \Symfony\Component\HttpFoundation\Response
+    {
+        $type = $type ?: 'properties';
+        $file = storage_path('app/legacy-site/feed/' . $type);
+
+        if (is_file($file)) {
+            return response(file_get_contents($file))->header('Content-Type', 'application/xml; charset=UTF-8');
+        }
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Darlii Feed</title><link>' . url('/') . '</link><description>Darlii Feed</description></channel></rss>';
+        return response($xml)->header('Content-Type', 'application/xml; charset=UTF-8');
+    }
+
     private function localeFromRequest(Request $request): string
     {
-        $supported = config('locales.supported', []);
-        $first = explode('/', trim($request->path(), '/'))[0] ?? 'en';
+        $supported = config('locales.supported', ['ar', 'en']);
+        $first = explode('/', trim($request->path(), '/'))[0] ?? 'ar';
         if (in_array($first, $supported, true)) {
             return $first;
         }
@@ -226,7 +239,7 @@ class LegacyCompatibilityController extends Controller
         $refererPath = parse_url((string) $request->headers->get('referer'), PHP_URL_PATH);
         $refererLocale = explode('/', trim((string) $refererPath, '/'))[0] ?? null;
 
-        return in_array($refererLocale, $supported, true) ? $refererLocale : config('locales.default', 'en');
+        return in_array($refererLocale, $supported, true) ? $refererLocale : config('locales.default', 'ar');
     }
 
     private function success(Request $request, string $message): JsonResponse|RedirectResponse

@@ -47,19 +47,36 @@
             ? (isDark ? arDark : arLight)
             : (isDark ? enDark : enLight);
 
+        // Strictly target brand logo containers and images only!
         const selectors = [
             '.darli-logo-img',
-            '.navbar-brand img',
-            '.site-logo img',
+            '.nav-logo img',
+            '.navbar-brand > img',
+            '.site-logo > img',
+            '.footer-logo img',
             'footer img.darli-logo-img',
-            'img[src*="logo"]',
-            'img[src*="homzen"]'
+            'img[src*="/images/logo/darli-logo"]'
         ].join(', ');
 
         document.querySelectorAll(selectors).forEach(function (logo) {
-            // Avoid changing non-brand icons if any
+            // Strict guard: NEVER touch property images, cards, avatars, placeholders, or gallery photos!
+            if (
+                logo.closest('.card-property, .darli-property-card, .flat-item, .box-house, .agent-card-item, .property-gallery, .swiper-slide, .img-box, .box-img') ||
+                logo.classList.contains('darli-card-image') ||
+                logo.classList.contains('card-img') ||
+                logo.classList.contains('darli-testi-avatar') ||
+                logo.classList.contains('object-fit-cover')
+            ) {
+                return;
+            }
+
             const src = logo.getAttribute('src') || '';
-            if (src.includes('logo') || src.includes('darli') || src.includes('homzen') || logo.classList.contains('darli-logo-img')) {
+            if (src.includes('placeholder') || src.includes('properties') || src.includes('avatars')) {
+                return;
+            }
+
+            // Only update verified brand logo images
+            if (logo.classList.contains('darli-logo-img') || src.includes('/images/logo/darli-logo') || logo.closest('.nav-logo, .navbar-brand, .site-logo')) {
                 logo.setAttribute('src', logoSrc);
             }
         });

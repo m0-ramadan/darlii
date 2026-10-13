@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\Project;
 use App\Models\Property;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PropertyMapController extends Controller
 {
@@ -27,11 +29,12 @@ class PropertyMapController extends Controller
             ->orderByDesc('published_at');
 
         $properties = $query->paginate($perPage);
+        $defaultCurrency = env('DEFAULT_CURRENCY', 'EGP');
         $currencyCode = strtoupper((string) $request->query(
             'currency',
-            $request->hasSession() ? $request->session()->get('currency', 'USD') : 'USD'
+            $request->hasSession() ? $request->session()->get('currency', $defaultCurrency) : $defaultCurrency
         ));
-        $currency = Currency::where('code', $currencyCode)->first();
+        $currency = Currency::where('code', $currencyCode)->first() ?? Currency::where('code', 'EGP')->first();
 
         return response()->json([
             'data' => collect($properties->items())->map(fn (Property $property) => $this->marker($property, $locale, $currency))->values(),
@@ -82,6 +85,45 @@ class PropertyMapController extends Controller
         return response()->json(['data' => $html]);
     }
 
+    public function route(Request $request, ?string $locale = null): JsonResponse
+    {
+        $validated = $request->validate([
+            'origin_lat' => ['required', 'numeric', 'between:-90,90'],
+            'origin_lng' => ['required', 'numeric', 'between:-180,180'],
+            'destination_lat' => ['required', 'numeric', 'between:-90,90'],
+            'destination_lng' => ['required', 'numeric', 'between:-180,180'],
+        ]);
+        $key = (string) config('services.google_maps.key', '');
+        abort_if($key === '', 503, 'Google Routes is not configured.');
+
+        $response = Http::timeout(10)
+            ->withHeaders([
+                'X-Goog-Api-Key' => $key,
+                'X-Goog-FieldMask' => 'routes.distanceMeters,routes.duration,routes.polyline.encodedPolyline',
+            ])
+            ->post('https://routes.googleapis.com/directions/v2:computeRoutes', [
+                'origin' => ['location' => ['latLng' => ['latitude' => (float) $validated['origin_lat'], 'longitude' => (float) $validated['origin_lng']]]],
+                'destination' => ['location' => ['latLng' => ['latitude' => (float) $validated['destination_lat'], 'longitude' => (float) $validated['destination_lng']]]],
+                'travelMode' => 'DRIVE',
+                'routingPreference' => 'TRAFFIC_AWARE',
+                'languageCode' => $this->locale($request, $locale),
+                'units' => 'METRIC',
+            ]);
+
+        if ($response->failed()) {
+            return response()->json(['message' => 'Unable to calculate the route.'], $response->status() >= 500 ? 502 : $response->status());
+        }
+
+        $route = $response->json('routes.0');
+        abort_if(! is_array($route), 404, 'No route found.');
+
+        return response()->json([
+            'distance_meters' => $route['distanceMeters'] ?? 0,
+            'duration' => $route['duration'] ?? null,
+            'encoded_polyline' => $route['polyline']['encodedPolyline'] ?? null,
+        ]);
+    }
+
     private function bounds(Request $request): array
     {
         $keys = ['sw_lat', 'sw_lng', 'ne_lat', 'ne_lng'];
@@ -96,15 +138,15 @@ class PropertyMapController extends Controller
             }
         }
 
-        $governorate = (string) $request->query('governorate', config('egypt_map.default', 'cairo'));
+        $governorate = (string) $request->query('governorate', config('egypt_map.default', 'beni-suef'));
 
         return config('egypt_map.governorates.' . $governorate . '.bounds')
-            ?? config('egypt_map.governorates.cairo.bounds');
+            ?? config('egypt_map.governorates.beni-suef.bounds');
     }
 
     private function locale(Request $request, ?string $locale): string
     {
-        $supported = config('locales.supported', ['en']);
+        $supported = config('locales.supported', ['ar', 'en']);
         foreach ([$locale, $request->query('locale'), $request->cookie('homzen_locale')] as $candidate) {
             if (is_string($candidate) && in_array($candidate, $supported, true)) {
                 return $candidate;
@@ -122,8 +164,18 @@ class PropertyMapController extends Controller
         $translation = $property->translation($locale);
         $sourceRate = (float) ($property->currency?->exchange_rate ?: 1);
         $targetRate = (float) ($currency?->exchange_rate ?: 1);
-        $price = (float) $property->price / $sourceRate * $targetRate;
-        $formattedPrice = ($currency?->symbol ?? $property->currency?->symbol ?? '$') . number_format($price, $currency?->decimal_places ?? 0);
+        if ($property->isPriceOnContact()) {
+            $formattedPrice = $locale === 'ar' ? 'السعر عند التواصل' : 'Price on request';
+        } else {
+            $price = (float) $property->price / $sourceRate * $targetRate;
+            $num = number_format($price, $currency?->decimal_places ?? 0);
+            if ($currency?->code === 'EGP') {
+                $formattedPrice = $locale === 'ar' ? $num . ' ج.م' : $num . ' EGP';
+            } else {
+                $sym = $currency?->symbol ?? $property->currency?->symbol ?? '$';
+                $formattedPrice = ($currency?->symbol_position ?? 'before') === 'after' ? $num . ' ' . $sym : $sym . $num;
+            }
+        }
         $slug = $translation?->slug ?? $property->id;
         $image = $property->media->first()?->path;
 
@@ -133,7 +185,7 @@ class PropertyMapController extends Controller
             'longitude' => (float) $property->longitude,
             'name' => $translation?->name ?? $property->reference_code,
             'location' => $translation?->address_text ?? '',
-            'image_thumb' => $image ? url('/' . ltrim($image, '/')) : url('/storage/general/placeholder.png'),
+            'image_thumb' => $image ? url('/' . ltrim($image, '/')) : $property->placeholderUrl($locale),
             'formatted_price' => $formattedPrice,
             'url' => url('/' . $locale . '/properties/' . $slug),
             'status_html' => '<span class="flag-tag primary">' . e(ucfirst($property->purpose)) . '</span>',

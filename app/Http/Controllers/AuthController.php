@@ -1,9 +1,141 @@
 <?php
-namespace App\Http\Controllers; use App\Models\Role; use App\Models\User; use Illuminate\Auth\Events\Registered; use Illuminate\Http\Request; use Illuminate\Support\Facades\Auth; use Illuminate\Support\Facades\Password;
-class AuthController {
- public function loginForm(){return view('auth.login');} public function login(Request $r){$c=$r->validate(['email'=>['required','email'],'password'=>['required','string']]);if(!Auth::attempt($c,$r->boolean('remember')))return back()->withErrors(['email'=>__('auth.failed')])->onlyInput('email');$r->session()->regenerate();return redirect()->intended(route('home',['locale'=>app()->getLocale()]));}
- public function registerForm(){return view('auth.register');} public function register(Request $r){$d=$r->validate(['name'=>['nullable','string','max:120'],'first_name'=>['nullable','string','max:120'],'last_name'=>['nullable','string','max:120'],'username'=>['nullable','string','max:120'],'phone'=>['nullable','string','max:50'],'email'=>['required','email','max:190','unique:users,email'],'password'=>['required','confirmed','min:8']]);$name=trim((string)($d['name']??trim(($d['first_name']??'').' '.($d['last_name']??''))));if($name===''){$name=$d['username']??strstr($d['email'],'@',true);}$u=User::create(['name'=>$name,'email'=>$d['email'],'password'=>$d['password'],'phone'=>$d['phone']??null,'status'=>'active']);if($role=Role::where('slug','customer')->first())$u->roles()->attach($role);event(new Registered($u));Auth::login($u);return redirect()->route('home',['locale'=>app()->getLocale()]);}
- public function logout(Request $r){Auth::logout();$r->session()->invalidate();$r->session()->regenerateToken();return redirect()->route('home',['locale'=>app()->getLocale()]);}
- public function forgotForm(){return view('auth.forgot');} public function forgot(Request $r){$r->validate(['email'=>'required|email']);$status=Password::sendResetLink($r->only('email'));return $status===Password::RESET_LINK_SENT?back()->with('status',__($status)):back()->withErrors(['email'=>__($status)]);}
- public function resetForm(Request $r,string $token){return view('auth.reset',['token'=>$token,'email'=>$r->email]);} public function reset(Request $r){$r->validate(['token'=>'required','email'=>'required|email','password'=>'required|confirmed|min:8']);$status=Password::reset($r->only('email','password','password_confirmation','token'),function(User $u,string $password){$u->forceFill(['password'=>$password])->save();});return $status===Password::PASSWORD_RESET?redirect()->route('login',['locale'=>app()->getLocale()])->with('status',__($status)):back()->withErrors(['email'=>__($status)]);}
+
+namespace App\Http\Controllers;
+
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+
+class AuthController
+{
+    public function loginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $r)
+    {
+        $c = $r->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        if (! Auth::attempt($c, $r->boolean('remember'))) {
+            if ($r->wantsJson() || $r->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => app()->getLocale() === 'ar'
+                        ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'
+                        : __('auth.failed'),
+                    'errors' => [
+                        'email' => [app()->getLocale() === 'ar' ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة.' : __('auth.failed')],
+                    ],
+                ], 422);
+            }
+
+            return back()->withErrors(['email' => __('auth.failed')])->onlyInput('email');
+        }
+
+        $r->session()->regenerate();
+
+        if ($r->wantsJson() || $r->ajax()) {
+            $targetUrl = redirect()->intended(route('home', ['locale' => app()->getLocale()]))->getTargetUrl();
+
+            return response()->json([
+                'success' => true,
+                'message' => app()->getLocale() === 'ar' ? 'تم تسجيل الدخول بنجاح!' : 'Logged in successfully!',
+                'redirect' => $targetUrl,
+                'user' => [
+                    'name' => Auth::user()?->name,
+                    'email' => Auth::user()?->email,
+                ],
+            ]);
+        }
+
+        return redirect()->intended(route('home', ['locale' => app()->getLocale()]));
+    }
+
+    public function registerForm()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $r)
+    {
+        $d = $r->validate([
+            'name' => ['nullable', 'string', 'max:120'],
+            'first_name' => ['nullable', 'string', 'max:120'],
+            'last_name' => ['nullable', 'string', 'max:120'],
+            'username' => ['nullable', 'string', 'max:120'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'email' => ['required', 'email', 'max:190', 'unique:users,email'],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $name = trim((string) ($d['name'] ?? trim(($d['first_name'] ?? '') . ' ' . ($d['last_name'] ?? ''))));
+        if ($name === '') {
+            $name = $d['username'] ?? strstr($d['email'], '@', true);
+        }
+
+        $u = User::create([
+            'name' => $name,
+            'email' => $d['email'],
+            'password' => $d['password'],
+            'phone' => $d['phone'] ?? null,
+            'status' => 'active',
+        ]);
+
+        if ($role = Role::where('slug', 'customer')->first()) {
+            $u->roles()->attach($role);
+        }
+
+        event(new Registered($u));
+        Auth::login($u);
+
+        if ($r->wantsJson() || $r->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => app()->getLocale() === 'ar' ? 'تم إنشاء الحساب بنجاح!' : 'Account registered successfully!',
+                'redirect' => route('home', ['locale' => app()->getLocale()]),
+                'user' => [
+                    'name' => $u->name,
+                    'email' => $u->email,
+                ],
+            ]);
+        }
+
+        return redirect()->route('home', ['locale' => app()->getLocale()]);
+    }
+    public function logout(Request $r)
+    {
+        Auth::logout();
+        $r->session()->invalidate();
+        $r->session()->regenerateToken();
+        return redirect()->route('home', ['locale' => app()->getLocale()]);
+    }
+    public function forgotForm()
+    {
+        return view('auth.forgot');
+    }
+    public function forgot(Request $r)
+    {
+        $r->validate(['email' => 'required|email']);
+        $status = Password::sendResetLink($r->only('email'));
+        return $status === Password::RESET_LINK_SENT ? back()->with('status', __($status)) : back()->withErrors(['email' => __($status)]);
+    }
+    public function resetForm(Request $r, string $token)
+    {
+        return view('auth.reset', ['token' => $token, 'email' => $r->email]);
+    }
+    public function reset(Request $r)
+    {
+        $r->validate(['token' => 'required', 'email' => 'required|email', 'password' => 'required|confirmed|min:8']);
+        $status = Password::reset($r->only('email', 'password', 'password_confirmation', 'token'), function (User $u, string $password) {
+            $u->forceFill(['password' => $password])->save();
+        });
+        return $status === Password::PASSWORD_RESET ? redirect()->route('login', ['locale' => app()->getLocale()])->with('status', __($status)) : back()->withErrors(['email' => __($status)]);
+    }
 }

@@ -1,0 +1,275 @@
+/* ==========================================================================
+   دارلي — طبقة بسيطة فوق تصميم هومزن الأصلي
+   تضيف فقط الأدوات التي تحتاجها الصفحات المعروضة من قاعدة البيانات
+   (بطاقات، لوحات، شبكة، أزرار) بنفس هوية الثيم.
+   ========================================================================== */
+
+/* The legacy listing section overlaps a hero by design. Database pages have
+   no legacy hero, so cancel that negative offset and keep them below the nav. */
+.darli-db-page #wrapper > .flat-section-v5:first-child {
+    margin-top: 0 !important;
+}
+
+html[data-theme="dark"] .darli-db-page .box-title-listing,
+html[data-theme="dark"] .darli-db-page .box-title-listing :where(.h5, .h6, .text-1) {
+    color: #f1f5f9 !important;
+}
+
+.darli-panel {
+    background: #fff;
+    border: 1px solid #e9eef1;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(54, 95, 104, .08);
+}
+
+.darli-panel--soft { background: #f7f7f7; box-shadow: none; }
+.darli-panel--pad { padding: 24px; }
+.darli-panel--pad-sm { padding: 16px; }
+
+/* شبكة بسيطة بديلة عن Bootstrap */
+.darli-grid { display: grid; gap: 24px; }
+.darli-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.darli-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.darli-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (max-width: 1199px) {
+    .darli-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 991px) {
+    .darli-grid--2,
+    .darli-grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+    .darli-grid--2,
+    .darli-grid--3,
+    .darli-grid--4 { grid-template-columns: 1fr; }
+}
+
+/* نماذج */
+.darli-field { margin-bottom: 14px; }
+.darli-label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #161e2d; }
+.darli-input,
+.darli-select,
+.darli-textarea {
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 8px;
+    color: #161e2d;
+    font-family: inherit;
+    font-size: 15px;
+    padding: 10px 16px;
+    width: 100%;
+}
+.darli-input:focus,
+.darli-select:focus,
+.darli-textarea:focus { border-color: var(--primary-color); outline: 0; }
+.darli-textarea { min-height: 110px; resize: vertical; }
+
+/* شرائح المعلومات */
+.darli-facts { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.darli-fact { background: #f7f7f7; border-radius: 12px; padding: 14px 16px; }
+.darli-fact__label { color: #5c6368; font-size: 13px; margin-bottom: 4px; }
+.darli-fact__value { color: #161e2d; font-size: 17px; font-weight: 700; }
+
+/* المعرض */
+.darli-gallery__main { border-radius: 16px; overflow: hidden; }
+.darli-gallery__main img { display: block; height: 100%; max-height: 520px; object-fit: cover; width: 100%; }
+.darli-gallery__thumbs { display: flex; gap: 10px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
+.darli-gallery__thumb {
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    flex: 0 0 auto;
+    height: 74px;
+    overflow: hidden;
+    padding: 0;
+    width: 104px;
+    background: none;
+}
+.darli-gallery__thumb.is-active { border-color: var(--primary-color); }
+.darli-gallery__thumb img { display: block; height: 100%; object-fit: cover; width: 100%; }
+
+/* خرائط */
+.darli-map { border-radius: 16px; overflow: hidden; }
+.darli-map iframe { border: 0; display: block; height: 380px; width: 100%; }
+
+/* سعر */
+.darli-price { color: var(--primary-color); font-size: 30px; font-weight: 700; line-height: 1.2; }
+.darli-price small { color: #5c6368; font-size: 14px; font-weight: 400; }
+
+/* قوائم المرافق */
+.darli-amenities { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.darli-amenity { align-items: center; color: #161e2d; display: flex; gap: 8px; font-size: 15px; }
+.darli-amenity::before { color: var(--primary-color); content: "\2713"; font-weight: 700; }
+
+/* جدول بسيط */
+.darli-table { border-collapse: collapse; width: 100%; }
+.darli-table th,
+.darli-table td { border-bottom: 1px solid #e9eef1; padding: 12px 14px; text-align: start; }
+.darli-table th { background: #f7f7f7; color: #5c6368; font-size: 13px; font-weight: 700; }
+.darli-table tbody tr:last-child td { border-bottom: 0; }
+
+/* واتساب */
+.darli-whatsapp {
+    align-items: center;
+    background: #25d366;
+    border-radius: 8px;
+    color: #fff !important;
+    display: inline-flex;
+    gap: 8px;
+    font-weight: 700;
+    padding: 10px 18px;
+}
+.darli-whatsapp:hover { background: #128c7e; color: #fff !important; }
+
+/* ترقيم الصفحات */
+.darli-pagination { display: flex; justify-content: center; margin-top: 40px; }
+.darli-pagination .pagination { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.darli-pagination .page-link,
+.darli-pagination .page-item > span {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 8px;
+    color: #161e2d;
+    display: inline-flex;
+    height: 40px;
+    justify-content: center;
+    min-width: 40px;
+    padding: 0 10px;
+}
+.darli-pagination .active .page-link,
+.darli-pagination .active > span {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.darli-pagination .disabled .page-link { opacity: .45; }
+
+/* أدوات مساعدة صغيرة */
+.darli-muted { color: #5c6368; }
+.darli-list-reset { list-style: none; margin: 0; padding: 0; }
+.darli-empty { padding: 48px 20px; text-align: center; }
+
+/* ---------------------------------------------------------------------------
+   أسماء أيقونات مستخدمة في صفحات قاعدة البيانات لكن لا يوجد لها رمز في خط
+   الثيم الأصلي — نربطها بأقرب رمز موجود حتى لا تظهر فراغات.
+   الرموز مأخوذة من نفس خط icomoon المرفق مع الثيم.
+   --------------------------------------------------------------------------- */
+.icon-building:before { content: "\e948"; }   /* icon-apartment */
+.icon-stairs:before { content: "\e948"; }     /* icon-apartment */
+.icon-car:before { content: "\e934"; }        /* icon-garage */
+.icon-user:before { content: "\e90e"; }       /* icon-profile */
+.icon-briefcase:before { content: "\e943"; }  /* icon-office */
+.icon-money:before { content: "\e909"; }      /* icon-calendar */
+
+/* ==========================================================================
+   زر الواتساب العائم الثابت (Floating WhatsApp Button)
+   ========================================================================== */
+.darli-floating-wa {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    z-index: 999999;
+    direction: ltr !important;
+}
+
+.darli-floating-wa__btn {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.darli-floating-wa__btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+    color: #ffffff !important;
+}
+
+.darli-floating-wa__pulse {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 2px solid #25D366;
+    animation: darli-wa-pulse 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes darli-wa-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    70% { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+}
+
+.darli-floating-wa__tooltip {
+    position: absolute;
+    left: 72px;
+    top: 50%;
+    transform: translateY(-50%) translateX(-8px);
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    font-family: inherit;
+    direction: rtl;
+}
+
+.darli-floating-wa[dir="ltr"] .darli-floating-wa__tooltip {
+    direction: ltr;
+}
+
+.darli-floating-wa__tooltip::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent #0f172a transparent transparent;
+}
+
+.darli-floating-wa__btn:hover .darli-floating-wa__tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width: 768px) {
+    .darli-floating-wa {
+        bottom: 20px;
+        left: 20px;
+    }
+    .darli-floating-wa__btn {
+        width: 52px;
+        height: 52px;
+    }
+    .darli-floating-wa__btn svg {
+        width: 24px;
+        height: 24px;
+    }
+    .darli-floating-wa__tooltip {
+        display: none !important;
+    }
+}

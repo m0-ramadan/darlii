@@ -59,7 +59,7 @@ class VisitorPreferences
             $request->user()?->preferred_currency,
             $request->cookie('homzen_currency'),
             $request->session()->get('currency'),
-            env('DEFAULT_CURRENCY', 'USD'),
+            env('DEFAULT_CURRENCY', 'EGP'),
         ];
 
         foreach ($candidates as $candidate) {
@@ -69,7 +69,7 @@ class VisitorPreferences
             }
         }
 
-        return 'USD';
+        return 'EGP';
     }
 
     public function currencyIsActive(string $code): bool
@@ -77,7 +77,7 @@ class VisitorPreferences
         try {
             return Currency::where('code', strtoupper($code))->where('is_active', true)->exists();
         } catch (Throwable) {
-            return strtoupper($code) === 'USD';
+            return in_array(strtoupper($code), ['EGP', 'USD'], true);
         }
     }
 }

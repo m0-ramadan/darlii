@@ -1,0 +1,59 @@
+@php
+    /**
+     * هيكل صفحات الموقع العام: يستخدم نفس الهيدر والفوتر والخطوط الخاصة
+     * بتصميم هومزن الأصلي (من نسخة الميرور) لكنه يعرض محتوى قاعدة البيانات.
+     *
+     * $shellHead / $shellFooter يأتيان من LegacyFrontendRenderer::shell().
+     */
+    $bodyClass = trim(($bodyClass ?? '') . ' darli-db-page');
+    $head = $shellHead ?? '';
+
+    // طبقة الأدوات المساعدة الخاصة بصفحات قاعدة البيانات (تُحمَّل بعد ثيم هومزن).
+    $darliCss = '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.css') . '?v=1.0.0">';
+
+    if (stripos($head, '</head>') !== false) {
+        $head = preg_replace('/<\/head>/i', $darliCss . '</head>', $head, 1) ?? $head;
+    } else {
+        $head .= $darliCss;
+    }
+    if ($bodyClass !== '') {
+        $head = preg_replace_callback(
+            '/<body\b([^>]*)>/i',
+            function (array $m) use ($bodyClass): string {
+                $attributes = $m[1];
+                if (preg_match('/class\s*=\s*(["\'])(.*?)\1/i', $attributes, $c)) {
+                    $attributes = str_replace($c[0], 'class="' . trim($c[2] . ' ' . $bodyClass) . '"', $attributes);
+                } else {
+                    $attributes .= ' class="' . $bodyClass . '"';
+                }
+
+                return '<body' . $attributes . '>';
+            },
+            $head,
+            1
+        ) ?? $head;
+    }
+@endphp
+@php
+    // عنوان الصفحة: يستخدم @section('title') من الصفحة نفسها إن وُجد،
+    // وإلا يبقى عنوان الميرور الأصلي كما هو.
+    $pageTitle = trim((string) $__env->yieldContent('title'));
+    $siteName = (string) setting('general.site_name', 'دارلي');
+
+    if ($pageTitle !== '') {
+        // لا نكرّر اسم الموقع إذا كان موجوداً في العنوان بالفعل.
+        $fullTitle = str_contains($pageTitle, $siteName) ? $pageTitle : $pageTitle . ' | ' . $siteName;
+
+        $head = preg_replace_callback(
+            '/<title\b[^>]*>.*?<\/title>/is',
+            static fn (): string => '<title>' . e($fullTitle) . '</title>',
+            $head,
+            1
+        ) ?? $head;
+    }
+@endphp
+{!! $head !!}
+<div id="wrapper">
+    @yield('content')
+</div>
+{!! $shellFooter ?? '' !!}

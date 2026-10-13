@@ -16,6 +16,9 @@
                                         <h2 class="section-title mt-4">{{ $attributes['title'] ?? '' }}</h2>
                                     </div>
                                     <ul class="box-tag">
+                                        @if ($property['is_sold'] ?? false)
+                                            <span class="flag-tag success status-badge-sold" style="background-color: #10b981 !important; color: #fff !important; font-weight: 700;">{{ $locale === 'ar' ? 'تم البيع' : 'Sold' }}</span>
+                                        @endif
                                         @if ($property['featured'])
                                             <span class="flag-tag success">{{ $locale === 'ar' ? 'مميز' : 'Featured' }}</span>
                                         @endif
@@ -70,6 +73,9 @@
                                 <div class="images-style"><img width="400" height="260" src="{{ $property['image'] }}" data-bb-lazy="true" loading="lazy" alt="{{ $property['name'] }}"></div>
                                 <div class="top">
                                     <div class="d-flex gap-8">
+                                        @if ($property['is_sold'] ?? false)
+                                            <span class="flag-tag success status-badge-sold" style="background-color: #10b981 !important; color: #fff !important; font-weight: 700;">{{ $locale === 'ar' ? 'تم البيع' : 'Sold' }}</span>
+                                        @endif
                                         @if ($property['featured'])<span class="flag-tag success">{{ $locale === 'ar' ? 'مميز' : 'Featured' }}</span>@endif
                                         <span class="flag-tag primary status-badge-{{ $property['purpose_class'] }}">{{ $property['purpose'] }}</span>
                                     </div>

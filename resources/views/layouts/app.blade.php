@@ -39,125 +39,21 @@
 
     <link rel="stylesheet"
         href="{{ asset(in_array(app()->getLocale(), config('locales.rtl')) ? 'themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css' : 'themes/homzen/plugins/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-design-system.css') }}?v=1.1.0">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/style.css') }}?v=2.0.1">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.1">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/rtl-custom.css') }}?v=2.0.1">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-design-system.css') }}?v=2.0.3">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/style.css') }}?v=2.0.3">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/rtl-custom.css') }}?v=2.0.3">
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/locale-switcher.css') }}?v=1.0.0">
+    {{-- Brand unification layer: same header/footer colours as the legacy pages. --}}
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-unified.css') }}?v=2.1.8">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
 
 <body class="darli-body">
-    <!-- Darlii Main Header / Navbar -->
-    <nav class="navbar navbar-expand-lg darli-navbar sticky-top">
-        <div class="container">
-            <a class="navbar-brand me-4 ms-0" href="{{ route('home', ['locale' => app()->getLocale()]) }}">
-                @php
-                    $isRtl = in_array(app()->getLocale(), config('locales.rtl'));
-                    $defaultLogo = $isRtl
-                        ? 'themes/homzen/images/logo/darli-logo-ar.png'
-                        : 'themes/homzen/images/logo/darli-logo-en.png';
-                @endphp
-                <img src="{{ asset($defaultLogo) }}" alt="Darlii دارلي" class="darli-logo-img">
-            </a>
-
-            <div class="d-flex align-items-center gap-2 order-lg-3">
-                <!-- Theme Toggle Button -->
-                <button class="darli-theme-toggle me-1 ms-1" type="button" aria-label="Toggle theme"></button>
-
-                <!-- Language Switcher -->
-                <div class="dropdown">
-                    <button
-                        class="btn btn-darli-secondary btn-sm-custom dropdown-toggle d-inline-flex align-items-center gap-1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i data-lucide="globe" style="width: 16px; height: 16px;"></i>
-                        <span>{{ strtoupper(app()->getLocale()) }}</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        @foreach (config('locales.names') as $code => $name)
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center justify-content-between @if ($code === app()->getLocale()) active @endif"
-                                    href="{{ route('locale.switch', ['locale' => $code, 'redirect' => request()->getRequestUri()]) }}"
-                                    lang="{{ $code }}" hreflang="{{ $code }}">
-                                    <span>{{ $name }}</span>
-                                    @if ($code === app()->getLocale())
-                                        <i data-lucide="check" style="width: 14px; height: 14px;"></i>
-                                    @endif
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                @auth
-                    <a class="btn btn-darli-primary btn-sm-custom d-none d-sm-inline-flex"
-                        href="{{ route('dashboard.properties.index', ['locale' => app()->getLocale()]) }}">
-                        <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i>
-                        <span>{{ app()->getLocale() === 'ar' ? 'لوحة التحكم' : 'Dashboard' }}</span>
-                    </a>
-                    <form method="post" action="{{ route('logout', ['locale' => app()->getLocale()]) }}" class="d-inline">
-                        @csrf
-                        <button class="btn btn-darli-secondary btn-sm-custom ms-1">
-                            <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
-                        </button>
-                    </form>
-                @else
-                    <a class="btn btn-darli-secondary btn-sm-custom"
-                        href="{{ route('login', ['locale' => app()->getLocale()]) }}">
-                        <i data-lucide="user" style="width: 16px; height: 16px;"></i>
-                        <span class="d-none d-sm-inline">{{ __('messages.login') }}</span>
-                    </a>
-                    <a class="btn btn-darli-primary btn-sm-custom d-none d-md-inline-flex"
-                        href="{{ route('login', ['locale' => app()->getLocale()]) }}">
-                        <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
-                        <span>{{ app()->getLocale() === 'ar' ? 'أضف عقارك' : 'Add Property' }}</span>
-                    </a>
-                @endauth
-
-                <button class="navbar-toggler border-0 shadow-none p-1 ms-2" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#darliNav" aria-controls="darliNav" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <i data-lucide="menu" style="width: 24px; height: 24px; color: var(--text-primary);"></i>
-                </button>
-            </div>
-
-            <div class="collapse navbar-collapse" id="darliNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
-                    <li class="nav-item">
-                        <a class="nav-link darli-nav-link @if (request()->routeIs('home')) active @endif"
-                            href="{{ route('home', ['locale' => app()->getLocale()]) }}">
-                            {{ app()->getLocale() === 'ar' ? 'الرئيسية' : 'Home' }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link darli-nav-link @if (request()->routeIs('properties.*')) active @endif"
-                            href="{{ route('properties.index', ['locale' => app()->getLocale()]) }}">
-                            {{ __('messages.properties') }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link darli-nav-link @if (request()->routeIs('projects.*')) active @endif"
-                            href="{{ route('projects.index', ['locale' => app()->getLocale()]) }}">
-                            {{ __('messages.projects') }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link darli-nav-link" href="{{ url('/' . app()->getLocale() . '/agents') }}">
-                            {{ __('messages.agents') }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link darli-nav-link @if (request()->routeIs('blog.*')) active @endif"
-                            href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}">
-                            {{ __('messages.blog') }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {!! app(\App\Services\LegacyFrontend\LegacyFrontendRenderer::class)->siteHeaderHtml(app()->getLocale()) !!}
+    <button class="darli-theme-toggle" id="theme-toggle-btn" type="button" style="display:none;" aria-label="Toggle theme"></button>
 
     @if (session('success'))
         <div class="container mt-3">
@@ -179,6 +75,9 @@
             <div class="row g-4 justify-content-between">
                 <div class="col-lg-4 col-md-6">
                     @php
+                        // $isRtl is set in the navbar block above, but this layout can also be
+                        // rendered by views that set their own sections, so default it here.
+                        $isRtl = $isRtl ?? in_array(app()->getLocale(), config('locales.rtl'), true);
                         $footerLogo = $isRtl
                             ? 'themes/homzen/images/logo/darli-logo-ar-dark.png'
                             : 'themes/homzen/images/logo/darli-logo-en-dark.png';
@@ -190,18 +89,60 @@
                     <p class="text-secondary-muted body-sm mb-4" style="max-width: 340px;">
                         {{ app()->getLocale() === 'ar' ? 'منصة دارلي هي وجهتك الأولى للبحث عن أفضل العقارات والمشروعات السكنية والتجارية في جميع أنحاء جمهورية مصر العربية.' : 'Darlii is your premier destination for finding top residential and commercial properties and developments across Egypt.' }}
                     </p>
+                    {{--
+                        Brand icons were dropped from the lucide icon set, so
+                        these are inlined (same Tabler paths the legacy footer
+                        uses) to guarantee the footer renders identically on
+                        every page.
+                    --}}
                     <div class="d-flex align-items-center gap-3">
-                        <a href="#" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
-                            aria-label="Facebook"><i data-lucide="facebook"
-                                style="width: 18px; height: 18px;"></i></a>
-                        <a href="#" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
-                            aria-label="Instagram"><i data-lucide="instagram"
-                                style="width: 18px; height: 18px;"></i></a>
-                        <a href="#" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
-                            aria-label="Twitter"><i data-lucide="twitter" style="width: 18px; height: 18px;"></i></a>
-                        <a href="#" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
-                            aria-label="LinkedIn"><i data-lucide="linkedin"
-                                style="width: 18px; height: 18px;"></i></a>
+                        @if ($fb = setting('contact.facebook', 'https://facebook.com'))
+                            <a href="{{ $fb }}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
+                                aria-label="Facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+                                </svg>
+                            </a>
+                        @endif
+                        @if ($tw = setting('contact.twitter', 'https://x.com'))
+                            <a href="{{ $tw }}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
+                                aria-label="X (Twitter)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                                </svg>
+                            </a>
+                        @endif
+                        @if ($yt = setting('contact.youtube', 'https://youtube.com'))
+                            <a href="{{ $yt }}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
+                                aria-label="YouTube">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path
+                                        d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z" />
+                                    <path d="M10 9l5 3l-5 3z" />
+                                </svg>
+                            </a>
+                        @endif
+                        @if ($li = setting('contact.linkedin', 'https://linkedin.com'))
+                            <a href="{{ $li }}" target="_blank" rel="noopener noreferrer" class="p-2 rounded-circle bg-body-tertiary d-inline-flex"
+                                aria-label="LinkedIn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M8 11v5" />
+                                    <path d="M8 8v.01" />
+                                    <path d="M12 16v-5" />
+                                    <path d="M16 16v-3a2 2 0 1 0 -4 0" />
+                                    <path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z" />
+                                </svg>
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -246,14 +187,16 @@
                     <ul class="list-unstyled d-flex flex-column gap-2 body-sm mb-3">
                         <li class="d-flex align-items-center gap-2"><i data-lucide="map-pin"
                                 style="width: 16px; height: 16px; color: var(--brand-gold);"></i>
-                            <span>{{ app()->getLocale() === 'ar' ? 'القاهرة، جمهورية مصر العربية' : 'Cairo, Arab Republic of Egypt' }}</span>
+                            <span>{{ setting(app()->getLocale() === 'ar' ? 'contact.address_ar' : 'contact.address_en', app()->getLocale() === 'ar' ? 'شارع صلاح سالم (تقاطع كورنيش النيل)، مدينة بني سويف' : 'Salah Salem St, Beni Suef City, Egypt') }}</span>
                         </li>
                         <li class="d-flex align-items-center gap-2"><i data-lucide="phone"
-                                style="width: 16px; height: 16px; color: var(--brand-gold);"></i> <span
-                                dir="ltr">+20 100 000 0000</span></li>
+                                style="width: 16px; height: 16px; color: var(--brand-gold);"></i>
+                            <a href="tel:{{ preg_replace('/[^\d+]/', '', setting('contact.phone', '+20 10 34905812')) }}" style="color:inherit;text-decoration:none;" dir="ltr">{{ setting('contact.phone', '+20 10 34905812') }}</a>
+                        </li>
                         <li class="d-flex align-items-center gap-2"><i data-lucide="mail"
                                 style="width: 16px; height: 16px; color: var(--brand-gold);"></i>
-                            <span>info@Darlii.eg</span></li>
+                            <a href="mailto:{{ setting('contact.email', 'info@darlii.eg') }}" style="color:inherit;text-decoration:none;">{{ setting('contact.email', 'info@darlii.eg') }}</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -277,10 +220,13 @@
         </div>
     </footer>
 
+    @include('components.floating-whatsapp')
+
     <script src="{{ asset('themes/homzen/js/jquery.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/js/popper.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script defer src="{{ asset('themes/homzen/js/theme-mode.js') }}?v=2.0.1"></script>
+    <script defer src="{{ asset('themes/homzen/js/darli-mobile-menu.js') }}?v=1.1.2"></script>
+    <script defer src="{{ asset('themes/homzen/js/theme-mode.js') }}?v=2.0.2"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

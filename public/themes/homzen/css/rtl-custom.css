@@ -93,3 +93,138 @@ html[lang="ar"] .leaflet-popup-content {
     direction: rtl;
     text-align: right;
 }
+
+html[lang="ar"] .box-title-listing .box-filter-tab .list-page,
+body[dir="rtl"] .box-title-listing .box-filter-tab .list-page {
+    width: auto !important;
+    min-width: 90px !important;
+}
+
+html[lang="ar"] .nice-select,
+body[dir="rtl"] .nice-select {
+    text-align: right !important;
+    padding-right: 18px !important;
+    padding-left: 32px !important;
+}
+
+html[lang="ar"] .nice-select:after,
+body[dir="rtl"] .nice-select:after {
+    right: auto !important;
+    left: 14px !important;
+}
+
+html[lang="ar"] .nice-select .option,
+body[dir="rtl"] .nice-select .option {
+    text-align: right !important;
+    padding-right: 18px !important;
+    padding-left: 18px !important;
+}
+
+/* ==========================================================================
+   زر الواتساب العائم الثابت (Floating WhatsApp Button)
+   ========================================================================== */
+.darli-floating-wa {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    z-index: 999999;
+    direction: ltr !important;
+}
+
+.darli-floating-wa__btn {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.darli-floating-wa__btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+    color: #ffffff !important;
+}
+
+.darli-floating-wa__pulse {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 2px solid #25D366;
+    animation: darli-wa-pulse 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes darli-wa-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    70% { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+}
+
+.darli-floating-wa__tooltip {
+    position: absolute;
+    left: 72px;
+    top: 50%;
+    transform: translateY(-50%) translateX(-8px);
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    font-family: inherit;
+    direction: rtl;
+}
+
+.darli-floating-wa[dir="ltr"] .darli-floating-wa__tooltip {
+    direction: ltr;
+}
+
+.darli-floating-wa__tooltip::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent #0f172a transparent transparent;
+}
+
+.darli-floating-wa__btn:hover .darli-floating-wa__tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width: 768px) {
+    .darli-floating-wa {
+        bottom: 20px;
+        left: 20px;
+    }
+    .darli-floating-wa__btn {
+        width: 52px;
+        height: 52px;
+    }
+    .darli-floating-wa__btn svg {
+        width: 24px;
+        height: 24px;
+    }
+    .darli-floating-wa__tooltip {
+        display: none !important;
+    }
+}

@@ -7,6 +7,7 @@ use App\Models\Property;
 use Database\Seeders\CoreSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class PropertyMapTest extends TestCase
@@ -32,7 +33,25 @@ class PropertyMapTest extends TestCase
         $this->getJson('/ar/map/governorates')
             ->assertOk()
             ->assertJsonCount(27, 'governorates')
-            ->assertJsonPath('default', 'cairo');
+            ->assertJsonPath('default', 'beni-suef');
+    }
+
+    public function test_route_endpoint_proxies_google_routes_without_exposing_the_key(): void
+    {
+        config(['services.google_maps.key' => 'test-key']);
+        Http::fake(['https://routes.googleapis.com/*' => Http::response([
+            'routes' => [[
+                'distanceMeters' => 12500,
+                'duration' => '1020s',
+                'polyline' => ['encodedPolyline' => 'encoded-path'],
+            ]],
+        ])]);
+
+        $this->getJson('/ar/map/route?origin_lat=29.1&origin_lng=31.1&destination_lat=29.2&destination_lng=31.2')
+            ->assertOk()
+            ->assertJsonPath('distance_meters', 12500)
+            ->assertJsonPath('duration', '1020s')
+            ->assertJsonMissingPath('key');
     }
 
     private function property(string $reference, string $status, float $latitude, float $longitude): Property

@@ -49,14 +49,14 @@ class PreferencePersistenceTest extends TestCase
 
     public function test_footer_lists_all_languages_and_marks_the_current_one(): void
     {
-        $html = $this->get('/ar')->assertOk()->getContent();
+        $html = $this->get('/ar/about-us')->assertOk()->getContent();
 
         $this->assertStringContainsString('class="homzen-footer-languages"', $html);
         $this->assertStringContainsString('class="homzen-footer-languages__link is-active"', $html);
         $this->assertStringContainsString('aria-current="page"', $html);
 
         foreach (config('locales.names') as $code => $name) {
-            $this->assertStringContainsString('/language/switch/' . $code . '?redirect=%2Far', $html);
+            $this->assertStringContainsString('/language/switch/' . $code . '?redirect=%2Far%2Fabout-us', $html);
             $this->assertStringContainsString($name, $html);
         }
     }
@@ -79,10 +79,10 @@ class PreferencePersistenceTest extends TestCase
 
     public function test_legacy_page_urls_redirect_to_the_saved_locale(): void
     {
-        $this->withCookie('homzen_locale', 'fr')
+        $this->withCookie('homzen_locale', 'en')
             ->get('/about-us')
             ->assertMovedPermanently()
-            ->assertRedirect('/fr/about-us');
+            ->assertRedirect('/en/about-us');
 
         $this->withCookie('homzen_locale', 'unsupported')->get('/contact-us')
             ->assertMovedPermanently()

@@ -86,6 +86,52 @@
                 </div>
             </div>
 
+            {{-- ------------------------------------------------ التخطيط الهندسي للشقة --}}
+            @php
+                $adminFloorPlans = $property->getFloorPlans();
+            @endphp
+            @if (!empty($adminFloorPlans))
+                <div class="ap-card">
+                    <div class="ap-card__head">
+                        <h2 class="ap-card__title">
+                            <svg style="width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin-left: 6px; color: #b45309;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            التخطيط الهندسي للشقة ({{ count($adminFloorPlans) }})
+                        </h2>
+                    </div>
+                    <div class="ap-card__body">
+                        <div style="display: flex; flex-direction: column; gap: 14px;">
+                            @foreach ($adminFloorPlans as $fp)
+                                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; background: rgba(248, 250, 252, 0.8);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                                        <strong style="color: #1e293b;">📐 {{ $fp['name'] ?? 'مخطط هندسي' }}</strong>
+                                        <div style="display: flex; gap: 10px; font-size: 12px; color: #64748b;">
+                                            @if(!empty($fp['bedrooms'])) <span>{{ $fp['bedrooms'] }} غرف</span> @endif
+                                            @if(!empty($fp['bathrooms'])) <span>{{ $fp['bathrooms'] }} حمام</span> @endif
+                                            @if(!empty($fp['area'])) <span>{{ $fp['area'] }} م²</span> @endif
+                                        </div>
+                                    </div>
+                                    @if(!empty($fp['description']))
+                                        <p style="font-size: 13px; color: #475569; margin-bottom: 8px;">{{ $fp['description'] }}</p>
+                                    @endif
+                                    @if(!empty($fp['image_url']) || !empty($fp['image']))
+                                        @php
+                                            $adminPlanImg = !empty($fp['image_url']) ? $fp['image_url'] : asset('storage/' . ltrim($fp['image'], '/'));
+                                        @endphp
+                                        <a href="{{ $adminPlanImg }}" target="_blank" style="display: block; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px;">
+                                            <img src="{{ $adminPlanImg }}" alt="{{ $fp['name'] ?? 'Floor plan' }}" style="max-height: 220px; max-width: 100%; object-fit: contain;">
+                                        </a>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             {{-- -------------------------------------------------- التفاصيل --}}
             <div class="ap-card">
                 <div class="ap-card__head">

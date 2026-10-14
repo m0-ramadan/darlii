@@ -94,15 +94,15 @@
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background: rgba(219, 29, 35, 0.08);
-        color: #db1d23;
+        background: var(--brand-gold-light, #f7f0e3);
+        color: var(--brand-gold, #c99a45);
         display: inline-flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 1rem;
     }
     html[data-theme="dark"] .darli-auth-icon-badge {
-        background: rgba(219, 29, 35, 0.18);
+        background: rgba(214, 174, 100, 0.16);
     }
     .darli-auth-title {
         font-size: 1.45rem;
@@ -149,13 +149,28 @@
         border-color: #24344d;
     }
     .darli-auth-input:focus {
-        border-color: #db1d23;
-        box-shadow: 0 0 0 3px rgba(219, 29, 35, 0.15);
+        border-color: var(--brand-gold, #c99a45);
+        box-shadow: 0 0 0 3px rgba(201, 154, 69, 0.16);
+    }
+    .darli-auth-input:-webkit-autofill,
+    .darli-auth-input:-webkit-autofill:hover,
+    .darli-auth-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text-primary, #0f172a);
+        -webkit-box-shadow: 0 0 0 1000px var(--surface, #ffffff) inset;
+        caret-color: var(--text-primary, #0f172a);
+        transition: background-color 9999s ease-out 0s;
+    }
+    html[data-theme="dark"] .darli-auth-input:-webkit-autofill,
+    html[data-theme="dark"] .darli-auth-input:-webkit-autofill:hover,
+    html[data-theme="dark"] .darli-auth-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #f8fafc;
+        -webkit-box-shadow: 0 0 0 1000px #0d1627 inset;
+        caret-color: #f8fafc;
     }
     .darli-auth-btn-submit {
         width: 100%;
         padding: 0.85rem 1.25rem;
-        background: #db1d23;
+        background: linear-gradient(135deg, var(--brand-navy, #0b1f3a), var(--brand-navy-dark, #071527));
         color: #ffffff;
         border: none;
         border-radius: 0.75rem;
@@ -166,11 +181,11 @@
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        box-shadow: 0 4px 14px rgba(219, 29, 35, 0.35);
+        box-shadow: 0 4px 14px rgba(11, 31, 58, 0.28);
         transition: background-color 0.2s, transform 0.2s;
     }
     .darli-auth-btn-submit:hover {
-        background: #b9151b;
+        background: linear-gradient(135deg, var(--brand-gold, #c99a45), var(--brand-gold-hover, #b38636));
         transform: translateY(-1px);
         color: #ffffff;
     }
@@ -261,13 +276,22 @@
         color: #94a3b8;
     }
     .darli-auth-switch a {
-        color: #db1d23;
+        color: var(--brand-gold-hover, #b38636);
         font-weight: 700;
         text-decoration: none;
         margin-right: 0.35rem;
     }
     .darli-auth-switch a:hover {
         text-decoration: underline;
+        color: var(--brand-navy, #0b1f3a);
+    }
+    .darli-auth-modal .form-check-input:checked {
+        background-color: var(--brand-gold, #c99a45);
+        border-color: var(--brand-gold, #c99a45);
+    }
+    .darli-auth-modal .form-check-input:focus {
+        border-color: var(--brand-gold, #c99a45);
+        box-shadow: 0 0 0 3px rgba(201, 154, 69, 0.16);
     }
 </style>
 
@@ -289,10 +313,10 @@
                     @csrf
                     <div class="darli-auth-alert alert d-none" role="alert"></div>
 
-                    <!-- Email -->
+                    <!-- Email or Phone -->
                     <div class="darli-auth-group">
-                        <label class="darli-auth-label" for="login-email">{{ $isAr ? 'البريد الإلكتروني' : 'Email Address' }}</label>
-                        <input type="email" id="login-email" name="email" class="darli-auth-input" placeholder="{{ $isAr ? 'name@example.com' : 'name@example.com' }}" required autofocus>
+                        <label class="darli-auth-label" for="login-identifier">{{ $isAr ? 'البريد الإلكتروني أو رقم الهاتف' : 'Email or Phone Number' }}</label>
+                        <input type="text" id="login-identifier" name="login" class="darli-auth-input" placeholder="{{ $isAr ? '010xxxxxxxx أو name@example.com' : '010xxxxxxxx or name@example.com' }}" required autofocus>
                     </div>
 
                     <!-- Password -->
@@ -323,26 +347,29 @@
                         <span>{{ $isAr ? 'تسجيل الدخول' : 'Sign In' }}</span>
                     </button>
 
-                    <!-- Social Logins (Google & Facebook ONLY) -->
-                    <div class="darli-auth-divider">
-                        <span>{{ $isAr ? 'أو تسجيل الدخول بواسطة' : 'Or sign in with' }}</span>
-                    </div>
+                    {{-- Social login is temporarily disabled. Remove this Blade comment to restore it.
+                    <div class="darli-social-wrapper">
+                        <div class="darli-auth-divider">
+                            <span>{{ $isAr ? 'أو تسجيل الدخول السريع بواسطة' : 'Or quick sign in with' }}</span>
+                        </div>
 
-                    <div class="darli-social-btns">
-                        <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'google']) }}" class="darli-social-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17c1.8 3.7 5.6 6.5 10.1 6.5z"/></svg>
-                            <span>Google</span>
-                        </a>
-                        <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'facebook']) }}" class="darli-social-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                            <span>Facebook</span>
-                        </a>
+                        <div class="darli-social-btns">
+                            <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'google']) }}" class="darli-social-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17c1.8 3.7 5.6 6.5 10.1 6.5z"/></svg>
+                                <span>Google</span>
+                            </a>
+                            <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'facebook']) }}" class="darli-social-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                <span>Facebook</span>
+                            </a>
+                        </div>
                     </div>
+                    --}}
 
                     <!-- Switch to Register -->
                     <div class="darli-auth-switch">
                         <span>{{ $isAr ? 'ليس لديك حساب بعد؟' : "Don't have an account?" }}</span>
-                        <a href="#modalRegister" class="darli-switch-to-register">{{ $isAr ? 'تسجيل في الموقع الآن' : 'Register now' }}</a>
+                        <a href="#modalRegister" class="darli-switch-to-register">{{ $isAr ? 'إنشاء حساب جديد' : 'Register now' }}</a>
                     </div>
                 </form>
             </div>
@@ -352,47 +379,117 @@
 
 <!-- 2. REGISTER MODAL -->
 <div class="modal fade darli-auth-modal" id="modalRegister" tabindex="-1" aria-labelledby="modalRegisterLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 520px;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 540px;">
         <div class="modal-content">
             <div class="darli-auth-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="darli-auth-icon-badge" style="background: rgba(200, 164, 92, 0.12); color: #c8a45c;">
+                <div class="darli-auth-icon-badge">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
                 </div>
-                <h3 class="darli-auth-title" id="modalRegisterLabel">{{ $isAr ? 'إنشاء حساب جديد في دارلي' : 'Register an account on Darli' }}</h3>
-                <p class="darli-auth-sub">{{ $isAr ? 'انضم إلينا للاستفادة من كافة خدمات البحث والوساطة العقارية' : 'Join Darli to discover properties and save favorites' }}</p>
+                <h3 class="darli-auth-title" id="modalRegisterLabel">{{ $isAr ? 'إنشاء حساب جديد في دارلي' : 'Create an Account on Darli' }}</h3>
+                <p class="darli-auth-sub">{{ $isAr ? 'اختر نوع الحساب وأدخل بياناتك للانضمام إلى منصة دارلي' : 'Select account type and enter details to join Darli' }}</p>
             </div>
 
             <div class="darli-auth-body">
-                <form id="darli-auth-register-form" method="POST" action="{{ url($locale . '/register') }}">
+                <form id="darli-auth-register-form" method="POST" action="{{ url($locale . '/register') }}" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="account_type" id="darli-reg-account-type" value="client">
+
                     <div class="darli-auth-alert alert d-none" role="alert"></div>
 
-                    <!-- Full Name -->
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="darli-auth-label" for="reg-first-name">{{ $isAr ? 'الاسم الأول' : 'First Name' }} <span class="text-danger">*</span></label>
-                            <input type="text" id="reg-first-name" name="first_name" class="darli-auth-input" placeholder="{{ $isAr ? 'محمد' : 'John' }}" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="darli-auth-label" for="reg-last-name">{{ $isAr ? 'اسم العائلة' : 'Last Name' }} <span class="text-danger">*</span></label>
-                            <input type="text" id="reg-last-name" name="last_name" class="darli-auth-input" placeholder="{{ $isAr ? 'علي' : 'Doe' }}" required>
+                    <!-- ROLE SELECTION CARDS (عميل / شركة / سمسار) -->
+                    <div class="mb-3">
+                        <label class="darli-auth-label mb-2">{{ $isAr ? 'أنت تسجل بصفتك:' : 'You are registering as:' }}</label>
+                        <div class="darli-role-selector d-flex gap-2">
+                            <!-- Option 1: Client -->
+                            <div class="darli-role-card flex-fill active text-center p-2 rounded-3 border" data-role="client" style="cursor: pointer; transition: all 0.2s;">
+                                <div class="darli-role-icon mb-1">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </div>
+                                <span class="darli-role-title fw-bold d-block" style="font-size: 0.9rem;">{{ $isAr ? 'عميل' : 'Customer' }}</span>
+                                <span class="darli-role-sub text-muted" style="font-size: 0.72rem;">{{ $isAr ? 'باحث عن عقار' : 'Property seeker' }}</span>
+                            </div>
+
+                            <!-- Option 2: Company -->
+                            <div class="darli-role-card flex-fill text-center p-2 rounded-3 border" data-role="company" style="cursor: pointer; transition: all 0.2s;">
+                                <div class="darli-role-icon mb-1">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="22.01"/><line x1="15" y1="22" x2="15" y2="22.01"/><line x1="12" y1="18" x2="12" y2="18.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="16" y1="18" x2="16" y2="18.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="16" y1="6" x2="16" y2="6.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="8" y1="6" x2="8" y2="6.01"/></svg>
+                                </div>
+                                <span class="darli-role-title fw-bold d-block" style="font-size: 0.9rem;">{{ $isAr ? 'شركة' : 'Company' }}</span>
+                                <span class="darli-role-sub text-muted" style="font-size: 0.72rem;">{{ $isAr ? 'تطوير وتسويق' : 'Real estate agency' }}</span>
+                            </div>
+
+                            <!-- Option 3: Broker -->
+                            <div class="darli-role-card flex-fill text-center p-2 rounded-3 border" data-role="broker" style="cursor: pointer; transition: all 0.2s;">
+                                <div class="darli-role-icon mb-1">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                </div>
+                                <span class="darli-role-title fw-bold d-block" style="font-size: 0.9rem;">{{ $isAr ? 'سمسار' : 'Broker / Agent' }}</span>
+                                <span class="darli-role-sub text-muted" style="font-size: 0.72rem;">{{ $isAr ? 'وسيط عقاري حر' : 'Independent agent' }}</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Email & Phone -->
-                    <div class="row g-2 mb-3">
-                        <div class="col-7">
-                            <label class="darli-auth-label" for="reg-email">{{ $isAr ? 'البريد الإلكتروني' : 'Email Address' }} <span class="text-danger">*</span></label>
-                            <input type="email" id="reg-email" name="email" class="darli-auth-input" placeholder="name@example.com" required>
+                    <!-- PENDING APPROVAL NOTICE (FOR COMPANY & BROKER) -->
+                    <div id="darli-role-notice" class="p-2 px-3 mb-3 d-none" style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; font-size: 0.82rem; color: #92400E;">
+                        ⏳ <strong>{{ $isAr ? 'ملاحظة هامة:' : 'Important Notice:' }}</strong>
+                        <span id="darli-role-notice-text">
+                            {{ $isAr ? 'حسابات الشركات والوسطاء تخضع للمراجعة والاعتماد من قبل إدارة دارلي قبل إتاحة إضافة ونشر العقارات والمشاريع.' : 'Partner accounts require review and activation by Darli administration before listing properties or projects.' }}
+                        </span>
+                    </div>
+
+                    <!-- FULL NAME / CONTACT NAME -->
+                    <div class="darli-auth-group">
+                        <label class="darli-auth-label" for="reg-name">
+                            <span id="darli-label-name">{{ $isAr ? 'الاسم بالكامل' : 'Full Name' }}</span> <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" id="reg-name" name="name" class="darli-auth-input" placeholder="{{ $isAr ? 'محمد أحمد علي' : 'Full Name' }}" required>
+                    </div>
+
+                    <!-- PHONE NUMBER (MANDATORY FOR ALL) -->
+                    <div class="darli-auth-group">
+                        <label class="darli-auth-label" for="reg-phone">
+                            <span id="darli-label-phone">{{ $isAr ? 'رقم الهاتف' : 'Phone Number' }}</span> <span class="text-danger">*</span>
+                        </label>
+                        <input type="tel" id="reg-phone" name="phone" class="darli-auth-input" placeholder="01012345678" required dir="ltr">
+                    </div>
+
+                    <!-- COMPANY SPECIFIC FIELDS (Hidden for client & broker) -->
+                    <div id="darli-company-fields" class="d-none">
+                        <!-- Company Name -->
+                        <div class="darli-auth-group">
+                            <label class="darli-auth-label" for="reg-company-name">
+                                {{ $isAr ? 'اسم الشركة / الوكالة العقارية' : 'Company / Agency Name' }} <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" id="reg-company-name" name="company_name" class="darli-auth-input" placeholder="{{ $isAr ? 'شركة النيل للتطوير العقاري' : 'Al-Nile Real Estate Development' }}">
                         </div>
-                        <div class="col-5">
-                            <label class="darli-auth-label" for="reg-phone">{{ $isAr ? 'رقم الهاتف' : 'Phone' }}</label>
-                            <input type="tel" id="reg-phone" name="phone" class="darli-auth-input" placeholder="01001234567">
+
+                        <!-- Company Official Email -->
+                        <div class="darli-auth-group">
+                            <label class="darli-auth-label" for="reg-company-email">
+                                {{ $isAr ? 'البريد الإلكتروني الرسمي للشركة' : 'Company Official Email' }} <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" id="reg-company-email" name="company_email" class="darli-auth-input" placeholder="info@company.com" dir="ltr">
                         </div>
                     </div>
 
-                    <!-- Password -->
+                    <!-- BROKER SPECIFIC FIELDS (National ID Upload) -->
+                    <div id="darli-broker-fields" class="d-none">
+                        <div class="darli-auth-group">
+                            <label class="darli-auth-label" for="reg-national-id">
+                                {{ $isAr ? 'صورة بطاقة الرقم القومي' : 'National ID Card Photo' }} <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" id="reg-national-id" name="national_id_image" class="darli-auth-input" accept="image/*,.pdf" style="padding: 6px 10px;">
+                            <small class="text-muted d-block mt-1" style="font-size: 0.78rem;">
+                                {{ $isAr ? 'يرجى إرفاق صورة واضحة لبطاقة الرقم القومي (وجه أو وجهين) لتوثيق واعتماد الحساب من إدارة المنصة.' : 'Please upload a clear copy of your National ID for verification.' }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- OPTIONAL EMAIL FOR CLIENT (Hidden by default since user asked name + phone only) -->
+                    <input type="hidden" name="email" id="reg-email" value="">
+
+                    <!-- PASSWORD -->
                     <div class="darli-auth-group">
                         <label class="darli-auth-label" for="reg-password">{{ $isAr ? 'كلمة المرور' : 'Password' }} <span class="text-danger">*</span></label>
                         <div class="position-relative">
@@ -403,7 +500,7 @@
                         </div>
                     </div>
 
-                    <!-- Confirm Password -->
+                    <!-- CONFIRM PASSWORD -->
                     <div class="darli-auth-group">
                         <label class="darli-auth-label" for="reg-password-confirmation">{{ $isAr ? 'تأكيد كلمة المرور' : 'Confirm Password' }} <span class="text-danger">*</span></label>
                         <div class="position-relative">
@@ -414,37 +511,46 @@
                         </div>
                     </div>
 
-                    <!-- Terms Checkbox -->
+                    <!-- TERMS CHECKBOX -->
                     <div class="mb-3" style="font-size: 0.88rem;">
                         <label class="d-flex align-items-center gap-2 mb-0" style="cursor: pointer;">
                             <input type="checkbox" name="agree_terms" class="form-check-input mt-0" value="1" required checked>
-                            <span>{{ $isAr ? 'أوافق على الشروط والأحكام وسياسة الخصوصية' : 'I agree to the Terms & Privacy Policy' }}</span>
+                            <span>
+                                @if($isAr)
+                                    أوافق على <a href="{{ route('terms.index', ['locale' => $locale]) }}" target="_blank" onclick="event.stopPropagation();" class="text-decoration-underline fw-semibold" style="color: var(--primary, #db1d23) !important;">الشروط والأحكام</a> و<a href="{{ route('privacy-policy.index', ['locale' => $locale]) }}" target="_blank" onclick="event.stopPropagation();" class="text-decoration-underline fw-semibold" style="color: var(--primary, #db1d23) !important;">سياسة الخصوصية</a>
+                                @else
+                                    I agree to the <a href="{{ route('terms.index', ['locale' => $locale]) }}" target="_blank" onclick="event.stopPropagation();" class="text-decoration-underline fw-semibold" style="color: var(--primary, #db1d23) !important;">Terms & Conditions</a> and <a href="{{ route('privacy-policy.index', ['locale' => $locale]) }}" target="_blank" onclick="event.stopPropagation();" class="text-decoration-underline fw-semibold" style="color: var(--primary, #db1d23) !important;">Privacy Policy</a>
+                                @endif
+                            </span>
                         </label>
                     </div>
 
-                    <!-- Submit -->
+                    <!-- SUBMIT -->
                     <button type="submit" class="darli-auth-btn-submit">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-                        <span>{{ $isAr ? 'إنشاء حساب جديد' : 'Create Account' }}</span>
+                        <span id="darli-reg-btn-text">{{ $isAr ? 'إنشاء حساب جديد' : 'Create Account' }}</span>
                     </button>
 
-                    <!-- Social Logins (Google & Facebook ONLY) -->
-                    <div class="darli-auth-divider">
-                        <span>{{ $isAr ? 'أو التسجيل السريع بواسطة' : 'Or register with' }}</span>
-                    </div>
+                    {{-- Social registration is temporarily disabled. Remove this Blade comment to restore it.
+                    <div id="darli-reg-social-section" class="darli-social-wrapper">
+                        <div class="darli-auth-divider">
+                            <span>{{ $isAr ? 'أو التسجيل السريع بواسطة' : 'Or quick register with' }}</span>
+                        </div>
 
-                    <div class="darli-social-btns">
-                        <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'google']) }}" class="darli-social-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17c1.8 3.7 5.6 6.5 10.1 6.5z"/></svg>
-                            <span>Google</span>
-                        </a>
-                        <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'facebook']) }}" class="darli-social-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                            <span>Facebook</span>
-                        </a>
+                        <div class="darli-social-btns">
+                            <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'google']) }}" class="darli-social-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9z"/><path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 17c1.8 3.7 5.6 6.5 10.1 6.5z"/></svg>
+                                <span>Google</span>
+                            </a>
+                            <a href="{{ route('social.login', ['locale' => $locale, 'provider' => 'facebook']) }}" class="darli-social-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                <span>Facebook</span>
+                            </a>
+                        </div>
                     </div>
+                    --}}
 
-                    <!-- Switch to Login -->
+                    <!-- SWITCH TO LOGIN -->
                     <div class="darli-auth-switch">
                         <span>{{ $isAr ? 'لديك حساب بالفعل؟' : 'Already have an account?' }}</span>
                         <a href="#modalLogin" class="darli-switch-to-login">{{ $isAr ? 'تسجيل الدخول' : 'Sign in' }}</a>

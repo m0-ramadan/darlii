@@ -130,6 +130,7 @@
                         <input type="text" name="translations[ar][slug]" class="ap-input"
                             value="{{ $old('translations.ar.slug', $arEditing->slug) }}" placeholder="cairo">
                     </div>
+                    @if (config('locales.admin_english_enabled'))
                     <div class="ap-field">
                         <label class="ap-label">الاسم بالإنجليزية</label>
                         <input type="text" name="translations[en][name]" class="ap-input"
@@ -140,6 +141,7 @@
                         <input type="text" name="translations[en][slug]" class="ap-input"
                             value="{{ $old('translations.en.slug', $enEditing->slug) }}" placeholder="cairo">
                     </div>
+                    @endif
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">

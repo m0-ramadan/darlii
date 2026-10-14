@@ -4,6 +4,8 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ProjectController as DashboardProjectController;
 use App\Http\Controllers\Dashboard\PropertyController as DashboardPropertyController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\LeadController;
@@ -19,12 +21,21 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (Request $request, VisitorPreferences $preferences) {
-    return redirect('/' . $preferences->locale($request));
-});
+// Redirect any incoming /ar or /en URL directly to clean root-level URL
+Route::get('/ar/{path?}', function (?string $path = null) {
+    $qs = request()->getQueryString();
+    $target = '/' . ($path ? ltrim($path, '/') : '');
+    return redirect($qs ? $target . '?' . $qs : $target, 301);
+})->where('path', '.*');
+
+Route::get('/en/{path?}', function (?string $path = null) {
+    $qs = request()->getQueryString();
+    $target = '/' . ($path ? ltrim($path, '/') : '');
+    return redirect($qs ? $target . '?' . $qs : $target, 301);
+})->where('path', '.*');
 
 Route::get('/homepage-{variant}', function () {
-    return redirect('/' . config('locales.default'), 301);
+    return redirect('/', 301);
 })->whereIn('variant', ['1', '2', '3', '4', '5']);
 
 Route::get('/language/switch/{locale}', LocaleController::class)
@@ -41,27 +52,21 @@ Route::match(['get', 'post'], '/ajax/render-ui-blocks', [LegacyCompatibilityCont
 Route::get('/currency/switch/{code}', [LegacyCompatibilityController::class, 'currency']);
 Route::get('/account/properties', function () {
     if (! auth()->check()) {
-        return redirect('/' . config('locales.default', 'ar') . '/login');
+        return redirect('/#modalLogin');
     }
     $user = auth()->user();
     if ($user->hasAnyRole(\App\Support\PermissionCatalog::panelRoles())) {
         return redirect('/admin/properties');
     }
-    return redirect('/' . config('locales.default', 'ar') . '/dashboard/properties');
+    return redirect('/dashboard/properties');
 });
 Route::get('/ajax/properties/map', [PropertyMapController::class, 'index'])->middleware('throttle:60,1');
 Route::get('/ajax/cities', [PropertyMapController::class, 'cities'])->middleware('throttle:60,1');
 Route::get('/ajax/projects/search', [LegacyCompatibilityController::class, 'projectSearch'])->middleware('throttle:60,1');
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('global.logout');
 
-Route::prefix('{locale}')
-    ->whereIn('locale', ['ar', 'en'])
-    ->middleware(['set.locale', 'set.currency'])
+Route::middleware(['set.locale', 'set.currency'])
     ->group(function () {
-        Route::get('/homepage-{variant}', function (string $locale) {
-            return redirect('/' . $locale, 301);
-        })->whereIn('variant', ['1', '2', '3', '4', '5']);
-
         // Public GET pages are rendered from the exact frontend files supplied by the user.
         Route::get('/', [LegacyFrontendController::class, 'home'])->name('home');
         // صفحات العقارات والمشروعات تُعرض من قاعدة البيانات (محتوى لوحة التحكم)
@@ -75,29 +80,32 @@ Route::prefix('{locale}')
         // المدونة والوظائف تُعرض من قاعدة البيانات (محتوى لوحة التحكم).
         Route::get('/blog', [ContentController::class, 'blog'])->name('blog.index');
         Route::get('/blog/{slug}', [ContentController::class, 'post'])->name('blog.show');
-        Route::get('/news/{slug}', fn(Request $request, string $locale, string $slug) => app(LegacyFrontendController::class)->page($request, $locale, 'news/' . $slug))->name('news.show');
+        Route::get('/news/{slug}', fn(Request $request, string $slug) => app(LegacyFrontendController::class)->page($request, 'news/' . $slug))->name('news.show');
         Route::get('/careers', [ContentController::class, 'careers'])->name('careers.index');
         Route::get('/careers/{slug}', [ContentController::class, 'career'])->name('careers.show');
         Route::get('/faqs', [ContentController::class, 'faqs'])->name('faqs.index');
         Route::get('/privacy-policy', [ContentController::class, 'privacyPolicy'])->name('privacy-policy.index');
+        Route::get('/terms-and-conditions', [ContentController::class, 'terms'])->name('terms.index');
+        Route::get('/terms', fn() => redirect()->route('terms.index'));
         Route::get('/contact-us', [ContentController::class, 'contactUs'])->name('contact-us.index');
         Route::post('/contact-us', [ContentController::class, 'submitContact'])->name('contact-us.submit');
-        Route::get('/wishlist', fn(Request $request, string $locale) => app(LegacyFrontendController::class)->page($request, $locale, 'wishlist'))->name('wishlist');
+        Route::get('/wishlist', fn(Request $request) => app(LegacyFrontendController::class)->page($request, 'wishlist'))->name('wishlist');
         Route::get('/feed/{type?}', [LegacyCompatibilityController::class, 'feed'])->whereIn('type', ['properties', 'projects', 'posts']);
-        Route::get('/account/properties', fn(string $locale) => redirect(auth()->check() ? '/admin' : '/' . $locale . '/login'));
+        Route::get('/account/properties', fn() => redirect(auth()->check() ? '/admin' : '/#modalLogin'));
         Route::get('/favorites/state', [FavoriteController::class, 'state'])->name('favorites.state');
 
-        // Original design login/register/password pages.
+        // Authentication uses the global in-page modals; keep the named URLs
+        // for forms and old links, but do not render standalone auth pages.
         Route::middleware('guest')->group(function () {
-            Route::get('/login', fn(Request $request, string $locale) => app(LegacyFrontendController::class)->page($request, $locale, 'login'))->name('login');
+            Route::get('/login', fn() => redirect('/#modalLogin'))->name('login');
             Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
-            Route::get('/register', fn(Request $request, string $locale) => app(LegacyFrontendController::class)->page($request, $locale, 'register'))->name('register');
-            Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
-            Route::get('/password/request', fn(Request $request, string $locale) => app(LegacyFrontendController::class)->page($request, $locale, 'password/request'))->name('password.request');
+            Route::get('/register', fn() => redirect('/#modalRegister'))->name('register');
+            Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:registration');
+            Route::get('/password/request', fn(Request $request) => app(LegacyFrontendController::class)->page($request, 'password/request'))->name('password.request');
             Route::post('/forgot-password', [AuthController::class, 'forgot'])->name('password.email')->middleware('throttle:5,1');
             Route::get('/reset-password/{token}', [AuthController::class, 'resetForm'])->name('password.reset');
             Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
-            Route::get('/auth/{provider}', fn(string $locale, string $provider) => redirect()->route('login', ['locale' => $locale]))->whereIn('provider', ['facebook', 'google'])->name('social.login');
+            Route::get('/auth/{provider}', fn() => redirect('/#modalLogin'))->whereIn('provider', ['facebook', 'google'])->name('social.login');
         });
 
         // Localized compatibility endpoints found in the original HTML/JS.
@@ -121,7 +129,7 @@ Route::prefix('{locale}')
             Route::get('/email/verify', fn() => view('auth.verify'))->name('verification.notice');
             Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
                 $request->fulfill();
-                return redirect()->route('home', ['locale' => app()->getLocale()]);
+                return redirect()->route('home');
             })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
             Route::post('/email/verification-notification', function (Request $request) {
                 $request->user()->sendEmailVerificationNotification();
@@ -134,15 +142,22 @@ Route::prefix('{locale}')
             Route::post('/properties/{property}/reviews', [ReviewController::class, 'store'])->middleware('throttle:5,1')->name('reviews.store');
 
             Route::prefix('dashboard')->name('dashboard.')->group(function () {
+                Route::get('/', [DashboardController::class, 'index'])->name('index');
                 Route::get('/properties', [DashboardPropertyController::class, 'index'])->name('properties.index');
                 Route::get('/properties/create', [DashboardPropertyController::class, 'create'])->name('properties.create');
                 Route::post('/properties', [DashboardPropertyController::class, 'store'])->name('properties.store');
                 Route::post('/properties/{property}/submit', [DashboardPropertyController::class, 'submit'])->name('properties.submit');
+                Route::post('/properties/{property}/sold', [DashboardPropertyController::class, 'markSold'])->name('properties.sold');
+                Route::post('/properties/{property}/available', [DashboardPropertyController::class, 'markAvailable'])->name('properties.available');
+
+                Route::get('/projects', [DashboardProjectController::class, 'index'])->name('projects.index');
+                Route::get('/projects/create', [DashboardProjectController::class, 'create'])->name('projects.create');
+                Route::post('/projects', [DashboardProjectController::class, 'store'])->name('projects.store');
             });
         });
 
         // Exact static pages such as about-us, contact-us, faqs, pricing-plans, homepage-2...5.
-        // Keep this last inside the locale group so backend routes above always win.
+        // Keep this last inside the group so backend routes above always win.
         Route::get('/{path}', [LegacyFrontendController::class, 'page'])
             ->where('path', '.*')
             ->name('legacy.page');

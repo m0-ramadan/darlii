@@ -220,10 +220,39 @@ class UserController extends Controller
         $this->guardScope($user);
         abort_if($user->id === $this->admin()->id, 403, 'لا يمكنك إيقاف حسابك.');
 
-        $user->update(['status' => $user->status === 'active' ? 'suspended' : 'active']);
+        $newStatus = $user->status === 'active' ? 'suspended' : 'active';
+        $user->update(['status' => $newStatus]);
+
+        if ($newStatus === 'active') {
+            if ($user->agentProfile) {
+                $user->agentProfile->update(['status' => 'active', 'verified_at' => now()]);
+            }
+            foreach ($user->agencies as $agency) {
+                $agency->update(['status' => 'active', 'verified_at' => now()]);
+            }
+        }
+
         AuditLogger::log('user.status', $user, [], ['status' => $user->status]);
 
-        return back()->with('success', $user->status === 'active' ? 'تم تفعيل الحساب.' : 'تم إيقاف الحساب.');
+        return back()->with('success', $user->status === 'active' ? 'تم اعتماد وتفعيل الحساب بنجاح.' : 'تم إيقاف الحساب.');
+    }
+
+    public function activate(User $user)
+    {
+        $this->authorizePermission('users.update');
+        $this->guardScope($user);
+
+        $user->update(['status' => 'active']);
+        if ($user->agentProfile) {
+            $user->agentProfile->update(['status' => 'active', 'verified_at' => now()]);
+        }
+        foreach ($user->agencies as $agency) {
+            $agency->update(['status' => 'active', 'verified_at' => now()]);
+        }
+
+        AuditLogger::log('user.activate', $user, [], ['status' => 'active']);
+
+        return back()->with('success', 'تم اعتماد وتفعيل حساب ' . $user->name . ' بنجاح.');
     }
 
     public function resetPassword(Request $request, User $user)
@@ -299,7 +328,7 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:190', Rule::unique('users', 'email')->ignore($user?->id)],
             'phone' => ['nullable', 'string', 'max:50'],
             'job_title' => ['nullable', 'string', 'max:150'],
-            'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
+            'status' => ['required', Rule::in(['active', 'pending', 'inactive', 'suspended'])],
             'manager_id' => ['nullable', 'exists:users,id'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'roles' => [$user ? 'nullable' : 'required', 'array'],

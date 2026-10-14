@@ -27,7 +27,7 @@ class LocaleController extends Controller
 
     private function destination(Request $request, string $locale, LocalizedUrlResolver $resolver): string
     {
-        $fallback = '/' . $locale;
+        $fallback = '/';
         $redirect = $request->query('redirect');
 
         if (! is_string($redirect) || $redirect === '') {
@@ -46,11 +46,12 @@ class LocaleController extends Controller
 
         $path = '/' . ltrim((string) ($parts['path'] ?? '/'), '/');
         $cleanPath = trim($path, '/');
+        $cleanPath = preg_replace('#^(?:ar|en|vi|fr|id)(?:/|$)#i', '', $cleanPath) ?? $cleanPath;
 
         if ($cleanPath === '') {
             $path = $fallback;
-        } elseif (! preg_match('#^(?:admin|api|up)(?:/|$)#i', $cleanPath)) {
-            $path = '/' . $resolver->forLocale($cleanPath, $locale);
+        } else {
+            $path = '/' . ltrim($cleanPath, '/');
         }
 
         $query = isset($parts['query']) && $parts['query'] !== '' ? '?' . $parts['query'] : '';

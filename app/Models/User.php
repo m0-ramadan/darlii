@@ -22,6 +22,11 @@ class User extends Authenticatable implements MustVerifyEmail {
  // ---------------------------------------------------------------- relations
  public function roles(){return $this->belongsToMany(Role::class,'role_user');}
  public function agentProfile(){return $this->hasOne(AgentProfile::class);}
+ public function agencies(){return $this->belongsToMany(Agency::class,'agency_user');}
+ public function getAgencyAttribute(){return $this->agencies()->first() ?? $this->agentProfile?->agency;}
+ public function isPending():bool{return $this->status === 'pending';}
+ public function isCompany():bool{return $this->hasRole('agency-manager') || $this->agencies()->exists();}
+ public function isBroker():bool{return $this->hasRole('agent') || $this->agentProfile()->exists();}
  public function manager(){return $this->belongsTo(self::class,'manager_id');}
  public function subordinates(){return $this->hasMany(self::class,'manager_id');}
  public function properties(){return $this->hasMany(Property::class,'owner_id');}
@@ -34,9 +39,11 @@ class User extends Authenticatable implements MustVerifyEmail {
  public function getAvatarUrlAttribute():string
  {
   if ($this->avatar_path) {
-   return str_starts_with($this->avatar_path, 'http')
-    ? $this->avatar_path
-    : asset('storage/' . ltrim($this->avatar_path, '/'));
+   if (str_starts_with($this->avatar_path, 'http')) {
+    return $this->avatar_path;
+   }
+   $trimmed = ltrim($this->avatar_path, '/');
+   return str_starts_with($trimmed, 'storage/') ? asset($trimmed) : asset('storage/' . $trimmed);
   }
 
   return 'https://ui-avatars.com/api/?background=0F3D2E&color=fff&name=' . urlencode($this->name ?: 'User');

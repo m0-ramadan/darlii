@@ -221,12 +221,36 @@
     </footer>
 
     <?php echo $__env->make('components.floating-whatsapp', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php echo $__env->make('components.floating-notifications', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <script src="<?php echo e(asset('themes/homzen/js/jquery.min.js')); ?>"></script>
     <script src="<?php echo e(asset('themes/homzen/js/popper.min.js')); ?>"></script>
     <script src="<?php echo e(asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js')); ?>"></script>
     <script defer src="<?php echo e(asset('themes/homzen/js/darli-mobile-menu.js')); ?>?v=1.1.2"></script>
     <script defer src="<?php echo e(asset('themes/homzen/js/theme-mode.js')); ?>?v=2.0.2"></script>
+
+    <?php if(setting('firebase.enabled', '1') == '1'): ?>
+        <script>
+            window.DarliFirebaseConfig = {
+                enabled: true,
+                apiKey: "<?php echo e(setting('firebase.api_key', 'AIzaSyBNv6O81fJnehjTBw12cc9IZOT-32Bfy9Q')); ?>",
+                authDomain: "<?php echo e(setting('firebase.auth_domain', 'khademate2.firebaseapp.com')); ?>",
+                projectId: "<?php echo e(setting('firebase.project_id', 'khademate2')); ?>",
+                storageBucket: "<?php echo e(setting('firebase.storage_bucket', 'khademate2.firebasestorage.app')); ?>",
+                messagingSenderId: "<?php echo e(setting('firebase.messaging_sender_id', '504226887841')); ?>",
+                appId: "<?php echo e(setting('firebase.app_id', '1:504226887841:web:cbc5abdc30304c6014d8e0')); ?>",
+                measurementId: "<?php echo e(setting('firebase.measurement_id', 'G-01HJBBQZP7')); ?>",
+                vapidKey: "<?php echo e(setting('firebase.vapid_public_key', '')); ?>",
+                userId: <?php echo e(auth()->id() ?? 'null'); ?>
+
+            };
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+        <script defer src="<?php echo e(asset('themes/homzen/js/darli-notifications.js')); ?>?v=1.0.1"></script>
+    <?php endif; ?>
+    <script defer src="<?php echo e(asset('themes/homzen/js/darli-testimonials-drag.js')); ?>?v=1.0.0"></script>
+    <script defer src="<?php echo e(asset('themes/homzen/js/darli-visitor-tracker.js')); ?>?v=1.0.0"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

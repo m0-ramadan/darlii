@@ -24,10 +24,13 @@ class ContentController extends Controller
         ]);
     }
 
-    public function post(string $locale, string $slug)
+    public function post(?string $param1 = null, ?string $param2 = null)
     {
+        $slug = $param2 ?? $param1 ?? '';
+        $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
+
         $post = Post::with('translations')
-            ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->where('slug', $slug))
+            ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->firstOrFail();
 
         PageViewTracker::track('blog', [$slug]);
@@ -74,10 +77,13 @@ class ContentController extends Controller
         ]);
     }
 
-    public function career(string $locale, string $slug)
+    public function career(?string $param1 = null, ?string $param2 = null)
     {
+        $slug = $param2 ?? $param1 ?? '';
+        $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
+
         $career = Career::with('translations')
-            ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->where('slug', $slug))
+            ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->firstOrFail();
 
         PageViewTracker::track('careers', [$slug]);
@@ -122,6 +128,19 @@ class ContentController extends Controller
         return view('pages.privacy-policy', [
             'page' => $page,
             'shell' => $this->shell('privacy-policy'),
+        ]);
+    }
+
+    public function terms()
+    {
+        $locale = app()->getLocale();
+        PageViewTracker::track('terms-and-conditions');
+
+        $page = Page::with('translations')->where('key', 'terms-and-conditions')->first();
+
+        return view('pages.terms-and-conditions', [
+            'page' => $page,
+            'shell' => $this->shell('terms-and-conditions'),
         ]);
     }
 

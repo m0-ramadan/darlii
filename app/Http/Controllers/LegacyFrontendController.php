@@ -17,13 +17,15 @@ class LegacyFrontendController extends Controller
         private readonly VisitorPreferences $visitorPreferences
     ) {}
 
-    public function home(Request $request, string $locale): Response
+    public function home(Request $request, ?string $locale = null): Response
     {
+        $locale = $locale ?: (app()->getLocale() ?: config('locales.default', 'ar'));
         $localizedHome = $locale . '/homepage-4';
         $html = $this->renderer->render($request, $localizedHome);
 
-        if ($html === null && $locale === 'en') {
-            $html = $this->renderer->render($request, 'homepage-4');
+        if ($html === null) {
+            $html = $this->renderer->render($request, 'ar/homepage-4')
+                ?? $this->renderer->render($request, 'homepage-4');
         }
 
         abort_if($html === null, 404);
@@ -33,23 +35,35 @@ class LegacyFrontendController extends Controller
         return response($html)->header('Content-Type', 'text/html; charset=UTF-8');
     }
 
-    public function page(Request $request, string $locale, string $path = ''): Response
+    public function page(Request $request, ?string $param1 = null, string $path = ''): Response
     {
+        $supported = config('locales.supported', ['ar', 'en']);
+        if ($param1 !== null && ! in_array($param1, $supported, true)) {
+            $path = $path !== '' ? $param1 . '/' . $path : $param1;
+            $locale = app()->getLocale() ?: config('locales.default', 'ar');
+        } else {
+            $locale = $param1 ?: (app()->getLocale() ?: config('locales.default', 'ar'));
+        }
+
         $segments = array_values(array_filter(explode('/', trim($path, '/'))));
 
         $resolved = trim($locale . '/' . $path, '/');
         $html = $this->renderer->render($request, $resolved);
 
+        if ($html === null && $locale !== 'ar') {
+            $html = $this->renderer->render($request, trim('ar/' . $path, '/'));
+        }
+
+        if ($html === null) {
+            $html = $this->renderer->render($request, trim($path, '/'));
+        }
+
         if ($html === null) {
             $legacyPath = $this->localizedUrlResolver->legacyMirrorPath($locale, $path);
             if ($legacyPath !== $path) {
-                $html = $this->renderer->render($request, trim($locale . '/' . $legacyPath, '/'));
+                $html = $this->renderer->render($request, trim($locale . '/' . $legacyPath, '/'))
+                    ?? $this->renderer->render($request, trim('ar/' . $legacyPath, '/'));
             }
-        }
-
-        if ($html === null && $locale === 'en') {
-            // The root archive contains the English versions of a few pages.
-            $html = $this->renderer->render($request, trim($path, '/'));
         }
 
         abort_if($html === null, 404);

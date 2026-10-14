@@ -60,6 +60,7 @@
                     </div>
                 </div>
 
+                @if (config('locales.admin_english_enabled'))
                 <div class="ap-card">
                     <div class="ap-card__head">
                         <h2 class="ap-card__title">
@@ -86,6 +87,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             {{-- ------------------------------------------------ الإعدادات --}}

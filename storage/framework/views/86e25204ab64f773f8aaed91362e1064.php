@@ -88,6 +88,19 @@
                                 </td>
                                 <td>
                                     <div class="ap-table__actions">
+                                        <?php
+                                            $publicUrl = match($page->key) {
+                                                'privacy-policy' => route('privacy-policy.index', ['locale' => 'ar']),
+                                                'terms-and-conditions' => route('terms.index', ['locale' => 'ar']),
+                                                'faqs' => route('faqs.index', ['locale' => 'ar']),
+                                                'contact-us' => route('contact-us.index', ['locale' => 'ar']),
+                                                default => url('/ar/' . ($arTranslation?->slug ?: $page->key)),
+                                            };
+                                        ?>
+                                        <a href="<?php echo e($publicUrl); ?>" target="_blank"
+                                            class="ap-btn ap-btn--ghost ap-btn--sm" title="عرض في الموقع">
+                                            <?php echo $__env->make('admin.partials.icon', ['iconName' => 'external-link', 'size' => 15], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                                        </a>
                                         <a href="<?php echo e(admin_route('admin.pages.edit', $page)); ?>"
                                             class="ap-btn ap-btn--ghost ap-btn--sm" title="تعديل">
                                             <?php echo $__env->make('admin.partials.icon', ['iconName' => 'edit', 'size' => 15], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

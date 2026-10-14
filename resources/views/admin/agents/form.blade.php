@@ -42,12 +42,14 @@
                                     placeholder="مثال: شركة النيل للتطوير العقاري">
                             </div>
 
+                            @if (config('locales.admin_english_enabled'))
                             <div class="ap-field">
                                 <label class="ap-label">الاسم بالإنجليزية</label>
                                 <input type="text" name="display_name_en" class="ap-input" dir="ltr"
                                     value="{{ old('display_name_en', $enTranslation?->display_name) }}"
                                     placeholder="e.g. Nile Real Estate Development">
                             </div>
+                            @endif
                         </div>
 
                         <div class="ap-grid ap-grid--2" style="margin-top: 15px;">
@@ -96,6 +98,49 @@
                             </div>
                         </div>
 
+                        <div class="ap-grid ap-grid--2" style="margin-top: 15px;">
+                            <div class="ap-field">
+                                <label class="ap-label">المدينة / المركز <span>*</span></label>
+                                <input type="text" name="city" list="citiesList" class="ap-input"
+                                    value="{{ old('city', $agent->city) }}"
+                                    placeholder="مثال: بني سويف">
+                                <datalist id="citiesList">
+                                    <option value="بني سويف">
+                                    <option value="بني سويف الجديدة">
+                                    <option value="الواسطى">
+                                    <option value="ناصر">
+                                    <option value="إهناسيا">
+                                    <option value="ببا">
+                                    <option value="الفشن">
+                                    <option value="سمسطا">
+                                </datalist>
+                                <small class="text-muted" style="font-size: 11px;">المدينة التي تظهر في أسفل بطاقة الشركة / الوكيل.</small>
+                            </div>
+
+                            <div class="ap-field">
+                                <label class="ap-label">الأيقونة المميزة (في سلايدر الشركاء)</label>
+                                <select name="icon" class="ap-select">
+                                    <option value="building" @selected(old('icon', $agent->icon) === 'building')>🏢 مبنى استثماري وتطوير (building)</option>
+                                    <option value="landmark" @selected(old('icon', $agent->icon) === 'landmark')>🏛️ صرح وتعمير (landmark)</option>
+                                    <option value="layers" @selected(old('icon', $agent->icon) === 'layers')>📑 طبقات واستثمار (layers)</option>
+                                    <option value="compass" @selected(old('icon', $agent->icon) === 'compass')>🧭 بوصلة وتسويق (compass)</option>
+                                    <option value="building-2" @selected(old('icon', $agent->icon) === 'building-2')>🏬 مكتب / شركة عقارية (building-2)</option>
+                                    <option value="home" @selected(old('icon', $agent->icon) === 'home')>🏡 منازل وسكن (home)</option>
+                                    <option value="briefcase" @selected(old('icon', $agent->icon) === 'briefcase')>💼 وساطة واستشارات (briefcase)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="ap-field" style="margin-top: 12px;">
+                            <label class="d-flex align-items-center gap-2" style="cursor: pointer;">
+                                <input type="checkbox" name="featured_on_homepage" value="1" @checked(old('featured_on_homepage', $agent->featured_on_homepage))>
+                                <span class="fw-bold" style="font-size: 13.5px; color: var(--ap-primary);">عرض في قسم "شركاؤنا المميزون" في الصفحة الرئيسية</span>
+                            </label>
+                            <small class="text-muted" style="display: block; margin-top: 4px; font-size: 11.5px;">
+                                عند التفعيل، ستظهر هذه الشركة / الوكيل في سلايدر "تعرف على وكلائنا" بالصفحة الرئيسية مع رابط لصفحة تفاصيلها.
+                            </small>
+                        </div>
+
                         {{-- بنود التعامل والنسب والأرقام (نص حر) --}}
                         <div class="ap-field" style="margin-top: 18px; padding-top: 15px; border-top: 1px dashed var(--ap-border);">
                             <label class="ap-label d-flex align-items-center justify-content-between">
@@ -128,10 +173,12 @@
                             <textarea name="bio_ar" class="ap-textarea" rows="4" placeholder="نبذة تعريفية عن الشركة أو الوكيل، مجالات التخصص، والخدمات المقدمة...">{{ old('bio_ar', $arTranslation?->bio ?? $agent->bio) }}</textarea>
                         </div>
 
+                        @if (config('locales.admin_english_enabled'))
                         <div class="ap-field">
                             <label class="ap-label">نبذة بالإنجليزية (اختياري)</label>
                             <textarea name="bio_en" class="ap-textarea" rows="3" dir="ltr" placeholder="Short biography / summary in English...">{{ old('bio_en', $enTranslation?->bio) }}</textarea>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

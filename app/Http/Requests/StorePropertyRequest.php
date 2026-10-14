@@ -9,7 +9,24 @@ class StorePropertyRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        if ($this->user() && $this->user()->status === 'pending') {
+            return false;
+        }
+
         return $this->user() !== null;
+    }
+
+    protected function failedAuthorization()
+    {
+        if ($this->user() && $this->user()->status === 'pending') {
+            throw new \Illuminate\Http\Exceptions\HttpResponseException(
+                redirect()
+                    ->route('dashboard.index', ['locale' => app()->getLocale()])
+                    ->with('status_warning', 'حسابك قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة عقارات جديدة حتى يتم تفعيل حسابك من قبل الإدارة.')
+            );
+        }
+
+        parent::failedAuthorization();
     }
 
     public function rules(): array
@@ -31,6 +48,9 @@ class StorePropertyRequest extends FormRequest
             'translations.*.name' => ['required_without_all:translations.ar.name,translations.en.name', 'nullable', 'string', 'max:190'],
             'translations.*.slug' => ['nullable', 'string', 'max:190'],
             'translations.*.description' => ['nullable', 'string'],
+            'floor_plan_name' => ['nullable', 'string', 'max:190'],
+            'floor_plan_image' => ['nullable', 'image', 'max:10240'],
+            'floor_plan_description' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

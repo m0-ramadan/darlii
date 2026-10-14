@@ -142,6 +142,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'properties.featured_limit', 'group' => 'properties', 'type' => 'number', 'value' => '6', 'label' => 'عدد العقارات المميزة المسموح بها'],
             ['key' => 'properties.expiry_days', 'group' => 'properties', 'type' => 'number', 'value' => '90', 'label' => 'مدة انتهاء العقار (أيام)'],
             ['key' => 'properties.reference_prefix', 'group' => 'properties', 'value' => 'DAR', 'label' => 'بادئة كود العقار'],
+            ['key' => 'properties.contact_display_mode', 'group' => 'properties', 'type' => 'select', 'value' => 'platform_only', 'label' => 'طريقة عرض بيانات التواصل في تفاصيل العقار', 'help' => 'platform_only: أرقام دارلي فقط | platform_with_agent_name: اسم السمسار مع أرقام دارلي | agent_direct: بيانات السمسار مباشرة'],
 
             // ------------------------------------------------------- leads
             ['key' => 'leads.auto_assign_agent', 'group' => 'leads', 'type' => 'boolean', 'value' => '1', 'label' => 'إسناد العميل المحتمل تلقائياً لصاحب العقار'],

@@ -29,7 +29,7 @@ class CareerController extends Controller
         if ($request->filled('q')) {
             $term = trim((string) $request->input('q'));
             $query->where(function ($q) use ($term) {
-                $q->whereHas('translations', fn ($t) => $t->where('title', 'like', "%{$term}%")->orWhere('summary', 'like', "%{$term}%"))
+                $q->whereHas('translations', fn($t) => $t->where('title', 'like', "%{$term}%")->orWhere('summary', 'like', "%{$term}%"))
                     ->orWhere('department', 'like', "%{$term}%")
                     ->orWhere('location', 'like', "%{$term}%");
             });
@@ -110,7 +110,7 @@ class CareerController extends Controller
                 'status' => $data['status'],
             ]);
 
-            $baseSlug = Str::slug($data['title_en'] ?: $data['title_ar']) ?: 'job-' . Str::random(6);
+            $baseSlug = Str::slug(($data['title_en'] ?? null) ?: $data['title_ar']) ?: 'job-' . Str::random(6);
 
             $career->translations()->create([
                 'locale' => 'ar',
@@ -122,7 +122,7 @@ class CareerController extends Controller
                 'seo_description' => Str::limit($data['summary_ar'] ?? $data['title_ar'], 160),
             ]);
 
-            if (!empty($data['title_en'])) {
+            if (config('locales.admin_english_enabled') && !empty($data['title_en'])) {
                 $career->translations()->create([
                     'locale' => 'en',
                     'title' => $data['title_en'],
@@ -139,9 +139,13 @@ class CareerController extends Controller
             return $career;
         });
 
+        if ($request->boolean('send_broadcast_notification')) {
+            $this->broadcastCareerNotification($career, 'created');
+        }
+
         return redirect()
             ->to(admin_route('admin.careers.index'))
-            ->with('status', 'تمت إضافة الوظيفة بنجاح.');
+            ->with('status', 'تمت إضافة الوظيفة بنجاح.' . ($request->boolean('send_broadcast_notification') ? ' وتم بث الإشعار لجميع المشتركين.' : ''));
     }
 
     public function edit(Career $career)
@@ -202,7 +206,7 @@ class CareerController extends Controller
                 ]
             );
 
-            if (!empty($data['title_en'])) {
+            if (config('locales.admin_english_enabled') && !empty($data['title_en'])) {
                 $career->translations()->updateOrCreate(
                     ['locale' => 'en'],
                     [
@@ -218,9 +222,13 @@ class CareerController extends Controller
             AuditLogger::log('career.updated', $career, $old, $career->fresh()->only(array_keys($old)));
         });
 
+        if ($request->boolean('send_broadcast_notification')) {
+            $this->broadcastCareerNotification($career, 'updated');
+        }
+
         return redirect()
             ->to(admin_route('admin.careers.index'))
-            ->with('status', 'تم تحديث بيانات الوظيفة بنجاح.');
+            ->with('status', 'تم تحديث بيانات الوظيفة بنجاح.' . ($request->boolean('send_broadcast_notification') ? ' وتم بث الإشعار لجميع المشتركين.' : ''));
     }
 
     public function toggleStatus(Career $career): RedirectResponse
@@ -264,5 +272,24 @@ class CareerController extends Controller
             'applications' => $applications,
         ]);
     }
-}
 
+    private function broadcastCareerNotification(Career $career, string $action = 'created'): void
+    {
+        try {
+            $arTranslation = $career->translations()->where('locale', 'ar')->first();
+            $title = ($action === 'created' ? 'فرصة عمل جديدة: ' : 'تحديث وظيفة: ') . ($arTranslation?->title ?: 'وظيفة شاغرة في دارلي');
+            $body = Str::limit(strip_tags((string) ($arTranslation?->summary ?: $arTranslation?->description)), 150) ?: 'انضم إلى فريق عمل منصة دارلي العقارية، تصفح تفاصيل الوظيفة وشروط التقديم الآن.';
+            $slug = $arTranslation?->slug ?: $career->id;
+
+            app(\App\Services\Notifications\FcmNotificationService::class)->send([
+                'title' => $title,
+                'body' => $body,
+                'image_path' => asset('themes/homzen/images/logo/logo-darli.png'),
+                'action_url' => url('/ar/careers/' . $slug),
+                'target_type' => 'all',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Career notification broadcast failed: ' . $e->getMessage());
+        }
+    }
+}

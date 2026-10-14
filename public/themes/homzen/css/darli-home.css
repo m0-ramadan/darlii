@@ -1883,9 +1883,67 @@ html[data-theme="light"] .darli-adv-amenity-item {
 }
 
 .darli-partners-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  display: flex !important;
+  gap: 20px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  padding: 10px 4px 20px !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.darli-partners-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.darli-partners-grid.is-dragging {
+  cursor: grabbing !important;
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+}
+
+.darli-partner-card {
+  flex: 0 0 calc((100% - 80px) / 5) !important;
+  min-width: 220px !important;
+  max-width: 280px !important;
+  scroll-snap-align: start;
+  user-select: none;
+}
+
+.darli-partner-card * {
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+@media (max-width: 1200px) {
+  .darli-partner-card {
+    flex: 0 0 calc((100% - 60px) / 4) !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .darli-partner-card {
+    flex: 0 0 calc((100% - 40px) / 3) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .darli-partner-card {
+    flex: 0 0 calc((100% - 20px) / 2) !important;
+    min-width: 200px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .darli-partner-card {
+    flex: 0 0 85% !important;
+    min-width: 220px !important;
+  }
 }
 
 .darli-partner-card {
@@ -2256,14 +2314,22 @@ html[data-theme="dark"] .darli-dot::before {
 
 .darli-calc-result-box {
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   gap: 14px;
   text-align: right;
 }
 
+html[dir="ltr"] .darli-calc-result-box {
+  flex-direction: row;
+  text-align: left;
+}
+
 .darli-calc-result-box .calc-icon {
   color: var(--darli-gold);
   font-size: 2.2rem;
+  display: flex;
+  align-items: center;
 }
 
 .darli-result-label {
@@ -2405,15 +2471,39 @@ html[data-theme="dark"] .darli-dot::before {
 }
 
 .darli-testimonials-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  display: flex !important;
+  gap: 28px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  padding: 10px 4px 20px !important;
+  user-select: none;
+  -webkit-user-select: none;
   max-width: 1050px;
   margin: 0 auto;
   text-align: right;
 }
 
+.darli-testimonials-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.darli-testimonials-grid.is-dragging {
+  cursor: grabbing !important;
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+}
+
 .darli-testimonial-card {
+  flex: 0 0 calc((100% - 28px) / 2) !important;
+  min-width: calc((100% - 28px) / 2) !important;
+  max-width: calc((100% - 28px) / 2) !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   background: #f8fafc;
   border: 1px solid var(--darli-border-light);
   border-radius: var(--darli-radius-lg);
@@ -2423,6 +2513,13 @@ html[data-theme="dark"] .darli-dot::before {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.darli-testimonial-card * {
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .darli-stars-row {
@@ -2810,37 +2907,73 @@ html[data-theme="dark"] .darli-dot::before {
 }
 
 .darli-newsletter-form {
+  position: relative;
   display: flex;
-  gap: 8px;
+  align-items: center;
+  background: #152238 !important;
+  border: 1px solid #1e2d4a !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
   margin-top: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.darli-newsletter-input {
-  flex-grow: 1;
-  background: #152238;
-  border: 1px solid #1e2d4a;
-  color: #ffffff;
-  padding: 10px 14px;
-  border-radius: var(--darli-radius-sm);
-  font-size: 0.875rem;
-  outline: none;
+.darli-newsletter-form:focus-within {
+  border-color: var(--darli-gold) !important;
+  box-shadow: 0 0 0 3px rgba(201, 154, 69, 0.2) !important;
+}
+
+.darli-footer .darli-newsletter-input,
+.darli-newsletter-form .darli-newsletter-input,
+input.darli-newsletter-input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  padding: 10px 14px !important;
+  font-size: 0.875rem !important;
+  outline: none !important;
+  height: 44px !important;
+  box-shadow: none !important;
+}
+
+.darli-footer .darli-newsletter-input::placeholder,
+.darli-newsletter-form .darli-newsletter-input::placeholder,
+input.darli-newsletter-input::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
 }
 
 .darli-btn-newsletter {
-  background-color: var(--darli-gold);
-  color: #ffffff;
-  border: none;
-  padding: 10px 16px;
-  border-radius: var(--darli-radius-sm);
+  background-color: var(--darli-gold) !important;
+  color: #ffffff !important;
+  border: none !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  border-radius: 8px !important;
   cursor: pointer;
-  display: flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  padding: 0 !important;
+  transition: all 0.2s ease;
+  flex-shrink: 0 !important;
 }
 
 .darli-btn-newsletter:hover {
-  background-color: var(--darli-gold-dark);
+  background-color: var(--darli-gold-dark) !important;
+  transform: scale(1.05);
+}
+
+html[dir="rtl"] .darli-btn-newsletter svg,
+html[dir="rtl"] .darli-btn-newsletter i {
+  transform: scaleX(-1);
 }
 
 .darli-footer-bottom {
@@ -3033,6 +3166,21 @@ html[data-theme="dark"] .darli-calc-actions-row {
   border-color: #1a3152 !important;
 }
 
+html[data-theme="dark"] .darli-btn-calc {
+  background-color: var(--darli-gold) !important;
+  color: #071527 !important;
+}
+
+html[data-theme="dark"] .darli-btn-calc:hover {
+  background-color: var(--darli-gold-dark) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .darli-calc-result-box {
+  background: rgba(201, 154, 69, 0.12) !important;
+  border-color: rgba(201, 154, 69, 0.35) !important;
+}
+
 html[data-theme="dark"] .darli-card-features {
   color: #cbd5e1 !important;
 }
@@ -3067,8 +3215,78 @@ html[data-theme="dark"] .darli-card-heart {
   .darli-locations-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  /* Mortgage Calculator Tablet */
+  .darli-calculator-section {
+    padding: 50px 0;
+  }
   .darli-calculator-box {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .darli-calc-sidebar {
+    order: -1;
+    padding: 28px 24px 22px 24px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0b1f3a 0%, #071527 100%);
+    border-bottom: 1px solid rgba(201, 154, 69, 0.25);
+  }
+  .darli-calc-sidebar > div:first-child {
+    position: relative;
+    z-index: 2;
+    max-width: 82%;
+  }
+  .darli-calc-sidebar-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    background: rgba(201, 154, 69, 0.18);
+    border: 1px solid rgba(201, 154, 69, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .darli-calc-sidebar-icon svg,
+  .darli-calc-sidebar-icon i {
+    width: 22px;
+    height: 22px;
+  }
+  .darli-calc-sidebar h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+  .darli-calc-sidebar p {
+    font-size: 0.875rem;
+    color: #cbd5e1;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .darli-calc-wireframe {
+    position: absolute;
+    left: -10px;
+    bottom: -15px;
+    width: 150px;
+    margin-top: 0;
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 1;
+  }
+  html[dir="ltr"] .darli-calc-wireframe {
+    left: auto;
+    right: -10px;
+  }
+  .darli-calc-form-container {
+    padding: 30px 24px;
+  }
+  .darli-calc-form-container > h3,
+  .darli-calc-form-container > p {
+    display: none;
   }
   .darli-recommended-card {
     grid-template-columns: 1fr;
@@ -3079,6 +3297,158 @@ html[data-theme="dark"] .darli-card-heart {
 }
 
 @media (max-width: 768px) {
+  /* Mortgage Calculator Mobile */
+  .darli-calculator-section {
+    padding: 35px 0;
+  }
+  .darli-calculator-box {
+    border-radius: 16px;
+  }
+  .darli-calc-sidebar {
+    padding: 24px 18px 18px 18px;
+  }
+  .darli-calc-sidebar > div:first-child {
+    max-width: 86%;
+  }
+  .darli-calc-sidebar-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+  .darli-calc-sidebar h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+  }
+  .darli-calc-sidebar p {
+    font-size: 0.825rem;
+    line-height: 1.5;
+  }
+  .darli-calc-wireframe {
+    width: 120px;
+    bottom: -10px;
+    left: -8px;
+    opacity: 0.15;
+  }
+  html[dir="ltr"] .darli-calc-wireframe {
+    left: auto;
+    right: -8px;
+  }
+  .darli-calc-form-container {
+    padding: 22px 16px;
+  }
+  .darli-calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 10px;
+    margin-bottom: 16px;
+  }
+  .darli-calc-grid > .darli-input-wrapper:nth-of-type(1),
+  .darli-calc-grid > .darli-input-wrapper:nth-of-type(2),
+  .darli-range-wrapper {
+    grid-column: span 2;
+  }
+  .darli-calc-grid > .darli-input-wrapper:nth-of-type(3),
+  .darli-calc-grid > .darli-input-wrapper:nth-of-type(4) {
+    grid-column: span 1;
+  }
+  .darli-input-wrapper label {
+    font-size: 0.825rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .darli-input-control {
+    height: 48px;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 14px;
+    padding-left: 48px;
+    border-radius: 10px;
+  }
+  html[dir="ltr"] .darli-input-control {
+    padding-left: 14px;
+    padding-right: 48px;
+  }
+  .darli-input-suffix {
+    left: 14px;
+    bottom: 13px;
+    font-size: 0.825rem;
+    font-weight: 700;
+  }
+  html[dir="ltr"] .darli-input-suffix {
+    right: 14px;
+    left: auto;
+  }
+  .darli-range-wrapper {
+    margin-top: -2px;
+    margin-bottom: 6px;
+  }
+  .darli-range-header {
+    font-size: 0.775rem;
+    margin-bottom: 6px;
+  }
+  .darli-range-slider {
+    height: 6px;
+  }
+  .darli-calc-actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--darli-border-light);
+  }
+  .darli-btn-calc {
+    width: 100%;
+    justify-content: center;
+    height: 48px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    order: 1;
+  }
+  .darli-calc-result-box {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(201, 154, 69, 0.08);
+    border: 1.5px solid rgba(201, 154, 69, 0.28);
+    border-radius: 12px;
+    order: 2;
+  }
+  html[dir="ltr"] .darli-calc-result-box {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  .darli-result-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+    white-space: nowrap;
+  }
+  .darli-result-val {
+    font-size: 1.55rem;
+    font-weight: 900;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .darli-calc-result-box .calc-icon {
+    font-size: 1.8rem;
+    color: var(--darli-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .darli-calc-result-box .calc-icon svg,
+  .darli-calc-result-box .calc-icon i {
+    width: 32px;
+    height: 32px;
+  }
   .darli-hero-title {
     font-size: 1.8rem;
   }
@@ -3088,12 +3458,14 @@ html[data-theme="dark"] .darli-card-heart {
   .darli-properties-grid,
   .darli-features-grid,
   .darli-locations-grid,
-  .darli-partners-grid,
   .darli-why-us-grid,
-  .darli-testimonials-grid,
-  .darli-blog-grid,
-  .darli-footer-grid {
+  .darli-blog-grid {
     grid-template-columns: 1fr;
+  }
+  .darli-testimonial-card {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
   }
   .darli-cta-banner {
     flex-direction: column;
@@ -3108,10 +3480,125 @@ html[data-theme="dark"] .darli-card-heart {
     align-items: flex-start;
     gap: 12px;
   }
+
+  /* Mobile Footer */
+  .darli-footer {
+    padding: 45px 0 100px !important;
+  }
+  .darli-footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+    margin-bottom: 35px !important;
+  }
+  .darli-footer-about p {
+    font-size: 0.875rem !important;
+    line-height: 1.65 !important;
+    margin-bottom: 16px !important;
+  }
+  .darli-footer-socials {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+  }
+  .darli-footer-col h4 {
+    font-size: 1.05rem !important;
+    margin-bottom: 14px !important;
+  }
+  .darli-footer-links li {
+    margin-bottom: 10px !important;
+  }
+  .darli-footer-links a {
+    font-size: 0.875rem !important;
+  }
+  .darli-footer-contact-item {
+    margin-bottom: 12px !important;
+    font-size: 0.875rem !important;
+    gap: 10px !important;
+  }
   .darli-footer-bottom {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
+    flex-direction: column !important;
+    gap: 12px !important;
+    text-align: center !important;
+    padding-top: 20px !important;
+    font-size: 0.8rem !important;
+  }
+  .darli-footer-bottom-links {
+    justify-content: center !important;
+    gap: 20px !important;
+  }
+
+  /* Mobile Button Font Sizing */
+  .darli-btn-details {
+    font-size: 0.725rem !important;
+    padding: 5px 12px !important;
+    border-radius: 8px !important;
+    gap: 4px !important;
+  }
+  .darli-btn-details svg,
+  .darli-btn-details i {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .darli-rec-actions .darli-btn-details {
+    font-size: 0.8rem !important;
+    padding: 7px 16px !important;
+  }
+  .darli-btn-calc {
+    font-size: 0.875rem !important;
+  }
+  .darli-btn-cta {
+    font-size: 0.875rem !important;
+    padding: 10px 20px !important;
+  }
+  .darli-btn-add-property {
+    font-size: 0.8rem !important;
+    padding: 6px 12px !important;
+  }
+  .hero-hotspot {
+    font-size: 0.75rem !important;
+  }
+  .darli-card-badge {
+    font-size: 0.75rem !important;
+    padding: 4px 10px !important;
+  }
+  .btn-search,
+  .darli-btn-search {
+    font-size: 0.875rem !important;
+  }
+  .btn-advanced,
+  .darli-btn-advanced {
+    font-size: 0.8rem !important;
+  }
+  .darli-btn-newsletter {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .darli-btn-details {
+    font-size: 0.7rem !important;
+    padding: 4px 8px !important;
+  }
+  .darli-calc-grid > .darli-input-wrapper:nth-of-type(3),
+  .darli-calc-grid > .darli-input-wrapper:nth-of-type(4) {
+    grid-column: span 2;
+  }
+  .darli-result-val {
+    font-size: 1.35rem;
+  }
+  .darli-calc-result-box {
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .darli-footer {
+    padding: 40px 0 105px !important;
+  }
+  .darli-footer-grid {
+    gap: 24px !important;
+  }
+  .darli-footer-bottom-links {
+    gap: 14px !important;
+    font-size: 0.775rem !important;
   }
 }
 
@@ -3186,14 +3673,12 @@ html[dir="ltr"] .darli-footer-bottom {
 }
 
 html[dir="ltr"] .darli-newsletter-input {
-  padding-right: 50px;
-  padding-left: 18px;
   text-align: left;
 }
 
-html[dir="ltr"] .darli-btn-newsletter {
-  right: 6px;
-  left: auto;
+html[dir="ltr"] .darli-btn-newsletter svg,
+html[dir="ltr"] .darli-btn-newsletter i {
+  transform: none;
 }
 
 html[dir="ltr"] .pin-nasr-city {

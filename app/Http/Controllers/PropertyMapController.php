@@ -187,7 +187,7 @@ class PropertyMapController extends Controller
             'location' => $translation?->address_text ?? '',
             'image_thumb' => $image ? url('/' . ltrim($image, '/')) : $property->placeholderUrl($locale),
             'formatted_price' => $formattedPrice,
-            'url' => url('/' . $locale . '/properties/' . $slug),
+            'url' => url('/properties/' . $slug),
             'status_html' => '<span class="flag-tag primary">' . e(ucfirst($property->purpose)) . '</span>',
             'number_bedroom' => $property->bedrooms,
             'number_bathroom' => $property->bathrooms,

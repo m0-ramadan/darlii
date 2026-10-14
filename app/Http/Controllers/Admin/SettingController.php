@@ -22,6 +22,9 @@ class SettingController extends Controller
         'maintenance' => ['label' => 'وضع الصيانة', 'route' => 'admin.settings.maintenance', 'icon' => 'alert', 'permission' => 'settings.manage'],
         'branding' => ['label' => 'الهوية', 'route' => 'admin.settings.branding', 'icon' => 'photo', 'permission' => 'settings.manage'],
         'contact' => ['label' => 'التواصل', 'route' => 'admin.settings.contact', 'icon' => 'phone', 'permission' => 'settings.manage'],
+        'footer' => ['label' => 'الفوتر', 'route' => 'admin.settings.footer', 'icon' => 'layout', 'permission' => 'settings.manage'],
+        'services' => ['label' => 'صفحة خدماتنا', 'route' => 'admin.settings.services', 'icon' => 'briefcase', 'permission' => 'settings.manage'],
+        'partners' => ['label' => 'شركاؤنا ووكلائنا', 'route' => 'admin.settings.partners', 'icon' => 'users', 'permission' => 'settings.manage'],
         'seo' => ['label' => 'SEO', 'route' => 'admin.settings.seo', 'icon' => 'search', 'permission' => 'settings.manage'],
         'mail' => ['label' => 'البريد', 'route' => 'admin.settings.mail', 'icon' => 'mail', 'permission' => 'settings.integrations'],
         'integrations' => ['label' => 'التكاملات', 'route' => 'admin.settings.integrations', 'icon' => 'plug', 'permission' => 'settings.integrations'],
@@ -55,6 +58,27 @@ class SettingController extends Controller
     public function contact()
     {
         return $this->render('contact', 'بيانات التواصل', 'الهاتف والواتساب والبريد والعنوان وحسابات التواصل الاجتماعي');
+    }
+
+    public function footer()
+    {
+        $this->ensureFooterSettings();
+
+        return $this->render('footer', 'إعدادات الفوتر', 'النبذة التعريفية، روابط الفوتر، نصوص النشرة الإخبارية وحقوق النشر');
+    }
+
+    public function services()
+    {
+        $this->ensureServicesSettings();
+
+        return $this->render('services', 'إعدادات صفحة خدماتنا', 'تخصيص العناوين والوصف والشارات وصندوق الدعوة للإدراج في صفحة خدماتنا');
+    }
+
+    public function partners()
+    {
+        $this->ensurePartnersSettings();
+
+        return $this->render('partners', 'إعدادات شركاؤنا ووكلائنا', 'تخصيص شارة وعنوان ووصف قسم الوكلاء والشركات في الصفحة الرئيسية مع إدارة الشركاء');
     }
 
     public function seo()
@@ -207,7 +231,13 @@ class SettingController extends Controller
     /** إعدادات المجموعة من قاعدة البيانات، مع تعريف الحقول الافتراضية. */
     private function fields(string $group)
     {
-        return Setting::query()->where('group', $group)->orderBy('sort_order')->get();
+        $fields = Setting::query()->where('group', $group)->orderBy('sort_order')->get();
+
+        if (! config('locales.admin_english_enabled')) {
+            $fields = $fields->reject(fn (Setting $setting): bool => str_ends_with($setting->key, '_en'))->values();
+        }
+
+        return $fields;
     }
 
     private function ensureLanguageSettings(): void
@@ -260,6 +290,122 @@ class SettingController extends Controller
             'help_ar' => 'عند التفعيل تظهر صفحة الصيانة للزوار، وتظل لوحة التحكم عاملة.',
             'sort_order' => 1,
         ]);
+
+        $this->settings->flush();
+    }
+
+    private function ensureFooterSettings(): void
+    {
+        $definitions = [
+            ['key' => 'footer.about_text_ar', 'value' => 'متخصصون في تقديم أرقى الجولات والخدمات العقارية لكل من يحتاجها. تواصل معنا', 'type' => 'textarea', 'label' => 'نبذة عن المنصة في الفوتر (عربي)', 'help' => 'النص التعريفي الذي يظهر في العمود الأول من الفوتر.', 'sort' => 1],
+            ['key' => 'footer.col2_title_ar', 'value' => 'فئات', 'type' => 'text', 'label' => 'عنوان العمود الثاني (فئات)', 'help' => null, 'sort' => 2],
+            ['key' => 'footer.col2_link1_text_ar', 'value' => 'خطط الأسعار', 'type' => 'text', 'label' => 'نص الرابط 1 (خطط الأسعار)', 'help' => null, 'sort' => 3],
+            ['key' => 'footer.col2_link2_text_ar', 'value' => 'خدماتنا', 'type' => 'text', 'label' => 'نص الرابط 2 (خدماتنا)', 'help' => null, 'sort' => 4],
+            ['key' => 'footer.col2_link3_text_ar', 'value' => 'من نحن', 'type' => 'text', 'label' => 'نص الرابط 3 (من نحن)', 'help' => null, 'sort' => 5],
+            ['key' => 'footer.col2_link4_text_ar', 'value' => 'اتصل بنا', 'type' => 'text', 'label' => 'نص الرابط 4 (اتصل بنا)', 'help' => null, 'sort' => 6],
+            ['key' => 'footer.col3_title_ar', 'value' => 'شركتنا', 'type' => 'text', 'label' => 'عنوان العمود الثالث (شركتنا)', 'help' => null, 'sort' => 7],
+            ['key' => 'footer.col3_link1_text_ar', 'value' => 'عقارات للبيع', 'type' => 'text', 'label' => 'نص الرابط 1 (عقارات للبيع)', 'help' => null, 'sort' => 8],
+            ['key' => 'footer.col3_link2_text_ar', 'value' => 'عقارات للإيجار', 'type' => 'text', 'label' => 'نص الرابط 2 (عقارات للإيجار)', 'help' => null, 'sort' => 9],
+            ['key' => 'footer.col3_link3_text_ar', 'value' => 'سياسة الخصوصية', 'type' => 'text', 'label' => 'نص الرابط 3 (سياسة الخصوصية)', 'help' => null, 'sort' => 10],
+            ['key' => 'footer.col3_link4_text_ar', 'value' => 'وكلاؤنا', 'type' => 'text', 'label' => 'نص الرابط 4 (وكلاؤنا)', 'help' => null, 'sort' => 11],
+            ['key' => 'footer.newsletter_title_ar', 'value' => 'النشرة الإخبارية', 'type' => 'text', 'label' => 'عنوان النشرة الإخبارية', 'help' => null, 'sort' => 12],
+            ['key' => 'footer.newsletter_subtitle_ar', 'value' => 'جرعتك الأسبوعية/الشهرية من المعرفة والإلهام', 'type' => 'text', 'label' => 'وصف النشرة الإخبارية', 'help' => null, 'sort' => 13],
+            ['key' => 'footer.newsletter_placeholder_ar', 'value' => 'أدخل بريدك الإلكتروني', 'type' => 'text', 'label' => 'نص حقل البريد الإلكتروني', 'help' => null, 'sort' => 14],
+            ['key' => 'footer.copyright_ar', 'value' => '© 2026 دارلي. جميع الحقوق محفوظة.', 'type' => 'text', 'label' => 'حقوق النشر في أسفل الفوتر', 'help' => null, 'sort' => 15],
+            ['key' => 'footer.terms_text_ar', 'value' => 'شروط الاستخدام', 'type' => 'text', 'label' => 'رابط شروط الاستخدام (أسفل الفوتر)', 'help' => null, 'sort' => 16],
+            ['key' => 'footer.privacy_text_ar', 'value' => 'سياسة الخصوصية', 'type' => 'text', 'label' => 'رابط سياسة الخصوصية (أسفل الفوتر)', 'help' => null, 'sort' => 17],
+            ['key' => 'footer.cookie_text_ar', 'value' => 'سياسة ملفات تعريف الارتباط', 'type' => 'text', 'label' => 'رابط ملفات تعريف الارتباط (أسفل الفوتر)', 'help' => null, 'sort' => 18],
+        ];
+
+        foreach ($definitions as $def) {
+            Setting::query()->firstOrCreate(
+                ['key' => $def['key']],
+                [
+                    'group' => 'footer',
+                    'value' => $def['value'],
+                    'type' => $def['type'],
+                    'label_ar' => $def['label'],
+                    'help_ar' => $def['help'],
+                    'is_public' => true,
+                    'sort_order' => $def['sort'],
+                ]
+            );
+        }
+
+        $this->settings->flush();
+    }
+
+    private function ensureServicesSettings(): void
+    {
+        $definitions = [
+            ['key' => 'services.hero_title', 'value' => 'خدماتنا', 'type' => 'text', 'label' => 'العنوان الرئيسي لصفحة الخدمات', 'help' => null, 'sort' => 1],
+            ['key' => 'services.hero_subtitle', 'value' => "حلول عقارية متكاملة تلبي جميع احتياجاتك\nفي بني سويف وما حولها", 'type' => 'textarea', 'label' => 'الوصف التوضيحي في ترويسة الخدمات', 'help' => null, 'sort' => 2],
+            ['key' => 'services.why_tag', 'value' => 'خدماتنا', 'type' => 'text', 'label' => 'شارة قسم لماذا تختار دارلي', 'help' => null, 'sort' => 3],
+            ['key' => 'services.why_title', 'value' => 'لماذا تختار دارلي؟', 'type' => 'text', 'label' => 'عنوان قسم لماذا تختار دارلي', 'help' => null, 'sort' => 4],
+            ['key' => 'services.why_desc', 'value' => 'نقدم لك حلولاً عقارية متكاملة وخبرة محلية عميقة في سوق بني سويف لمساعدتك في تحقيق أهدافك العقارية بسهولة وأمان.', 'type' => 'textarea', 'label' => 'وصف قسم لماذا تختار دارلي', 'help' => null, 'sort' => 5],
+            ['key' => 'services.badge_title', 'value' => 'مستقبلك العقاري يبدأ هنا', 'type' => 'text', 'label' => 'عنوان شارة فيلا دارلي', 'help' => null, 'sort' => 6],
+            ['key' => 'services.badge_desc', 'value' => 'شريكك الموثوق في شراء وبيع وتأجير العقارات في بني سويف', 'type' => 'textarea', 'label' => 'وصف شارة فيلا دارلي', 'help' => null, 'sort' => 7],
+            ['key' => 'services.s1_title', 'value' => 'شراء منزل', 'type' => 'text', 'label' => 'عنوان بطاقة الخدمة 1', 'help' => null, 'sort' => 8],
+            ['key' => 'services.s1_desc', 'value' => 'اكتشف أفضل المنازل المعروضة للبيع في بني سويف مع دعم كامل طوال رحلتك الشرائية.', 'type' => 'textarea', 'label' => 'وصف بطاقة الخدمة 1', 'help' => null, 'sort' => 9],
+            ['key' => 'services.s1_btn', 'value' => 'اعرف المزيد', 'type' => 'text', 'label' => 'زر بطاقة الخدمة 1', 'help' => null, 'sort' => 10],
+            ['key' => 'services.s2_title', 'value' => 'استئجار منزل', 'type' => 'text', 'label' => 'عنوان بطاقة الخدمة 2', 'help' => null, 'sort' => 11],
+            ['key' => 'services.s2_desc', 'value' => 'مجموعة متنوعة من المنازل والشقق للإيجار بما يناسب احتياجاتك وميزانيتك.', 'type' => 'textarea', 'label' => 'وصف بطاقة الخدمة 2', 'help' => null, 'sort' => 12],
+            ['key' => 'services.s2_btn', 'value' => 'اعرف المزيد', 'type' => 'text', 'label' => 'زر بطاقة الخدمة 2', 'help' => null, 'sort' => 13],
+            ['key' => 'services.s3_title', 'value' => 'بيع منزل', 'type' => 'text', 'label' => 'عنوان بطاقة الخدمة 3', 'help' => null, 'sort' => 14],
+            ['key' => 'services.s3_desc', 'value' => 'قم ببيع عقارك بأفضل سعر مع تسويق احترافي ووصول واسع للمشترين المحتملين.', 'type' => 'textarea', 'label' => 'وصف بطاقة الخدمة 3', 'help' => null, 'sort' => 15],
+            ['key' => 'services.s3_btn', 'value' => 'اعرف المزيد', 'type' => 'text', 'label' => 'زر بطاقة الخدمة 3', 'help' => null, 'sort' => 16],
+            ['key' => 'services.testi_tag', 'value' => 'آراء عملائنا', 'type' => 'text', 'label' => 'شارة قسم آراء العملاء', 'help' => null, 'sort' => 17],
+            ['key' => 'services.testi_title', 'value' => 'ما يقوله الناس', 'type' => 'text', 'label' => 'عنوان قسم آراء العملاء', 'help' => null, 'sort' => 18],
+            ['key' => 'services.testi_subtitle', 'value' => 'نفخر بثقة عملائنا ونسعى دائمًا لتقديم أفضل تجربة عقارية في بني سويف.', 'type' => 'textarea', 'label' => 'وصف قسم آراء العملاء', 'help' => null, 'sort' => 19],
+            ['key' => 'services.cta_tag', 'value' => 'كن جزءاً من مجتمع دارلي', 'type' => 'text', 'label' => 'شارة صندوق الدعوة للإدراج', 'help' => null, 'sort' => 20],
+            ['key' => 'services.cta_title', 'value' => 'قم بإدراج عقاراتك على Darli الآن', 'type' => 'text', 'label' => 'عنوان صندوق الدعوة للإدراج', 'help' => null, 'sort' => 21],
+            ['key' => 'services.cta_subtitle', 'value' => 'وصل إلى آلاف الباحثين عن العقارات في بني سويف وابدأ في تحقيق أفضل العوائد لعقارك.', 'type' => 'textarea', 'label' => 'وصف صندوق الدعوة للإدراج', 'help' => null, 'sort' => 22],
+            ['key' => 'services.cta_btn_text', 'value' => 'ابدأ الآن', 'type' => 'text', 'label' => 'نص زر صندوق الإدراج', 'help' => null, 'sort' => 23],
+            ['key' => 'services.cta_f1', 'value' => "وصول لعدد كبير\nمن المشترين والمستأجرين", 'type' => 'textarea', 'label' => 'الميزة 1 في صندوق الإدراج', 'help' => null, 'sort' => 24],
+            ['key' => 'services.cta_f2', 'value' => "خطوات بسيطة\nوسريعة للإدراج", 'type' => 'textarea', 'label' => 'الميزة 2 في صندوق الإدراج', 'help' => null, 'sort' => 25],
+            ['key' => 'services.cta_f3', 'value' => "دعم متخصص\nعلى مدار الساعة", 'type' => 'textarea', 'label' => 'الميزة 3 في صندوق الإدراج', 'help' => null, 'sort' => 26],
+        ];
+
+        foreach ($definitions as $def) {
+            Setting::query()->firstOrCreate(
+                ['key' => $def['key']],
+                [
+                    'group' => 'services',
+                    'value' => $def['value'],
+                    'type' => $def['type'],
+                    'label_ar' => $def['label'],
+                    'help_ar' => $def['help'],
+                    'is_public' => true,
+                    'sort_order' => $def['sort'],
+                ]
+            );
+        }
+
+        $this->settings->flush();
+    }
+
+    private function ensurePartnersSettings(): void
+    {
+        $definitions = [
+            ['key' => 'partners.tag', 'value' => '— شركاؤنا المميزون —', 'type' => 'text', 'label' => 'شارة قسم الشركاء', 'help' => 'تظهر أعلى عنوان القسم', 'sort' => 1],
+            ['key' => 'partners.title', 'value' => 'تعرف على وكلائنا', 'type' => 'text', 'label' => 'العنوان الرئيسي للقسم', 'help' => null, 'sort' => 2],
+            ['key' => 'partners.subtitle', 'value' => 'تعاون مع نخبة من شركات الوساطة العقارية الموثوقة في مختلف مناطق المملكة', 'type' => 'textarea', 'label' => 'الوصف التوضيحي للقسم', 'help' => null, 'sort' => 3],
+        ];
+
+        foreach ($definitions as $def) {
+            Setting::query()->firstOrCreate(
+                ['key' => $def['key']],
+                [
+                    'group' => 'partners',
+                    'value' => $def['value'],
+                    'type' => $def['type'],
+                    'label_ar' => $def['label'],
+                    'help_ar' => $def['help'],
+                    'is_public' => true,
+                    'sort_order' => $def['sort'],
+                ]
+            );
+        }
 
         $this->settings->flush();
     }

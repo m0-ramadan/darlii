@@ -40,12 +40,14 @@
                                 placeholder="مثال: مستشار مبيعات واستثمار عقاري">
                         </div>
 
+                        @if (config('locales.admin_english_enabled'))
                         <div class="ap-field" style="margin-bottom: 15px;">
                             <label class="ap-label">المسمى الوظيفي بالإنجليزية</label>
                             <input type="text" name="title_en" class="ap-input" dir="ltr"
                                 value="{{ old('title_en', $en?->title) }}"
                                 placeholder="e.g. Senior Real Estate Sales Advisor">
                         </div>
+                        @endif
 
                         <div class="ap-field" style="margin-bottom: 15px;">
                             <label class="ap-label">ملخص الوظيفة (بالعربية)</label>
@@ -133,6 +135,21 @@
                                 <option value="draft" @selected(old('status', $career->status) === 'draft')>مسودة (غير ظاهر)</option>
                             </select>
                         </div>
+                    </div>
+                </div>
+
+                <div class="ap-card border-primary border-opacity-25 bg-primary bg-opacity-10 mb-3">
+                    <div class="ap-card__body py-3">
+                        <label class="d-flex align-items-center gap-3 cursor-pointer m-0" style="cursor: pointer;">
+                            <input type="checkbox" name="send_broadcast_notification" value="1" class="form-check-input mt-0 fs-5" id="careerSendBroadcastNotif">
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 13.5px;">
+                                    @include('admin.partials.icon', ['iconName' => 'bell', 'size' => 15])
+                                    إرسال إشعار فوري لجميع المستخدمين
+                                </strong>
+                                <span class="text-muted small">بث إشعار فوري بفرصة العمل الجديدة إلى هواتف ومتصفحات المشتركين.</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 

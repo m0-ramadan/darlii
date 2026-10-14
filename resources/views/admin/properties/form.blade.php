@@ -253,6 +253,125 @@
                         @endif
                     </div>
                 </div>
+
+                {{-- ------------------------------------------------ التخطيط الهندسي للشقة --}}
+                <div class="ap-card" id="floorPlansCard" style="margin-top: 18px;">
+                    <div class="ap-card__head" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                        <h2 class="ap-card__title" style="margin: 0; display: flex; align-items: center; gap: 6px;">
+                            <svg style="width: 18px; height: 18px; color: #b45309;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            التخطيط الهندسي للشقة (Floor Plans)
+                        </h2>
+                        <button type="button" class="ap-btn ap-btn--ghost ap-btn--sm" id="addFloorPlanBtn" style="font-size: 12px; padding: 4px 10px;">
+                            + إضافة مخطط هندسي
+                        </button>
+                    </div>
+                    <div class="ap-card__body">
+                        <input type="hidden" name="floor_plans_submitted" value="1">
+                        <p class="text-muted" style="font-size: 13px; margin-bottom: 14px;">
+                            أضف التخطيطات الهندسية والمعمارية للشقة (مخطط الشقة، توزيع الغرف، الأبعاد) مع صورة المخطط.
+                        </p>
+
+                        <div id="floorPlansContainer" style="display: flex; flex-direction: column; gap: 14px;">
+                            @php
+                                $existingPlans = old('floor_plans', $property->exists ? $property->getFloorPlans() : []);
+                            @endphp
+
+                            @forelse ($existingPlans as $idx => $fp)
+                                <div class="floor-plan-row" data-plan-index="{{ $idx }}" style="background: rgba(248, 250, 252, 0.8); border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <strong style="font-size: 13px; color: #334155;" class="plan-number-label">📐 مخطط هندسي #{{ $loop->iteration }}</strong>
+                                        <button type="button" class="ap-btn ap-btn--danger ap-btn--sm remove-floor-plan-btn" style="padding: 2px 8px; font-size: 11px;">
+                                            حذف
+                                        </button>
+                                    </div>
+                                    <div class="ap-grid ap-grid--2" style="margin-bottom: 10px;">
+                                        <div class="ap-field">
+                                            <label class="ap-label">اسم / عنوان المخطط</label>
+                                            <input type="text" name="floor_plans[{{ $idx }}][name]" class="ap-input"
+                                                value="{{ $fp['name'] ?? '' }}" placeholder="مثال: المخطط المعماري للشقة">
+                                        </div>
+                                        <div class="ap-field">
+                                            <label class="ap-label">المساحة (م²)</label>
+                                            <input type="number" step="0.1" min="0" name="floor_plans[{{ $idx }}][area]" class="ap-input"
+                                                value="{{ $fp['area'] ?? '' }}" placeholder="140">
+                                        </div>
+                                        <div class="ap-field">
+                                            <label class="ap-label">غرف النوم</label>
+                                            <input type="number" min="0" name="floor_plans[{{ $idx }}][bedrooms]" class="ap-input"
+                                                value="{{ $fp['bedrooms'] ?? '' }}" placeholder="3">
+                                        </div>
+                                        <div class="ap-field">
+                                            <label class="ap-label">الحمامات</label>
+                                            <input type="number" min="0" name="floor_plans[{{ $idx }}][bathrooms]" class="ap-input"
+                                                value="{{ $fp['bathrooms'] ?? '' }}" placeholder="2">
+                                        </div>
+                                    </div>
+
+                                    <div class="ap-field" style="margin-bottom: 10px;">
+                                        <label class="ap-label">صورة التخطيط الهندسي</label>
+                                        @if (!empty($fp['image']))
+                                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                                <img src="{{ !empty($fp['image_url']) ? $fp['image_url'] : asset('storage/' . ltrim($fp['image'], '/')) }}"
+                                                     alt="Floor Plan" style="height: 60px; width: 90px; object-fit: contain; background: #fff; border-radius: 6px; border: 1px solid #cbd5e1; padding: 2px;">
+                                                <input type="hidden" name="floor_plans[{{ $idx }}][existing_image]" value="{{ $fp['image'] }}">
+                                                <span style="font-size: 12px; color: #64748b;">توجد صورة محفوظة. لرفع صورة بديلة:</span>
+                                            </div>
+                                        @endif
+                                        <input type="file" name="floor_plans[{{ $idx }}][image]" class="ap-input" accept="image/*">
+                                    </div>
+
+                                    <div class="ap-field" style="margin-bottom: 0;">
+                                        <label class="ap-label">ملاحظات أو مواصفات المخطط</label>
+                                        <textarea name="floor_plans[{{ $idx }}][description]" class="ap-textarea" rows="2"
+                                            placeholder="تفاصيل إضافية عن التقسيم الداخلي والأبعاد...">{{ $fp['description'] ?? '' }}</textarea>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="floor-plan-row" data-plan-index="0" style="background: rgba(248, 250, 252, 0.8); border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <strong style="font-size: 13px; color: #334155;" class="plan-number-label">📐 مخطط هندسي #1</strong>
+                                        <button type="button" class="ap-btn ap-btn--danger ap-btn--sm remove-floor-plan-btn" style="padding: 2px 8px; font-size: 11px;">
+                                            حذف
+                                        </button>
+                                    </div>
+                                    <div class="ap-grid ap-grid--2" style="margin-bottom: 10px;">
+                                        <div class="ap-field">
+                                            <label class="ap-label">اسم / عنوان المخطط</label>
+                                            <input type="text" name="floor_plans[0][name]" class="ap-input" placeholder="مثال: المخطط المعماري للشقة">
+                                        </div>
+                                        <div class="ap-field">
+                                            <label class="ap-label">المساحة (م²)</label>
+                                            <input type="number" step="0.1" min="0" name="floor_plans[0][area]" class="ap-input" placeholder="140">
+                                        </div>
+                                        <div class="ap-field">
+                                            <label class="ap-label">غرف النوم</label>
+                                            <input type="number" min="0" name="floor_plans[0][bedrooms]" class="ap-input" placeholder="3">
+                                        </div>
+                                        <div class="ap-field">
+                                            <label class="ap-label">الحمامات</label>
+                                            <input type="number" min="0" name="floor_plans[0][bathrooms]" class="ap-input" placeholder="2">
+                                        </div>
+                                    </div>
+
+                                    <div class="ap-field" style="margin-bottom: 10px;">
+                                        <label class="ap-label">صورة التخطيط الهندسي</label>
+                                        <input type="file" name="floor_plans[0][image]" class="ap-input" accept="image/*">
+                                    </div>
+
+                                    <div class="ap-field" style="margin-bottom: 0;">
+                                        <label class="ap-label">ملاحظات أو مواصفات المخطط</label>
+                                        <textarea name="floor_plans[0][description]" class="ap-textarea" rows="2"
+                                            placeholder="تفاصيل إضافية عن التقسيم الداخلي والأبعاد..."></textarea>
+                                    </div>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {{-- ------------------------------------------------------- التفاصيل --}}
@@ -338,7 +457,7 @@
 
                 <div class="ap-card">
                     <div class="ap-card__head">
-                        <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'edit', 'size' => 18]) المحتوى (عربي / إنجليزي)</h2>
+                        <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'edit', 'size' => 18]) المحتوى العربي</h2>
                     </div>
                     <div class="ap-card__body">
                         <h3 style="font-size: 14px;">العربية</h3>
@@ -373,6 +492,7 @@
                             </div>
                         </div>
 
+                        @if (config('locales.admin_english_enabled'))
                         <hr style="margin: 18px 0; border: 0; border-top: 1px solid var(--ap-border);">
 
                         <h3 style="font-size: 14px;">English</h3>
@@ -405,6 +525,22 @@
                                     value="{{ old('translations.en.seo_title', $en->seo_title) }}">
                             </div>
                         </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="ap-card border-primary border-opacity-25 bg-primary bg-opacity-10 mb-3">
+                    <div class="ap-card__body py-3">
+                        <label class="d-flex align-items-center gap-3 cursor-pointer m-0" style="cursor: pointer;">
+                            <input type="checkbox" name="send_broadcast_notification" value="1" class="form-check-input mt-0 fs-5" id="propSendBroadcastNotif">
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 14px;">
+                                    @include('admin.partials.icon', ['iconName' => 'bell', 'size' => 16])
+                                    إرسال إشعار فوري لجميع المستخدمين والمشتركين
+                                </strong>
+                                <span class="text-muted small">عند التحديد، سيتم بث إشعار فوري (Web Push وفي الموقع) بعنوان وصورة هذا العقار ورابط مباشر إليه.</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -476,6 +612,69 @@
             if (priceTypeSelect) {
                 priceTypeSelect.addEventListener('change', syncPriceState);
                 syncPriceState();
+            }
+
+            // إدارة صفوف التخطيط الهندسي ديناميكياً
+            var floorPlansContainer = document.getElementById('floorPlansContainer');
+            var addFloorPlanBtn = document.getElementById('addFloorPlanBtn');
+            var planCount = document.querySelectorAll('.floor-plan-row').length;
+
+            if (addFloorPlanBtn && floorPlansContainer) {
+                addFloorPlanBtn.addEventListener('click', function () {
+                    var newIdx = planCount++;
+                    var div = document.createElement('div');
+                    div.className = 'floor-plan-row';
+                    div.setAttribute('data-plan-index', newIdx);
+                    div.style.cssText = 'background: rgba(248, 250, 252, 0.8); border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;';
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <strong style="font-size: 13px; color: #334155;" class="plan-number-label">📐 مخطط هندسي #${floorPlansContainer.children.length + 1}</strong>
+                            <button type="button" class="ap-btn ap-btn--danger ap-btn--sm remove-floor-plan-btn" style="padding: 2px 8px; font-size: 11px;">
+                                حذف
+                            </button>
+                        </div>
+                        <div class="ap-grid ap-grid--2" style="margin-bottom: 10px;">
+                            <div class="ap-field">
+                                <label class="ap-label">اسم / عنوان المخطط</label>
+                                <input type="text" name="floor_plans[${newIdx}][name]" class="ap-input" placeholder="مثال: مخطط الدور العلوي">
+                            </div>
+                            <div class="ap-field">
+                                <label class="ap-label">المساحة (م²)</label>
+                                <input type="number" step="0.1" min="0" name="floor_plans[${newIdx}][area]" class="ap-input" placeholder="140">
+                            </div>
+                            <div class="ap-field">
+                                <label class="ap-label">غرف النوم</label>
+                                <input type="number" min="0" name="floor_plans[${newIdx}][bedrooms]" class="ap-input" placeholder="3">
+                            </div>
+                            <div class="ap-field">
+                                <label class="ap-label">الحمامات</label>
+                                <input type="number" min="0" name="floor_plans[${newIdx}][bathrooms]" class="ap-input" placeholder="2">
+                            </div>
+                        </div>
+                        <div class="ap-field" style="margin-bottom: 10px;">
+                            <label class="ap-label">صورة التخطيط الهندسي</label>
+                            <input type="file" name="floor_plans[${newIdx}][image]" class="ap-input" accept="image/*">
+                        </div>
+                        <div class="ap-field" style="margin-bottom: 0;">
+                            <label class="ap-label">ملاحظات أو مواصفات المخطط</label>
+                            <textarea name="floor_plans[${newIdx}][description]" class="ap-textarea" rows="2" placeholder="تفاصيل إضافية عن التقسيم الداخلي والأبعاد..."></textarea>
+                        </div>
+                    `;
+                    floorPlansContainer.appendChild(div);
+                });
+
+                floorPlansContainer.addEventListener('click', function (e) {
+                    if (e.target && e.target.closest('.remove-floor-plan-btn')) {
+                        var row = e.target.closest('.floor-plan-row');
+                        if (row) {
+                            row.remove();
+                            var labels = floorPlansContainer.querySelectorAll('.plan-number-label');
+                            labels.forEach(function (lbl, i) {
+                                lbl.textContent = '📐 مخطط هندسي #' + (i + 1);
+                            });
+                        }
+                    }
+                });
             }
         });
     </script>

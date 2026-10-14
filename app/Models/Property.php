@@ -73,6 +73,10 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
                 $property->setPriceMeta($property->priceMetaTransient);
                 $property->priceMetaTransient = [];
             }
+            if (! empty($property->floorPlansTransient)) {
+                $property->setFloorPlans($property->floorPlansTransient);
+                $property->floorPlansTransient = [];
+            }
         });
     }
 
@@ -257,6 +261,103 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
     public static function clearPriceMetaCache(): void
     {
         static::$priceMetaCache = [];
+    }
+
+    protected static array $floorPlansCache = [];
+    protected array $floorPlansTransient = [];
+
+    public function getFloorPlans(): array
+    {
+        if (! $this->exists || ! $this->id) {
+            return $this->floorPlansTransient;
+        }
+
+        if (isset(static::$floorPlansCache[$this->id])) {
+            return static::$floorPlansCache[$this->id];
+        }
+
+        $setting = Setting::query()
+            ->where('group', 'property_floor_plans')
+            ->whereIn('key', ['floor_plans_' . $this->id, 'property_' . $this->id])
+            ->first();
+
+        $plans = [];
+        if ($setting && $setting->value) {
+            $decoded = json_decode((string) $setting->value, true);
+            if (is_array($decoded)) {
+                $plans = $decoded;
+            }
+        }
+
+        if (empty($plans)) {
+            $mediaPlans = $this->relationLoaded('media')
+                ? $this->media->where('type', 'floor_plan')
+                : $this->media()->where('type', 'floor_plan')->get();
+
+            foreach ($mediaPlans as $mp) {
+                $plans[] = [
+                    'name' => $mp->alt_text ?: 'المخطط الهندسي',
+                    'bedrooms' => $this->bedrooms,
+                    'bathrooms' => $this->bathrooms,
+                    'area' => $this->area,
+                    'image' => $mp->path,
+                    'description' => $mp->caption,
+                ];
+            }
+        }
+
+        foreach ($plans as &$plan) {
+            $img = $plan['image'] ?? null;
+            if ($img) {
+                if (str_starts_with($img, 'http') || str_starts_with($img, '/')) {
+                    $plan['image_url'] = $img;
+                } else {
+                    $plan['image_url'] = asset('storage/' . ltrim($img, '/'));
+                }
+            } else {
+                $plan['image_url'] = asset('storage/properties/floor.png');
+            }
+        }
+        unset($plan);
+
+        static::$floorPlansCache[$this->id] = $plans;
+        return $plans;
+    }
+
+    public function getFloorPlansAttribute(): array
+    {
+        return $this->getFloorPlans();
+    }
+
+    public function setFloorPlans(array $plans): void
+    {
+        if (! $this->exists || ! $this->id) {
+            $this->floorPlansTransient = $plans;
+            return;
+        }
+
+        static::$floorPlansCache[$this->id] = $plans;
+
+        Setting::updateOrCreate(
+            ['group' => 'property_floor_plans', 'key' => 'floor_plans_' . $this->id],
+            [
+                'value' => json_encode($plans, JSON_UNESCAPED_UNICODE),
+                'type' => 'json',
+                'is_public' => true,
+                'label_ar' => 'التخطيط الهندسي للعقار #' . $this->id,
+            ]
+        );
+
+        // Clean up legacy key if existed under property_floor_plans
+        Setting::query()
+            ->where('group', 'property_floor_plans')
+            ->where('key', 'property_' . $this->id)
+            ->delete();
+    }
+
+    public static function clearFloorPlansCache(): void
+    {
+        static::$floorPlansCache = [];
     }
 }
 

@@ -161,7 +161,7 @@ class PageController extends Controller
     /** @param array<string, mixed> $data */
     private function syncTranslations(Page $page, array $data): void
     {
-        foreach (['ar', 'en'] as $locale) {
+        foreach (config('locales.admin_english_enabled') ? ['ar', 'en'] : ['ar'] as $locale) {
             $translation = (array) ($data['translations'][$locale] ?? []);
 
             if (blank($translation['title'] ?? null)) {

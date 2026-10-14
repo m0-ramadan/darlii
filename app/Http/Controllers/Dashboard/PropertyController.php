@@ -8,21 +8,40 @@ use App\Models\Currency;
 use App\Models\Property;
 use App\Modules\Property\Application\Actions\CreatePropertyAction;
 use App\Modules\Property\Application\Actions\SubmitPropertyAction;
+use Illuminate\Http\Request;
 
 class PropertyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('dashboard.properties.index', [
-            'properties' => Property::with(['translations', 'category', 'location'])
-                ->where('owner_id', auth()->id())
-                ->latest()
-                ->paginate(15),
-        ]);
+        $status = $request->query('status');
+        $query = Property::with(['translations', 'category', 'location'])
+            ->where('owner_id', auth()->id());
+
+        if ($status === 'published') {
+            $query->where('status', 'published');
+        } elseif ($status === 'sold') {
+            $query->where(function ($q) {
+                $q->where('status', 'sold')->orWhereNotNull('sold_at');
+            });
+        } elseif ($status === 'pending_review') {
+            $query->where('status', 'pending_review');
+        }
+
+        $properties = $query->latest()->paginate(15)->withQueryString();
+
+        return view('dashboard.properties.index', compact('properties', 'status'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $user = $request->user();
+        if ($user && $user->status === 'pending') {
+            return redirect()
+                ->route('dashboard.index', ['locale' => app()->getLocale()])
+                ->with('status_warning', 'حسابك قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة عقارات جديدة حتى يتم تفعيل حسابك من قبل الإدارة.');
+        }
+
         return view('dashboard.properties.create', [
             'currencies' => Currency::where('is_active', true)->get(),
         ]);
@@ -30,10 +49,31 @@ class PropertyController extends Controller
 
     public function store(StorePropertyRequest $request, CreatePropertyAction $action)
     {
-        $p = $action->execute($request->validated(), $request->user()->id);
+        $user = $request->user();
+        if ($user && $user->status === 'pending') {
+            return redirect()
+                ->route('dashboard.index', ['locale' => app()->getLocale()])
+                ->with('status_warning', 'حسابك قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة عقارات جديدة حتى يتم تفعيل حسابك من قبل الإدارة.');
+        }
+
+        $p = $action->execute($request->validated(), $user->id);
+
+        if ($request->hasFile('floor_plan_image') || filled($request->input('floor_plan_name')) || filled($request->input('floor_plan_description'))) {
+            $imagePath = null;
+            if ($request->hasFile('floor_plan_image') && $request->file('floor_plan_image')->isValid()) {
+                $imagePath = $request->file('floor_plan_image')->store('properties/' . $p->id . '/floor_plans/' . now()->format('Y/m'), 'public');
+            }
+            $p->setFloorPlans([[
+                'name' => $request->input('floor_plan_name') ?: 'المخطط الهندسي للشقة',
+                'bedrooms' => $p->bedrooms,
+                'bathrooms' => $p->bathrooms,
+                'area' => $p->area,
+                'image' => $imagePath,
+                'description' => $request->input('floor_plan_description'),
+            ]]);
+        }
 
         // العميل العادي لا يظهر عقاره في الموقع مباشرة بل يخضع لمراجعة وتأكيد الأدمن
-        $user = $request->user();
         $isClient = $user && ! $user->hasRole('agent') && ! $user->hasRole('admin');
 
         if ($isClient) {
@@ -48,11 +88,47 @@ class PropertyController extends Controller
             ->with('success', $msg);
     }
 
-    public function submit(string $locale, Property $property, SubmitPropertyAction $action)
+    public function submit(...$args)
     {
-        $this->authorize('update', $property);
+        $property = collect($args)->first(fn($a) => $a instanceof Property);
+        $action = collect($args)->first(fn($a) => $a instanceof SubmitPropertyAction) ?? app(SubmitPropertyAction::class);
+        $this->authorizeOwnerOrAdmin($property);
         $action->execute($property);
 
         return back()->with('success', 'تم إرسال العقار لمراجعة وتأكيد الإدارة.');
+    }
+
+    public function markSold(Request $request, ...$args)
+    {
+        $property = collect($args)->first(fn($a) => $a instanceof Property);
+        $this->authorizeOwnerOrAdmin($property);
+
+        $property->update([
+            'status' => 'sold',
+            'sold_at' => now(),
+        ]);
+
+        return back()->with('success', 'تم تحديث حالة العقار بنجاح إلى: تم البيع ✓');
+    }
+
+    public function markAvailable(Request $request, ...$args)
+    {
+        $property = collect($args)->first(fn($a) => $a instanceof Property);
+        $this->authorizeOwnerOrAdmin($property);
+
+        $property->update([
+            'status' => 'published',
+            'sold_at' => null,
+        ]);
+
+        return back()->with('success', 'تم إعادة تفعيل عرض العقار بالموقع بنجاح.');
+    }
+
+    private function authorizeOwnerOrAdmin(Property $property): void
+    {
+        $user = auth()->user();
+        if (! $user || ($property->owner_id !== $user->id && ! $user->isAdmin())) {
+            abort(403, 'غير مصرح لك بتعديل هذا العقار.');
+        }
     }
 }

@@ -196,6 +196,13 @@ class AgentController extends Controller
             // Save meta if columns not in DB
             $profile->agent_type = $data['agent_type'] ?? 'individual';
             $profile->contract_terms = $data['contract_terms'] ?? null;
+            if ($request->filled('city')) {
+                $profile->city = $request->input('city');
+            }
+            if ($request->filled('icon')) {
+                $profile->icon = $request->input('icon');
+            }
+            $profile->featured_on_homepage = $request->boolean('featured_on_homepage');
 
             // 4. Create Translations
             $profile->translations()->create([
@@ -206,7 +213,7 @@ class AgentController extends Controller
                 'seo_description' => Str::limit($data['bio_ar'] ?? $data['display_name_ar'], 160),
             ]);
 
-            if (!empty($data['display_name_en'])) {
+            if (config('locales.admin_english_enabled') && !empty($data['display_name_en'])) {
                 $profile->translations()->create([
                     'locale' => 'en',
                     'display_name' => $data['display_name_en'],
@@ -256,6 +263,9 @@ class AgentController extends Controller
             'phone' => ['nullable', 'string', 'max:50'],
             'whatsapp' => ['nullable', 'string', 'max:50'],
             'job_title' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:50'],
+            'featured_on_homepage' => ['nullable', 'boolean'],
             'license_number' => ['nullable', 'string', 'max:100'],
             'years_experience' => ['nullable', 'integer', 'min:0', 'max:60'],
             'website' => ['nullable', 'string', 'max:255'],
@@ -320,6 +330,13 @@ class AgentController extends Controller
 
             $agent->agent_type = $data['agent_type'] ?? 'individual';
             $agent->contract_terms = $data['contract_terms'] ?? null;
+            if ($request->has('city')) {
+                $agent->city = $request->input('city');
+            }
+            if ($request->has('icon')) {
+                $agent->icon = $request->input('icon');
+            }
+            $agent->featured_on_homepage = $request->boolean('featured_on_homepage');
 
             // 4. Update Translations
             $agent->translations()->updateOrCreate(
@@ -332,7 +349,7 @@ class AgentController extends Controller
                 ]
             );
 
-            if (!empty($data['display_name_en'])) {
+            if (config('locales.admin_english_enabled') && !empty($data['display_name_en'])) {
                 $agent->translations()->updateOrCreate(
                     ['locale' => 'en'],
                     [

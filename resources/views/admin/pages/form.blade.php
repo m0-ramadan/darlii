@@ -12,6 +12,20 @@
 @endphp
 
 @section('page_actions')
+    @if ($isEdit)
+        @php
+            $publicUrl = match($page->key) {
+                'privacy-policy' => route('privacy-policy.index', ['locale' => 'ar']),
+                'terms-and-conditions' => route('terms.index', ['locale' => 'ar']),
+                'faqs' => route('faqs.index', ['locale' => 'ar']),
+                'contact-us' => route('contact-us.index', ['locale' => 'ar']),
+                default => url('/' . ($ar->slug ?: $page->key)),
+            };
+        @endphp
+        <a href="{{ $publicUrl }}" target="_blank" class="ap-btn ap-btn--ghost ap-btn--sm">
+            @include('admin.partials.icon', ['iconName' => 'external-link', 'size' => 15]) عرض في الموقع
+        </a>
+    @endif
     <a href="{{ admin_route('admin.pages.index') }}" class="ap-btn ap-btn--ghost ap-btn--sm">رجوع للقائمة</a>
 @endsection
 
@@ -54,6 +68,7 @@
                     </div>
                 </div>
 
+                @if (config('locales.admin_english_enabled'))
                 <div class="ap-card">
                     <div class="ap-card__head">
                         <h2 class="ap-card__title">
@@ -81,6 +96,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             {{-- ------------------------------------------------ الإعدادات --}}
@@ -135,6 +151,7 @@
                             <label class="ap-label">SEO description (AR)</label>
                             <textarea name="translations[ar][seo_description]" class="ap-textarea" rows="3">{{ $old('translations.ar.seo_description', $ar->seo_description) }}</textarea>
                         </div>
+                        @if (config('locales.admin_english_enabled'))
                         <div class="ap-field">
                             <label class="ap-label">SEO title (EN)</label>
                             <input type="text" name="translations[en][seo_title]" class="ap-input"
@@ -144,6 +161,7 @@
                             <label class="ap-label">SEO description (EN)</label>
                             <textarea name="translations[en][seo_description]" class="ap-textarea" rows="3">{{ $old('translations.en.seo_description', $en->seo_description) }}</textarea>
                         </div>
+                        @endif
                     </div>
                 </div>
 

@@ -5,13 +5,37 @@
 @section('page_subtitle', $subtitle ?? '')
 
 @section('page_actions')
+    @if ($user->status === 'pending')
+        <form method="post" action="{{ admin_route('admin.users.activate', $user) }}" class="d-inline">
+            @csrf
+            <button class="ap-btn ap-btn--gold ap-btn--sm">
+                @include('admin.partials.icon', ['iconName' => 'check', 'size' => 16]) اعتماد وتفعيل الحساب
+            </button>
+        </form>
+    @endif
     @can('users.update')
-        <a href="{{ admin_route('admin.users.edit', $user) }}" class="ap-btn ap-btn--gold ap-btn--sm">تعديل</a>
+        <a href="{{ admin_route('admin.users.edit', $user) }}" class="ap-btn ap-btn--ghost ap-btn--sm">تعديل</a>
     @endcan
     <a href="{{ admin_route('admin.users.index') }}" class="ap-btn ap-btn--ghost ap-btn--sm">رجوع</a>
 @endsection
 
 @section('content')
+    @if ($user->status === 'pending')
+        <div class="ap-alert ap-alert--warning" style="margin-bottom: 18px; border-radius: 12px; padding: 16px 20px;">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <strong>⏳ تنبيه: هذا الحساب معلق وبانتظار اعتماد الإدارة.</strong>
+                    <div style="font-size: 13px; margin-top: 4px;">لا يمكن للمستخدم نشر عقارات أو مشاريع حتى تقوم باعتماد وتفعيل حسابه.</div>
+                </div>
+                <form method="post" action="{{ admin_route('admin.users.activate', $user) }}">
+                    @csrf
+                    <button class="ap-btn ap-btn--gold ap-btn--sm">
+                        @include('admin.partials.icon', ['iconName' => 'check', 'size' => 15]) تفعيل الحساب الآن
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endif
     <div class="ap-grid ap-grid--3" style="margin-bottom: 18px;">
         <div class="ap-stat">
             <div class="ap-stat__icon">@include('admin.partials.icon', ['iconName' => 'building', 'size' => 20])</div>
@@ -79,7 +103,10 @@
             @if ($user->agentProfile)
                 <div class="ap-card">
                     <div class="ap-card__head">
-                        <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'star', 'size' => 18]) ملف السمسار</h2>
+                        <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'star', 'size' => 18]) ملف السمسار والتوثيق</h2>
+                        @if ($user->agentProfile->status === 'pending')
+                            <span class="ap-badge ap-badge--warning">بانتظار الاعتماد</span>
+                        @endif
                     </div>
                     <div class="ap-card__body">
                         <table class="ap-table">
@@ -88,11 +115,49 @@
                                 <tr><th>واتساب</th><td dir="ltr">{{ $user->agentProfile->whatsapp ?? '—' }}</td></tr>
                                 <tr><th>سنوات الخبرة</th><td>{{ $user->agentProfile->years_experience ?? '—' }}</td></tr>
                                 <tr><th>الرابط العام</th><td><code>{{ $user->agentProfile->slug }}</code></td></tr>
+                                @if ($user->agentProfile->national_id_url)
+                                    <tr>
+                                        <th>بطاقة الرقم القومي</th>
+                                        <td>
+                                            <a href="{{ $user->agentProfile->national_id_url }}" target="_blank" class="ap-btn ap-btn--gold ap-btn--sm" style="display: inline-flex; align-items: center; gap: 6px;">
+                                                @include('admin.partials.icon', ['iconName' => 'eye', 'size' => 14]) عرض صورة البطاقة
+                                            </a>
+                                            <div class="mt-2">
+                                                <a href="{{ $user->agentProfile->national_id_url }}" target="_blank">
+                                                    <img src="{{ $user->agentProfile->national_id_url }}" alt="بطاقة الرقم القومي" class="rounded shadow-sm border" style="max-width: 100%; max-height: 180px; object-fit: contain;">
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                         @if ($user->agentProfile->bio)
                             <p style="margin-top: 10px; font-size: 13px;">{{ $user->agentProfile->bio }}</p>
                         @endif
+                    </div>
+                </div>
+            @endif
+
+            @if ($user->agency)
+                <div class="ap-card">
+                    <div class="ap-card__head">
+                        <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'building', 'size' => 18]) بيانات الشركة / الوكالة العقارية</h2>
+                        @if ($user->agency->status === 'pending')
+                            <span class="ap-badge ap-badge--warning">معلقة</span>
+                        @else
+                            <span class="ap-badge ap-badge--success">نشطة</span>
+                        @endif
+                    </div>
+                    <div class="ap-card__body">
+                        <table class="ap-table">
+                            <tbody>
+                                <tr><th style="width: 45%;">اسم الشركة</th><td class="fw-bold">{{ $user->agency->name }}</td></tr>
+                                <tr><th>البريد الإلكتروني للشركة</th><td dir="ltr">{{ $user->agency->email ?? '—' }}</td></tr>
+                                <tr><th>هاتف الشركة</th><td dir="ltr">{{ $user->agency->phone ?? '—' }}</td></tr>
+                                <tr><th>الرابط التعريفي</th><td><code>{{ $user->agency->slug }}</code></td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             @endif

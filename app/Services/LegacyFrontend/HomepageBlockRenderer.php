@@ -102,7 +102,7 @@ class HomepageBlockRenderer
                 return [
                     'id' => $property->id,
                     'name' => $translation?->name ?? $property->reference_code,
-                    'url' => '/' . $locale . '/properties/' . ($translation?->slug ?? $property->id),
+                    'url' => '/properties/' . ($translation?->slug ?? $property->id),
                     'image' => $this->mediaUrl($property->media->first()?->path),
                     'address' => $translation?->address_text ?? '',
                     'category' => $category?->name ?? $purpose['label'],
@@ -155,7 +155,7 @@ class HomepageBlockRenderer
                 return [
                     'name' => $translation?->name ?? '',
                     'key' => $translation?->slug ?? 'cairo',
-                    'url' => '/' . $locale . '/properties?governorate=' . urlencode($translation?->slug ?? 'cairo'),
+                    'url' => '/properties?governorate=' . urlencode($translation?->slug ?? 'cairo'),
                     'image' => '/storage/locations/' . ($index % 2 === 0 ? '5-400x560.jpg' : '3-400x560.jpg'),
                 ];
             });
@@ -187,7 +187,7 @@ class HomepageBlockRenderer
 
             return [
                 'name' => $name,
-                'url' => '/' . $locale . '/agents/' . $agent->slug,
+                'url' => '/agents/' . $agent->slug,
                 'image' => $this->mediaUrl($agent->avatar_path),
                 'email' => $agent->user?->email,
                 'phone' => $agent->user?->phone,
@@ -242,7 +242,7 @@ class HomepageBlockRenderer
                 return [
                     'title' => $translation?->title ?? '',
                     'excerpt' => Str::limit(strip_tags((string) ($translation?->excerpt ?? '')), 130),
-                    'url' => '/' . $locale . '/blog/' . ($translation?->slug ?? $post->id),
+                    'url' => '/blog/' . ($translation?->slug ?? $post->id),
                     'image' => $this->mediaUrl($post->featured_image),
                     'date' => $post->published_at?->translatedFormat('M d, Y') ?? '',
                     'author' => $post->author?->name ?? 'System Admin',
@@ -308,7 +308,7 @@ class HomepageBlockRenderer
 
         $path = '/' . ltrim($url, '/');
 
-        return '/' . $locale . ($path === '/' ? '' : $path);
+        return $path;
     }
 
     private function storageUrl(?string $path): ?string

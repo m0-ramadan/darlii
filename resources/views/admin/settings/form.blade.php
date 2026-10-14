@@ -7,6 +7,25 @@
 @section('content')
     @include('admin.settings._tabs', ['tabs' => $tabs, 'active' => $active])
 
+    @if ($group === 'partners')
+        <div class="ap-card" style="margin-bottom: 20px; background: rgba(201, 154, 69, 0.05); border: 1px dashed var(--ap-gold);">
+            <div class="ap-card__body d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h3 class="fw-bold" style="font-size: 15px; margin-bottom: 4px; color: var(--ap-navy);">
+                        @include('admin.partials.icon', ['iconName' => 'briefcase', 'size' => 18])
+                        إدارة الشركات والوكلاء المعروضين
+                    </h3>
+                    <p class="text-muted mb-0" style="font-size: 12.5px;">
+                        يمكنك إضافة شركات عقارية جديدة أو تعديل أسمائها ومسمياتها وأرقام هواتفها والمدن وتحديد من يظهر في الرئيسية من خلال دليل الوكلاء.
+                    </p>
+                </div>
+                <a href="{{ admin_route('admin.agents.index') }}" class="ap-btn ap-btn--gold ap-btn--sm">
+                    إدارة الوكلاء والشركات ←
+                </a>
+            </div>
+        </div>
+    @endif
+
     <form method="post" action="{{ admin_route('admin.settings.update', ['group' => $group]) }}" enctype="multipart/form-data">
         @csrf
         @method('put')
@@ -93,6 +112,18 @@
                                                 class="ap-input" accept="image/*">
                                         </div>
                                         <div class="ap-help">اتركه فارغاً للإبقاء على الملف الحالي: <code>{{ $value ?: '—' }}</code></div>
+                                        @break
+
+                                    @case('select')
+                                        <select id="field-{{ $inputName }}" name="{{ $inputName }}" class="ap-select">
+                                            @if ($field->key === 'properties.contact_display_mode')
+                                                <option value="platform_only" @selected($value === 'platform_only')>أرقام إدارة دارلي المباشرة فقط (إخفاء أرقام الوسيط / الشركة تماماً)</option>
+                                                <option value="platform_with_agent_name" @selected($value === 'platform_with_agent_name')>عرض اسم الوسيط / الشركة مع توجيه الاتصال والواتساب لأرقام دارلي</option>
+                                                <option value="agent_direct" @selected($value === 'agent_direct')>عرض أرقام وبيانات الوسيط / الشركة مباشرة</option>
+                                            @else
+                                                <option value="{{ $value }}">{{ $value }}</option>
+                                            @endif
+                                        </select>
                                         @break
 
                                     @default

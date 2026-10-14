@@ -39,9 +39,16 @@ if (! function_exists('setting')) {
     /**
      * Read a value from the CMS settings store (cached per request/forever).
      */
-    function setting(string $key, mixed $default = null): mixed
+    function setting(array|string $key, mixed $default = null): mixed
     {
-        return app(\App\Services\Settings\SettingsRepository::class)->get($key, $default);
+        $repo = app(\App\Services\Settings\SettingsRepository::class);
+
+        if (is_array($key)) {
+            $repo->setMany($key);
+            return null;
+        }
+
+        return $repo->get($key, $default);
     }
 }
 

@@ -56,8 +56,11 @@ class AgentController
         ]);
     }
 
-    public function show(Request $request, string $locale, string $slug): Response
+    public function show(Request $request, ?string $param1 = null, ?string $param2 = null): Response
     {
+        $slug = $param2 ?? $param1 ?? '';
+        $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
+
         $agent = AgentProfile::with(['user', 'agency', 'translations'])
             ->where('slug', $slug)
             ->first();

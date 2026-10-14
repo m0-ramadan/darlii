@@ -216,6 +216,10 @@ class ProjectController extends Controller
     private function syncTranslations(Project $project, array $data): void
     {
         foreach ((array) ($data['translations'] ?? []) as $locale => $translation) {
+            if ($locale === 'en' && ! config('locales.admin_english_enabled')) {
+                continue;
+            }
+
             if (blank($translation['name'] ?? null)) {
                 continue;
             }

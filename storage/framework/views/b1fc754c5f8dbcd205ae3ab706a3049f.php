@@ -85,6 +85,52 @@
             </div>
 
             
+            <?php
+                $adminFloorPlans = $property->getFloorPlans();
+            ?>
+            <?php if(!empty($adminFloorPlans)): ?>
+                <div class="ap-card">
+                    <div class="ap-card__head">
+                        <h2 class="ap-card__title">
+                            <svg style="width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin-left: 6px; color: #b45309;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
+                            التخطيط الهندسي للشقة (<?php echo e(count($adminFloorPlans)); ?>)
+                        </h2>
+                    </div>
+                    <div class="ap-card__body">
+                        <div style="display: flex; flex-direction: column; gap: 14px;">
+                            <?php $__currentLoopData = $adminFloorPlans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; background: rgba(248, 250, 252, 0.8);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                                        <strong style="color: #1e293b;">📐 <?php echo e($fp['name'] ?? 'مخطط هندسي'); ?></strong>
+                                        <div style="display: flex; gap: 10px; font-size: 12px; color: #64748b;">
+                                            <?php if(!empty($fp['bedrooms'])): ?> <span><?php echo e($fp['bedrooms']); ?> غرف</span> <?php endif; ?>
+                                            <?php if(!empty($fp['bathrooms'])): ?> <span><?php echo e($fp['bathrooms']); ?> حمام</span> <?php endif; ?>
+                                            <?php if(!empty($fp['area'])): ?> <span><?php echo e($fp['area']); ?> م²</span> <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <?php if(!empty($fp['description'])): ?>
+                                        <p style="font-size: 13px; color: #475569; margin-bottom: 8px;"><?php echo e($fp['description']); ?></p>
+                                    <?php endif; ?>
+                                    <?php if(!empty($fp['image_url']) || !empty($fp['image'])): ?>
+                                        <?php
+                                            $adminPlanImg = !empty($fp['image_url']) ? $fp['image_url'] : asset('storage/' . ltrim($fp['image'], '/'));
+                                        ?>
+                                        <a href="<?php echo e($adminPlanImg); ?>" target="_blank" style="display: block; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px;">
+                                            <img src="<?php echo e($adminPlanImg); ?>" alt="<?php echo e($fp['name'] ?? 'Floor plan'); ?>" style="max-height: 220px; max-width: 100%; object-fit: contain;">
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            
             <div class="ap-card">
                 <div class="ap-card__head">
                     <h2 class="ap-card__title"><?php echo $__env->make('admin.partials.icon', ['iconName' => 'clipboard', 'size' => 18], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?> التفاصيل</h2>

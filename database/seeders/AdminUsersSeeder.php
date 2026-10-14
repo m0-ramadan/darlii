@@ -26,7 +26,7 @@ class AdminUsersSeeder extends Seeder
 
     public function run(): void
     {
-        $ids = fn (string $slug): int => (int) Role::query()->where('slug', $slug)->value('id');
+        $ids = fn(string $slug): int => (int) Role::query()->where('slug', $slug)->value('id');
 
         $super = $this->makeUser([
             'name' => 'مدير النظام',
@@ -110,7 +110,7 @@ class AdminUsersSeeder extends Seeder
         // Attach the legacy/recovered catalogue to the admin so the reporting
         // tree owns every record instead of leaving them orphaned.
         Property::query()
-            ->where(fn ($q) => $q->whereNull('owner_id')->orWhere('owner_id', '!=', $admin->id))
+            ->where(fn($q) => $q->whereNull('owner_id')->orWhere('owner_id', '!=', $admin->id))
             ->whereNull('managed_by')
             ->update(['created_by' => $admin->id, 'managed_by' => $admin->id, 'assignment_status' => 'assigned', 'last_assigned_at' => now()]);
 

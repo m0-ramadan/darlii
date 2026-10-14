@@ -2,7 +2,7 @@
 
 @section('title', $title)
 @section('page_title', $title)
-@section('page_subtitle', $subtitle ?? 'أدخل بيانات المشروع بالعربية والإنجليزية مع المرافق والموقع الجغرافي')
+@section('page_subtitle', $subtitle ?? 'أدخل بيانات المشروع بالعربية مع المرافق والموقع الجغرافي')
 
 @section('page_actions')
     <a href="{{ admin_route('admin.projects.index') }}" class="ap-btn ap-btn--ghost ap-btn--sm">
@@ -155,6 +155,7 @@
                     </div>
                 </div>
 
+                @if (config('locales.admin_english_enabled'))
                 <div class="ap-card">
                     <div class="ap-card__head">
                         <h2 class="ap-card__title">
@@ -187,6 +188,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             <div>

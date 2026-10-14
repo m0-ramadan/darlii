@@ -247,8 +247,45 @@ html[data-theme="dark"] .about-testi-user .user-role {
   margin-bottom: 40px !important;
 }
 
+#darli-about-testimonials-container {
+  display: flex !important;
+  flex-direction: row !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  width: 100%;
+}
+
+#darli-about-testimonials-container::-webkit-scrollbar {
+  display: none;
+}
+
+#darli-about-testimonials-container.is-dragging {
+  cursor: grabbing !important;
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+}
+
 .about-testi-slide {
-  width: 100% !important;
+  flex: 0 0 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.about-testi-slide * {
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .about-testi-card {

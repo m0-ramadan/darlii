@@ -90,11 +90,13 @@
                         <input type="text" name="translations[ar][name]" class="ap-input" required
                             value="{{ $old('translations.ar.name', $arEditing->name) }}" placeholder="مثال: مسبح">
                     </div>
+                    @if (config('locales.admin_english_enabled'))
                     <div class="ap-field">
                         <label class="ap-label">الاسم بالإنجليزية</label>
                         <input type="text" name="translations[en][name]" class="ap-input"
                             value="{{ $old('translations.en.name', $enEditing->name) }}" placeholder="Swimming pool">
                     </div>
+                    @endif
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">

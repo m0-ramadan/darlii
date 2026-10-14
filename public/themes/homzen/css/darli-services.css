@@ -1,0 +1,666 @@
+/* ==========================================================================
+   Darli - Our Services Page Styles (/our-services)
+   Precision parity with target design (media_1791989765144_b4476c77.png)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Hero / Page Title Section
+   -------------------------------------------------------------------------- */
+.services-hero-section {
+  position: relative;
+  background: #ffffff;
+  padding: 48px 0 32px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.services-hero-decor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: auto;
+  max-width: 320px;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+.services-hero-decor--left {
+  left: 0;
+  right: auto;
+}
+
+.services-hero-decor--right {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .services-hero-decor--left {
+  left: 0;
+  right: auto;
+}
+
+[dir="rtl"] .services-hero-decor--right {
+  right: 0;
+  left: auto;
+}
+
+@media (max-width: 768px) {
+  .services-hero-decor {
+    display: none;
+  }
+}
+
+.services-breadcrumb {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 0 12px !important;
+  font-size: 14px !important;
+}
+
+.services-breadcrumb a {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+.services-breadcrumb-sep {
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+}
+
+.services-breadcrumb .active {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+.services-hero-title {
+  color: #0f172a !important;
+  font-size: 46px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  margin: 0 0 14px !important;
+  letter-spacing: -0.5px;
+}
+
+.services-hero-subtitle {
+  color: #475569 !important;
+  font-size: 16px !important;
+  line-height: 1.65 !important;
+  max-width: 600px;
+  margin: 0 auto 16px !important;
+}
+
+.services-hero-gold-bar {
+  width: 44px;
+  height: 3.5px;
+  background-color: #c39953;
+  border-radius: 999px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   Section 1: Why Choose Darli (لماذا تختار دارلي؟)
+   -------------------------------------------------------------------------- */
+.services-page-wrapper {
+  background-color: #ffffff !important;
+  color: #161e2d;
+}
+
+.flat-services-section {
+  padding: 40px 0 60px !important;
+  background-color: #ffffff !important;
+}
+
+.services-showcase-container {
+  position: relative;
+  width: 100%;
+  max-width: 490px;
+  margin: 0 auto;
+}
+
+.services-showcase-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.services-content-wrap {
+  padding: 0 10px;
+}
+
+.services-header-group {
+  margin-bottom: 26px;
+}
+
+.services-gold-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c39953 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  margin-bottom: 6px !important;
+}
+
+.services-tag-line {
+  display: inline-block;
+  width: 32px;
+  height: 3.5px;
+  background-color: #c39953;
+  border-radius: 2px;
+}
+
+.services-why-heading {
+  color: #0f172a !important;
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  margin: 0 0 12px !important;
+}
+
+.services-why-desc {
+  color: #64748b !important;
+  font-size: 14.5px !important;
+  line-height: 1.7 !important;
+  max-width: 540px;
+  margin: 0 !important;
+}
+
+/* Service Action Cards */
+.services-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.services-action-card {
+  display: flex;
+  align-items: center;
+  background: #fcfbfa;
+  border: 1px solid #f0ede6;
+  border-radius: 16px;
+  padding: 18px 22px;
+  transition: all 0.25s ease;
+  gap: 18px;
+}
+
+.services-action-card:hover {
+  background: #ffffff;
+  border-color: #e6d3ad;
+  box-shadow: 0 8px 24px rgba(195, 153, 83, 0.08);
+}
+
+.services-card-icon-box {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-card-content {
+  flex-grow: 1;
+}
+
+.services-card-title {
+  color: #0f172a !important;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  margin: 0 0 4px !important;
+}
+
+.services-card-text {
+  color: #64748b !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
+.services-card-action {
+  flex-shrink: 0;
+}
+
+.services-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+}
+
+.services-btn-text {
+  color: #c39953;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.services-btn-circle {
+  width: 38px;
+  height: 38px;
+  background-color: #c39953;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.services-action-card:hover .services-btn-circle {
+  transform: translateX(-3px);
+  background-color: #b0853e;
+}
+
+[dir="ltr"] .services-action-card:hover .services-btn-circle {
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   Section 2: Testimonials (ما يقوله الناس)
+   -------------------------------------------------------------------------- */
+.flat-testimonials-section {
+  padding: 40px 0 60px !important;
+  background-color: #ffffff !important;
+}
+
+.testimonials-header {
+  margin-bottom: 35px;
+}
+
+.testimonials-gold-tag {
+  color: #c39953 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-bottom: 6px !important;
+}
+
+.testimonials-main-heading {
+  color: #0f172a !important;
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  margin: 0 0 8px !important;
+}
+
+.testimonials-subheading {
+  color: #64748b !important;
+  font-size: 15px !important;
+  margin: 0 !important;
+}
+
+.darli-testi-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 230px;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.darli-testi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+.darli-testi-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.darli-testi-quote-mark {
+  font-family: Georgia, serif;
+  font-size: 38px;
+  line-height: 1;
+  color: #edd9b6;
+  user-select: none;
+}
+
+.darli-testi-stars {
+  display: flex;
+  gap: 3px;
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+.darli-testi-content {
+  color: #334155 !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  margin: 0 0 20px !important;
+  flex-grow: 1;
+}
+
+.darli-testi-author-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.darli-testi-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+}
+
+.darli-testi-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.darli-testi-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.darli-testi-name {
+  color: #0f172a !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+
+.darli-testi-role {
+  color: #94a3b8 !important;
+  font-size: 12.5px !important;
+  margin: 0 !important;
+}
+
+/* Pagination Dots */
+.darli-testi-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.darli-testi-dot {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.darli-testi-dot .dot-inner {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  transition: all 0.25s ease;
+  display: block;
+}
+
+.darli-testi-dot.is-active .dot-inner {
+  background-color: #c39953;
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 0 0 4.5px #c39953;
+}
+
+/* --------------------------------------------------------------------------
+   Section 3: Call to Action Banner (كن جزءاً من مجتمع دارلي)
+   -------------------------------------------------------------------------- */
+.flat-cta-section {
+  padding-bottom: 60px !important;
+}
+
+.darli-services-cta-banner {
+  background: #ffffff;
+  border: 1px solid #edf2f7;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  display: flex;
+  position: relative;
+  align-items: stretch;
+  min-height: 200px;
+}
+
+.darli-cta-image-side {
+  width: 32%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.darli-cta-house-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.darli-cta-image-side::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  background: linear-gradient(to left, transparent, #ffffff);
+  pointer-events: none;
+}
+
+[dir="rtl"] .darli-cta-image-side::after {
+  left: auto;
+  right: 0;
+  background: linear-gradient(to right, transparent, #ffffff);
+}
+
+.darli-cta-content-side {
+  width: 68%;
+  padding: 30px 40px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.darli-cta-tag {
+  color: #c39953 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-bottom: 6px !important;
+}
+
+.darli-cta-title {
+  color: #0f172a !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  margin: 0 0 8px !important;
+}
+
+.darli-cta-subtitle {
+  color: #64748b !important;
+  font-size: 14.5px !important;
+  line-height: 1.6 !important;
+  margin: 0 0 20px !important;
+}
+
+.darli-cta-bottom-bar {
+  background: #fbfbfa;
+  border: 1px solid #f0ede6;
+  border-radius: 14px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.darli-cta-btn {
+  background-color: #c39953 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 10px 24px !important;
+  font-weight: 700 !important;
+  font-size: 14.5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+  flex-shrink: 0 !important;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.darli-cta-btn:hover {
+  background-color: #b0853e !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.darli-cta-features-list {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-grow: 1;
+  justify-content: space-around;
+}
+
+.darli-cta-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.darli-cta-feature-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.darli-cta-feature-text {
+  color: #1e293b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .darli-services-cta-banner {
+    flex-direction: column-reverse;
+  }
+  .darli-cta-image-side {
+    width: 100%;
+    height: 180px;
+  }
+  .darli-cta-content-side {
+    width: 100%;
+    padding: 24px 20px;
+  }
+  .darli-cta-bottom-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .darli-cta-features-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .services-hero-title {
+    font-size: 34px !important;
+  }
+  .services-why-heading {
+    font-size: 28px !important;
+  }
+  .darli-cta-title {
+    font-size: 24px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Force Pristine Light Theme Parity (media_1791989765144_b4476c77.png)
+   -------------------------------------------------------------------------- */
+html[data-theme="dark"] .services-page-wrapper,
+html[data-theme="dark"] .flat-services-section,
+html[data-theme="dark"] .flat-testimonials-section,
+html[data-theme="dark"] .flat-cta-section,
+html[data-theme="dark"] .services-hero-section {
+  background-color: #ffffff !important;
+  color: #161e2d !important;
+}
+
+html[data-theme="dark"] .services-why-heading,
+html[data-theme="dark"] .testimonials-main-heading,
+html[data-theme="dark"] .darli-cta-title,
+html[data-theme="dark"] .services-hero-title,
+html[data-theme="dark"] .services-card-title,
+html[data-theme="dark"] .darli-testi-name {
+  color: #0f172a !important;
+}
+
+html[data-theme="dark"] .services-why-desc,
+html[data-theme="dark"] .testimonials-subheading,
+html[data-theme="dark"] .darli-cta-subtitle,
+html[data-theme="dark"] .services-hero-subtitle,
+html[data-theme="dark"] .services-card-text,
+html[data-theme="dark"] .darli-testi-content {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] .services-action-card {
+  background: #fcfbfa !important;
+  border-color: #f0ede6 !important;
+}
+
+html[data-theme="dark"] .darli-testi-card {
+  background: #ffffff !important;
+  border-color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .darli-services-cta-banner {
+  background: #ffffff !important;
+  border-color: #edf2f7 !important;
+}
+
+html[data-theme="dark"] .darli-cta-bottom-bar {
+  background: #fbfbfa !important;
+  border-color: #f0ede6 !important;
+}
+
+html[data-theme="dark"] .darli-cta-feature-text {
+  color: #1e293b !important;
+}
+
+html[data-theme="dark"] .services-breadcrumb a {
+  color: #1e293b !important;
+}
+
+html[data-theme="dark"] .services-breadcrumb-sep,
+html[data-theme="dark"] .services-breadcrumb .active {
+  color: #64748b !important;
+}

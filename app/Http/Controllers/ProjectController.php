@@ -42,10 +42,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function show(string $locale, string $slug)
+    public function show(?string $param1 = null, ?string $param2 = null)
     {
+        $slug = $param2 ?? $param1 ?? '';
+        $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
+
         $project = Project::with(['translations', 'amenities.translations', 'units', 'location.translations'])
-            ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->where('slug', $slug))
+            ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->firstOrFail();
 
         PageViewTracker::track('projects', [$slug]);

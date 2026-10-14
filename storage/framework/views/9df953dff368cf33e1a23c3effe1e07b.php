@@ -93,7 +93,7 @@
             
             <div id="darli-about-testimonials-container">
                 <!-- Slide 0 (Items 1 & 2) -->
-                <div class="about-testi-slide" data-slide="0" style="display: none;">
+                <div class="about-testi-slide" data-slide="0">
                     <div class="row g-4 w-100">
                         <?php if(isset($testimonials[0])): ?>
                             <div class="col-md-6">
@@ -233,7 +233,7 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <input type="checkbox" id="contact-agree" name="agree" class="form-check-input" required checked>
                                     <label for="contact-agree" class="form-check-label mb-0 ms-2">
-                                        أوافق على الشروط وسياسة الخصوصية <span style="color: #ef4444;">*</span>
+                                        أوافق على <a href="/<?php echo e($locale ?? 'ar'); ?>/terms-and-conditions" target="_blank" onclick="event.stopPropagation();" style="color: #db1d23; text-decoration: underline; font-weight: 600;">الشروط والأحكام</a> و<a href="/<?php echo e($locale ?? 'ar'); ?>/privacy-policy" target="_blank" onclick="event.stopPropagation();" style="color: #db1d23; text-decoration: underline; font-weight: 600;">سياسة الخصوصية</a> <span style="color: #ef4444;">*</span>
                                     </label>
                                 </div>
                                 <div class="col-12 pt-2">
@@ -379,26 +379,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Testimonials Slider Dots
+    // 2. Testimonials Slider Dots & Drag
     var dots = document.querySelectorAll('.darli-about-dot');
-    var slides = document.querySelectorAll('.about-testi-slide');
-    if (dots.length && slides.length) {
-        dots.forEach(function(dot) {
-            dot.addEventListener('click', function() {
-                var idx = parseInt(this.getAttribute('data-index'), 10) || 0;
-                dots.forEach(function(d) { d.classList.remove('active'); });
-                this.classList.add('active');
-                
-                var targetSlide = idx % slides.length;
-                slides.forEach(function(s, i) {
-                    s.style.display = (i === targetSlide) ? 'flex' : 'none';
-                    if (i === targetSlide) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
+    var container = document.getElementById('darli-about-testimonials-container');
+    if (dots.length && container) {
+        var scrollRaf = null;
+        function updateAboutDots() {
+            if (scrollRaf) cancelAnimationFrame(scrollRaf);
+            scrollRaf = requestAnimationFrame(function() {
+                var maxScroll = container.scrollWidth - container.clientWidth;
+                if (maxScroll <= 0) return;
+                var curScroll = Math.abs(container.scrollLeft);
+                var ratio = Math.min(1, Math.max(0, curScroll / maxScroll));
+                var activeIdx = Math.round(ratio * (dots.length - 1));
+                dots.forEach(function(d, i) {
+                    d.classList.toggle('active', i === activeIdx);
                 });
             });
+        }
+
+        container.addEventListener('scroll', updateAboutDots);
+
+        dots.forEach(function(dot, index) {
+            dot.addEventListener('click', function() {
+                var maxScroll = container.scrollWidth - container.clientWidth;
+                var targetScroll = (index / (dots.length - 1)) * maxScroll;
+                var finalLeft = document.dir === 'rtl' ? -targetScroll : targetScroll;
+                container.scrollTo({ left: finalLeft, behavior: 'smooth' });
+            });
+        });
+
+        // Initial position at slide index 1 (active dot 2) to match reference
+        requestAnimationFrame(function() {
+            var maxScroll = container.scrollWidth - container.clientWidth;
+            if (maxScroll > 0) {
+                var initialScroll = (1 / (dots.length - 1)) * maxScroll;
+                var finalLeft = document.dir === 'rtl' ? -initialScroll : initialScroll;
+                container.scrollTo({ left: finalLeft, behavior: 'auto' });
+            }
         });
     }
 });

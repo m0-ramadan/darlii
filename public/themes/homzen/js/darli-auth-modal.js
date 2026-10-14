@@ -197,6 +197,10 @@
                 document.body.classList.remove('mobile-menu-visible');
             }
         });
+
+        if (window.location.hash === '#modalLogin' || window.location.hash === '#modalRegister') {
+            showModal(window.location.hash);
+        }
     }
 
     // =========================================================================
@@ -221,12 +225,12 @@
                     alertBox.innerHTML = '';
                 }
 
-                var email = (form.querySelector('input[name="email"]') || {}).value || '';
+                var loginInput = (form.querySelector('input[name="login"]') || form.querySelector('input[name="email"]') || {}).value || '';
                 var password = (form.querySelector('input[name="password"]') || {}).value || '';
                 var remember = (form.querySelector('input[name="remember"]') || {}).checked ? 1 : 0;
 
-                if (!email || !password) {
-                    showError(alertBox, isAr ? 'يرجى إدخال البريد الإلكتروني وكلمة المرور.' : 'Please enter email and password.');
+                if (!loginInput || !password) {
+                    showError(alertBox, isAr ? 'يرجى إدخال البريد الإلكتروني أو رقم الهاتف وكلمة المرور.' : 'Please enter email/phone and password.');
                     return;
                 }
 
@@ -240,7 +244,8 @@
                         'X-CSRF-TOKEN': getCsrfToken()
                     },
                     body: JSON.stringify({
-                        email: email,
+                        login: loginInput,
+                        email: loginInput,
                         password: password,
                         remember: remember
                     })
@@ -260,10 +265,10 @@
                             } else {
                                 window.location.reload();
                             }
-                        }, 600);
+                        }, 500);
                     } else {
-                        var msg = (res.data.errors && res.data.errors.email)
-                            ? res.data.errors.email[0]
+                        var msg = (res.data.errors && (res.data.errors.login || res.data.errors.email))
+                            ? (res.data.errors.login ? res.data.errors.login[0] : res.data.errors.email[0])
                             : (res.data.message || (isAr ? 'بيانات تسجيل الدخول غير صحيحة.' : 'Invalid credentials.'));
                         showError(alertBox, msg);
                     }
@@ -275,9 +280,103 @@
             });
         }
 
-        // ------------------------ REGISTER FORM ------------------------
+        // ------------------------ ROLE TABS SWITCHING ------------------------
         var regForm = document.getElementById('darli-auth-register-form');
         if (regForm) {
+            var roleCards = regForm.querySelectorAll('.darli-role-card');
+            var accountTypeInput = document.getElementById('darli-reg-account-type');
+            var companyFields = document.getElementById('darli-company-fields');
+            var brokerFields = document.getElementById('darli-broker-fields');
+            var roleNotice = document.getElementById('darli-role-notice');
+            var roleNoticeText = document.getElementById('darli-role-notice-text');
+            var socialSection = document.getElementById('darli-reg-social-section');
+            var labelName = document.getElementById('darli-label-name');
+            var labelPhone = document.getElementById('darli-label-phone');
+            var submitBtnText = document.getElementById('darli-reg-btn-text');
+
+            var companyNameInput = document.getElementById('reg-company-name');
+            var companyEmailInput = document.getElementById('reg-company-email');
+            var nationalIdInput = document.getElementById('reg-national-id');
+
+            function applyRoleState(role) {
+                if (accountTypeInput) accountTypeInput.value = role;
+
+                roleCards.forEach(function (card) {
+                    if (card.getAttribute('data-role') === role) {
+                        card.classList.add('active');
+                        card.style.borderColor = 'var(--brand-gold, #c99a45)';
+                        card.style.background = 'var(--brand-gold-light, #f7f0e3)';
+                    } else {
+                        card.classList.remove('active');
+                        card.style.borderColor = '#e2e8f0';
+                        card.style.background = '';
+                    }
+                });
+
+                if (role === 'company') {
+                    if (companyFields) companyFields.classList.remove('d-none');
+                    if (brokerFields) brokerFields.classList.add('d-none');
+                    if (roleNotice) roleNotice.classList.remove('d-none');
+                    if (roleNoticeText) {
+                        roleNoticeText.textContent = isAr
+                            ? 'حسابات الشركات تخضع للمراجعة والاعتماد السريع من إدارة المنصة قبل تفعيل إضافة العقارات والمشاريع.'
+                            : 'Company accounts are subject to admin review before listing properties or projects.';
+                    }
+                    if (socialSection) socialSection.classList.add('d-none'); // دا للعميل بس!
+                    if (labelName) labelName.textContent = isAr ? 'اسم مسؤول التواصل' : 'Contact Person Name';
+                    if (labelPhone) labelPhone.textContent = isAr ? 'رقم هاتف المسؤول' : 'Contact Phone';
+                    if (submitBtnText) submitBtnText.textContent = isAr ? 'تسجيل حساب شركة جديدة' : 'Register Company Account';
+
+                    if (companyNameInput) companyNameInput.required = true;
+                    if (companyEmailInput) companyEmailInput.required = true;
+                    if (nationalIdInput) nationalIdInput.required = false;
+
+                } else if (role === 'broker') {
+                    if (companyFields) companyFields.classList.add('d-none');
+                    if (brokerFields) brokerFields.classList.remove('d-none');
+                    if (roleNotice) roleNotice.classList.remove('d-none');
+                    if (roleNoticeText) {
+                        roleNoticeText.textContent = isAr
+                            ? 'حسابات السماسرة تخضع لمراجعة بطاقة الرقم القومي واعتماد إدارة دارلي قبل إتاحة نشر العقارات.'
+                            : 'Broker accounts require National ID verification by Darli administration before listing properties.';
+                    }
+                    if (socialSection) socialSection.classList.add('d-none'); // دا للعميل بس!
+                    if (labelName) labelName.textContent = isAr ? 'الاسم بالكامل كما في بطاقة الرقم القومي' : 'Full Name (as in National ID)';
+                    if (labelPhone) labelPhone.textContent = isAr ? 'رقم الهاتف' : 'Phone Number';
+                    if (submitBtnText) submitBtnText.textContent = isAr ? 'تسجيل حساب سمسار' : 'Register Broker Account';
+
+                    if (companyNameInput) companyNameInput.required = false;
+                    if (companyEmailInput) companyEmailInput.required = false;
+                    if (nationalIdInput) nationalIdInput.required = true;
+
+                } else {
+                    // Client / Customer (Default)
+                    if (companyFields) companyFields.classList.add('d-none');
+                    if (brokerFields) brokerFields.classList.remove('d-none', false);
+                    if (brokerFields) brokerFields.classList.add('d-none');
+                    if (roleNotice) roleNotice.classList.add('d-none');
+                    if (socialSection) socialSection.classList.remove('d-none'); // متاح للعميل
+                    if (labelName) labelName.textContent = isAr ? 'الاسم بالكامل' : 'Full Name';
+                    if (labelPhone) labelPhone.textContent = isAr ? 'رقم الهاتف' : 'Phone Number';
+                    if (submitBtnText) submitBtnText.textContent = isAr ? 'إنشاء حساب عميل جديد' : 'Create Customer Account';
+
+                    if (companyNameInput) companyNameInput.required = false;
+                    if (companyEmailInput) companyEmailInput.required = false;
+                    if (nationalIdInput) nationalIdInput.required = false;
+                }
+            }
+
+            roleCards.forEach(function (card) {
+                card.addEventListener('click', function () {
+                    var role = this.getAttribute('data-role');
+                    applyRoleState(role);
+                });
+            });
+
+            // Initialize default state
+            applyRoleState('client');
+
+            // ------------------------ REGISTER FORM SUBMIT ------------------------
             regForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 var form = this;
@@ -290,13 +389,33 @@
                     alertBox.innerHTML = '';
                 }
 
-                var firstName = (form.querySelector('input[name="first_name"]') || {}).value || '';
-                var lastName = (form.querySelector('input[name="last_name"]') || {}).value || '';
-                var name = (form.querySelector('input[name="name"]') || {}).value || (firstName + ' ' + lastName).trim();
-                var email = (form.querySelector('input[name="email"]') || {}).value || '';
+                var role = (accountTypeInput ? accountTypeInput.value : 'client') || 'client';
+                var name = (form.querySelector('input[name="name"]') || {}).value || '';
                 var phone = (form.querySelector('input[name="phone"]') || {}).value || '';
                 var password = (form.querySelector('input[name="password"]') || {}).value || '';
                 var passwordConfirmation = (form.querySelector('input[name="password_confirmation"]') || {}).value || '';
+
+                if (role === 'broker') {
+                    var fileInput = form.querySelector('input[name="national_id_image"]');
+                    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                        showError(alertBox, isAr ? 'يرجى إرفاق صورة بطاقة الرقم القومي لاعتماد الحساب.' : 'Please upload your National ID card photo.');
+                        return;
+                    }
+                }
+
+                if (role === 'company') {
+                    var cName = (companyNameInput || {}).value || '';
+                    var cEmail = (companyEmailInput || {}).value || '';
+                    if (!cName.trim() || !cEmail.trim()) {
+                        showError(alertBox, isAr ? 'يرجى إدخال اسم الشركة وبريدها الرسمي.' : 'Please enter company name and official email.');
+                        return;
+                    }
+                }
+
+                if (!phone.trim()) {
+                    showError(alertBox, isAr ? 'يرجى إدخال رقم الهاتف.' : 'Please enter phone number.');
+                    return;
+                }
 
                 if (password !== passwordConfirmation) {
                     showError(alertBox, isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.');
@@ -308,24 +427,18 @@
                     return;
                 }
 
+                var defaultBtnText = submitBtnText ? submitBtnText.textContent : (isAr ? 'إنشاء حساب جديد' : 'Create Account');
                 setLoading(submitBtn, true, isAr ? 'جاري إنشاء الحساب...' : 'Creating account...');
+
+                var formData = new FormData(form);
 
                 fetch('/' + locale + '/register', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': getCsrfToken()
                     },
-                    body: JSON.stringify({
-                        name: name,
-                        first_name: firstName,
-                        last_name: lastName,
-                        email: email,
-                        phone: phone,
-                        password: password,
-                        password_confirmation: passwordConfirmation
-                    })
+                    body: formData
                 })
                 .then(function (res) {
                     return res.json().then(function (data) {
@@ -333,20 +446,26 @@
                     });
                 })
                 .then(function (res) {
-                    setLoading(submitBtn, false, isAr ? 'إنشاء حساب جديد' : 'Create Account');
+                    setLoading(submitBtn, false, defaultBtnText);
                     if (res.status === 200 && res.data.success) {
-                        showSuccess(alertBox, isAr ? 'تم إنشاء الحساب وتسجيل الدخول بنجاح! جاري التحويل...' : 'Account created successfully! Redirecting...');
+                        showSuccess(alertBox, res.data.message || (isAr ? 'تم إنشاء الحساب وتسجيل الدخول بنجاح! جاري التحويل...' : 'Account created successfully! Redirecting...'));
                         setTimeout(function () {
                             if (res.data.redirect) {
                                 window.location.href = res.data.redirect;
                             } else {
                                 window.location.reload();
                             }
-                        }, 600);
+                        }, 700);
                     } else {
                         var errors = res.data.errors || {};
                         var errorMsg = res.data.message || '';
-                        if (errors.email) {
+                        if (errors.company_email) {
+                            errorMsg = errors.company_email[0];
+                        } else if (errors.national_id_image) {
+                            errorMsg = errors.national_id_image[0];
+                        } else if (errors.phone) {
+                            errorMsg = errors.phone[0];
+                        } else if (errors.email) {
                             errorMsg = errors.email[0];
                         } else if (errors.password) {
                             errorMsg = errors.password[0];
@@ -357,7 +476,7 @@
                     }
                 })
                 .catch(function () {
-                    setLoading(submitBtn, false, isAr ? 'إنشاء حساب جديد' : 'Create Account');
+                    setLoading(submitBtn, false, defaultBtnText);
                     showError(alertBox, isAr ? 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً.' : 'Network error. Please try again.');
                 });
             });

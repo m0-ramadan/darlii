@@ -22,16 +22,32 @@
             'items' => [
                 ['كل العقارات', 'admin.properties.index', 'building', 'admin.properties.index', 'property.view'],
                 ['إضافة عقار', 'admin.properties.create', 'plus', 'admin.properties.create', 'property.create'],
-                ['بانتظار المراجعة', 'admin.properties.pending', 'clipboard', 'admin.properties.pending', 'property.approve'],
-                ['العقارات المميزة', 'admin.properties.featured', 'star', 'admin.properties.featured', 'property.feature'],
-                ['إسناد العقارات', 'admin.properties.assignments', 'users', 'admin.properties.assignments', 'property.assign'],
+                [
+                    'بانتظار المراجعة',
+                    'admin.properties.pending',
+                    'clipboard',
+                    'admin.properties.pending',
+                    'property.approve',
+                ],
+                [
+                    'العقارات المميزة',
+                    'admin.properties.featured',
+                    'star',
+                    'admin.properties.featured',
+                    'property.feature',
+                ],
+                [
+                    'إسناد العقارات',
+                    'admin.properties.assignments',
+                    'users',
+                    'admin.properties.assignments',
+                    'property.assign',
+                ],
             ],
         ],
         [
             'title' => 'المشروعات',
-            'items' => [
-                ['كل المشروعات', 'admin.projects.index', 'building', 'admin.projects.*', 'project.view'],
-            ],
+            'items' => [['كل المشروعات', 'admin.projects.index', 'building', 'admin.projects.*', 'project.view']],
         ],
         [
             'title' => 'المستخدمون والصلاحيات',
@@ -46,6 +62,7 @@
             'title' => 'المحتوى',
             'items' => [
                 ['الصفحات', 'admin.pages.index', 'file-text', 'admin.pages.*', 'content.manage'],
+                ['الأسئلة الشائعة', 'admin.faqs.index', 'help-circle', 'admin.faqs.*', 'content.manage'],
                 ['المقالات', 'admin.posts.index', 'edit', 'admin.posts.*', 'content.manage'],
                 ['الوظائف وفرص العمل', 'admin.careers.index', 'briefcase', 'admin.careers.*', 'content.manage'],
                 ['آراء العملاء', 'admin.testimonials.index', 'message', 'admin.testimonials.*', 'content.testimonials'],
@@ -56,8 +73,17 @@
             ],
         ],
         [
-            'title' => 'العملاء والمواعيد',
+            'title' => 'الإشعارات والتواصل',
             'items' => [
+                ['الإشعارات', 'admin.notifications.index', 'bell', 'admin.notifications.*', 'settings.manage'],
+                ['إرسال إشعار', 'admin.notifications.create', 'send', 'admin.notifications.create', 'settings.manage'],
+                [
+                    'إعدادات Firebase',
+                    'admin.notifications.settings',
+                    'plug',
+                    'admin.notifications.settings',
+                    'settings.manage',
+                ],
                 ['العملاء المحتملون', 'admin.leads.index', 'message', 'admin.leads.*', null],
                 ['المواعيد', 'admin.appointments.index', 'clipboard', 'admin.appointments.*', 'appointment.manage'],
                 ['التقييمات', 'admin.reviews.index', 'star', 'admin.reviews.*', 'review.moderate'],
@@ -67,7 +93,13 @@
             'title' => 'الإعدادات',
             'items' => [
                 ['الإعدادات العامة', 'admin.settings.general', 'settings', 'admin.settings.*', 'settings.manage'],
-                ['التكاملات', 'admin.settings.integrations', 'plug', 'admin.settings.integrations', 'settings.integrations'],
+                [
+                    'التكاملات',
+                    'admin.settings.integrations',
+                    'plug',
+                    'admin.settings.integrations',
+                    'settings.integrations',
+                ],
                 ['سجل النشاط', 'admin.audit.index', 'activity', 'admin.audit.*', 'audit.view'],
             ],
         ],
@@ -88,7 +120,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css')); ?>">
-    <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/css/admin-panel.css')); ?>?v=1.0.0">
+    <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/css/admin-panel.css')); ?>?v=1.0.2">
     <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/css/dark-mode.css')); ?>?v=2.0.3">
     <style>
         :root {
@@ -124,7 +156,7 @@
                 <?php $__currentLoopData = $groups; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php
                         $visibleItems = collect($group['items'])->filter(
-                            fn ($item) => $item[4] === null || ($user && $user->hasPermission($item[4])),
+                            fn($item) => $item[4] === null || ($user && $user->hasPermission($item[4])),
                         );
                     ?>
                     <?php if($visibleItems->isNotEmpty()): ?>
@@ -165,10 +197,30 @@
 
                 <div class="ap-topbar__actions">
                     <?php echo $__env->yieldContent('page_actions'); ?>
-                    <button class="darli-theme-toggle btn btn-sm btn-outline-secondary me-2 ms-2" type="button" aria-label="Toggle theme"></button>
+                    <a href="<?php echo e(admin_route('admin.notifications.index')); ?>"
+                        class="btn btn-sm btn-outline-secondary position-relative me-1 ms-1 d-inline-flex align-items-center justify-content-center"
+                        style="width: 36px; height: 36px; padding: 0;" title="الإشعارات">
+                        <?php echo $__env->make('admin.partials.icon', ['iconName' => 'bell', 'size' => 17], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                        <?php
+                            $adminUnreadNotifs = \Illuminate\Support\Facades\Schema::hasTable('site_notifications')
+                                ? \App\Models\SiteNotification::unread()->count()
+                                : 0;
+                        ?>
+                        <?php if($adminUnreadNotifs > 0): ?>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                style="font-size: 10px; padding: 2px 5px;">
+                                <?php echo e($adminUnreadNotifs > 99 ? '99+' : $adminUnreadNotifs); ?>
+
+                            </span>
+                        <?php endif; ?>
+                    </a>
+                    <button class="darli-theme-toggle btn btn-sm btn-outline-secondary me-2 ms-2" type="button"
+                        aria-label="Toggle theme"></button>
                     <div class="ap-dropdown">
                         <button type="button" class="ap-topbar__user" data-ap-dropdown>
-                            <img src="<?php echo e($user?->avatar_url); ?>" alt="<?php echo e($user?->name); ?>" class="ap-avatar ap-avatar--sm">
+                            <img src="<?php echo e($user?->avatar_url); ?>" alt="<?php echo e($user?->name); ?>"
+                                class="ap-avatar ap-avatar--sm">
                             <span class="d-none d-md-inline"><?php echo e($user?->name); ?></span>
                             <?php echo $__env->make('admin.partials.icon', ['iconName' => 'chevron-down', 'size' => 16], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                         </button>
@@ -245,15 +297,31 @@
                 if (event.target.closest('[data-ap-sidebar-close]')) {
                     document.body.classList.remove('ap-sidebar-open');
                 }
+                if (window.innerWidth <= 992 && event.target.closest('.ap-sidebar .ap-nav__link')) {
+                    document.body.classList.remove('ap-sidebar-open');
+                }
                 if (event.target.closest('[data-ap-dismiss]')) {
                     var alert = event.target.closest('.ap-alert');
                     if (alert) alert.remove();
                 }
                 var toggle = event.target.closest('[data-ap-dropdown]');
                 document.querySelectorAll('.ap-dropdown.is-open').forEach(function(node) {
-                    if (!toggle || node !== toggle.closest('.ap-dropdown')) node.classList.remove('is-open');
+                    if (!toggle || node !== toggle.closest('.ap-dropdown')) node.classList.remove(
+                        'is-open');
                 });
                 if (toggle) toggle.closest('.ap-dropdown').classList.toggle('is-open');
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    document.body.classList.remove('ap-sidebar-open');
+                }
+            });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992) {
+                    document.body.classList.remove('ap-sidebar-open');
+                }
             });
 
             document.addEventListener('submit', function(event) {

@@ -41,10 +41,10 @@ class PostController extends Controller
                     $inner->whereHas('translations', function ($translation) use ($term): void {
                         $translation->where('title', 'like', '%' . $term . '%')
                             ->orWhere('slug', 'like', '%' . $term . '%');
-                    })->orWhereHas('author', fn ($author) => $author->where('name', 'like', '%' . $term . '%'));
+                    })->orWhereHas('author', fn($author) => $author->where('name', 'like', '%' . $term . '%'));
                 });
             })
-            ->when(filled($filters['status'] ?? null), fn ($query) => $query->where('status', $filters['status']))
+            ->when(filled($filters['status'] ?? null), fn($query) => $query->where('status', $filters['status']))
             ->latest('id')
             ->paginate((int) setting('general.items_per_page', 15))
             ->withQueryString();
@@ -91,7 +91,11 @@ class PostController extends Controller
 
         AuditLogger::log('post.created', $post, [], ['status' => $post->status]);
 
-        return redirect()->route('admin.posts.index')->with('success', 'تم إنشاء المقال بنجاح.');
+        if ($request->boolean('send_broadcast_notification')) {
+            $this->broadcastPostNotification($post, 'created');
+        }
+
+        return redirect()->route('admin.posts.index')->with('success', 'تم إنشاء المقال بنجاح.' . ($request->boolean('send_broadcast_notification') ? ' وتم بث الإشعار لجميع المشتركين.' : ''));
     }
 
     // ------------------------------------------------------------- التعديل
@@ -137,7 +141,11 @@ class PostController extends Controller
 
         AuditLogger::log('post.updated', $post, $old, $post->fresh()->only(array_keys($old)));
 
-        return back()->with('success', 'تم تحديث المقال بنجاح.');
+        if ($request->boolean('send_broadcast_notification')) {
+            $this->broadcastPostNotification($post, 'updated');
+        }
+
+        return back()->with('success', 'تم تحديث المقال بنجاح.' . ($request->boolean('send_broadcast_notification') ? ' وتم بث الإشعار لجميع المشتركين.' : ''));
     }
 
     // -------------------------------------------------------------- الحذف
@@ -181,7 +189,7 @@ class PostController extends Controller
     /** @param array<string, mixed> $data */
     private function syncTranslations(Post $post, array $data): void
     {
-        foreach (['ar', 'en'] as $locale) {
+        foreach (config('locales.admin_english_enabled') ? ['ar', 'en'] : ['ar'] as $locale) {
             $translation = (array) ($data['translations'][$locale] ?? []);
 
             if (blank($translation['title'] ?? null)) {
@@ -226,11 +234,33 @@ class PostController extends Controller
         while (PostTranslation::query()
             ->where('locale', $locale)
             ->where('slug', $slug)
-            ->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))
-            ->exists()) {
+            ->when($ignoreId, fn($query) => $query->whereKeyNot($ignoreId))
+            ->exists()
+        ) {
             $slug = $base . '-' . $counter++;
         }
 
         return $slug;
+    }
+
+    private function broadcastPostNotification(Post $post, string $action = 'created'): void
+    {
+        try {
+            $arTranslation = $post->translation('ar');
+            $title = ($action === 'created' ? 'مقال جديد: ' : 'تحديث مقال: ') . ($arTranslation?->title ?: 'مقال عقاري جديد');
+            $body = Str::limit(strip_tags((string) ($arTranslation?->summary ?: $arTranslation?->content)), 150) ?: 'تصفح أحدث المقالات والتحليلات العقارية الحصرية على منصة دارلي.';
+            $slug = $arTranslation?->slug ?: $post->id;
+            $imageUrl = $post->featured_image ? asset('storage/' . $post->featured_image) : null;
+
+            app(\App\Services\Notifications\FcmNotificationService::class)->send([
+                'title' => $title,
+                'body' => $body,
+                'image_path' => $imageUrl,
+                'action_url' => url('/ar/blog/' . $slug),
+                'target_type' => 'all',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Post notification broadcast failed: ' . $e->getMessage());
+        }
     }
 }

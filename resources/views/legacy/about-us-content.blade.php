@@ -46,7 +46,7 @@
                             <div class="service-feature-content">
                                 <h3>شراء منزل جديد</h3>
                                 <p>اكتشف منزل أحلامك دون عناء. استكشف العقارات المتنوعة وإرشادات الخبراء للحصول على تجربة شراء سلسة.</p>
-                                <a href="/ar/properties?type=sale" class="btn-learn-more">يتعلم أكثر <i class="icon icon-arrow-right2"></i></a>
+                                <a href="/properties?type=sale" class="btn-learn-more">يتعلم أكثر <i class="icon icon-arrow-right2"></i></a>
                             </div>
                         </div>
                         <!-- Feature 2 -->
@@ -57,7 +57,7 @@
                             <div class="service-feature-content">
                                 <h3>استئجار منزل</h3>
                                 <p>اكتشف الإيجار المثالي الخاص بك دون عناء. اكتشف مجموعة متنوعة من القوائم المصممة خصيصًا لتناسب احتياجات نمط حياتك الفريدة.</p>
-                                <a href="/ar/properties?type=rent" class="btn-learn-more">يتعلم أكثر <i class="icon icon-arrow-right2"></i></a>
+                                <a href="/properties?type=rent" class="btn-learn-more">يتعلم أكثر <i class="icon icon-arrow-right2"></i></a>
                             </div>
                         </div>
                         <!-- Feature 3 -->
@@ -68,7 +68,7 @@
                             <div class="service-feature-content">
                                 <h3>بيع منزل</h3>
                                 <p>قم بالبيع بثقة بفضل توجيهات الخبراء والاستراتيجيات الفعالة، مع عرض أفضل ميزات الممتلكات الخاصة بك لتحقيق عملية بيع ناجحة.</p>
-                                <a href="/ar/dashboard/properties/create" class="btn-learn-more">يتعلم أكثر <i class="icon icon-arrow-right2"></i></a>
+                                <a href="/dashboard/properties/create" class="btn-learn-more">يتعلم أكثر <i class="icon icon-arrow-right2"></i></a>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
             
             <div id="darli-about-testimonials-container">
                 <!-- Slide 0 (Items 1 & 2) -->
-                <div class="about-testi-slide" data-slide="0" style="display: none;">
+                <div class="about-testi-slide" data-slide="0">
                     <div class="row g-4 w-100">
                         @if (isset($testimonials[0]))
                             <div class="col-md-6">
@@ -190,7 +190,7 @@
                 <!-- Form on Left in RTL -->
                 <div class="col-lg-5 order-lg-2">
                     <div class="about-contact-card">
-                        <form id="darli-about-contact-form" action="/ar/contact-us" method="POST">
+                        <form id="darli-about-contact-form" action="/contact-us" method="POST">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <div class="row g-3">
                                 <div class="col-sm-6">
@@ -233,7 +233,7 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <input type="checkbox" id="contact-agree" name="agree" class="form-check-input" required checked>
                                     <label for="contact-agree" class="form-check-label mb-0 ms-2">
-                                        أوافق على الشروط وسياسة الخصوصية <span style="color: #ef4444;">*</span>
+                                        أوافق على <a href="/{{ $locale ?? 'ar' }}/terms-and-conditions" target="_blank" onclick="event.stopPropagation();" style="color: #db1d23; text-decoration: underline; font-weight: 600;">الشروط والأحكام</a> و<a href="/{{ $locale ?? 'ar' }}/privacy-policy" target="_blank" onclick="event.stopPropagation();" style="color: #db1d23; text-decoration: underline; font-weight: 600;">سياسة الخصوصية</a> <span style="color: #ef4444;">*</span>
                                     </label>
                                 </div>
                                 <div class="col-12 pt-2">
@@ -298,7 +298,7 @@
                 <div class="col-lg-7 order-lg-1">
                     <div class="text-subtitle">تصبح شركاء</div>
                     <h2 class="section-title">قم بإدراج عقاراتك على Darli، انضم إلينا الآن!</h2>
-                    <a href="/ar/dashboard/properties/create" class="btn-cta">تصبح استضافة</a>
+                    <a href="/dashboard/properties/create" class="btn-cta">تصبح استضافة</a>
                 </div>
                 <div class="col-lg-5 order-lg-2 text-center text-lg-start">
                     <img src="/storage/pages/call-to-action.png" alt="قم بإدراج عقاراتك على Darli، انضم إلينا الآن!">
@@ -377,26 +377,44 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Testimonials Slider Dots
+    // 2. Testimonials Slider Dots & Drag
     var dots = document.querySelectorAll('.darli-about-dot');
-    var slides = document.querySelectorAll('.about-testi-slide');
-    if (dots.length && slides.length) {
-        dots.forEach(function(dot) {
-            dot.addEventListener('click', function() {
-                var idx = parseInt(this.getAttribute('data-index'), 10) || 0;
-                dots.forEach(function(d) { d.classList.remove('active'); });
-                this.classList.add('active');
-                
-                var targetSlide = idx % slides.length;
-                slides.forEach(function(s, i) {
-                    s.style.display = (i === targetSlide) ? 'flex' : 'none';
-                    if (i === targetSlide) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
+    var container = document.getElementById('darli-about-testimonials-container');
+    if (dots.length && container) {
+        var scrollRaf = null;
+        function updateAboutDots() {
+            if (scrollRaf) cancelAnimationFrame(scrollRaf);
+            scrollRaf = requestAnimationFrame(function() {
+                var maxScroll = container.scrollWidth - container.clientWidth;
+                if (maxScroll <= 0) return;
+                var curScroll = Math.abs(container.scrollLeft);
+                var ratio = Math.min(1, Math.max(0, curScroll / maxScroll));
+                var activeIdx = Math.round(ratio * (dots.length - 1));
+                dots.forEach(function(d, i) {
+                    d.classList.toggle('active', i === activeIdx);
                 });
             });
+        }
+
+        container.addEventListener('scroll', updateAboutDots);
+
+        dots.forEach(function(dot, index) {
+            dot.addEventListener('click', function() {
+                var maxScroll = container.scrollWidth - container.clientWidth;
+                var targetScroll = (index / (dots.length - 1)) * maxScroll;
+                var finalLeft = document.dir === 'rtl' ? -targetScroll : targetScroll;
+                container.scrollTo({ left: finalLeft, behavior: 'smooth' });
+            });
+        });
+
+        // Initial position at slide index 1 (active dot 2) to match reference
+        requestAnimationFrame(function() {
+            var maxScroll = container.scrollWidth - container.clientWidth;
+            if (maxScroll > 0) {
+                var initialScroll = (1 / (dots.length - 1)) * maxScroll;
+                var finalLeft = document.dir === 'rtl' ? -initialScroll : initialScroll;
+                container.scrollTo({ left: finalLeft, behavior: 'auto' });
+            }
         });
     }
 });

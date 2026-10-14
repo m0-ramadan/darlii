@@ -66,6 +66,7 @@
                     </div>
                 </div>
 
+                @if (config('locales.admin_english_enabled'))
                 <div class="ap-card">
                     <div class="ap-card__head">
                         <h2 class="ap-card__title">
@@ -96,6 +97,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             {{-- ------------------------------------------------ الإعدادات --}}
@@ -164,6 +166,7 @@
                             <label class="ap-label">SEO description (AR)</label>
                             <textarea name="translations[ar][seo_description]" class="ap-textarea" rows="3">{{ $old('translations.ar.seo_description', $ar->seo_description) }}</textarea>
                         </div>
+                        @if (config('locales.admin_english_enabled'))
                         <div class="ap-field">
                             <label class="ap-label">SEO title (EN)</label>
                             <input type="text" name="translations[en][seo_title]" class="ap-input"
@@ -173,6 +176,22 @@
                             <label class="ap-label">SEO description (EN)</label>
                             <textarea name="translations[en][seo_description]" class="ap-textarea" rows="3">{{ $old('translations.en.seo_description', $en->seo_description) }}</textarea>
                         </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="ap-card border-primary border-opacity-25 bg-primary bg-opacity-10 mb-3">
+                    <div class="ap-card__body py-3">
+                        <label class="d-flex align-items-center gap-3 cursor-pointer m-0" style="cursor: pointer;">
+                            <input type="checkbox" name="send_broadcast_notification" value="1" class="form-check-input mt-0 fs-5" id="postSendBroadcastNotif">
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 13.5px;">
+                                    @include('admin.partials.icon', ['iconName' => 'bell', 'size' => 15])
+                                    إرسال إشعار فوري لجميع المستخدمين
+                                </strong>
+                                <span class="text-muted small">بث إشعار فوري بهذا المقال إلى هواتف ومتصفحات المشتركين.</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 

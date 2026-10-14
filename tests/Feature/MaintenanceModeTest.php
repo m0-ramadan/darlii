@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use App\Models\Setting;
 use App\Services\Settings\SettingsRepository;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class MaintenanceModeTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_maintenance_mode_blocks_the_public_site_but_not_admin_routes(): void
     {
         Setting::query()->updateOrCreate(

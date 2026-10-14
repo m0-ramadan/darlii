@@ -36,6 +36,7 @@
                     <label class="ap-label">الحالة</label>
                     <select name="status" class="ap-select ap-select--sm">
                         <option value="">الكل</option>
+                        <option value="pending" @selected(($filters['status'] ?? '') === 'pending')>معلق (بانتظار الاعتماد)</option>
                         <option value="active" @selected(($filters['status'] ?? '') === 'active')>نشط</option>
                         <option value="inactive" @selected(($filters['status'] ?? '') === 'inactive')>غير نشط</option>
                         <option value="suspended" @selected(($filters['status'] ?? '') === 'suspended')>موقوف</option>
@@ -114,13 +115,21 @@
                                 <td>{{ $user->subordinates_count }}</td>
                                 <td>{{ $user->properties_count }}</td>
                                 <td>
-                                    <span class="ap-badge ap-badge--{{ $user->status === 'active' ? 'success' : ($user->status === 'suspended' ? 'danger' : 'secondary') }}">
-                                        {{ status_label($user->status) }}
+                                    <span class="ap-badge ap-badge--{{ $user->status === 'active' ? 'success' : ($user->status === 'pending' ? 'warning' : ($user->status === 'suspended' ? 'danger' : 'secondary')) }}">
+                                        {{ $user->status === 'pending' ? 'معلق (بانتظار الاعتماد)' : status_label($user->status) }}
                                     </span>
                                 </td>
                                 <td>{{ $user->last_login_at?->diffForHumans() ?? '—' }}</td>
                                 <td>
                                     <div class="ap-table__actions">
+                                        @if ($user->status === 'pending')
+                                            <form method="post" action="{{ admin_route('admin.users.activate', $user) }}" class="d-inline">
+                                                @csrf
+                                                <button class="ap-btn ap-btn--gold ap-btn--sm" title="اعتماد وتفعيل الحساب فوراً" style="padding: 2px 8px; font-size: 11.5px;">
+                                                    @include('admin.partials.icon', ['iconName' => 'check', 'size' => 14]) اعتماد
+                                                </button>
+                                            </form>
+                                        @endif
                                         <a href="{{ admin_route('admin.users.show', $user) }}" class="ap-btn ap-btn--ghost ap-btn--sm" title="عرض">
                                             @include('admin.partials.icon', ['iconName' => 'eye', 'size' => 15])
                                         </a>
@@ -130,7 +139,7 @@
                                             </a>
                                             <form method="post" action="{{ admin_route('admin.users.status', $user) }}" class="d-inline">
                                                 @csrf
-                                                <button class="ap-btn ap-btn--ghost ap-btn--sm" title="تفعيل/إيقاف">
+                                                <button class="ap-btn ap-btn--ghost ap-btn--sm" title="{{ $user->status === 'active' ? 'إيقاف الحساب' : 'تفعيل الحساب' }}">
                                                     @include('admin.partials.icon', ['iconName' => 'toggle', 'size' => 15])
                                                 </button>
                                             </form>

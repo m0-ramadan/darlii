@@ -5,9 +5,11 @@
 namespace App\Services\LegacyFrontend;
 
 use App\Models\AgentProfile;
+use App\Models\Post;
 use App\Models\Property;
 use App\Models\Testimonial;
 use App\Services\Localization\LocalizedUrlResolver;
+use App\Services\Settings\SettingsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -119,7 +121,8 @@ class LegacyFrontendRenderer
     }
 
     public function render(Request $request, ?string $forcedPath = null): ?string
-    {        $root = $this->root !== ''
+    {
+        $root = $this->root !== ''
             ? $this->root
             : storage_path('app/legacy-site');
 
@@ -175,10 +178,12 @@ class LegacyFrontendRenderer
         $logo = $settings->get($isRtl ? 'branding.logo_ar' : 'branding.logo_en');
         $darkLogo = $settings->get($isRtl ? 'branding.logo_dark_ar' : 'branding.logo_dark_en');
 
-        foreach (array_filter([
-            '/themes/homzen/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '.png' => (string) $logo,
-            '/themes/homzen/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '-dark.png' => (string) $darkLogo,
-        ]) as $mirrorPath => $cmsPath) {
+        foreach (
+            array_filter([
+                '/themes/homzen/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '.png' => (string) $logo,
+                '/themes/homzen/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '-dark.png' => (string) $darkLogo,
+            ]) as $mirrorPath => $cmsPath
+        ) {
             if (! str_contains($cmsPath, 'images/logo/')) {
                 continue;
             }
@@ -223,7 +228,7 @@ class LegacyFrontendRenderer
             'info@darli.com' => $email,
             'info@dari.com' => $email,
             'contact@botble.com' => $email,
-        ], static fn (string $value): bool => $value !== '');
+        ], static fn(string $value): bool => $value !== '');
 
         if ($replacements !== []) {
             $html = str_replace(array_keys($replacements), array_values($replacements), $html);
@@ -241,25 +246,25 @@ class LegacyFrontendRenderer
         // Update footer social media icons (.darli-footer-socials)
         $socialLinks = [];
         if ($facebook !== '') {
-            $socialLinks[] = '<a href="' . e($facebook) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i data-lucide="facebook" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="' . e($facebook) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>';
         }
         if ($twitter !== '') {
-            $socialLinks[] = '<a href="' . e($twitter) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i data-lucide="twitter" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="' . e($twitter) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>';
         }
         if ($instagram !== '') {
-            $socialLinks[] = '<a href="' . e($instagram) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i data-lucide="instagram" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="' . e($instagram) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>';
         }
         if ($linkedin !== '') {
-            $socialLinks[] = '<a href="' . e($linkedin) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i data-lucide="linkedin" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="' . e($linkedin) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>';
         }
         if ($youtube !== '') {
-            $socialLinks[] = '<a href="' . e($youtube) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i data-lucide="youtube" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="' . e($youtube) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>';
         }
         if ($cleanWa !== '') {
-            $socialLinks[] = '<a href="https://wa.me/' . e($cleanWa) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i data-lucide="phone" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="https://wa.me/' . e($cleanWa) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.587 1.761.88 2.795.88h.002c3.18 0 5.767-2.587 5.768-5.766.001-3.18-2.585-5.767-5.769-5.767zm7.509 5.766c-.001 4.144-3.373 7.514-7.512 7.515-1.256 0-2.485-.316-3.574-.915l-4.454 1.168 1.189-4.342c-.658-1.144-1.006-2.448-1.006-3.791.001-4.143 3.372-7.514 7.513-7.515 4.141 0 7.512 3.372 7.514 7.515zm-4.316 2.062c-.179-.089-1.058-.523-1.222-.582-.164-.059-.283-.089-.402.089-.119.179-.462.582-.566.702-.104.119-.208.134-.387.045s-.758-.279-1.444-.891c-.534-.476-.895-1.064-.999-1.243-.104-.179-.011-.276.078-.365.08-.08.179-.208.268-.312.09-.104.119-.179.179-.298.059-.119.03-.223-.015-.312-.045-.089-.402-.969-.551-1.327-.145-.348-.292-.3-.402-.305-.104-.005-.223-.006-.342-.006s-.313.045-.476.223c-.164.179-.625.611-.625 1.49 0 .879.64 1.728.729 1.847.09.119 1.259 1.922 3.05 2.695.426.184.759.294 1.018.377.428.136.818.117 1.126.071.344-.052 1.058-.432 1.207-.849.149-.417.149-.774.104-.849-.045-.075-.164-.119-.343-.208z"/></svg></a>';
         }
         if ($tiktok !== '') {
-            $socialLinks[] = '<a href="' . e($tiktok) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i data-lucide="video" style="width: 16px; height: 16px;"></i></a>';
+            $socialLinks[] = '<a href="' . e($tiktok) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z"/></svg></a>';
         }
 
         if (! empty($socialLinks)) {
@@ -271,6 +276,8 @@ class LegacyFrontendRenderer
         if (! app()->runningUnitTests() && ! (bool) $settings->get('general.language_en_enabled', false)) {
             $html = preg_replace('~<a\b[^>]*href=["\'][^"\']*/language/switch/en[^"\']*["\'][^>]*>.*?</a>~is', '', $html) ?? $html;
         }
+
+        $html = $this->renderDynamicFooter($html, $request, $settings);
 
         // Floating WhatsApp button (Fixed on the Left)
         if ($cleanWa !== '') {
@@ -299,15 +306,54 @@ HTML;
             }
         }
 
+        // -------------------------------------------- نظام الإشعارات العائم و Firebase
+        if (setting('firebase.enabled', '1') == '1' && ! str_contains($html, 'darli-notifications-wrapper')) {
+            $firebaseConfigJson = json_encode([
+                'enabled' => true,
+                'apiKey' => (string) setting('firebase.api_key', 'AIzaSyBNv6O81fJnehjTBw12cc9IZOT-32Bfy9Q'),
+                'authDomain' => (string) setting('firebase.auth_domain', 'khademate2.firebaseapp.com'),
+                'projectId' => (string) setting('firebase.project_id', 'khademate2'),
+                'storageBucket' => (string) setting('firebase.storage_bucket', 'khademate2.firebasestorage.app'),
+                'messagingSenderId' => (string) setting('firebase.messaging_sender_id', '504226887841'),
+                'appId' => (string) setting('firebase.app_id', '1:504226887841:web:cbc5abdc30304c6014d8e0'),
+                'measurementId' => (string) setting('firebase.measurement_id', 'G-01HJBBQZP7'),
+                'vapidKey' => (string) setting('firebase.vapid_public_key', ''),
+                'userId' => auth()->id(),
+            ]);
+
+            $floatingNotifHtml = view('components.floating-notifications')->render() . "\n" . <<<HTML
+<script>window.DarliFirebaseConfig = {$firebaseConfigJson};</script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+<script defer src="/themes/homzen/js/darli-notifications.js?v=1.0.1"></script>
+<script defer src="/themes/homzen/js/darli-visitor-tracker.js?v=1.0.0"></script>
+HTML;
+
+            if (stripos($html, '</body>') !== false) {
+                $html = str_ireplace('</body>', $floatingNotifHtml . "\n</body>", $html);
+            } else {
+                $html .= $floatingNotifHtml;
+            }
+        }
+
+        if (! str_contains($html, 'darli-testimonials-drag.js')) {
+            $testimonialDragScript = '<script defer src="/themes/homzen/js/darli-testimonials-drag.js?v=1.0.0"></script>';
+            $html = stripos($html, '</body>') !== false
+                ? str_ireplace('</body>', $testimonialDragScript . "\n</body>", $html)
+                : $html . $testimonialDragScript;
+        }
+
         // -------------------------------------------- "إضافة عقار" / dashboard
         // Logged-in staff go straight to the CMS, regular clients to their dashboard, visitors to login.
         if (auth()->check()) {
             $user = auth()->user();
-            $accountUrl = $user->hasAnyRole(\App\Support\PermissionCatalog::panelRoles())
-                ? '/admin'
-                : '/' . $locale . '/dashboard/properties';
+            $accountUrl = ($user->hasRole('agency-manager') || $user->hasRole('agent') || $user->hasRole('customer'))
+                ? '/dashboard'
+                : ($user->hasAnyRole(\App\Support\PermissionCatalog::panelRoles())
+                    ? '/admin'
+                    : '/dashboard');
         } else {
-            $accountUrl = '/' . $locale . '/login';
+            $accountUrl = '/login';
         }
         $html = preg_replace(
             '#(href=")(?:\.\./|/)?(?:' . preg_quote($locale, '#') . '/)?account/properties(")#',
@@ -370,14 +416,14 @@ HTML;
         if (auth()->check()) {
             $user = auth()->user();
             $displayName = e($user?->name ?? 'حسابي');
-            $authHeaderHtml = '<ul class="d-flex align-items-center gap-2"><li><a href="/admin" class="fw-bold"><i data-lucide="user" style="width:14px;height:14px;"></i> ' . $displayName . ' (لوحة التحكم)</a></li><li>/</li><li><a href="/logout">تسجيل الخروج</a></li></ul>';
+            $authHeaderHtml = '<ul class="d-flex align-items-center gap-2"><li><a href="' . $accountUrl . '" class="fw-bold"><i data-lucide="user" style="width:14px;height:14px;"></i> ' . $displayName . ' (لوحة التحكم)</a></li><li>/</li><li><a href="/logout">تسجيل الخروج</a></li></ul>';
             $html = preg_replace(
                 '~<div class="register">\s*<ul class="d-flex">.*?</ul>\s*</div>~is',
                 '<div class="register">' . $authHeaderHtml . '</div>',
                 $html
             ) ?? $html;
 
-            $mobileAuthHtml = '<div class="login-box flex align-items-center"><a href="/admin"><i data-lucide="user" style="width:14px;height:14px;"></i> ' . $displayName . ' (لوحة التحكم)</a><span>/</span><a href="/logout">تسجيل الخروج</a></div>';
+            $mobileAuthHtml = '<div class="login-box flex align-items-center"><a href="' . $accountUrl . '"><i data-lucide="user" style="width:14px;height:14px;"></i> ' . $displayName . ' (لوحة التحكم)</a><span>/</span><a href="/logout">تسجيل الخروج</a></div>';
             $html = preg_replace(
                 '~<div class="login-box flex align-items-center">.*?</div>~is',
                 $mobileAuthHtml,
@@ -385,7 +431,7 @@ HTML;
             ) ?? $html;
 
             // Also replace topbar items in homepage-4
-            $topbarUserHtml = '<a href="/admin" class="darli-topbar-item"><span>لوحة التحكم</span><i data-lucide="user" style="width:15px;height:15px;"></i></a><a href="/logout" class="darli-topbar-item"><span>تسجيل الخروج</span><i data-lucide="log-out" style="width:15px;height:15px;"></i></a>';
+            $topbarUserHtml = '<a href="' . $accountUrl . '" class="darli-topbar-item"><span>لوحة التحكم</span><i data-lucide="user" style="width:15px;height:15px;"></i></a><a href="/logout" class="darli-topbar-item"><span>تسجيل الخروج</span><i data-lucide="log-out" style="width:15px;height:15px;"></i></a>';
             $html = preg_replace(
                 '~<a\b[^>]*href=["\'][^"\']*/login["\'][^>]*class=["\'][^"\']*darli-topbar-item[^"\']*["\'][^>]*>.*?</a>~is',
                 $topbarUserHtml,
@@ -424,7 +470,7 @@ HTML;
             }
         }
 
-        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.js?v=2.0.0"></script>';
+        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.js?v=2.0.2"></script>';
 
         if (str_contains($html, '</body>')) {
             $html = preg_replace('/<\/body>/i', $authModalsHtml . "\n" . $authScript . "\n</body>", $html, 1) ?? $html;
@@ -454,7 +500,7 @@ HTML;
         ];
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $html)) {
-                $html = preg_replace_callback($pattern, static fn (): string => $header, $html, 1) ?? $html;
+                $html = preg_replace_callback($pattern, static fn(): string => $header, $html, 1) ?? $html;
                 break;
             }
         }
@@ -484,7 +530,39 @@ HTML;
             1
         ) ?? $header;
 
+        $header = $this->applyAuthenticatedHeader($header, $locale);
+
         return $this->pageSpeedStylesUsedBy($header, $source) . $header;
+    }
+
+    private function applyAuthenticatedHeader(string $header, string $locale): string
+    {
+        if (! auth()->check()) {
+            return $header;
+        }
+
+        $user = auth()->user();
+        $displayName = e($user?->name ?? 'حسابي');
+        $accountUrl = ($user->hasRole('agency-manager') || $user->hasRole('agent') || $user->hasRole('customer'))
+            ? '/dashboard'
+            : ($user->hasAnyRole(\App\Support\PermissionCatalog::panelRoles())
+                ? '/admin'
+                : '/dashboard');
+
+        $desktopAuth = '<ul class="d-flex align-items-center gap-2"><li><a href="' . $accountUrl . '" class="fw-bold"><i data-lucide="user" style="width:14px;height:14px;"></i> ' . $displayName . ' (لوحة التحكم)</a></li><li>/</li><li><a href="/logout">تسجيل الخروج</a></li></ul>';
+        $header = preg_replace(
+            '~<div class="register">\s*<ul class="d-flex">.*?</ul>\s*</div>~is',
+            '<div class="register">' . $desktopAuth . '</div>',
+            $header
+        ) ?? $header;
+
+        $mobileAuth = '<div class="login-box flex align-items-center"><a href="' . $accountUrl . '"><i data-lucide="user" style="width:14px;height:14px;"></i> ' . $displayName . ' (لوحة التحكم)</a><span>/</span><a href="/logout">تسجيل الخروج</a></div>';
+
+        return preg_replace(
+            '~<div class="login-box flex align-items-center">.*?</div>~is',
+            $mobileAuth,
+            $header
+        ) ?? $header;
     }
 
     private function pageSpeedStylesUsedBy(string $fragment, string $sourceHtml): string
@@ -543,8 +621,12 @@ HTML;
         // On the homepage, its own stylesheet must remain last so the body
         // keeps the established homepage design while the header gains its CSS.
         if (str_contains($html, '/themes/homzen/css/darli-home.css')) {
-            return preg_replace('~<link\b[^>]*href=["\'][^"\']*/themes/homzen/css/darli-home\.css[^"\']*["\'][^>]*>~i',
-                $links . '$0', $html, 1) ?? $html;
+            return preg_replace(
+                '~<link\b[^>]*href=["\'][^"\']*/themes/homzen/css/darli-home\.css[^"\']*["\'][^>]*>~i',
+                $links . '$0',
+                $html,
+                1
+            ) ?? $html;
         }
 
         return preg_replace('/<\/head>/i', $links . '</head>', $html, 1) ?? $html;
@@ -702,8 +784,7 @@ HTML;
         $encodedBase = rawurlencode($base);
         $html = str_replace($encodedOld, $encodedBase, $html);
 
-        $locale = $this->localeFromRequest($request);
-        $localizedAjax = $base . '/' . $locale . '/ajax/render-ui-blocks';
+        $localizedAjax = $base . '/ajax/render-ui-blocks';
         $html = str_replace(
             [$base . '/ajax/render-ui-blocks', $escapedBase . '\\/ajax\\/render-ui-blocks'],
             [$localizedAjax, str_replace('/', '\\/', $localizedAjax)],
@@ -786,7 +867,10 @@ HTML;
         $html = $this->removeHomepageSelector($html);
         $html = $this->applyLocalizedSeo($html, $request);
         $html = $this->normalizeBrandColours($html);
+        $html = $this->renderHomepagePosts($html, $request);
+        $html = $this->renderHomepagePartners($html, $request);
         $html = $this->renderAboutUsDynamicContent($html, $request);
+        $html = $this->renderOurServicesDynamicContent($html, $request);
         $html = $this->injectCustomAssets($html);
         $html = $this->attachImagePlaceholders($html);
 
@@ -795,6 +879,130 @@ HTML;
         $html = $this->removeCloudflareChallengeScript($html);
 
         return $this->deduplicateFormFieldIds($html);
+    }
+
+    private function renderHomepagePosts(string $html, Request $request): string
+    {
+        if (! str_contains($html, 'darli-blog-section')) {
+            return $html;
+        }
+
+        $locale = $this->localeFromRequest($request);
+        $posts = Post::query()
+            ->with('translations')
+            ->where('status', 'published')
+            ->where(fn($query) => $query->whereNull('published_at')->orWhere('published_at', '<=', now()))
+            ->latest('published_at')
+            ->limit(3)
+            ->get()
+            ->map(function (Post $post) use ($locale): array {
+                $translation = $post->translation($locale);
+                $image = $post->featured_image;
+
+                if (! $image) {
+                    $image = '/themes/homzen/images/darli-placeholder.png';
+                } elseif (! str_starts_with($image, 'http')) {
+                    $image = str_starts_with($image, 'storage/')
+                        ? '/' . ltrim($image, '/')
+                        : '/storage/' . ltrim($image, '/');
+                }
+
+                return [
+                    'title' => (string) ($translation?->title ?? ''),
+                    'excerpt' => Str::limit(strip_tags((string) ($translation?->excerpt ?: $translation?->content)), 125),
+                    'url' => '/blog/' . ($translation?->slug ?: $post->id),
+                    'image' => $image,
+                    'date' => $post->published_at?->locale($locale)->translatedFormat('d F Y') ?? '',
+                ];
+            });
+
+        try {
+            $section = view('legacy.homepage-posts', compact('posts', 'locale'))->render();
+
+            return preg_replace(
+                '~<section\b[^>]*class=["\'][^"\']*darli-blog-section[^"\']*["\'][^>]*>.*?</section>~is',
+                $section,
+                $html,
+                1
+            ) ?? $html;
+        } catch (\Throwable) {
+            return $html;
+        }
+    }
+
+    private function renderHomepagePartners(string $html, Request $request): string
+    {
+        if (! str_contains($html, 'darli-partners-section')) {
+            return $html;
+        }
+
+        $locale = $this->localeFromRequest($request);
+
+        // Fetch active partner companies & agents
+        $agentQuery = \App\Models\AgentProfile::query()
+            ->with(['translations', 'user', 'agency'])
+            ->where('status', 'active');
+
+        $agents = $agentQuery->get()
+            ->filter(fn (\App\Models\AgentProfile $a) => $a->featured_on_homepage)
+            ->sortBy(function (\App\Models\AgentProfile $a) {
+                // Priority order: 50, 51, 52, 54, 53 first to match reference design exactly
+                $priority = [50 => 1, 51 => 2, 52 => 3, 54 => 4, 53 => 5];
+                return $priority[$a->id] ?? ($a->id + 100);
+            })
+            ->values();
+
+        if ($agents->isEmpty()) {
+            $agents = \App\Models\AgentProfile::query()
+                ->with(['translations', 'user', 'agency'])
+                ->where('status', 'active')
+                ->limit(6)
+                ->get();
+        }
+
+        $partners = $agents->map(function (\App\Models\AgentProfile $agent) use ($locale): array {
+            $tr = $agent->translation($locale);
+            $name = $tr?->display_name ?: ($agent->agency?->name ?: ($agent->user?->name ?: $agent->slug));
+
+            return [
+                'id' => $agent->id,
+                'name' => $name,
+                'job_title' => $agent->job_title ?: ($agent->agency?->name ?: 'وساطة وتسويق عقاري'),
+                'city' => $agent->city,
+                'url' => '/agents/' . $agent->slug,
+                'phone' => $agent->user?->phone,
+                'whatsapp' => $agent->whatsapp ?: $agent->user?->phone,
+                'email' => $agent->user?->email,
+                'icon' => $agent->icon,
+                'icon_color' => $agent->icon_color,
+                'custom_logo' => (!empty($agent->avatar_path) && !str_contains($agent->avatar_path, 'default') && !str_contains($agent->avatar_path, 'placeholder'))
+                    ? (str_starts_with($agent->avatar_path, 'http') ? $agent->avatar_path : asset($agent->avatar_path))
+                    : null,
+            ];
+        });
+
+        $sectionTag = setting('partners.tag', '— شركاؤنا المميزون —');
+        $sectionTitle = setting('partners.title', 'تعرف على وكلائنا');
+        $sectionSubtitle = setting('partners.subtitle', 'تعاون مع نخبة من شركات الوساطة العقارية الموثوقة في مختلف مناطق المملكة');
+
+        try {
+            $section = view('legacy.homepage-partners', [
+                'partners' => $partners,
+                'sectionTag' => $sectionTag,
+                'sectionTitle' => $sectionTitle,
+                'sectionSubtitle' => $sectionSubtitle,
+                'locale' => $locale,
+            ])->render();
+
+            return preg_replace(
+                '~<section\b[^>]*class=["\'][^"\']*darli-partners-section[^"\']*["\'][^>]*>.*?</section>~is',
+                $section,
+                $html,
+                1
+            ) ?? $html;
+        } catch (\Throwable $e) {
+            return $html;
+        }
     }
 
     private function renderAboutUsDynamicContent(string $html, Request $request): string
@@ -818,7 +1026,7 @@ HTML;
 
                 return [
                     'name' => $name,
-                    'url' => '/' . $locale . '/agents/' . $agent->slug,
+                    'url' => '/agents/' . $agent->slug,
                     'image' => $avatar,
                     'job_title' => $agent->job_title ?: ($agent->agency ? $agent->agency->name : 'وكيل عقاري معتمد'),
                     'email' => $agent->user?->email,
@@ -853,11 +1061,175 @@ HTML;
                 'locale' => $locale,
             ])->render();
 
-            return preg_replace(
-                '~<div class="ck-content[^"]*about-page-wrapper[^"]*">.*?</div>\s*<!-- Interactive Scripts for About Us -->\s*<script>.*?</script>~is',
-                $rendered,
-                $html
-            ) ?? preg_replace('~<div class="ck-content[^>]*>.*?</div>(?=<div class="modal fade" id="modalLogin")~is', $rendered, $html) ?? $html;
+            $p1 = '~<div class="ck-content[^"]*about-page-wrapper[^"]*">.*?</div>\s*<!-- Interactive Scripts for About Us -->\s*<script>.*?</script>~is';
+            $p2 = '~<div class="ck-content[^>]*>.*?</div>(?=<div class="modal fade" id="modalLogin")~is';
+
+            return preg_match($p1, $html) ? preg_replace($p1, $rendered, $html) : preg_replace($p2, $rendered, $html);
+        } catch (\Throwable) {
+            return $html;
+        }
+    }
+
+    private function renderOurServicesDynamicContent(string $html, Request $request): string
+    {
+        $path = trim($request->path(), '/');
+        if (! str_ends_with($path, 'our-services') && $path !== 'our-services') {
+            return $html;
+        }
+
+        $locale = $this->localeFromRequest($request);
+
+        $heroTitle = (string) setting('services.hero_title', $locale === 'en' ? 'Our Services' : 'خدماتنا');
+        $heroSubtitle = (string) setting('services.hero_subtitle', $locale === 'en'
+            ? "Integrated real estate solutions fulfilling all your needs\nin Beni Suef and beyond"
+            : "حلول عقارية متكاملة تلبي جميع احتياجاتك\nفي بني سويف وما حولها");
+
+        $whyTag = (string) setting('services.why_tag', $locale === 'en' ? 'Our Services' : 'خدماتنا');
+        $whyTitle = (string) setting('services.why_title', $locale === 'en' ? 'Why Choose Darli?' : 'لماذا تختار دارلي؟');
+        $whyDesc = (string) setting('services.why_desc', $locale === 'en'
+            ? 'We provide comprehensive real estate solutions and deep local expertise in Beni Suef market to help you achieve your goals with ease and confidence.'
+            : 'نقدم لك حلولاً عقارية متكاملة وخبرة محلية عميقة في سوق بني سويف لمساعدتك في تحقيق أهدافك العقارية بسهولة وأمان.');
+
+        $badgeTitle = (string) setting('services.badge_title', $locale === 'en' ? 'Your Real Estate Future Starts Here' : 'مستقبلك العقاري يبدأ هنا');
+        $badgeDesc = (string) setting('services.badge_desc', $locale === 'en'
+            ? 'Your trusted partner in buying, selling, and renting properties in Beni Suef'
+            : 'شريكك الموثوق في شراء وبيع وتأجير العقارات في بني سويف');
+
+        $s1Title = (string) setting('services.s1_title', $locale === 'en' ? 'Buy a Home' : 'شراء منزل');
+        $s1Desc = (string) setting('services.s1_desc', $locale === 'en'
+            ? 'Discover top homes for sale in Beni Suef with comprehensive guidance along your journey.'
+            : 'اكتشف أفضل المنازل المعروضة للبيع في بني سويف مع دعم كامل طوال رحلتك الشرائية.');
+        $s1Btn = (string) setting('services.s1_btn', $locale === 'en' ? 'Learn More' : 'اعرف المزيد');
+
+        $s2Title = (string) setting('services.s2_title', $locale === 'en' ? 'Rent a Home' : 'استئجار منزل');
+        $s2Desc = (string) setting('services.s2_desc', $locale === 'en'
+            ? 'A diverse collection of homes and apartments for rent tailored to your lifestyle and budget.'
+            : 'مجموعة متنوعة من المنازل والشقق للإيجار بما يناسب احتياجاتك وميزانيتك.');
+        $s2Btn = (string) setting('services.s2_btn', $locale === 'en' ? 'Learn More' : 'اعرف المزيد');
+
+        $s3Title = (string) setting('services.s3_title', $locale === 'en' ? 'Sell a Home' : 'بيع منزل');
+        $s3Desc = (string) setting('services.s3_desc', $locale === 'en'
+            ? 'Sell your property at the best price with professional marketing and reach to serious buyers.'
+            : 'قم ببيع عقارك بأفضل سعر مع تسويق احترافي ووصول واسع للمشترين المحتملين.');
+        $s3Btn = (string) setting('services.s3_btn', $locale === 'en' ? 'Learn More' : 'اعرف المزيد');
+
+        $testiTag = (string) setting('services.testi_tag', $locale === 'en' ? 'Client Reviews' : 'آراء عملائنا');
+        $testiTitle = (string) setting('services.testi_title', $locale === 'en' ? 'What People Say' : 'ما يقوله الناس');
+        $testiSubtitle = (string) setting('services.testi_subtitle', $locale === 'en'
+            ? 'We pride ourselves on our clients trust and always strive to deliver the best real estate experience in Beni Suef.'
+            : 'نفخر بثقة عملائنا ونسعى دائمًا لتقديم أفضل تجربة عقارية في بني سويف.');
+
+        $ctaTag = (string) setting('services.cta_tag', $locale === 'en' ? 'Be Part of Darli Community' : 'كن جزءاً من مجتمع دارلي');
+        $ctaTitle = (string) setting('services.cta_title', $locale === 'en' ? 'List your properties on Darli now' : 'قم بإدراج عقاراتك على Darli الآن');
+        $ctaSubtitle = (string) setting('services.cta_subtitle', $locale === 'en'
+            ? 'Reach thousands of property seekers in Beni Suef and start maximizing returns on your property.'
+            : 'وصل إلى آلاف الباحثين عن العقارات في بني سويف وابدأ في تحقيق أفضل العوائد لعقارك.');
+        $ctaBtnText = (string) setting('services.cta_btn_text', $locale === 'en' ? 'Start Now' : 'ابدأ الآن');
+        $ctaF1 = (string) setting('services.cta_f1', $locale === 'en' ? "Broad reach to buyers\nand tenants" : "وصول لعدد كبير\nمن المشترين والمستأجرين");
+        $ctaF2 = (string) setting('services.cta_f2', $locale === 'en' ? "Simple and fast\nlisting steps" : "خطوات بسيطة\nوسريعة للإدراج");
+        $ctaF3 = (string) setting('services.cta_f3', $locale === 'en' ? "Dedicated 24/7\nexpert support" : "دعم متخصص\nعلى مدار الساعة");
+
+        // Defaults matching reference image
+        $defaultTestimonials = [
+            [
+                'name' => $locale === 'en' ? 'Amr Khaled' : 'عمرو خالد',
+                'position' => $locale === 'en' ? 'Property Buyer' : 'مشتري عقار',
+                'content' => $locale === 'en'
+                    ? 'Darli platform made searching for a home in Beni Suef a seamless and enjoyable experience. Highly recommended for trusted properties.'
+                    : 'منصة دارلي جعلت عملية البحث عن منزل في بني سويف تجربة سهلة وممتعة. أنصح بها لجميع الباحثين عن عقارات موثوقة.',
+                'image' => asset('themes/homzen/images/avatar/avatar-amr.png'),
+                'rating' => 5,
+            ],
+            [
+                'name' => $locale === 'en' ? 'Sara Ali' : 'سارة علي',
+                'position' => $locale === 'en' ? 'Property Seller' : 'بائعة عقار',
+                'content' => $locale === 'en'
+                    ? 'The Darli team helped me sell my home swiftly and at the right price. Exceptional professionalism and ongoing support throughout.'
+                    : 'ساعدني فريق دارلي في بيع منزلي بسرعة وبسعر مناسب. احترافية عالية ومتابعة مستمرة من البداية للنهاية.',
+                'image' => asset('themes/homzen/images/avatar/avatar-sara.png'),
+                'rating' => 5,
+            ],
+            [
+                'name' => $locale === 'en' ? 'Ahmed Mohamed' : 'أحمد محمد',
+                'position' => $locale === 'en' ? 'Property Tenant' : 'مستأجر عقار',
+                'content' => $locale === 'en'
+                    ? 'My experience with Darli was excellent. I found the right home for my family easily. The site is user-friendly and support was great.'
+                    : 'تجربتي مع دارلي كانت ممتازة. وجدت المنزل المناسب لعائلتي بسهولة. الموقع سهل الاستخدام وفريق الدعم متعاون جدًا.',
+                'image' => asset('themes/homzen/images/avatar/avatar-ahmed.png'),
+                'rating' => 5,
+            ],
+        ];
+
+        $dbTestimonials = Testimonial::query()
+            ->with('translations')
+            ->where('status', true)
+            ->orderBy('sort_order')
+            ->limit(3)
+            ->get();
+
+        $testimonials = [];
+        foreach ($defaultTestimonials as $idx => $fallback) {
+            $model = $dbTestimonials->get($idx);
+            if ($model) {
+                $trans = $model->translation($locale);
+                $testimonials[] = [
+                    'name' => $trans?->name ?: $fallback['name'],
+                    'position' => $trans?->position ?: $fallback['position'],
+                    'content' => $trans?->content ?: $fallback['content'],
+                    'image' => $model->image_path ? asset($model->image_path) : $fallback['image'],
+                    'rating' => min(max($model->rating, 1), 5),
+                ];
+            } else {
+                $testimonials[] = $fallback;
+            }
+        }
+
+        try {
+            $rendered = view('legacy.our-services-content', [
+                'heroTitle' => $heroTitle,
+                'heroSubtitle' => $heroSubtitle,
+                'whyTag' => $whyTag,
+                'whyTitle' => $whyTitle,
+                'whyDesc' => $whyDesc,
+                'badgeTitle' => $badgeTitle,
+                'badgeDesc' => $badgeDesc,
+                's1Title' => $s1Title,
+                's1Desc' => $s1Desc,
+                's1Btn' => $s1Btn,
+                's2Title' => $s2Title,
+                's2Desc' => $s2Desc,
+                's2Btn' => $s2Btn,
+                's3Title' => $s3Title,
+                's3Desc' => $s3Desc,
+                's3Btn' => $s3Btn,
+                'testiTag' => $testiTag,
+                'testiTitle' => $testiTitle,
+                'testiSubtitle' => $testiSubtitle,
+                'testimonials' => $testimonials,
+                'ctaTag' => $ctaTag,
+                'ctaTitle' => $ctaTitle,
+                'ctaSubtitle' => $ctaSubtitle,
+                'ctaBtnText' => $ctaBtnText,
+                'ctaF1' => $ctaF1,
+                'ctaF2' => $ctaF2,
+                'ctaF3' => $ctaF3,
+                'locale' => $locale,
+            ])->render();
+
+            $patterns = [
+                '~<section[^>]*class="[^"]*(?:flat-title-page|services-hero-section)[^"]*"[^>]*>.*?</section>\s*<div class="ck-content[^>]*>.*?</div>(?=<div class="modal fade" id="modalLogin")~is',
+                '~<section[^>]*class="[^"]*(?:flat-title-page|services-hero-section)[^"]*"[^>]*>.*?</section>\s*<div class="ck-content[^"]*services-page-wrapper[^"]*">.*?</div>\s*(?:<script id="darli-services-script">.*?</script>)?~is',
+                '~<div class="ck-content[^"]*services-page-wrapper[^"]*">.*?</div>\s*(?:<script id="darli-services-script">.*?</script>)?~is',
+                '~<div class="ck-content[^>]*>.*?</div>(?=<div class="modal fade" id="modalLogin")~is',
+            ];
+
+            foreach ($patterns as $pattern) {
+                if (preg_match($pattern, $html)) {
+                    return preg_replace($pattern, $rendered, $html, 1);
+                }
+            }
+
+            return $html;
         } catch (\Throwable) {
             return $html;
         }
@@ -893,8 +1265,16 @@ HTML;
             : '/themes/homzen/images/darli-placeholder-en.png';
 
         $brandContainers = [
-            'logo-box', 'nav-logo', 'footer-logo', 'navbar-brand', 'top-header', 'site-logo',
-            'darli-logo', 'darli-footer', 'darli-footer-about', 'footer',
+            'logo-box',
+            'nav-logo',
+            'footer-logo',
+            'navbar-brand',
+            'top-header',
+            'site-logo',
+            'darli-logo',
+            'darli-footer',
+            'darli-footer-about',
+            'footer',
         ];
         $offset = 0;
 
@@ -1010,10 +1390,28 @@ HTML;
                 // If path points to known root or top-level application endpoints, avoid relative prepending
                 $trimmedPath = ltrim($path, './');
                 $topLevelSections = [
-                    'wishlist', 'properties', 'projects', 'agents', 'blog', 'news', 'careers',
-                    'about-us', 'contact-us', 'our-services', 'pricing-plans', 'faqs',
-                    'privacy-policy', 'cookie-policy', 'property-category', 'tag', 'login',
-                    'register', 'password', 'account', 'currency/switch', 'feed'
+                    'wishlist',
+                    'properties',
+                    'projects',
+                    'agents',
+                    'blog',
+                    'news',
+                    'careers',
+                    'about-us',
+                    'contact-us',
+                    'our-services',
+                    'pricing-plans',
+                    'faqs',
+                    'privacy-policy',
+                    'cookie-policy',
+                    'property-category',
+                    'tag',
+                    'login',
+                    'register',
+                    'password',
+                    'account',
+                    'currency/switch',
+                    'feed'
                 ];
 
                 $isTopLevel = false;
@@ -1031,42 +1429,24 @@ HTML;
 
                 $clean = ltrim($path, '/');
 
-                // Map unsupported locales (vi, fr, id) back to active locale
-                $clean = preg_replace('#^(?:vi|fr|id)(?:/|$)#i', $locale . '/', $clean) ?? $clean;
-                $clean = preg_replace('#^(' . implode('|', array_map('preg_quote', $supported)) . ')/(?:vi|fr|id)(?:/|$)#i', '$1/', $clean) ?? $clean;
+                // Strip any leading language prefix (ar, en, vi, fr, id)
+                $clean = preg_replace('#^(?:ar|en|vi|fr|id)(?:/|$)#i', '', $clean) ?? $clean;
 
-                // Deduplicate repeated locale segments (e.g. ar/ar/... -> ar/...)
-                $clean = preg_replace('#^(' . implode('|', array_map('preg_quote', $supported)) . ')/(?:\1)(?:/|$)#i', '$1/', $clean) ?? $clean;
-
+                // Normalize homepages to root
                 if ($clean === '' || preg_match('#^homepage-[1-5]$#i', $clean)) {
-                    $clean = $locale;
+                    $clean = '';
                 } elseif ($this->isAssetPath($clean) || preg_match('#^(?:admin|api|up|language|currency/switch)(?:/|$)#i', $clean)) {
                     // Assets and non-localized application endpoints stay at root.
                 } else {
-                    $first = explode('/', $clean, 2)[0];
-                    if (! in_array($first, $supported, true)) {
-                        $clean = $locale . '/' . $clean;
-                    }
+                    $clean = $this->localizedUrlResolver->translateEntityPath($clean);
+                    $clean = preg_replace('#^(?:ar|en|vi|fr|id)(?:/|$)#i', '', $clean) ?? $clean;
                 }
 
-                if ($locale === 'ar' && ($clean === 'en' || str_starts_with($clean, 'en/'))) {
-                    if (! str_contains($url, 'language/switch') && ! str_contains($url, 'locale.switch')) {
-                        $clean = preg_replace('#^en(/|$)#', 'ar$1', $clean) ?? 'ar';
-                    }
-                }
+                $targetQuery = isset($parts['query']) && $parts['query'] !== '' ? '?' . $parts['query'] : '';
+                $fragment = isset($parts['fragment']) && $parts['fragment'] !== '' ? '#' . $parts['fragment'] : '';
+                $outPath = $clean === '' ? '/' : '/' . $clean;
 
-                $clean = preg_replace('#^(' . implode('|', array_map('preg_quote', $supported)) . ')/homepage-[1-5]$#i', '$1', $clean) ?? $clean;
-                $clean = $this->localizedUrlResolver->translateEntityPath($clean);
-
-                $targetLocale = explode('/', $clean, 2)[0];
-                $targetQuery = isset($parts['query']) ? '?' . $parts['query'] : '';
-                if ($targetQuery === '' && $query && in_array($targetLocale, $supported, true) && $targetLocale !== $locale) {
-                    $targetQuery = '?' . $query;
-                }
-
-                $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
-
-                return $matches[1] . '="/' . $clean . $targetQuery . $fragment . '"';
+                return $matches[1] . '="' . $outPath . $targetQuery . $fragment . '"';
             },
             $html
         ) ?? $html;
@@ -1098,7 +1478,7 @@ HTML;
 
         return preg_replace(
             '/(<li\b[^>]*class\s*=\s*(["\'])[^"\']*\bdropdown2\b[^"\']*\2[^>]*>\s*<a\b[^>]*\bhref\s*=\s*)(["\'])#\3([^>]*>\s*(?:المدونة|Blog)\s*<\/a>)/iu',
-            '$1"/' . $locale . '/blog"$4',
+            '$1"/blog"$4',
             $html
         ) ?? $html;
     }
@@ -1136,7 +1516,7 @@ HTML;
             '/\bclass\s*=\s*(["\'])(.*?)\1/i',
             static function (array $matches) use ($class): string {
                 $classes = preg_split('/\s+/', trim($matches[2])) ?: [];
-                $classes = array_values(array_filter($classes, static fn (string $item): bool => $item !== $class));
+                $classes = array_values(array_filter($classes, static fn(string $item): bool => $item !== $class));
 
                 return 'class=' . $matches[1] . implode(' ', $classes) . $matches[1];
             },
@@ -1312,7 +1692,7 @@ HTML;
         $dropdownPattern = '~<div\b[^>]*class\s*=\s*(["\'])[^"\']*\bdropdown\b[^"\']*\1[^>]*>.*?<ul\b[^>]*class\s*=\s*(["\'])[^"\']*\bdropdown-menu\b[^"\']*\2[^>]*>.*?</ul>\s*</div>~is';
         $html = preg_replace_callback(
             $dropdownPattern,
-            static fn (array $matches): string => str_contains($matches[0], '/currency/switch/')
+            static fn(array $matches): string => str_contains($matches[0], '/currency/switch/')
                 ? $newDropdown
                 : $matches[0],
             $html
@@ -1342,7 +1722,7 @@ HTML;
         $locale = $this->localeFromRequest($request);
         $direction = in_array($locale, config('locales.rtl', []), true) ? 'rtl' : 'ltr';
         $base = rtrim($request->getSchemeAndHttpHost(), '/');
-        $canonical = $base . '/' . $locale;
+        $canonical = $base;
 
         $html = preg_replace('/<html\b[^>]*>/i', '<html lang="' . $locale . '" dir="' . $direction . '">', $html, 1) ?? $html;
 
@@ -1359,12 +1739,8 @@ HTML;
             }
             $html = preg_replace('#(<meta\b[^>]*property\s*=\s*(["\']?)og:url\2[^>]*content\s*=\s*)(["\'])[^"\']*\3([^>]*>)#i', '$1$3' . $canonical . '$3$4', $html, 1) ?? $html;
 
-            $hreflang = '';
-            foreach (config('locales.supported', ['ar', 'en']) as $code) {
-                $hreflang .= '<link rel="alternate" hreflang="' . $code . '" href="' . $base . '/' . $code . '">';
-            }
-            $hreflang .= '<link rel="alternate" hreflang="x-default" href="' . $base . '/' . config('locales.default', 'ar') . '">';
-            $html = preg_replace('/<\/head>/i', $hreflang . '</head>', $html, 1) ?? $html;
+            $hreflang = '<link rel="alternate" hreflang="ar" href="' . $base . '">' . "\n" . '<link rel="alternate" hreflang="x-default" href="' . $base . '">';
+            $html = preg_replace('/<\/head>/i', $hreflang . "\n" . '</head>', $html, 1) ?? $html;
         }
 
         return $html;
@@ -1432,6 +1808,7 @@ HTML;
 <link rel="stylesheet" href="/themes/homzen/css/dark-mode.css?v=2.0.1">
 <link rel="stylesheet" href="/themes/homzen/css/darli-unified.css?v=2.1.8">
 <link rel="stylesheet" href="/themes/homzen/css/darli-about-us.css?v=2.2.0">
+<link rel="stylesheet" href="/themes/homzen/css/darli-services.css?v=1.0.0">
 HTML;
 
         $html = preg_replace('/<head([^>]*)>/i', '<head$1>' . $themeBoot, $html, 1) ?? $html;
@@ -1491,7 +1868,7 @@ HTML,
         $googleMapsKey = (string) config('services.google_maps.key', '');
         $html = preg_replace('~\bdata-center\s*=\s*["\'][^"\']*["\']~i', 'data-center="[29.0661,31.0994]"', $html, 1) ?? $html;
         $html = preg_replace('~(<[^>]*data-bb-toggle="list-map"[^>]*)>~i', '$1 data-map-theme="light">', $html, 1) ?? $html;
-        $html = preg_replace('/\bdata-url\s*=\s*(["\'])[^"\']*\/ajax\/(?:properties|projects)\/map[^"\']*\1/i', 'data-url="/' . $locale . '/ajax/properties/map"', $html, 1) ?? $html;
+        $html = preg_replace('/\bdata-url\s*=\s*(["\'])[^"\']*\/ajax\/(?:properties|projects)\/map[^"\']*\1/i', 'data-url="/ajax/properties/map"', $html, 1) ?? $html;
         $html = preg_replace('/\bdata-tile-layer\s*=\s*(["\'])[^"\']+\1/i', 'data-tile-layer="https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"', $html, 1) ?? $html;
 
         if ($googleMapsKey !== '' && ! str_contains($html, 'maps.googleapis.com/maps/api/js')) {
@@ -1510,7 +1887,7 @@ HTML,
         }
 
         return preg_replace_callback(
-            '~<a\b[^>]*\bhref\s*=\s*(["\'])/(?:en|ar|fr|id|vi)/properties/([^"\'/?#]+)[^"\']*\1[^>]*>|<button\b(?=[^>]*data-bb-toggle\s*=\s*(["\'])add-to-wishlist\3)(?=[^>]*data-type\s*=\s*(["\'])property\4)[^>]*>~i',
+            '~<a\b[^>]*\bhref\s*=\s*(["\'])/(?:(?:en|ar|fr|id|vi)/)?properties/([^"\'/?#]+)[^"\']*\1[^>]*>|<button\b(?=[^>]*data-bb-toggle\s*=\s*(["\'])add-to-wishlist\3)(?=[^>]*data-type\s*=\s*(["\'])property\4)[^>]*>~i',
             function (array $matches) use (&$lastSlug): string {
                 if (isset($matches[2]) && $matches[2] !== '') {
                     $lastSlug = $matches[2];
@@ -1630,5 +2007,123 @@ HTML,
             },
             $html
         ) ?? $html;
+    }
+
+    private function renderDynamicFooter(string $html, Request $request, SettingsRepository $settings): string
+    {
+        $locale = $this->localeFromRequest($request);
+        if ($locale !== 'ar') {
+            return $html;
+        }
+
+        $aboutText = e((string) $settings->get('footer.about_text_ar', 'متخصصون في تقديم أرقى الجولات والخدمات العقارية لكل من يحتاجها. تواصل معنا'));
+        $address = e((string) $settings->get('contact.address_ar', 'شارع صلاح سالم (تقاطع كورنيش النيل)، مدينة بني سويف، محافظة بني سويف'));
+        $phone = e((string) $settings->get('contact.phone', '+20 10 34905812'));
+        $cleanPhone = preg_replace('/[^\d+]/', '', $phone);
+        $email = e((string) $settings->get('contact.email', 'contact@darlii.eg'));
+
+        $col2Title = e((string) $settings->get('footer.col2_title_ar', 'فئات'));
+        $col2Link1 = e((string) $settings->get('footer.col2_link1_text_ar', 'خطط الأسعار'));
+        $col2Link2 = e((string) $settings->get('footer.col2_link2_text_ar', 'خدماتنا'));
+        $col2Link3 = e((string) $settings->get('footer.col2_link3_text_ar', 'من نحن'));
+        $col2Link4 = e((string) $settings->get('footer.col2_link4_text_ar', 'اتصل بنا'));
+
+        $col3Title = e((string) $settings->get('footer.col3_title_ar', 'شركتنا'));
+        $col3Link1 = e((string) $settings->get('footer.col3_link1_text_ar', 'عقارات للبيع'));
+        $col3Link2 = e((string) $settings->get('footer.col3_link2_text_ar', 'عقارات للإيجار'));
+        $col3Link3 = e((string) $settings->get('footer.col3_link3_text_ar', 'سياسة الخصوصية'));
+        $col3Link4 = e((string) $settings->get('footer.col3_link4_text_ar', 'وكلاؤنا'));
+
+        $newsletterTitle = e((string) $settings->get('footer.newsletter_title_ar', 'النشرة الإخبارية'));
+        $newsletterSubtitle = e((string) $settings->get('footer.newsletter_subtitle_ar', 'جرعتك الأسبوعية/الشهرية من المعرفة والإلهام'));
+        $newsletterPlaceholder = e((string) $settings->get('footer.newsletter_placeholder_ar', 'أدخل بريدك الإلكتروني'));
+
+        $copyright = e((string) $settings->get('footer.copyright_ar', '© 2026 دارلي. جميع الحقوق محفوظة.'));
+        $termsText = e((string) $settings->get('footer.terms_text_ar', 'شروط الاستخدام'));
+        $privacyText = e((string) $settings->get('footer.privacy_text_ar', 'سياسة الخصوصية'));
+        $cookieText = e((string) $settings->get('footer.cookie_text_ar', 'سياسة ملفات تعريف الارتباط'));
+
+        // Extract CSRF token from page or Laravel helper
+        $csrfToken = '';
+        if (preg_match('/<input\b[^>]*name=["\']_token["\'][^>]*value=["\']([^"\']+)["\']/i', $html, $tokenMatch)) {
+            $csrfToken = $tokenMatch[1];
+        } elseif (function_exists('csrf_token')) {
+            try {
+                $csrfToken = (string) csrf_token();
+            } catch (\Throwable) {
+            }
+        }
+
+        // 1. Dynamic replacement for classic inner-footer (4 columns)
+        $innerFooterPattern = '/<div\b[^>]*class=["\'][^"\']*\binner-footer\b[^"\']*["\'][^>]*>.*?<\/div>\s*(?=<div\b[^>]*class=["\'](?:homzen-footer-languages|bottom-footer)\b)/si';
+        if (preg_match($innerFooterPattern, $html)) {
+            $innerFooterHtml = <<<HTML
+<div class="inner-footer"><div class="container"><div class="row"><div class="col-lg-4 col-md-6"><div class="footer-cl-1"><p class="text-variant-2">{$aboutText}</p><ul class="mt-12"><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-map-pin page_speed_1278168353"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" /></svg><p class="text-white">{$address}</p></li><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-phone-call page_speed_1278168353"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" /><path d="M15 7a2 2 0 0 1 2 2" /><path d="M15 3a6 6 0 0 1 6 6" /></svg><p class="text-white" dir="ltr"><a href="tel:{$cleanPhone}" style="color:inherit;text-decoration:none;" dir="ltr">{$phone}</a></p></li><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-mail page_speed_1278168353"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg><p class="text-white"><a href="mailto:{$email}" style="color:inherit;text-decoration:none;">{$email}</a></p></li></ul></div></div><div class="col-lg-2 col-md-4 col-6"><div class="footer-cl-3"><div class="fw-7 text-white">{$col2Title}</div><ul class="mt-10 navigation-menu-footer"><li><a href="/pricing-plans" title="{$col2Link1}" class="caption-1 text-variant-2" > {$col2Link1} </a></li><li><a href="/our-services" title="{$col2Link2}" class="caption-1 text-variant-2" > {$col2Link2} </a></li><li><a href="/about-us" title="{$col2Link3}" class="caption-1 text-variant-2" > {$col2Link3} </a></li><li><a href="/contact-us" title="{$col2Link4}" class="caption-1 text-variant-2" > {$col2Link4} </a></li></ul></div></div><div class="col-lg-2 col-md-4 col-6"><div class="footer-cl-3"><div class="fw-7 text-white">{$col3Title}</div><ul class="mt-10 navigation-menu-footer"><li><a href="/properties?type=sale" title="{$col3Link1}" class="caption-1 text-variant-2" > {$col3Link1} </a></li><li><a href="/properties?type=rent" title="{$col3Link2}" class="caption-1 text-variant-2" > {$col3Link2} </a></li><li><a href="/privacy-policy" title="{$col3Link3}" class="caption-1 text-variant-2" > {$col3Link3} </a></li><li><a href="/agents" title="{$col3Link4}" class="caption-1 text-variant-2" > {$col3Link4} </a></li></ul></div></div><div class="col-lg-4 col-md-6"><div class="footer-cl-4"><div class="fw-7 text-white"> {$newsletterTitle} </div><p class="mt-12 text-variant-2">{$newsletterSubtitle}</p><form method="POST" action="/newsletter/subscribe" accept-charset="UTF-8" id="botble-newsletter-forms-fronts-newsletter-form" class="subscribe-form mt-12 dirty-check"><input name="_token" type="hidden" value="{$csrfToken}"><div class="mb-3 position-relative"><span class="icon-left icon-mail"></span><input class="" placeholder="{$newsletterPlaceholder}" id="newsletter-email" required="required" name="email" type="email"><button class="" type="submit" title="اشترك"><i class="icon icon-send"></i></button></div><div class="newsletter-message newsletter-success-message page_speed_545063869"></div><div class="newsletter-message newsletter-error-message page_speed_545063869"></div></form></div></div></div></div></div>
+HTML;
+            $html = preg_replace($innerFooterPattern, $innerFooterHtml . "\n", $html, 1) ?? $html;
+        }
+
+        // 2. Dynamic replacement for classic bottom-footer (copyright & bottom links)
+        $bottomFooterPattern = '/<div\b[^>]*class=["\'][^"\']*\bbottom-footer\b[^"\']*["\'][^>]*>.*?<\/div>\s*<\/div>\s*<\/div>(?=\s*<\/footer>)/si';
+        if (preg_match($bottomFooterPattern, $html)) {
+            $bottomFooterHtml = <<<HTML
+<div class="bottom-footer"><div class="container"><div class="content-footer-bottom"><div class="copyright text-variant-2">{$copyright}</div><ul class="menu-bottom"><li><a href="/terms-and-conditions" title="{$termsText}" class="caption-1 text-variant-2" > {$termsText} </a></li><li><a href="/privacy-policy" title="{$privacyText}" class="caption-1 text-variant-2" > {$privacyText} </a></li><li><a href="/cookie-policy" title="{$cookieText}" class="caption-1 text-variant-2" > {$cookieText} </a></li></ul></div></div></div>
+HTML;
+            $html = preg_replace($bottomFooterPattern, $bottomFooterHtml, $html, 1) ?? $html;
+        }
+
+        // 3. Dynamic replacement for homepage darli-footer
+        if (str_contains($html, 'darli-footer')) {
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-about[^"\']*["\'][^>]*>[\s\S]*?<p>)(.*?)(<\/p>)/si',
+                '${1}' . $aboutText . '${3}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-bottom[^"\']*["\'][^>]*>\s*<div>)(.*?)(<\/div>)/si',
+                '${1}' . $copyright . '${3}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-bottom-links[^"\']*["\'][^>]*>\s*<a\b[^>]*href=["\'])[^"\']*privacy-policy[^"\']*(["\'][^>]*>)(.*?)(<\/a>)/si',
+                '${1}/privacy-policy${2}' . $privacyText . '${4}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-bottom-links[^"\']*["\'][^>]*>[\s\S]*?<a\b[^>]*href=["\'])[^"\']*(?:cookie-policy|terms-and-conditions)[^"\']*(["\'][^>]*>)(.*?)(<\/a>)/si',
+                '${1}/terms-and-conditions${2}' . $termsText . '${4}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-col[^"\']*["\'][^>]*>\s*<h4>)(?:اشترك في نشرتنا البريدية)(<\/h4>)/si',
+                '${1}' . $newsletterTitle . '${2}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-col[^"\']*["\'][^>]*>[\s\S]*?<p[^>]*>)(?:احصل على آخر العروض والعقارات الجديدة)(<\/p>)/si',
+                '${1}' . $newsletterSubtitle . '${2}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<input\b[^>]*class=["\'][^"\']*darli-newsletter-input[^"\']*["\'][^>]*placeholder=["\'])[^"\']*(["\'])/si',
+                '${1}' . $newsletterPlaceholder . '${2}',
+                $html,
+                1
+            ) ?? $html;
+        }
+
+        return $html;
     }
 }

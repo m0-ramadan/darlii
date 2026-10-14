@@ -135,6 +135,18 @@ class AgentProfile extends Model
         return null;
     }
 
+    public function getNationalIdUrlAttribute(): ?string
+    {
+        $path = $this->contract_terms;
+        if (! $path) {
+            return null;
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        return asset('storage/' . ltrim($path, '/'));
+    }
+
     public function setContractTermsAttribute(?string $value): void
     {
         if (static::hasContractTermsColumn()) {
@@ -183,5 +195,102 @@ class AgentProfile extends Model
     public function scopeVerified(Builder $query): Builder
     {
         return $query->whereNotNull('verified_at');
+    }
+
+    public function getCityAttribute(): string
+    {
+        $val = setting("agent.city.{$this->id}");
+        if (filled($val)) {
+            return (string) $val;
+        }
+
+        $bio = $this->bio ?? '';
+        if (str_contains($bio, 'الواسطى')) return 'الواسطى';
+        if (str_contains($bio, 'بني سويف الجديدة')) return 'بني سويف الجديدة';
+        if (str_contains($bio, 'الفشن')) return 'الفشن';
+        if (str_contains($bio, 'إهناسيا')) return 'إهناسيا';
+        if (str_contains($bio, 'ببا')) return 'ببا';
+
+        return 'بني سويف';
+    }
+
+    public function setCityAttribute(?string $value): void
+    {
+        if ($this->exists) {
+            try {
+                app(\App\Services\Settings\SettingsRepository::class)->set("agent.city.{$this->id}", (string) $value);
+            } catch (\Throwable $e) {}
+        }
+    }
+
+    public function getIconAttribute(): string
+    {
+        $val = setting("agent.icon.{$this->id}");
+        if (filled($val)) {
+            return (string) $val;
+        }
+
+        return match ($this->slug) {
+            'nile-real-estate-development' => 'building',
+            'upper-egypt-development-group' => 'landmark',
+            'al-mostaqbal-real-estate' => 'layers',
+            'homeland-real-estate-beni-suef' => 'compass',
+            'al-amal-real-estate-wasta' => 'building-2',
+            default => 'building-2',
+        };
+    }
+
+    public function setIconAttribute(?string $value): void
+    {
+        if ($this->exists) {
+            try {
+                app(\App\Services\Settings\SettingsRepository::class)->set("agent.icon.{$this->id}", (string) $value);
+            } catch (\Throwable $e) {}
+        }
+    }
+
+    public function getIconColorAttribute(): string
+    {
+        $val = setting("agent.icon_color.{$this->id}");
+        if (filled($val)) {
+            return (string) $val;
+        }
+
+        return match ($this->icon) {
+            'building' => '#0284c7', // blue
+            'landmark' => '#ea580c', // orange
+            'layers' => '#c39953',   // gold
+            'compass' => '#0f172a',  // dark navy
+            'building-2' => '#c39953', // gold
+            default => '#c39953',
+        };
+    }
+
+    public function getFeaturedOnHomepageAttribute(): bool
+    {
+        $val = setting("agent.featured.{$this->id}");
+        if ($val !== null && $val !== '') {
+            return filter_var($val, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return in_array($this->agent_type, ['office', 'company'], true) 
+            || $this->agency_id !== null 
+            || in_array($this->id, [50, 51, 52, 53, 54, 55, 56, 57, 58], true);
+    }
+
+    public function setFeaturedOnHomepageAttribute(bool|int|string|null $value): void
+    {
+        if ($this->exists) {
+            try {
+                $boolVal = filter_var($value, FILTER_VALIDATE_BOOLEAN) ? '1' : '0';
+                app(\App\Services\Settings\SettingsRepository::class)->set("agent.featured.{$this->id}", $boolVal);
+            } catch (\Throwable $e) {}
+        }
+    }
+
+    public function getUrlAttribute(): string
+    {
+        $locale = app()->getLocale();
+        return route('agents.show', ['locale' => $locale, 'slug' => $this->slug]);
     }
 }

@@ -15,9 +15,11 @@ use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -29,6 +31,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VisitorLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +43,13 @@ Route::get('/stats', [StatsController::class, 'index'])->name('stats.index');
 Route::get('/stats/properties', [StatsController::class, 'properties'])->name('stats.properties');
 Route::get('/stats/users', [StatsController::class, 'users'])->name('stats.users');
 Route::get('/stats/export', [StatsController::class, 'export'])->name('stats.export');
+
+// ------------------------------------------------------------- سجل الزوار والمواقع
+Route::prefix('visitors')->name('visitors.')->group(function (): void {
+    Route::get('/', [VisitorLogController::class, 'index'])->name('index');
+    Route::get('/{visitor}', [VisitorLogController::class, 'show'])->name('show');
+    Route::delete('/{visitor}', [VisitorLogController::class, 'destroy'])->name('destroy');
+});
 
 // --------------------------------------------------------------- العقارات
 Route::prefix('properties')->name('properties.')->group(function (): void {
@@ -85,6 +95,7 @@ Route::prefix('users')->name('users.')->group(function (): void {
     Route::put('/{user}', [UserController::class, 'update'])->name('update');
     Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
     Route::post('/{user}/status', [UserController::class, 'toggleStatus'])->name('status');
+    Route::post('/{user}/activate', [UserController::class, 'activate'])->name('activate');
     Route::post('/{user}/password', [UserController::class, 'resetPassword'])->name('password');
     Route::post('/{user}/manager', [UserController::class, 'assignManager'])->name('manager');
 });
@@ -117,6 +128,16 @@ Route::prefix('pages')->name('pages.')->group(function (): void {
     Route::get('/{page}/edit', [PageController::class, 'edit'])->name('edit');
     Route::put('/{page}', [PageController::class, 'update'])->name('update');
     Route::delete('/{page}', [PageController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('faqs')->name('faqs.')->group(function (): void {
+    Route::get('/', [FaqController::class, 'index'])->name('index');
+    Route::get('/create', [FaqController::class, 'create'])->name('create');
+    Route::post('/', [FaqController::class, 'store'])->name('store');
+    Route::put('/settings', [FaqController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/{id}/edit', [FaqController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [FaqController::class, 'update'])->name('update');
+    Route::delete('/{id}', [FaqController::class, 'destroy'])->name('destroy');
 });
 
 Route::prefix('posts')->name('posts.')->group(function (): void {
@@ -198,6 +219,16 @@ Route::prefix('reviews')->name('reviews.')->group(function (): void {
     Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('destroy');
 });
 
+// ----------------------------------------------------------- الإشعارات
+Route::prefix('notifications')->name('notifications.')->group(function (): void {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::get('/create', [NotificationController::class, 'create'])->name('create');
+    Route::post('/', [NotificationController::class, 'store'])->name('store');
+    Route::get('/settings', [NotificationController::class, 'settings'])->name('settings');
+    Route::put('/settings', [NotificationController::class, 'updateSettings'])->name('settings.update');
+    Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
+});
+
 // ---------------------------------------------------------- الإعدادات
 Route::prefix('settings')->name('settings.')->group(function (): void {
     Route::get('/', [SettingController::class, 'general'])->name('index');
@@ -205,6 +236,9 @@ Route::prefix('settings')->name('settings.')->group(function (): void {
     Route::get('/maintenance', [SettingController::class, 'maintenance'])->name('maintenance');
     Route::get('/branding', [SettingController::class, 'branding'])->name('branding');
     Route::get('/contact', [SettingController::class, 'contact'])->name('contact');
+    Route::get('/footer', [SettingController::class, 'footer'])->name('footer');
+    Route::get('/services', [SettingController::class, 'services'])->name('services');
+    Route::get('/partners', [SettingController::class, 'partners'])->name('partners');
     Route::get('/seo', [SettingController::class, 'seo'])->name('seo');
     Route::get('/mail', [SettingController::class, 'mail'])->name('mail');
     Route::get('/integrations', [SettingController::class, 'integrations'])->name('integrations');

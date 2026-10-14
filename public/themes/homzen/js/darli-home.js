@@ -151,38 +151,170 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ==========================================
-  // PARTNERS SLIDER DOTS & ARROWS
+  // REUSABLE MOUSE DRAG-TO-SCROLL HELPER
   // ==========================================
+  function makeDraggableScroll(slider) {
+    if (!slider) return;
+
+    let isDown = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+    let clickPrevented = false;
+
+    slider.style.cursor = 'grab';
+
+    slider.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return; // Only left click
+      isDown = true;
+      clickPrevented = false;
+      slider.classList.add('is-dragging');
+      slider.style.cursor = 'grabbing';
+      slider.style.scrollBehavior = 'auto';
+      slider.style.scrollSnapType = 'none';
+      startX = e.pageX;
+      startScrollLeft = slider.scrollLeft;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > 4) {
+        clickPrevented = true;
+      }
+      slider.scrollLeft = startScrollLeft - dx;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      slider.classList.remove('is-dragging');
+      slider.style.cursor = 'grab';
+      slider.style.scrollBehavior = 'smooth';
+      slider.style.scrollSnapType = 'x mandatory';
+      setTimeout(() => {
+        clickPrevented = false;
+      }, 50);
+    });
+
+    // Prevent clicking links/buttons during drag
+    slider.addEventListener('click', (e) => {
+      if (clickPrevented) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    // Mouse wheel horizontal scroll
+    slider.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && slider.scrollWidth > slider.clientWidth) {
+        e.preventDefault();
+        const step = 260;
+        const dir = document.dir === 'rtl' ? -1 : 1;
+        slider.scrollBy({
+          left: (e.deltaY > 0 ? step : -step) * dir,
+          behavior: 'smooth'
+        });
+      }
+    }, { passive: false });
+  }
+
+  // ==========================================
+  // PARTNERS SLIDER (Drag-to-Scroll + Arrows + Dots)
+  // ==========================================
+  const partnerSlider = document.querySelector('.darli-partners-grid');
   const partnerDots = document.querySelectorAll('.darli-partners-section .darli-dot');
   const partnerPrev = document.querySelector('.darli-partners-prev');
   const partnerNext = document.querySelector('.darli-partners-next');
-  let curPartnerIdx = 0;
 
-  function setPartnerActive(idx) {
-    if (!partnerDots.length) return;
-    curPartnerIdx = (idx + partnerDots.length) % partnerDots.length;
-    partnerDots.forEach((d, i) => d.classList.toggle('active', i === curPartnerIdx));
-  }
+  if (partnerSlider) {
+    makeDraggableScroll(partnerSlider);
 
-  partnerDots.forEach((dot, index) => {
-    dot.addEventListener('click', () => setPartnerActive(index));
-  });
+    function getCardStep() {
+      const card = partnerSlider.querySelector('.darli-partner-card');
+      return card ? card.offsetWidth + 20 : 260;
+    }
 
-  if (partnerPrev) {
-    partnerPrev.addEventListener('click', () => setPartnerActive(curPartnerIdx - 1));
-  }
-  if (partnerNext) {
-    partnerNext.addEventListener('click', () => setPartnerActive(curPartnerIdx + 1));
-  }
+    if (partnerPrev) {
+      partnerPrev.addEventListener('click', () => {
+        const step = getCardStep();
+        const dir = document.dir === 'rtl' ? 1 : -1;
+        partnerSlider.scrollBy({ left: step * dir, behavior: 'smooth' });
+      });
+    }
 
-  // ==========================================
-  // TESTIMONIALS SLIDER DOTS
-  // ==========================================
-  const testiDots = document.querySelectorAll('.darli-testimonials-section .darli-dot');
-  testiDots.forEach((dot, index) => {
-    dot.addEventListener('click', function () {
-      testiDots.forEach(d => d.classList.remove('active'));
-      this.classList.add('active');
+    if (partnerNext) {
+      partnerNext.addEventListener('click', () => {
+        const step = getCardStep();
+        const dir = document.dir === 'rtl' ? -1 : 1;
+        partnerSlider.scrollBy({ left: step * dir, behavior: 'smooth' });
+      });
+    }
+
+    // Dynamic dot updates on scroll
+    let scrollRaf = null;
+    function updatePartnerDots() {
+      if (!partnerDots.length) return;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = requestAnimationFrame(() => {
+        const maxScroll = partnerSlider.scrollWidth - partnerSlider.clientWidth;
+        if (maxScroll <= 0) return;
+        const curScroll = Math.abs(partnerSlider.scrollLeft);
+        const ratio = Math.min(1, Math.max(0, curScroll / maxScroll));
+        const activeIdx = Math.round(ratio * (partnerDots.length - 1));
+        partnerDots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+      });
+    }
+
+    partnerSlider.addEventListener('scroll', updatePartnerDots);
+
+    partnerDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        const maxScroll = partnerSlider.scrollWidth - partnerSlider.clientWidth;
+        const targetScroll = (index / (partnerDots.length - 1)) * maxScroll;
+        const finalLeft = document.dir === 'rtl' ? -targetScroll : targetScroll;
+        partnerSlider.scrollTo({ left: finalLeft, behavior: 'smooth' });
+      });
     });
-  });
+  }
+
+  // Also enable drag to scroll on mobile chips scroll if present
+  const chipsScroll = document.querySelector('.chips-scroll');
+  if (chipsScroll) {
+    makeDraggableScroll(chipsScroll);
+  }
+
+  // ==========================================
+  // TESTIMONIALS SLIDER (Drag-to-Scroll + Dots)
+  // ==========================================
+  const testiSlider = document.querySelector('.darli-testimonials-grid');
+  const testiDots = document.querySelectorAll('.darli-testimonials-section .darli-dot');
+
+  if (testiSlider) {
+    makeDraggableScroll(testiSlider);
+
+    let testiScrollRaf = null;
+    function updateTestiDots() {
+      if (!testiDots.length) return;
+      if (testiScrollRaf) cancelAnimationFrame(testiScrollRaf);
+      testiScrollRaf = requestAnimationFrame(() => {
+        const maxScroll = testiSlider.scrollWidth - testiSlider.clientWidth;
+        if (maxScroll <= 0) return;
+        const curScroll = Math.abs(testiSlider.scrollLeft);
+        const ratio = Math.min(1, Math.max(0, curScroll / maxScroll));
+        const activeIdx = Math.round(ratio * (testiDots.length - 1));
+        testiDots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+      });
+    }
+
+    testiSlider.addEventListener('scroll', updateTestiDots);
+
+    testiDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        const maxScroll = testiSlider.scrollWidth - testiSlider.clientWidth;
+        const targetScroll = (index / (testiDots.length - 1)) * maxScroll;
+        const finalLeft = document.dir === 'rtl' ? -targetScroll : targetScroll;
+        testiSlider.scrollTo({ left: finalLeft, behavior: 'smooth' });
+      });
+    });
+  }
 });

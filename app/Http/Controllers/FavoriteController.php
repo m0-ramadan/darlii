@@ -102,7 +102,7 @@ class FavoriteController extends Controller
             'id' => $property->id,
             'name' => $translation?->name ?? $property->reference_code,
             'slug' => $translation?->slug,
-            'url' => url('/' . $locale . '/properties/' . ($translation?->slug ?? $property->id)),
+            'url' => url('/properties/' . ($translation?->slug ?? $property->id)),
             'image' => $image ? url('/' . ltrim($image, '/')) : $property->placeholderUrl($locale),
             'address' => $translation?->address_text,
             'bedrooms' => $property->bedrooms,

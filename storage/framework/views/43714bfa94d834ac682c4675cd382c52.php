@@ -5,6 +5,25 @@
 <?php $__env->startSection('content'); ?>
     <?php echo $__env->make('admin.settings._tabs', ['tabs' => $tabs, 'active' => $active], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
+    <?php if($group === 'partners'): ?>
+        <div class="ap-card" style="margin-bottom: 20px; background: rgba(201, 154, 69, 0.05); border: 1px dashed var(--ap-gold);">
+            <div class="ap-card__body d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h3 class="fw-bold" style="font-size: 15px; margin-bottom: 4px; color: var(--ap-navy);">
+                        <?php echo $__env->make('admin.partials.icon', ['iconName' => 'briefcase', 'size' => 18], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                        إدارة الشركات والوكلاء المعروضين
+                    </h3>
+                    <p class="text-muted mb-0" style="font-size: 12.5px;">
+                        يمكنك إضافة شركات عقارية جديدة أو تعديل أسمائها ومسمياتها وأرقام هواتفها والمدن وتحديد من يظهر في الرئيسية من خلال دليل الوكلاء.
+                    </p>
+                </div>
+                <a href="<?php echo e(admin_route('admin.agents.index')); ?>" class="ap-btn ap-btn--gold ap-btn--sm">
+                    إدارة الوكلاء والشركات ←
+                </a>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <form method="post" action="<?php echo e(admin_route('admin.settings.update', ['group' => $group])); ?>" enctype="multipart/form-data">
         <?php echo csrf_field(); ?>
         <?php echo method_field('put'); ?>
@@ -93,6 +112,18 @@
                                                 class="ap-input" accept="image/*">
                                         </div>
                                         <div class="ap-help">اتركه فارغاً للإبقاء على الملف الحالي: <code><?php echo e($value ?: '—'); ?></code></div>
+                                        <?php break; ?>
+
+                                    <?php case ('select'): ?>
+                                        <select id="field-<?php echo e($inputName); ?>" name="<?php echo e($inputName); ?>" class="ap-select">
+                                            <?php if($field->key === 'properties.contact_display_mode'): ?>
+                                                <option value="platform_only" <?php if($value === 'platform_only'): echo 'selected'; endif; ?>>أرقام إدارة دارلي المباشرة فقط (إخفاء أرقام الوسيط / الشركة تماماً)</option>
+                                                <option value="platform_with_agent_name" <?php if($value === 'platform_with_agent_name'): echo 'selected'; endif; ?>>عرض اسم الوسيط / الشركة مع توجيه الاتصال والواتساب لأرقام دارلي</option>
+                                                <option value="agent_direct" <?php if($value === 'agent_direct'): echo 'selected'; endif; ?>>عرض أرقام وبيانات الوسيط / الشركة مباشرة</option>
+                                            <?php else: ?>
+                                                <option value="<?php echo e($value); ?>"><?php echo e($value); ?></option>
+                                            <?php endif; ?>
+                                        </select>
                                         <?php break; ?>
 
                                     <?php default: ?>

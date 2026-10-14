@@ -221,12 +221,35 @@
     </footer>
 
     @include('components.floating-whatsapp')
+    @include('components.floating-notifications')
 
     <script src="{{ asset('themes/homzen/js/jquery.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/js/popper.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script defer src="{{ asset('themes/homzen/js/darli-mobile-menu.js') }}?v=1.1.2"></script>
     <script defer src="{{ asset('themes/homzen/js/theme-mode.js') }}?v=2.0.2"></script>
+
+    @if(setting('firebase.enabled', '1') == '1')
+        <script>
+            window.DarliFirebaseConfig = {
+                enabled: true,
+                apiKey: "{{ setting('firebase.api_key', 'AIzaSyBNv6O81fJnehjTBw12cc9IZOT-32Bfy9Q') }}",
+                authDomain: "{{ setting('firebase.auth_domain', 'khademate2.firebaseapp.com') }}",
+                projectId: "{{ setting('firebase.project_id', 'khademate2') }}",
+                storageBucket: "{{ setting('firebase.storage_bucket', 'khademate2.firebasestorage.app') }}",
+                messagingSenderId: "{{ setting('firebase.messaging_sender_id', '504226887841') }}",
+                appId: "{{ setting('firebase.app_id', '1:504226887841:web:cbc5abdc30304c6014d8e0') }}",
+                measurementId: "{{ setting('firebase.measurement_id', 'G-01HJBBQZP7') }}",
+                vapidKey: "{{ setting('firebase.vapid_public_key', '') }}",
+                userId: {{ auth()->id() ?? 'null' }}
+            };
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+        <script defer src="{{ asset('themes/homzen/js/darli-notifications.js') }}?v=1.0.1"></script>
+    @endif
+    <script defer src="{{ asset('themes/homzen/js/darli-testimonials-drag.js') }}?v=1.0.0"></script>
+    <script defer src="{{ asset('themes/homzen/js/darli-visitor-tracker.js') }}?v=1.0.0"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

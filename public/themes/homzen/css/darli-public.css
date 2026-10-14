@@ -273,3 +273,141 @@ html[data-theme="dark"] .darli-db-page .box-title-listing :where(.h5, .h6, .text
         display: none !important;
     }
 }
+
+/* ==========================================
+   التخطيط الهندسي للشقة (Floor Plans)
+   ========================================== */
+.single-property-floor {
+    margin-bottom: 30px;
+}
+
+.single-property-floor .title {
+    margin-bottom: 20px;
+}
+
+.single-property-floor .box-floor {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.single-property-floor .floor-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+}
+
+.single-property-floor .floor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+    background: #f1f5f9;
+    transition: background 0.2s ease;
+}
+
+.single-property-floor .floor-header:hover {
+    background: #e2e8f0;
+}
+
+.single-property-floor .floor-header .inner-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.single-property-floor .floor-header .inner-left svg {
+    color: #c9933b;
+    transition: transform 0.25s ease;
+    transform: rotate(-90deg);
+}
+
+.single-property-floor .floor-header.collapsed .inner-left svg {
+    transform: rotate(0deg);
+}
+
+.single-property-floor .floor-header .inner-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.single-property-floor .floor-header .inner-right li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.single-property-floor .floor-header .inner-right li svg {
+    color: #c9933b;
+    flex-shrink: 0;
+}
+
+.single-property-floor .faq-body {
+    padding: 22px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+.single-property-floor .faq-body .box-img {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.single-property-floor .faq-body .box-img img {
+    max-height: 520px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+/* Dark Mode Overrides */
+html[data-theme="dark"] .single-property-floor .floor-item {
+    background: #182234 !important;
+    border-color: #2a374a !important;
+}
+
+html[data-theme="dark"] .single-property-floor .floor-header {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .single-property-floor .floor-header:hover {
+    background: #243447 !important;
+}
+
+html[data-theme="dark"] .single-property-floor .floor-header .inner-right li {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .single-property-floor .faq-body {
+    background: #182234 !important;
+    border-top-color: #2a374a !important;
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .single-property-floor .faq-body .box-img {
+    background: #0f172a !important;
+    border-color: #2a374a !important;
+}

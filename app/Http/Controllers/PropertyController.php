@@ -106,17 +106,21 @@ class PropertyController extends Controller
         ]);
     }
 
-    public function show(string $locale, string $slug)
+    public function show(?string $param1 = null, ?string $param2 = null)
     {
+        $slug = $param2 ?? $param1 ?? '';
+        $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
+
         $property = Property::with([
             'translations', 'currency', 'media', 'amenities.translations',
             'project.translations', 'location.translations', 'category.translations', 'owner',
         ])
-            ->whereHas('translations', fn ($q) => $q->where('locale', $locale)->where('slug', $slug))
+            ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->first();
 
         if (! $property) {
-            $html = $this->renderer->render(request(), $locale . '/properties/' . $slug);
+            $html = $this->renderer->render(request(), 'ar/properties/' . $slug)
+                ?? $this->renderer->render(request(), $locale . '/properties/' . $slug);
             abort_if($html === null, 404);
             return response($html)->header('Content-Type', 'text/html; charset=UTF-8');
         }

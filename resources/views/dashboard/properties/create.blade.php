@@ -32,7 +32,7 @@
     @endif
 
     <div class="card shadow-sm border-0" style="border-radius: 16px; padding: 28px;">
-        <form method="post" action="{{ route('dashboard.properties.store', ['locale' => app()->getLocale()]) }}" class="row g-3">
+        <form method="post" action="{{ route('dashboard.properties.store', ['locale' => app()->getLocale()]) }}" enctype="multipart/form-data" class="row g-3">
             @csrf
 
             <div class="col-12">
@@ -71,7 +71,37 @@
 
             <div class="col-12">
                 <label class="form-label fw-bold">تفاصيل ووصف العقار</label>
-                <textarea class="form-control" rows="5" name="translations[ar][description]" placeholder="اكتب مواصفات العقار، الطابق، الخدمات المتوفرة، الموقع بالتحديد..." style="border-radius: 8px;">{{ old('translations.ar.description') }}</textarea>
+                <textarea class="form-control" rows="4" name="translations[ar][description]" placeholder="اكتب مواصفات العقار، الطابق، الخدمات المتوفرة، الموقع بالتحديد..." style="border-radius: 8px;">{{ old('translations.ar.description') }}</textarea>
+            </div>
+
+            {{-- قسم التخطيط الهندسي للشقة --}}
+            <div class="col-12 mt-4 pt-3" style="border-top: 1px dashed #cbd5e1;">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span style="font-size: 20px;">📐</span>
+                    <h6 class="fw-bold mb-0" style="color: #1e293b; font-size: 16px;">التخطيط الهندسي للشقة (المخطط المعماري)</h6>
+                    <span class="badge bg-light text-muted border px-2 py-1" style="font-size: 11px; font-weight: normal;">اختياري</span>
+                </div>
+                <p class="text-muted small mb-3" style="font-size: 13px;">
+                    أرفق رسم أو مخطط كروكي/هندسي للشقة يوضح تقسيم الغرف والمساحات والريسبشن لمساعدة المشترين على تصور الشقة بدقة.
+                </p>
+
+                <div class="p-3" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size: 13px;">عنوان أو اسم المخطط</label>
+                            <input type="text" name="floor_plan_name" class="form-control" value="{{ old('floor_plan_name') }}" placeholder="مثال: المخطط المعماري للشقة 140م" style="padding: 8px 12px; border-radius: 8px;">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size: 13px;">صورة التخطيط الهندسي</label>
+                            <input type="file" name="floor_plan_image" class="form-control" accept="image/*" style="padding: 6px 12px; border-radius: 8px;">
+                            <small class="text-muted" style="font-size: 11px;">صيغ مدعومة: JPG, PNG, WEBP (بحد أقصى 10 ميجابايت)</small>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" style="font-size: 13px;">ملاحظات معمارية أو وصف المخطط</label>
+                            <textarea name="floor_plan_description" class="form-control" rows="2" placeholder="مثال: مدخل خاص، ريسبشن 3 قطع، مطبخ أمريكان مفتوح، غرف نوم بحرية غير مجروحة..." style="border-radius: 8px;">{{ old('floor_plan_description') }}</textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12 pt-3">

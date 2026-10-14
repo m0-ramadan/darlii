@@ -13,9 +13,102 @@ class ContentPagesSeeder extends Seeder
     public function run(): void
     {
         $this->seedPrivacyPolicy();
+        $this->seedTermsAndConditions();
         $this->seedFaqs();
         $this->seedContactPage();
         $this->seedCareers();
+    }
+
+    private function seedTermsAndConditions(): void
+    {
+        $page = Page::firstOrNew(['key' => 'terms-and-conditions']);
+        $page->fill([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+        $page->save();
+
+        $page->translations()->updateOrCreate(
+            ['locale' => 'ar'],
+            [
+                'title' => 'الشروط والأحكام',
+                'slug' => 'terms-and-conditions',
+                'seo_title' => 'الشروط والأحكام | منصة دارلي العقارية',
+                'seo_description' => 'تعرف على الشروط والأحكام والضوابط القانونية لاستخدام منصة دارلي العقارية ونشر الإعلانات والتعامل مع الوسطاء والشركات.',
+                'content' => '<h3>1. تمهيد وقبول الاتفاقية</h3>
+<p>مرحباً بكم في منصة <strong>دارلي العقارية (Darli Real Estate)</strong>. يُعد استخدامك لمنصتنا الإلكترونية أو تسجيل حساب جديد إقراراً صريحاً بموافقتك الكاملة وغير المشروطة على الالتزام بجميع بنود هذه الشروط والأحكام وسياسة الخصوصية المعتمدة.</p>
+
+<h3>2. أهلية الاستخدام وتسجيل الحسابات</h3>
+<ul>
+    <li>يجب أن يبلغ المستخدم السن القانونية (21 عاماً أو الأهلية القانونية الكاملة للتعاقد وفقاً لأحكام القانون المدني المصري).</li>
+    <li>يلتزم المستخدم بتقديم بيانات شخصية صحيحة ودقيقة (الاسم، رقم الهاتف الفعلي، والعنوان)، وتحديثها دورياً.</li>
+    <li>يتحمل المستخدم المسؤولية الكاملة عن سرية بيانات حسابه وكلمة المرور، وكافة الأنشطة التي تتم من خلاله.</li>
+</ul>
+
+<h3>3. حسابات الوسطاء (السماسرة) والشركات العقارية</h3>
+<ul>
+    <li>تخضع حسابات الوسطاء المستقلين والشركات العقارية لنظام التدقيق والمراجعة الإدارية (الحساب المعلق) قبل تفعيل صلاحيات نشر العقارات والمشروعات.</li>
+    <li>يلتزم الوسيط العقاري برفع صورة بطاقة الرقم القومي سارية والبيانات المهنية المطلوبة.</li>
+    <li>تلتزم الشركات العقارية بتقديم بيانات السجل التجاري والبطاقة الضريبية والتراخيص الرسمية اللازمة لمزاولة النشاط.</li>
+    <li>تحتفظ إدارة المنصة بالحق الكامل في رفض أو تعليق أي حساب يخالف معايير المصداقية أو يقدم وثائق غير مطابقة.</li>
+</ul>
+
+<h3>4. ضوابط وسياسة نشر الإعلانات العقارية</h3>
+<ul>
+    <li>يجب أن تكون جميع العقارات المعروضة حقيقية ومتاحة فعلياً للبيع أو الإيجار، وبأسعار ومواصفات واقعية وموثقة.</li>
+    <li>يُحظر منعاً باتاً نشر إعلانات مكررة، أو مضللة، أو استخدام صور تخضع لحقوق ملكية فكرية لأطراف أخرى دون ترخيص.</li>
+    <li>يحق لمنصة دارلي تعديل أو إيقاف أو حذف أي إعلان يثبت عدم دقته أو مخالفته للقوانين واللوائح السارية دون أي تعويض.</li>
+</ul>
+
+<h3>5. العمولات والوساطة وإخلاء المسؤولية</h3>
+<ul>
+    <li>تعمل منصة دارلي كبيئة رقمية موثوقة لربط البائعين والمشترين والمستأجرين مع نخبة من الوكلاء والشركات المعتمدة في بني سويف وكافة المحافظات.</li>
+    <li>تخضع العمولات العقارية للاتفاقات المباشرة والعقود المبرمة بين أطراف المعاملة ووفقاً للعرف التجاري والقوانين المنظمة للوساطة العقارية في مصر.</li>
+    <li>لا تتحمل منصة دارلي أي مسؤولية مالية أو قانونية عن أي اتفاقات أو تعاملات تتم خارج نطاق الإشراف المباشر للمنصة.</li>
+</ul>
+
+<h3>6. حقوق الملكية الفكرية</h3>
+<p>جميع حقوق الملكية الفكرية، بما في ذلك العلامات التجارية "دارلي" (Darli)، التصاميم، النصوص، البرمجيات، وقواعد البيانات، هي ملك حصري للمنصة ومحمية بموجب القانون رقم 82 لسنة 2002 بشأن حماية حقوق الملكية الفكرية في جمهورية مصر العربية.</p>
+
+<h3>7. التعديلات والقانون الحاكم والاختصاص القضائي</h3>
+<p>تحتفظ المنصة بالحق في تحديث أو تعديل هذه الشروط في أي وقت، ويسري التعديل من تاريخ نشره على هذه الصفحة. تخضع هذه الاتفاقية لأحكام القوانين المصرية، وتختص محاكم بني سويف ومحاكم القاهرة الاقتصادية بنظر أي نزاع ينشأ عن تطبيقها.</p>',
+            ]
+        );
+
+        $page->translations()->updateOrCreate(
+            ['locale' => 'en'],
+            [
+                'title' => 'Terms & Conditions',
+                'slug' => 'terms-and-conditions-en',
+                'seo_title' => 'Terms & Conditions | Darli Real Estate Platform',
+                'seo_description' => 'Read the terms of service, regulations, and listing guidelines for Darli Real Estate Platform.',
+                'content' => '<h3>1. Agreement & Acceptance</h3>
+<p>Welcome to <strong>Darli Real Estate Platform</strong>. By accessing our platform or creating an account, you unconditionally agree to comply with and be bound by these Terms and Conditions and our Privacy Policy.</p>
+
+<h3>2. Account Registration & Eligibility</h3>
+<ul>
+    <li>Users must possess full legal capacity under Egyptian law to enter into binding agreements.</li>
+    <li>You must provide accurate, current, and verifiable contact and identification information.</li>
+    <li>You are solely responsible for safeguarding your credentials and all activity under your account.</li>
+</ul>
+
+<h3>3. Broker & Agency Guidelines</h3>
+<ul>
+    <li>Broker and company accounts are subject to administrative vetting and approval before publishing listings.</li>
+    <li>Brokers must provide valid national identification; companies must furnish official trade licenses and tax cards.</li>
+    <li>Darli reserves the right to suspend or terminate accounts that breach integrity guidelines.</li>
+</ul>
+
+<h3>4. Property Listing Standards</h3>
+<ul>
+    <li>All property listings must be genuine, available, and priced accurately.</li>
+    <li>Duplicate, misleading, or unauthorized third-party media is strictly prohibited.</li>
+</ul>
+
+<h3>5. Intellectual Property & Governing Law</h3>
+<p>All platform software, branding, and content are protected by Egyptian Intellectual Property Law No. 82 of 2002. Any dispute shall be governed by the laws of the Arab Republic of Egypt.</p>',
+            ]
+        );
     }
 
     private function seedPrivacyPolicy(): void

@@ -149,7 +149,7 @@ class AmenityController extends Controller
     /** @param array<string, mixed> $data */
     private function syncTranslations(Amenity $amenity, array $data): void
     {
-        foreach (['ar', 'en'] as $locale) {
+        foreach (config('locales.admin_english_enabled') ? ['ar', 'en'] : ['ar'] as $locale) {
             $translation = (array) ($data['translations'][$locale] ?? []);
 
             if (blank($translation['name'] ?? null)) {

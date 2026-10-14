@@ -128,6 +128,7 @@ class PropertyController extends Controller
 
             $this->syncTranslations($property, $data);
             $this->syncRelations($property, $data, $request);
+            $this->syncFloorPlans($property, $request);
 
             return $property;
         });
@@ -135,8 +136,12 @@ class PropertyController extends Controller
         AuditLogger::log('property.created', $property, [], ['reference_code' => $property->reference_code]);
         $this->logStatus($property, null, $property->status?->value ?? 'draft', 'إنشاء العقار');
 
+        if ($request->boolean('send_broadcast_notification')) {
+            $this->broadcastPropertyNotification($property, 'created');
+        }
+
         return redirect()->route('admin.properties.edit', $property)
-            ->with('success', 'تم إنشاء العقار ' . $property->reference_code . ' بنجاح.');
+            ->with('success', 'تم إنشاء العقار ' . $property->reference_code . ' بنجاح.' . ($request->boolean('send_broadcast_notification') ? ' وتم بث الإشعار لجميع المشتركين.' : ''));
     }
 
     // -------------------------------------------------------------- العرض
@@ -207,11 +212,16 @@ class PropertyController extends Controller
             ]);
             $this->syncTranslations($property, $data);
             $this->syncRelations($property, $data, $request);
+            $this->syncFloorPlans($property, $request);
         });
 
         AuditLogger::log('property.updated', $property, $old, $property->fresh()->only(array_keys($old)));
 
-        return back()->with('success', 'تم تحديث بيانات العقار بنجاح.');
+        if ($request->boolean('send_broadcast_notification')) {
+            $this->broadcastPropertyNotification($property, 'updated');
+        }
+
+        return back()->with('success', 'تم تحديث بيانات العقار بنجاح.' . ($request->boolean('send_broadcast_notification') ? ' وتم بث الإشعار لجميع المشتركين.' : ''));
     }
 
     public function destroy(Property $property)
@@ -563,6 +573,10 @@ class PropertyController extends Controller
     private function syncTranslations(Property $property, array $data): void
     {
         foreach ((array) ($data['translations'] ?? []) as $locale => $translation) {
+            if ($locale === 'en' && ! config('locales.admin_english_enabled')) {
+                continue;
+            }
+
             if (blank($translation['name'] ?? null)) {
                 continue;
             }
@@ -610,6 +624,49 @@ class PropertyController extends Controller
         }
     }
 
+    private function syncFloorPlans(Property $property, Request $request): void
+    {
+        if (! $request->has('floor_plans') && ! $request->has('floor_plans_submitted')) {
+            return;
+        }
+
+        $inputPlans = (array) $request->input('floor_plans', []);
+        $files = (array) $request->file('floor_plans', []);
+
+        $savedPlans = [];
+        foreach ($inputPlans as $index => $planData) {
+            if (! is_array($planData)) {
+                continue;
+            }
+            $name = trim((string) ($planData['name'] ?? ''));
+            $bedrooms = filled($planData['bedrooms'] ?? null) ? (int) $planData['bedrooms'] : null;
+            $bathrooms = filled($planData['bathrooms'] ?? null) ? (int) $planData['bathrooms'] : null;
+            $area = filled($planData['area'] ?? null) ? (float) $planData['area'] : null;
+            $description = trim((string) ($planData['description'] ?? ''));
+            $imagePath = $planData['existing_image'] ?? null;
+
+            if (isset($files[$index]['image']) && $files[$index]['image'] instanceof \Illuminate\Http\UploadedFile && $files[$index]['image']->isValid()) {
+                $uploaded = $this->uploadImage($files[$index]['image'], 'properties/' . $property->id . '/floor_plans');
+                if ($uploaded) {
+                    $imagePath = $uploaded;
+                }
+            }
+
+            if ($name !== '' || $imagePath !== null || $description !== '') {
+                $savedPlans[] = [
+                    'name' => $name ?: 'المخطط الهندسي',
+                    'bedrooms' => $bedrooms,
+                    'bathrooms' => $bathrooms,
+                    'area' => $area,
+                    'image' => $imagePath,
+                    'description' => $description,
+                ];
+            }
+        }
+
+        $property->setFloorPlans($savedPlans);
+    }
+
     private function nextReference(): string
     {
         $prefix = (string) setting('properties.reference_prefix', 'DAR');
@@ -643,6 +700,28 @@ class PropertyController extends Controller
             ]);
         } catch (\Throwable $e) {
             // التاريخ اختياري — لا نوقف العملية.
+        }
+    }
+
+    private function broadcastPropertyNotification(Property $property, string $action = 'created'): void
+    {
+        try {
+            $imageUrl = $property->primaryImageUrl('ar');
+            $translation = $property->translation('ar');
+            $name = $property->displayName('ar') ?: 'عقار مميز في دارلي';
+            $title = ($action === 'created' ? 'عقار جديد: ' : 'تحديث عقار: ') . $name;
+            $body = Str::limit(strip_tags((string) $translation?->description), 150) ?: 'تم إضافة عقار جديد ومميز على منصة دارلي، تصفح التفاصيل والأسعار الآن.';
+            $slug = $property->slug('ar') ?: ($property->reference_code ?: $property->id);
+
+            app(\App\Services\Notifications\FcmNotificationService::class)->send([
+                'title' => $title,
+                'body' => $body,
+                'image_path' => $imageUrl,
+                'action_url' => url('/ar/properties/' . $slug),
+                'target_type' => 'all',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Property notification broadcast failed: ' . $e->getMessage());
         }
     }
 }

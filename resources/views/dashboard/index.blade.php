@@ -1,315 +1,708 @@
-@extends('layouts.app')
+@extends('layouts.public-shell')
 
 @php
     $locale = app()->getLocale();
     $isAr = $locale === 'ar';
 @endphp
 
-@section('title', $isAr ? 'لوحة التحكم الخاصة' : 'Partner Dashboard')
+@section('title', 'لوحة التحكم الشريكة')
 
 @section('content')
-<div class="container page-section" style="padding-top: 35px; padding-bottom: 60px;">
-    @if (session('success'))
-        <div class="alert alert-success d-flex align-items-center mb-4" role="alert"
-            style="border-radius: 12px; background: #ecfdf5; border-color: #a7f3d0; color: #065f46;">
-            <div><strong>✓ تم بنجاح:</strong> {{ session('success') }}</div>
-        </div>
-    @endif
+<style>
+    :root {
+        --dash-bg: #f8fafc;
+        --dash-card: #ffffff;
+        --dash-border: #e2e8f0;
+        --dash-text: #0f172a;
+        --dash-muted: #64748b;
+        --dash-hover: #f1f5f9;
+        --dash-hero: linear-gradient(180deg, #edf3f8 0%, #f8fafc 100%);
+        --dash-primary: #db1d23;
+        --dash-primary-hover: #b9151b;
+        --dash-gold: #c8a45c;
+    }
 
-    @if (session('status_warning') || $isPending)
-        <div class="alert alert-warning mb-4 shadow-sm" role="alert"
-            style="border-radius: 12px; background: #FFFBEB; border-color: #FDE68A; color: #92400E; padding: 18px 22px;">
-            <div class="d-flex align-items-start gap-3">
-                <div style="font-size: 26px; line-height: 1;">⏳</div>
-                <div>
-                    <h5 class="fw-bold mb-1" style="color: #B45309; font-size: 1.05rem;">
-                        {{ $isAr ? 'حسابك قيد المراجعة والاعتماد' : 'Account Under Review' }}
-                    </h5>
-                    <p class="mb-0" style="font-size: 0.92rem; line-height: 1.6;">
-                        {{ session('status_warning') ?? ($isAr
-                            ? 'مرحباً بك في دارلي! حسابك حالياً قيد المراجعة والاعتماد من قبل إدارة المنصة للتحقق من البيانات والمستندات. بمجرد تفعيل الحساب ستتمكن من إضافة ونشر العقارات والمشاريع الخاصة بك مباشرة.'
-                            : 'Welcome to Darli! Your account is currently under review by platform administration. Once approved, you will be able to publish properties and projects.') }}
-                    </p>
-                </div>
+    html[data-theme="dark"] {
+        --dash-bg: #0b1320;
+        --dash-card: #111e33;
+        --dash-border: #1e293b;
+        --dash-text: #f8fafc;
+        --dash-muted: #94a3b8;
+        --dash-hover: #16243d;
+        --dash-hero: linear-gradient(180deg, #0e192c 0%, #0b1320 100%);
+    }
+
+    .darli-dash-wrapper {
+        background-color: var(--dash-bg);
+        min-height: 80vh;
+        padding-bottom: 80px;
+    }
+
+    .darli-dash-hero {
+        background: var(--dash-hero);
+        border-bottom: 1px solid var(--dash-border);
+        padding: 40px 0 25px 0;
+        margin-bottom: 30px;
+    }
+
+    .darli-dash-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--dash-muted);
+        margin-bottom: 14px;
+    }
+    .darli-dash-breadcrumb a {
+        color: var(--dash-muted);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .darli-dash-breadcrumb a:hover {
+        color: var(--dash-primary);
+    }
+    .darli-dash-breadcrumb .sep {
+        font-size: 11px;
+        opacity: 0.6;
+    }
+
+    .darli-dash-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .darli-user-profile-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .darli-user-avatar {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ffffff;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .darli-btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--dash-primary);
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 12px 24px;
+        border-radius: 10px;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(219, 29, 35, 0.25);
+        transition: all 0.2s ease;
+        border: none;
+    }
+    .darli-btn-add:hover {
+        background: var(--dash-primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(219, 29, 35, 0.35);
+    }
+
+    .darli-btn-gold {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #111e33;
+        color: #f8e3a6 !important;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 12px 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        border: 1px solid rgba(200, 164, 92, 0.5);
+        transition: all 0.2s ease;
+    }
+    .darli-btn-gold:hover {
+        background: #1e293b;
+        transform: translateY(-1px);
+    }
+
+    .darli-btn-disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        background: #94a3b8;
+    }
+
+    /* Sub-Navigation Tabs */
+    .darli-dash-nav-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px;
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 12px;
+        margin-bottom: 30px;
+        overflow-x: auto;
+    }
+
+    .darli-dash-nav-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dash-muted);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+    .darli-dash-nav-item:hover {
+        color: var(--dash-text);
+        background: var(--dash-hover);
+    }
+    .darli-dash-nav-item.active {
+        background: #111e33;
+        color: #ffffff !important;
+    }
+    html[data-theme="dark"] .darli-dash-nav-item.active {
+        background: #db1d23;
+    }
+
+    /* KPI Cards */
+    .darli-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .darli-stat-card {
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: 20px 22px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+    }
+    .darli-stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .darli-stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .darli-stat-label {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--dash-muted);
+    }
+    .darli-stat-icon-wrap {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+    .darli-stat-value {
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--dash-text);
+        line-height: 1.1;
+        margin-bottom: 6px;
+    }
+    .darli-stat-subtext {
+        font-size: 12px;
+        color: var(--dash-muted);
+    }
+
+    /* Recent Table Card */
+    .darli-table-card {
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        margin-bottom: 30px;
+    }
+
+    .darli-table-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--dash-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .darli-table-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--dash-text);
+        margin: 0;
+    }
+
+    .darli-table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .darli-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: right;
+    }
+    .darli-table th {
+        background: var(--dash-hover);
+        color: var(--dash-muted);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--dash-border);
+        white-space: nowrap;
+    }
+    .darli-table td {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--dash-border);
+        vertical-align: middle;
+        font-size: 14px;
+        color: var(--dash-text);
+    }
+    .darli-table tr:hover td {
+        background: var(--dash-hover);
+    }
+
+    .darli-badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .darli-badge-status.published {
+        background: #dcfce7;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+    }
+    .darli-badge-status.sold {
+        background: #ccfbf1;
+        color: #0f766e;
+        border: 1px solid #99f6e4;
+    }
+    .darli-badge-status.pending_review {
+        background: #fef3c7;
+        color: #b45309;
+        border: 1px solid #fde68a;
+    }
+    .darli-badge-status.rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .darli-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        background: transparent;
+        cursor: pointer;
+    }
+    .darli-action-btn.view {
+        background: var(--dash-hover);
+        color: var(--dash-text);
+        border-color: var(--dash-border);
+    }
+    .darli-action-btn.view:hover {
+        color: var(--dash-primary);
+        border-color: var(--dash-primary);
+    }
+    .darli-action-btn.sold-btn {
+        background: #ecfdf5;
+        color: #047857;
+        border-color: #a7f3d0;
+    }
+    .darli-action-btn.sold-btn:hover {
+        background: #d1fae5;
+    }
+    .darli-action-btn.reactive {
+        background: #f1f5f9;
+        color: #475569;
+        border-color: #cbd5e1;
+    }
+    .darli-action-btn.reactive:hover {
+        background: #e2e8f0;
+    }
+    .darli-action-btn.submit {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+    }
+    .darli-action-btn.submit:hover {
+        background: #dbeafe;
+    }
+
+    .darli-alert-warning {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        border-radius: 14px;
+        padding: 18px 22px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .darli-alert-success {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+</style>
+
+<div class="darli-dash-wrapper">
+    {{-- Hero Banner --}}
+    <div class="darli-dash-hero">
+        <div class="container">
+            <div class="darli-dash-breadcrumb">
+                <a href="{{ route('home') }}">الرئيسية</a>
+                <span class="sep">›</span>
+                <span style="color: var(--dash-text); font-weight: 700;">لوحة التحكم</span>
+                <span class="sep">›</span>
+                <span>نظرة عامة</span>
             </div>
-        </div>
-    @endif
 
-    {{-- Top Profile & Welcome Header --}}
-    <div class="card shadow-sm border-0 mb-4 p-4" style="border-radius: 16px; background: linear-gradient(135deg, #111e33 0%, #1e293b 100%); color: #ffffff;">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="rounded-circle shadow" style="width: 64px; height: 64px; object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.2);">
-                <div>
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h2 class="h4 fw-bold mb-0 text-white">{{ $user->name }}</h2>
-                        @if ($isCompany)
-                            <span class="badge" style="background: rgba(196, 154, 69, 0.25); color: #F8E3A6; border: 1px solid rgba(196, 154, 69, 0.5); font-size: 11.5px; padding: 4px 10px; border-radius: 20px;">
-                                🏢 {{ $user->agency?->name ?: ($isAr ? 'شركة عقارية' : 'Company') }}
-                            </span>
-                        @elseif ($isBroker)
-                            <span class="badge" style="background: rgba(56, 189, 248, 0.2); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.4); font-size: 11.5px; padding: 4px 10px; border-radius: 20px;">
-                                🤝 {{ $isAr ? 'سمسار / وسيط عقاري' : 'Broker' }}
-                            </span>
-                        @else
-                            <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #E2E8F0; font-size: 11.5px; padding: 4px 10px; border-radius: 20px;">
-                                👤 {{ $isAr ? 'عميل' : 'Customer' }}
-                            </span>
-                        @endif
+            <div class="darli-dash-header-row">
+                <div class="darli-user-profile-header">
+                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="darli-user-avatar">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                            <h1 class="darli-dash-title mb-0">{{ $user->name }}</h1>
+                            @if ($isCompany)
+                                <span class="badge" style="background: rgba(196, 154, 69, 0.2); color: #c8a45c; border: 1px solid rgba(200, 164, 92, 0.4); font-size: 12px; padding: 5px 12px; border-radius: 20px;">
+                                    🏢 {{ $user->agency?->name ?: 'شركة عقارية' }}
+                                </span>
+                            @elseif ($isBroker)
+                                <span class="badge" style="background: rgba(14, 165, 233, 0.15); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.35); font-size: 12px; padding: 5px 12px; border-radius: 20px;">
+                                    🤝 سمسار / وسيط عقاري
+                                </span>
+                            @else
+                                <span class="badge" style="background: rgba(100, 116, 139, 0.15); color: var(--dash-muted); font-size: 12px; padding: 5px 12px; border-radius: 20px;">
+                                    👤 عميل دارلي
+                                </span>
+                            @endif
 
-                        @if ($isPending)
-                            <span class="badge bg-warning text-dark" style="font-size: 11.5px; padding: 4px 10px; border-radius: 20px;">
-                                ⏳ {{ $isAr ? 'معلق (بانتظار التفعيل)' : 'Pending Review' }}
-                            </span>
-                        @else
-                            <span class="badge bg-success" style="font-size: 11.5px; padding: 4px 10px; border-radius: 20px;">
-                                ✓ {{ $isAr ? 'حساب مفعّل ونشط' : 'Active Account' }}
-                            </span>
-                        @endif
+                            @if ($isPending)
+                                <span class="badge" style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 12px; padding: 5px 12px; border-radius: 20px;">
+                                    ⏳ قيد المراجعة والاعتماد
+                                </span>
+                            @else
+                                <span class="badge" style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 12px; padding: 5px 12px; border-radius: 20px;">
+                                    ✓ حساب مفعّل ونشط
+                                </span>
+                            @endif
+                        </div>
+                        <p class="darli-dash-subtitle">
+                            متابعة أداء العقارات والزيارات وحالة المبيعات الخاصة بك على منصة دارلي
+                        </p>
                     </div>
-                    <p class="mb-0 text-light opacity-75 mt-1" style="font-size: 13.5px;">
-                        {{ $isAr ? 'متابعة أداء العقارات والزيارات وحالة المبيعات الخاصة بك' : 'Track your property listings, views, and sales performance' }}
-                    </p>
                 </div>
-            </div>
 
-            <div class="d-flex gap-2 flex-wrap">
-                @if ($isPending)
-                    <button class="btn btn-secondary disabled" style="opacity: 0.65; border-radius: 8px; font-weight: 600;" title="{{ $isAr ? 'لا يمكن الإضافة حتى يتم تفعيل حسابك' : 'Pending activation' }}">
-                        + {{ $isAr ? 'إضافة عقار (بانتظار التفعيل)' : 'Add Property (Pending)' }}
-                    </button>
-                @else
-                    <a href="{{ route('dashboard.properties.create', ['locale' => $locale]) }}" class="btn btn-primary" style="background: #db1d23; border-color: #db1d23; border-radius: 8px; font-weight: 700; padding: 10px 20px;">
-                        + {{ $isAr ? 'إضافة عقار جديد' : 'Add Property' }}
-                    </a>
-                @endif
-
-                @if ($isCompany)
+                <div class="d-flex align-items-center gap-2 flex-wrap">
                     @if ($isPending)
-                        <button class="btn btn-outline-light disabled" style="opacity: 0.65; border-radius: 8px; font-weight: 600;">
-                            + {{ $isAr ? 'إضافة مشروع (معلق)' : 'Add Project (Pending)' }}
-                        </button>
+                        <span class="darli-btn-add darli-btn-disabled" title="لا يمكن الإضافة حتى يتم تفعيل حسابك من قبل الإدارة">
+                            + إضافة عقار (بانتظار التفعيل)
+                        </span>
                     @else
-                        <a href="{{ route('dashboard.projects.create', ['locale' => $locale]) }}" class="btn btn-outline-light" style="border-radius: 8px; font-weight: 600; padding: 10px 18px;">
-                            + {{ $isAr ? 'إضافة مشروع جديد' : 'Add Project' }}
+                        <a href="{{ route('dashboard.properties.create') }}" class="darli-btn-add">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            إضافة عقار جديد
                         </a>
                     @endif
-                @endif
+
+                    @if ($isCompany)
+                        @if ($isPending)
+                            <span class="darli-btn-gold darli-btn-disabled">
+                                + إضافة مشروع (معلق)
+                            </span>
+                        @else
+                            <a href="{{ route('dashboard.projects.create') }}" class="darli-btn-gold">
+                                🏗️ إضافة مشروع جديد
+                            </a>
+                        @endif
+                    @endif
+                </div>
             </div>
         </div>
     </div>
 
-    {{-- STATS CARDS --}}
-    <div class="row g-3 mb-4">
-        <!-- Total Properties -->
-        <div class="col-6 col-md-4 @if($isCompany) col-lg @else col-lg-3 @endif">
-            <div class="card shadow-sm border-0 p-3 h-100" style="border-radius: 14px; background: #ffffff;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted fw-semibold" style="font-size: 13.5px;">{{ $isAr ? 'إجمالي العقارات' : 'Total Properties' }}</span>
-                    <span style="font-size: 20px;">🏠</span>
+    {{-- Main Container --}}
+    <div class="container">
+
+        {{-- Success Notice --}}
+        @if (session('success'))
+            <div class="darli-alert-success">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <div><strong>تم بنجاح:</strong> {{ session('success') }}</div>
+            </div>
+        @endif
+
+        {{-- Pending Notice --}}
+        @if (session('status_warning') || $isPending)
+            <div class="darli-alert-warning">
+                <div style="font-size: 28px; line-height: 1;">⏳</div>
+                <div>
+                    <h5 style="color: #b45309; font-size: 16px; font-weight: 800; margin: 0 0 6px 0;">
+                        حسابك قيد المراجعة والاعتماد
+                    </h5>
+                    <p style="margin: 0; font-size: 14px; line-height: 1.6;">
+                        {{ session('status_warning') ?? 'مرحباً بك في منصة دارلي! حسابك حالياً قيد المراجعة والاعتماد من قبل إدارة المنصة للتحقق من البيانات والمستندات. بمجرد تفعيل الحساب ستتمكن من إضافة ونشر العقارات والمشاريع الخاصة بك مباشرة.' }}
+                    </p>
                 </div>
-                <div class="h3 fw-bold mb-0 text-dark">{{ number_format($totalProperties) }}</div>
-                <a href="{{ route('dashboard.properties.index', ['locale' => $locale]) }}" class="text-decoration-none mt-2 d-inline-block text-muted" style="font-size: 12px;">
-                    {{ $isAr ? 'عرض الكل' : 'View all' }} ←
+            </div>
+        @endif
+
+        {{-- Sub-Navigation Tabs --}}
+        <div class="darli-dash-nav-bar">
+            <a href="{{ route('dashboard.index') }}" class="darli-dash-nav-item active">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                نظرة عامة
+            </a>
+            <a href="{{ route('dashboard.properties.index') }}" class="darli-dash-nav-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                عقاراتي ({{ $totalProperties }})
+            </a>
+            @if ($isCompany)
+                <a href="{{ route('dashboard.projects.index') }}" class="darli-dash-nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    مشاريع الشركة ({{ $totalProjects }})
                 </a>
-            </div>
-        </div>
-
-        <!-- Active / Published Listings -->
-        <div class="col-6 col-md-4 @if($isCompany) col-lg @else col-lg-3 @endif">
-            <div class="card shadow-sm border-0 p-3 h-100" style="border-radius: 14px; background: #ffffff;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted fw-semibold" style="font-size: 13.5px;">{{ $isAr ? 'معروضة بالموقع' : 'Published' }}</span>
-                    <span style="font-size: 20px;">🟢</span>
-                </div>
-                <div class="h3 fw-bold mb-0 text-success">{{ number_format($activeProperties) }}</div>
-                <a href="{{ route('dashboard.properties.index', ['locale' => $locale, 'status' => 'published']) }}" class="text-decoration-none mt-2 d-inline-block text-muted" style="font-size: 12px;">
-                    {{ $isAr ? 'العروض النشطة' : 'Active listings' }} ←
+            @endif
+            @if (! $isPending)
+                <a href="{{ route('dashboard.properties.create') }}" class="darli-dash-nav-item" style="color: var(--dash-primary); margin-inline-start: auto;">
+                    + إضافة عقار جديد
                 </a>
-            </div>
+            @endif
         </div>
 
-        <!-- Sold Properties -->
-        <div class="col-6 col-md-4 @if($isCompany) col-lg @else col-lg-3 @endif">
-            <div class="card shadow-sm border-0 p-3 h-100" style="border-radius: 14px; background: #ffffff;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted fw-semibold" style="font-size: 13.5px;">{{ $isAr ? 'عقارات تم بيعها' : 'Sold Properties' }}</span>
-                    <span style="font-size: 20px;">🤝</span>
+        {{-- KPI Cards --}}
+        <div class="darli-stat-grid">
+            <!-- Total Properties -->
+            <a href="{{ route('dashboard.properties.index') }}" class="darli-stat-card">
+                <div class="darli-stat-header">
+                    <span class="darli-stat-label">إجمالي العقارات</span>
+                    <div class="darli-stat-icon-wrap" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">🏠</div>
                 </div>
-                <div class="h3 fw-bold mb-0" style="color: #0d9488;">{{ number_format($soldProperties) }}</div>
-                <a href="{{ route('dashboard.properties.index', ['locale' => $locale, 'status' => 'sold']) }}" class="text-decoration-none mt-2 d-inline-block text-muted" style="font-size: 12px;">
-                    {{ $isAr ? 'المبيعات المنفذة' : 'Completed sales' }} ←
-                </a>
-            </div>
-        </div>
+                <div class="darli-stat-value">{{ number_format($totalProperties) }}</div>
+                <div class="darli-stat-subtext">عرض كافة العقارات المسجلة ←</div>
+            </a>
 
-        <!-- Total Views / Visits (الزيارات والمشاهدات) -->
-        <div class="col-6 col-md-4 @if($isCompany) col-lg @else col-lg-3 @endif">
-            <div class="card shadow-sm border-0 p-3 h-100" style="border-radius: 14px; background: #ffffff;">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted fw-semibold" style="font-size: 13.5px;">{{ $isAr ? 'إجمالي المشاهدات' : 'Total Views' }}</span>
-                    <span style="font-size: 20px;">👁️</span>
+            <!-- Active / Published -->
+            <a href="{{ route('dashboard.properties.index', ['status' => 'published']) }}" class="darli-stat-card">
+                <div class="darli-stat-header">
+                    <span class="darli-stat-label">معروضة بالموقع</span>
+                    <div class="darli-stat-icon-wrap" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">🟢</div>
                 </div>
-                <div class="h3 fw-bold mb-0" style="color: #2563eb;">{{ number_format($totalViews) }}</div>
-                <span class="text-muted mt-2 d-inline-block" style="font-size: 12px;">
-                    {{ $isAr ? 'زيارات على عقاراتك' : 'Visits on listings' }}
-                </span>
-            </div>
-        </div>
+                <div class="darli-stat-value" style="color: #10b981;">{{ number_format($activeProperties) }}</div>
+                <div class="darli-stat-subtext">العروض النشطة والمباشرة ←</div>
+            </a>
 
-        <!-- Company Projects (If Company) -->
-        @if ($isCompany)
-            <div class="col-12 col-md-4 col-lg">
-                <div class="card shadow-sm border-0 p-3 h-100" style="border-radius: 14px; background: #ffffff;">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-muted fw-semibold" style="font-size: 13.5px;">{{ $isAr ? 'مشاريع الشركة' : 'Company Projects' }}</span>
-                        <span style="font-size: 20px;">🏗️</span>
+            <!-- Sold -->
+            <a href="{{ route('dashboard.properties.index', ['status' => 'sold']) }}" class="darli-stat-card">
+                <div class="darli-stat-header">
+                    <span class="darli-stat-label">عقارات تم بيعها</span>
+                    <div class="darli-stat-icon-wrap" style="background: rgba(13, 148, 136, 0.1); color: #0d9488;">🤝</div>
+                </div>
+                <div class="darli-stat-value" style="color: #0d9488;">{{ number_format($soldProperties) }}</div>
+                <div class="darli-stat-subtext">المبيعات المنفذة عبر المنصة ←</div>
+            </a>
+
+            <!-- Total Views -->
+            <div class="darli-stat-card">
+                <div class="darli-stat-header">
+                    <span class="darli-stat-label">إجمالي الزيارات</span>
+                    <div class="darli-stat-icon-wrap" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">👁️</div>
+                </div>
+                <div class="darli-stat-value" style="color: #2563eb;">{{ number_format($totalViews) }}</div>
+                <div class="darli-stat-subtext">مشاهدات حقيقية على عقاراتك</div>
+            </div>
+
+            <!-- Company Projects (If Company) -->
+            @if ($isCompany)
+                <a href="{{ route('dashboard.projects.index') }}" class="darli-stat-card">
+                    <div class="darli-stat-header">
+                        <span class="darli-stat-label">مشاريع الشركة</span>
+                        <div class="darli-stat-icon-wrap" style="background: rgba(200, 164, 92, 0.15); color: #c8a45c;">🏗️</div>
                     </div>
-                    <div class="h3 fw-bold mb-0" style="color: #C8A45C;">{{ number_format($totalProjects) }}</div>
-                    <a href="{{ route('dashboard.projects.index', ['locale' => $locale]) }}" class="text-decoration-none mt-2 d-inline-block text-muted" style="font-size: 12px;">
-                        {{ $isAr ? 'إدارة المشاريع' : 'Manage projects' }} ←
-                    </a>
-                </div>
-            </div>
-        @endif
-    </div>
-
-    {{-- NAVIGATION TABS --}}
-    <ul class="nav nav-pills mb-4 gap-2 border-bottom pb-3" style="font-size: 14px;">
-        <li class="nav-item">
-            <a class="nav-link active fw-bold" href="{{ route('dashboard.index', ['locale' => $locale]) }}" style="background: #111e33; border-radius: 8px;">
-                {{ $isAr ? 'نظرة عامة' : 'Overview' }}
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark fw-semibold" href="{{ route('dashboard.properties.index', ['locale' => $locale]) }}">
-                {{ $isAr ? 'عقاراتي' : 'My Properties' }} ({{ $totalProperties }})
-            </a>
-        </li>
-        @if ($isCompany)
-            <li class="nav-item">
-                <a class="nav-link text-dark fw-semibold" href="{{ route('dashboard.projects.index', ['locale' => $locale]) }}">
-                    {{ $isAr ? 'مشاريع الشركة' : 'Projects' }} ({{ $totalProjects }})
+                    <div class="darli-stat-value" style="color: #c8a45c;">{{ number_format($totalProjects) }}</div>
+                    <div class="darli-stat-subtext">إدارة المشروعات والوحدات ←</div>
                 </a>
-            </li>
-        @endif
-    </ul>
-
-    {{-- RECENT PROPERTIES LIST --}}
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 14px; overflow: hidden;">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">
-                {{ $isAr ? 'آخر العقارات المضافة وتفاصيل الزيارات' : 'Recent Listings & Views Performance' }}
-            </h5>
-            <a href="{{ route('dashboard.properties.index', ['locale' => $locale]) }}" class="btn btn-sm btn-outline-secondary" style="border-radius: 6px; font-size: 12.5px;">
-                {{ $isAr ? 'عرض الكل' : 'View All' }}
-            </a>
+            @endif
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" style="font-size: 14px;">
-                <thead style="background: #F8FAFC;">
-                    <tr>
-                        <th style="padding: 14px 18px;">كود العقار</th>
-                        <th>اسم العقار والموقع</th>
-                        <th>السعر</th>
-                        <th>الزيارات (المشاهدات)</th>
-                        <th>الحالة</th>
-                        <th class="text-end" style="padding-left: 18px;">إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($recentProperties as $p)
-                        @php
-                            $st = $p->status?->value ?? (string) $p->status;
-                        @endphp
-                        <tr>
-                            <td style="padding: 14px 18px;">
-                                <code>{{ $p->reference_code }}</code>
-                            </td>
-                            <td>
-                                <div class="fw-bold">{{ $p->translation()?->name ?: 'عقار بدون اسم' }}</div>
-                                <div class="text-muted" style="font-size: 12px;">{{ $p->location?->translation()?->name ?? '—' }}</div>
-                            </td>
-                            <td>
-                                @if ($p->isPriceOnContact())
-                                    <span class="badge text-bg-secondary">عند التواصل</span>
-                                @else
-                                    <span class="fw-bold">{{ money_eg($p->price) }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                <span class="d-inline-flex align-items-center gap-1 fw-bold text-primary" style="font-size: 13.5px;">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    {{ number_format($p->views_count) }}
-                                </span>
-                            </td>
-                            <td>
-                                @if ($st === 'published')
-                                    <span class="badge" style="background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; font-size: 12px; padding: 5px 10px; border-radius: 20px;">
-                                        ✓ معتمد ومعروض
-                                    </span>
-                                @elseif ($st === 'sold')
-                                    <span class="badge" style="background: #CCFBF1; color: #0F766E; border: 1px solid #99F6E4; font-size: 12px; padding: 5px 10px; border-radius: 20px;">
-                                        🤝 تم البيع
-                                    </span>
-                                @elseif ($st === 'pending_review')
-                                    <span class="badge" style="background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; font-size: 12px; padding: 5px 10px; border-radius: 20px;">
-                                        ⏳ قيد المراجعة
-                                    </span>
-                                @elseif ($st === 'rejected')
-                                    <span class="badge" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; font-size: 12px; padding: 5px 10px; border-radius: 20px;">
-                                        ✕ مرفوض
-                                    </span>
-                                @else
-                                    <span class="badge" style="background: #F1F5F9; color: #475569; font-size: 12px; padding: 5px 10px; border-radius: 20px;">
-                                        {{ $st }}
-                                    </span>
-                                @endif
-                            </td>
-                            <td class="text-end" style="padding-left: 18px;">
-                                <div class="d-inline-flex gap-1">
-                                    @if ($st === 'published')
-                                        <a href="{{ route('properties.show', ['locale' => $locale, 'slug' => $p->translation()?->slug ?? $p->id]) }}"
-                                            class="btn btn-sm btn-outline-success" target="_blank"
-                                            style="border-radius: 6px; font-size: 11.5px;">
-                                            عرض بالموقع ↗
-                                        </a>
+        {{-- Recent Listings Table --}}
+        <div class="darli-table-card">
+            <div class="darli-table-header">
+                <div>
+                    <h3 class="darli-table-title">آخر العقارات المضافة وتفاصيل الزيارات</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--dash-muted);">
+                        متابعة حركة المشاهدات والحالة لكل عقار مضاف
+                    </p>
+                </div>
+                <a href="{{ route('dashboard.properties.index') }}" class="darli-action-btn view" style="padding: 8px 16px; font-size: 13px;">
+                    عرض كل العقارات ({{ $totalProperties }}) ←
+                </a>
+            </div>
 
-                                        {{-- Mark as Sold Button --}}
-                                        <form method="POST" action="{{ route('dashboard.properties.sold', ['locale' => $locale, 'property' => $p]) }}" style="display:inline;" onsubmit="return confirm('هل أنت متأكد من تحديد هذا العقار كـ «تم البيع»؟');">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-outline-teal" style="border: 1px solid #0d9488; color: #0d9488; border-radius: 6px; font-size: 11.5px;">
-                                                تم البيع ✓
-                                            </button>
-                                        </form>
-                                    @elseif ($st === 'sold')
-                                        <form method="POST" action="{{ route('dashboard.properties.available', ['locale' => $locale, 'property' => $p]) }}" style="display:inline;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-outline-secondary" style="border-radius: 6px; font-size: 11.5px;">
-                                                إعادة العرض
-                                            </button>
-                                        </form>
-                                    @elseif ($st === 'draft' || $st === 'rejected')
-                                        <form method="POST" action="{{ route('dashboard.properties.submit', ['locale' => $locale, 'property' => $p]) }}" style="display:inline;">
-                                            @csrf
-                                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 6px; font-size: 11.5px;">إرسال للمراجعة</button>
-                                        </form>
+            <div class="darli-table-responsive">
+                <table class="darli-table">
+                    <thead>
+                        <tr>
+                            <th>كود العقار</th>
+                            <th>اسم العقار والموقع</th>
+                            <th>السعر</th>
+                            <th>المشاهدات</th>
+                            <th>الحالة</th>
+                            <th style="text-align: left;">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($recentProperties as $p)
+                            @php
+                                $st = $p->status?->value ?? (string) $p->status;
+                            @endphp
+                            <tr>
+                                <td>
+                                    <span style="font-family: monospace; background: var(--dash-hover); padding: 4px 8px; border-radius: 6px; font-size: 12.5px; font-weight: 700; color: var(--dash-text);">
+                                        {{ $p->reference_code }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 700; color: var(--dash-text); margin-bottom: 3px;">
+                                        @if ($st === 'published')
+                                            <a href="{{ route('properties.show', ['slug' => $p->translation()?->slug ?? $p->id]) }}" target="_blank" style="color: inherit; text-decoration: none;">
+                                                {{ $p->translation()?->name ?: 'عقار بدون اسم' }}
+                                            </a>
+                                        @else
+                                            {{ $p->translation()?->name ?: 'عقار بدون اسم' }}
+                                        @endif
+                                    </div>
+                                    <div style="font-size: 12.5px; color: var(--dash-muted);">
+                                        📍 {{ $p->location?->translation()?->name ?? 'موقع غير محدد' }}
+                                        @if ($p->category)
+                                            • {{ $p->category->translation()?->name }}
+                                        @endif
+                                    </div>
+                                </td>
+                                <td>
+                                    @if ($p->isPriceOnContact())
+                                        <span class="badge" style="background: var(--dash-hover); color: var(--dash-muted); font-size: 12px;">عند التواصل</span>
+                                    @else
+                                        <span style="font-weight: 800; color: var(--dash-text);">
+                                            {{ money_eg($p->price) }}
+                                        </span>
                                     @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                لا توجد عقارات مضافة لديك بعد. اضغط على «+ إضافة عقار جديد» للبدء.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                </td>
+                                <td>
+                                    <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 800; color: #2563eb; font-size: 13.5px;">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        {{ number_format($p->views_count) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if ($st === 'published')
+                                        <span class="darli-badge-status published">✓ معتمد ومعروض</span>
+                                    @elseif ($st === 'sold')
+                                        <span class="darli-badge-status sold">🤝 تم البيع</span>
+                                    @elseif ($st === 'pending_review')
+                                        <span class="darli-badge-status pending_review">⏳ قيد المراجعة</span>
+                                    @elseif ($st === 'rejected')
+                                        <span class="darli-badge-status rejected">✕ مرفوض</span>
+                                    @else
+                                        <span class="darli-badge-status" style="background: var(--dash-hover); color: var(--dash-muted);">{{ $st }}</span>
+                                    @endif
+                                </td>
+                                <td style="text-align: left;">
+                                    <div style="display: inline-flex; align-items: center; gap: 6px;">
+                                        @if ($st === 'published')
+                                            <a href="{{ route('properties.show', ['slug' => $p->translation()?->slug ?? $p->id]) }}"
+                                               class="darli-action-btn view" target="_blank" title="معاينة العقار بالواجهة">
+                                                معاينة ↗
+                                            </a>
+                                            <form method="POST" action="{{ route('dashboard.properties.sold', ['property' => $p]) }}" style="display:inline;" onsubmit="return confirm('هل تريد تحديد هذا العقار كـ «تم البيع»؟');">
+                                                @csrf
+                                                <button type="submit" class="darli-action-btn sold-btn" title="تحديد كـ تم البيع">
+                                                    تم البيع ✓
+                                                </button>
+                                            </form>
+                                        @elseif ($st === 'sold')
+                                            <form method="POST" action="{{ route('dashboard.properties.available', ['property' => $p]) }}" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="darli-action-btn reactive" title="إعادة العرض بالموقع">
+                                                    إعادة العرض
+                                                </button>
+                                            </form>
+                                        @elseif ($st === 'draft' || $st === 'rejected')
+                                            <form method="POST" action="{{ route('dashboard.properties.submit', ['property' => $p]) }}" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="darli-action-btn submit" title="إرسال العقار لمراجعة وتأكيد الإدارة">
+                                                    إرسال للمراجعة
+                                                </button>
+                                            </form>
+                                        @elseif ($st === 'pending_review')
+                                            <span style="font-size: 12px; color: var(--dash-muted);">بانتظار الموافقة</span>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 45px 20px; color: var(--dash-muted);">
+                                    <div style="font-size: 32px; margin-bottom: 8px;">🏠</div>
+                                    <div style="font-weight: 700; margin-bottom: 4px;">لا توجد عقارات مضافة لديك حتى الآن</div>
+                                    <div style="font-size: 13px; margin-bottom: 16px;">أضف أول عقار لك لتتم مراجعته وعرضه لآلاف الزوار على منصة دارلي.</div>
+                                    @if (! $isPending)
+                                        <a href="{{ route('dashboard.properties.create') }}" class="darli-btn-add" style="display: inline-flex;">
+                                            + إضافة أول عقار الآن
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
 </div>
 @endsection
-

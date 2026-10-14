@@ -5,16 +5,35 @@
      *
      * $shellHead / $shellFooter يأتيان من LegacyFrontendRenderer::shell().
      */
+    $shellHead = $shellHead ?? null;
+    $shellFooter = $shellFooter ?? null;
+
+    if (empty($shellHead) || empty($shellFooter)) {
+        try {
+            $renderer = app(\App\Services\LegacyFrontend\LegacyFrontendRenderer::class);
+            $autoShell = $renderer->shell(
+                app()->getLocale(),
+                'properties',
+                \App\Services\LegacyFrontend\LegacyFrontendRenderer::listingsMarker()
+            );
+            $shellHead = $shellHead ?: ($autoShell['head'] ?? '');
+            $shellFooter = $shellFooter ?: ($autoShell['footer'] ?? '');
+        } catch (\Throwable $e) {}
+    }
+
     $bodyClass = trim(($bodyClass ?? '') . ' darli-db-page');
     $head = $shellHead ?? '';
 
     // طبقة الأدوات المساعدة الخاصة بصفحات قاعدة البيانات (تُحمَّل بعد ثيم هومزن).
     $darliCss = '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.css') . '?v=1.0.0">';
 
+    $pushedHead = (string) $__env->yieldPushContent('head');
+    $headInjection = $darliCss . ($pushedHead !== '' ? "\n" . $pushedHead : '');
+
     if (stripos($head, '</head>') !== false) {
-        $head = preg_replace('/<\/head>/i', $darliCss . '</head>', $head, 1) ?? $head;
+        $head = preg_replace('/<\/head>/i', $headInjection . '</head>', $head, 1) ?? $head;
     } else {
-        $head .= $darliCss;
+        $head .= $headInjection;
     }
     if ($bodyClass !== '') {
         $head = preg_replace_callback(
@@ -51,12 +70,22 @@
             1
         ) ?? $head;
     }
+
+    $pushedScripts = (string) $__env->yieldPushContent('scripts');
+    $footer = $shellFooter ?? '';
+    if ($pushedScripts !== '') {
+        if (stripos($footer, '</body>') !== false) {
+            $footer = preg_replace('/<\/body>/i', $pushedScripts . "\n</body>", $footer, 1) ?? $footer;
+        } else {
+            $footer .= "\n" . $pushedScripts;
+        }
+    }
 ?>
 <?php echo $head; ?>
 
 <div id="wrapper">
     <?php echo $__env->yieldContent('content'); ?>
 </div>
-<?php echo $shellFooter ?? ''; ?>
+<?php echo $footer; ?>
 
 <?php /**PATH /var/www/html/resources/views/layouts/public-shell.blade.php ENDPATH**/ ?>

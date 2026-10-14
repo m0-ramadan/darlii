@@ -94,15 +94,20 @@
                                     <span>تمييز المشروع في الواجهة</span>
                                 </label>
                             </div>
-                            <div class="ap-field">
-                                <label class="ap-label" for="latitude">خط العرض (Latitude)</label>
-                                <input type="text" id="latitude" name="latitude" class="ap-input"
-                                    value="{{ old('latitude', $project->latitude) }}" placeholder="30.0444">
-                            </div>
-                            <div class="ap-field">
-                                <label class="ap-label" for="longitude">خط الطول (Longitude)</label>
-                                <input type="text" id="longitude" name="longitude" class="ap-input"
-                                    value="{{ old('longitude', $project->longitude) }}" placeholder="31.2357">
+                            {{-- تحديد الموقع والإحداثيات بالخريطة التفاعلية --}}
+                            <div style="grid-column: 1 / -1;">
+                                @include('admin.partials.map-picker', [
+                                    'latId' => 'latitude',
+                                    'lngId' => 'longitude',
+                                    'latName' => 'latitude',
+                                    'lngName' => 'longitude',
+                                    'latValue' => old('latitude', $project->latitude),
+                                    'lngValue' => old('longitude', $project->longitude),
+                                    'containerId' => 'project-map-picker-box',
+                                    'mapId' => 'project-leaflet-picker-map',
+                                    'defaultLat' => 29.0724,
+                                    'defaultLng' => 31.0962,
+                                ])
                             </div>
                         </div>
                     </div>

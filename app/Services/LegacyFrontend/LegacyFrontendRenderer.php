@@ -37,10 +37,8 @@ class LegacyFrontendRenderer
         $root = $this->root !== '' ? $this->root : storage_path('app/legacy-site');
         $path = trim($locale . '/' . $page, '/');
 
-        // يعمل داخل الطلب وخارجه (مثلاً من أوامر artisan أو الاختبارات).
         try {
-            request()->getSession();
-            $request = request();
+            $request = request()->hasSession() ? request() : Request::create('/' . $path, 'GET');
         } catch (\Throwable $e) {
             $request = Request::create('/' . $path, 'GET');
         }

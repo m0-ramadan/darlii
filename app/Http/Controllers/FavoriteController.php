@@ -10,8 +10,9 @@ use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
-    public function state(Request $request, string $locale): JsonResponse
+    public function state(Request $request, ?string $locale = null): JsonResponse
     {
+        $locale = $locale ?: app()->getLocale();
         $ids = $request->user()
             ? Favorite::query()
                 ->where('user_id', $request->user()->id)
@@ -23,9 +24,11 @@ class FavoriteController extends Controller
         return $this->stateResponse($request, $locale, $ids);
     }
 
-    public function store(Request $request, string $locale, Property $property): JsonResponse
+    public function store(Request $request, mixed $p1, mixed $p2 = null): JsonResponse
     {
-        abort_unless($property->status->value === 'published', 404);
+        $property = $p1 instanceof Property ? $p1 : ($p2 instanceof Property ? $p2 : null);
+        $locale = is_string($p1) ? $p1 : (is_string($p2) ? $p2 : app()->getLocale());
+        abort_unless($property && $property->status->value === 'published', 404);
 
         Favorite::firstOrCreate([
             'user_id' => $request->user()->id,
@@ -36,8 +39,12 @@ class FavoriteController extends Controller
         return $this->stateResponse($request, $locale, $this->userFavoriteIds($request));
     }
 
-    public function destroy(Request $request, string $locale, Property $property): JsonResponse
+    public function destroy(Request $request, mixed $p1, mixed $p2 = null): JsonResponse
     {
+        $property = $p1 instanceof Property ? $p1 : ($p2 instanceof Property ? $p2 : null);
+        $locale = is_string($p1) ? $p1 : (is_string($p2) ? $p2 : app()->getLocale());
+        abort_unless($property, 404);
+
         Favorite::query()
             ->where('user_id', $request->user()->id)
             ->where('favoritable_type', Property::class)
@@ -47,8 +54,9 @@ class FavoriteController extends Controller
         return $this->stateResponse($request, $locale, $this->userFavoriteIds($request));
     }
 
-    public function merge(Request $request, string $locale): JsonResponse
+    public function merge(Request $request, ?string $locale = null): JsonResponse
     {
+        $locale = $locale ?: app()->getLocale();
         $data = $request->validate([
             'property_ids' => ['array', 'max:100'],
             'property_ids.*' => ['integer', 'distinct', 'exists:properties,id'],

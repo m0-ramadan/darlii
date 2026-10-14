@@ -5,10 +5,24 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Property;
+use App\Services\LegacyFrontend\LegacyFrontendRenderer;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    public function __construct(protected LegacyFrontendRenderer $renderer)
+    {
+    }
+
+    private function shell(): ?array
+    {
+        return $this->renderer->shell(
+            app()->getLocale(),
+            'properties',
+            LegacyFrontendRenderer::listingsMarker()
+        );
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -46,6 +60,8 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
+        $shell = $this->shell();
+
         return view('dashboard.index', compact(
             'user',
             'isCompany',
@@ -57,7 +73,8 @@ class DashboardController extends Controller
             'pendingProperties',
             'totalViews',
             'totalProjects',
-            'recentProperties'
+            'recentProperties',
+            'shell'
         ));
     }
 }

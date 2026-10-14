@@ -236,7 +236,8 @@
 
                 setLoading(submitBtn, true, isAr ? 'جاري التحقق...' : 'Signing in...');
 
-                fetch('/' + locale + '/login', {
+                var loginUrl = form.getAttribute('action') || '/login';
+                fetch(loginUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -432,7 +433,8 @@
 
                 var formData = new FormData(form);
 
-                fetch('/' + locale + '/register', {
+                var registerUrl = form.getAttribute('action') || '/register';
+                fetch(registerUrl, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',

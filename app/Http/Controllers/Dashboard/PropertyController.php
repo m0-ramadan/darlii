@@ -8,15 +8,41 @@ use App\Models\Currency;
 use App\Models\Property;
 use App\Modules\Property\Application\Actions\CreatePropertyAction;
 use App\Modules\Property\Application\Actions\SubmitPropertyAction;
+use App\Services\LegacyFrontend\LegacyFrontendRenderer;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
 {
+    public function __construct(protected LegacyFrontendRenderer $renderer)
+    {
+    }
+
+    private function shell(): ?array
+    {
+        return $this->renderer->shell(
+            app()->getLocale(),
+            'properties',
+            LegacyFrontendRenderer::listingsMarker()
+        );
+    }
+
     public function index(Request $request)
     {
+        $user = auth()->user();
         $status = $request->query('status');
-        $query = Property::with(['translations', 'category', 'location'])
-            ->where('owner_id', auth()->id());
+        $search = trim((string) $request->query('q', ''));
+        $query = Property::with(['translations', 'category', 'location', 'media'])
+            ->where('owner_id', $user->id);
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('reference_code', 'like', "%{$search}%")
+                  ->orWhereHas('translations', function ($t) use ($search) {
+                      $t->where('name', 'like', "%{$search}%")
+                        ->orWhere('address_text', 'like', "%{$search}%");
+                  });
+            });
+        }
 
         if ($status === 'published') {
             $query->where('status', 'published');
@@ -30,7 +56,23 @@ class PropertyController extends Controller
 
         $properties = $query->latest()->paginate(15)->withQueryString();
 
-        return view('dashboard.properties.index', compact('properties', 'status'));
+        $counts = [
+            'all' => Property::where('owner_id', $user->id)->count(),
+            'published' => Property::where('owner_id', $user->id)->where('status', 'published')->count(),
+            'sold' => Property::where('owner_id', $user->id)->where(function ($q) {
+                $q->where('status', 'sold')->orWhereNotNull('sold_at');
+            })->count(),
+            'pending_review' => Property::where('owner_id', $user->id)->where('status', 'pending_review')->count(),
+            'views' => Property::where('owner_id', $user->id)->sum('views_count') ?? 0,
+        ];
+
+        return view('dashboard.properties.index', [
+            'properties' => $properties,
+            'status' => $status,
+            'counts' => $counts,
+            'user' => $user,
+            'shell' => $this->shell(),
+        ]);
     }
 
     public function create(Request $request)
@@ -38,12 +80,13 @@ class PropertyController extends Controller
         $user = $request->user();
         if ($user && $user->status === 'pending') {
             return redirect()
-                ->route('dashboard.index', ['locale' => app()->getLocale()])
+                ->route('dashboard.index')
                 ->with('status_warning', 'حسابك قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة عقارات جديدة حتى يتم تفعيل حسابك من قبل الإدارة.');
         }
 
         return view('dashboard.properties.create', [
             'currencies' => Currency::where('is_active', true)->get(),
+            'shell' => $this->shell(),
         ]);
     }
 
@@ -52,7 +95,7 @@ class PropertyController extends Controller
         $user = $request->user();
         if ($user && $user->status === 'pending') {
             return redirect()
-                ->route('dashboard.index', ['locale' => app()->getLocale()])
+                ->route('dashboard.index')
                 ->with('status_warning', 'حسابك قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة عقارات جديدة حتى يتم تفعيل حسابك من قبل الإدارة.');
         }
 
@@ -84,7 +127,7 @@ class PropertyController extends Controller
         }
 
         return redirect()
-            ->route('dashboard.properties.index', ['locale' => app()->getLocale()])
+            ->route('dashboard.properties.index')
             ->with('success', $msg);
     }
 

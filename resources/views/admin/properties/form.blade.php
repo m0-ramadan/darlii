@@ -424,16 +424,19 @@
                             </div>
                         </div>
 
-                        <div class="ap-grid ap-grid--2">
-                            <div class="ap-field">
-                                <label class="ap-label">خط العرض (Latitude)</label>
-                                <input type="text" name="latitude" class="ap-input" value="{{ $oldValue('latitude', $property->latitude) }}">
-                            </div>
-                            <div class="ap-field">
-                                <label class="ap-label">خط الطول (Longitude)</label>
-                                <input type="text" name="longitude" class="ap-input" value="{{ $oldValue('longitude', $property->longitude) }}">
-                            </div>
-                        </div>
+                        {{-- تحديد الموقع والإحداثيات بالخريطة التفاعلية --}}
+                        @include('admin.partials.map-picker', [
+                            'latId' => 'prop-latitude',
+                            'lngId' => 'prop-longitude',
+                            'latName' => 'latitude',
+                            'lngName' => 'longitude',
+                            'latValue' => $oldValue('latitude', $property->latitude),
+                            'lngValue' => $oldValue('longitude', $property->longitude),
+                            'containerId' => 'prop-map-picker-box',
+                            'mapId' => 'prop-leaflet-picker-map',
+                            'defaultLat' => 29.0724,
+                            'defaultLng' => 31.0962,
+                        ])
 
                         <div class="ap-field">
                             <label class="ap-label">المرافق والخدمات</label>

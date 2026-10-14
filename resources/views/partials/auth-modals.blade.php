@@ -309,7 +309,7 @@
             </div>
 
             <div class="darli-auth-body">
-                <form id="darli-auth-login-form" method="POST" action="{{ url($locale . '/login') }}">
+                <form id="darli-auth-login-form" method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="darli-auth-alert alert d-none" role="alert"></div>
 
@@ -391,7 +391,7 @@
             </div>
 
             <div class="darli-auth-body">
-                <form id="darli-auth-register-form" method="POST" action="{{ url($locale . '/register') }}" enctype="multipart/form-data">
+                <form id="darli-auth-register-form" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="account_type" id="darli-reg-account-type" value="client">
 

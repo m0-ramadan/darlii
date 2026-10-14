@@ -311,7 +311,7 @@
             </div>
 
             <div class="darli-auth-body">
-                <form id="darli-auth-login-form" method="POST" action="<?php echo e(url($locale . '/login')); ?>">
+                <form id="darli-auth-login-form" method="POST" action="<?php echo e(route('login')); ?>">
                     <?php echo csrf_field(); ?>
                     <div class="darli-auth-alert alert d-none" role="alert"></div>
 
@@ -377,7 +377,7 @@
             </div>
 
             <div class="darli-auth-body">
-                <form id="darli-auth-register-form" method="POST" action="<?php echo e(url($locale . '/register')); ?>" enctype="multipart/form-data">
+                <form id="darli-auth-register-form" method="POST" action="<?php echo e(route('register')); ?>" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     <input type="hidden" name="account_type" id="darli-reg-account-type" value="client">
 

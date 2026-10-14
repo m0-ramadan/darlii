@@ -7,12 +7,26 @@ use App\Models\Amenity;
 use App\Models\Location;
 use App\Models\Project;
 use App\Models\ProjectTranslation;
+use App\Services\LegacyFrontend\LegacyFrontendRenderer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
+    public function __construct(protected LegacyFrontendRenderer $renderer)
+    {
+    }
+
+    private function shell(): ?array
+    {
+        return $this->renderer->shell(
+            app()->getLocale(),
+            'properties',
+            LegacyFrontendRenderer::listingsMarker()
+        );
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -31,7 +45,9 @@ class ProjectController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('dashboard.projects.index', compact('projects', 'user'));
+        $shell = $this->shell();
+
+        return view('dashboard.projects.index', compact('projects', 'user', 'shell'));
     }
 
     public function create(Request $request)
@@ -43,14 +59,15 @@ class ProjectController extends Controller
 
         if ($user->status === 'pending') {
             return redirect()
-                ->route('dashboard.index', ['locale' => app()->getLocale()])
+                ->route('dashboard.index')
                 ->with('status_warning', 'حساب الشركة قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة مشاريع جديدة حتى يتم تفعيل الحساب.');
         }
 
         $locations = Location::with('translations')->get();
         $amenities = Amenity::with('translations')->get();
+        $shell = $this->shell();
 
-        return view('dashboard.projects.create', compact('locations', 'amenities'));
+        return view('dashboard.projects.create', compact('locations', 'amenities', 'shell'));
     }
 
     public function store(Request $request)
@@ -62,7 +79,7 @@ class ProjectController extends Controller
 
         if ($user->status === 'pending') {
             return redirect()
-                ->route('dashboard.index', ['locale' => app()->getLocale()])
+                ->route('dashboard.index')
                 ->with('status_warning', 'حساب الشركة قيد المراجعة والاعتماد من قبل إدارة منصة دارلي. لا يمكنك إضافة مشاريع جديدة حتى يتم تفعيل الحساب.');
         }
 
@@ -125,7 +142,7 @@ class ProjectController extends Controller
         });
 
         return redirect()
-            ->route('dashboard.projects.index', ['locale' => app()->getLocale()])
+            ->route('dashboard.projects.index')
             ->with('success', 'تم إنشاء المشروع بنجاح (' . $project->reference_code . ') وسيتم مراجعته وتفعيله من قبل الإدارة.');
     }
 }

@@ -239,6 +239,83 @@
                     <textarea class="darli-form-control" rows="4" name="translations[ar][description]" placeholder="اكتب مواصفات العقار، الطابق، الخدمات المتوفرة، الموقع بالتحديد...">{{ old('translations.ar.description') }}</textarea>
                 </div>
 
+                {{-- قسم ألبوم ومعرض صور العقار بالتوضيح الشامل --}}
+                <div class="col-12 mt-4 pt-3" style="border-top: 1px dashed var(--dash-border);">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span style="font-size: 22px;">📸</span>
+                            <h6 class="fw-bold mb-0" style="color: var(--dash-text); font-size: 16.5px;">ألبوم ومعرض صور العقار (الصور الحقيقية)</h6>
+                        </div>
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.12); color: #059669; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 20px;">
+                            ⭐ عنصر أساسي — العقارات المزودة بصور تحقق 8 أضعاف الاهتمام
+                        </span>
+                    </div>
+
+                    {{-- بطاقة التوضيحات والإرشادات الهامة --}}
+                    <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1px solid #a7f3d0; border-radius: 12px; padding: 18px 20px; margin-bottom: 18px;">
+                        <div class="d-flex align-items-start gap-3">
+                            <div style="font-size: 22px; line-height: 1; flex-shrink: 0; margin-top: 2px;">💡</div>
+                            <div style="font-size: 13.5px; color: #065f46; line-height: 1.7;">
+                                <strong style="font-size: 14.5px; display: block; margin-bottom: 6px; color: #047857;">
+                                    دليل وإرشادات رفع صور العقار للحصول على أسرع بيع / إيجار:
+                                </strong>
+                                <ul style="margin: 0; padding-right: 18px; display: grid; gap: 4px;">
+                                    <li>
+                                        <strong>صورة الغلاف الرئيسية:</strong> أول صورة ترفعها ستكون هي صورة الغلاف البارزة التي تظهر للزوار في نتائج البحث وبطاقة العقار الرئيسية.
+                                    </li>
+                                    <li>
+                                        <strong>التقاط الصور نهاراً:</strong> يفضل تصوير الشقة نهاراً في ضوء طبيعي مع فتح النوافذ والستائر لإظهار المساحات الحقيقية بوضوح.
+                                    </li>
+                                    <li>
+                                        <strong>تغطية كافة الأركان:</strong> صوّر واجهة العمارة والمدخل، الريسبشن من زاويتين واسعتين، غرف النوم، المطبخ، الحمامات، وأي إطلالة أو بلكونة مميزة.
+                                    </li>
+                                    <li>
+                                        <strong>المواصفات الفنية:</strong> الصيغ المدعومة (<code>JPG</code>, <code>JPEG</code>, <code>PNG</code>, <code>WEBP</code>) والحد الأقصى لكل صورة هو <code>10 ميجابايت</code>.
+                                    </li>
+                                    <li>
+                                        <strong>رفع متعدد دفعة واحدة:</strong> يمكنك تحديد عدة صور معاً من جهازك (بالضغط على Ctrl أو Shift أثناء الاختيار).
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- منطقة السحب والإفلات / اختيار الصور --}}
+                    <div id="prop-images-dropzone" style="border: 2px dashed #cbd5e1; border-radius: 14px; background: var(--dash-hover); padding: 30px 20px; text-align: center; cursor: pointer; transition: all 0.25s ease;">
+                        <input type="file" id="prop-images-input" name="images[]" accept="image/jpeg,image/png,image/jpg,image/webp" multiple style="display: none;">
+                        <div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.06); font-size: 26px;">
+                            🖼️
+                        </div>
+                        <h6 style="color: var(--dash-text); font-weight: 700; margin-bottom: 6px; font-size: 15px;">
+                            اضغط هنا لاختيار صور العقار، أو اسحب الصور وأفلتها في هذه المساحة
+                        </h6>
+                        <p style="color: var(--dash-muted); font-size: 13px; margin-bottom: 14px;">
+                            يمكنك اختيار صورة واحدة أو مجموعة صور معاً في نفس الوقت
+                        </p>
+                        <button type="button" id="btn-browse-images" class="btn" style="background: #0F3D2E; color: #ffffff; font-weight: 700; font-size: 13.5px; border-radius: 8px; padding: 9px 24px;">
+                            📁 تصفح واختيار الصور من جهازك
+                        </button>
+                    </div>
+
+                    {{-- شريط ملخص وحالة الصور المختارة والمعاينة الفورية --}}
+                    <div id="prop-images-preview-wrapper" style="display: none; margin-top: 18px;">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 pb-2" style="border-bottom: 1px solid var(--dash-border);">
+                            <div class="d-flex align-items-center gap-2">
+                                <span style="font-size: 16px;">📸</span>
+                                <strong id="prop-images-count-text" style="color: var(--dash-text); font-size: 14px;">
+                                    الصور المختارة للرفع
+                                </strong>
+                            </div>
+                            <button type="button" id="btn-clear-all-images" class="btn btn-sm btn-outline-danger" style="font-size: 12px; border-radius: 6px;">
+                                🗑️ إفراغ واختيار صور أخرى
+                            </button>
+                        </div>
+
+                        {{-- شبكة المعاينة الحية --}}
+                        <div id="prop-images-preview-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px;"></div>
+                    </div>
+                </div>
+
                 <div class="col-12">
                     @include('admin.partials.map-picker', [
                         'latId' => 'prop-latitude-user',
@@ -295,3 +372,197 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dropzone = document.getElementById('prop-images-dropzone');
+    const input = document.getElementById('prop-images-input');
+    const browseBtn = document.getElementById('btn-browse-images');
+    const previewWrapper = document.getElementById('prop-images-preview-wrapper');
+    const previewGrid = document.getElementById('prop-images-preview-grid');
+    const countText = document.getElementById('prop-images-count-text');
+    const clearBtn = document.getElementById('btn-clear-all-images');
+
+    if (!input || !dropzone) return;
+
+    let dt = new DataTransfer();
+
+    function openFilePicker(e) {
+        if (e) e.stopPropagation();
+        input.click();
+    }
+
+    dropzone.addEventListener('click', openFilePicker);
+    if (browseBtn) {
+        browseBtn.addEventListener('click', openFilePicker);
+    }
+
+    ['dragenter', 'dragover'].forEach(name => {
+        dropzone.addEventListener(name, function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.style.borderColor = '#0F3D2E';
+            dropzone.style.backgroundColor = 'rgba(15, 61, 46, 0.06)';
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+        dropzone.addEventListener(name, function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.style.borderColor = '#cbd5e1';
+            dropzone.style.backgroundColor = 'var(--dash-hover)';
+        });
+    });
+
+    dropzone.addEventListener('drop', function (e) {
+        if (e.dataTransfer && e.dataTransfer.files) {
+            handleFiles(e.dataTransfer.files);
+        }
+    });
+
+    input.addEventListener('change', function () {
+        if (input.files) {
+            handleFiles(input.files);
+        }
+    });
+
+    function handleFiles(files) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        const maxBytes = 10 * 1024 * 1024; // 10MB
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (!allowedTypes.includes(file.type)) {
+                alert('الملف "' + file.name + '" ليس بصيغة مقبولة. الصيغ المدعومة هي JPG, PNG, WEBP فقط.');
+                continue;
+            }
+            if (file.size > maxBytes) {
+                alert('حجم الصورة "' + file.name + '" يتجاوز الحد الأقصى المسموح (10 ميجابايت).');
+                continue;
+            }
+
+            let exists = false;
+            for (let j = 0; j < dt.items.length; j++) {
+                const existing = dt.items[j].getAsFile();
+                if (existing && existing.name === file.name && existing.size === file.size) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                dt.items.add(file);
+            }
+        }
+
+        input.files = dt.files;
+        renderPreviews();
+    }
+
+    function renderPreviews() {
+        previewGrid.innerHTML = '';
+        const files = dt.files;
+
+        if (files.length === 0) {
+            previewWrapper.style.display = 'none';
+            return;
+        }
+
+        previewWrapper.style.display = 'block';
+        countText.textContent = 'تم اختيار ' + files.length + ' صورة جاهزة للرفع مع العقار';
+
+        Array.from(files).forEach((file, index) => {
+            const item = document.createElement('div');
+            item.style.position = 'relative';
+            item.style.borderRadius = '10px';
+            item.style.overflow = 'hidden';
+            item.style.border = index === 0 ? '2px solid #c8a45c' : '1px solid var(--dash-border)';
+            item.style.background = '#ffffff';
+            item.style.aspectRatio = '4/3';
+            item.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+
+            const img = document.createElement('img');
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.alt = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            item.appendChild(img);
+
+            // Primary badge on first image
+            if (index === 0) {
+                const badge = document.createElement('span');
+                badge.textContent = '⭐ صورة الغلاف';
+                badge.style.position = 'absolute';
+                badge.style.bottom = '6px';
+                badge.style.right = '6px';
+                badge.style.background = '#0F3D2E';
+                badge.style.color = '#ffffff';
+                badge.style.fontSize = '10.5px';
+                badge.style.fontWeight = '700';
+                badge.style.padding = '3px 7px';
+                badge.style.borderRadius = '4px';
+                badge.style.boxShadow = '0 2px 4px rgba(0,0,0,0.25)';
+                item.appendChild(badge);
+            }
+
+            // Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.innerHTML = '✕';
+            removeBtn.title = 'إلغاء هذه الصورة';
+            removeBtn.style.position = 'absolute';
+            removeBtn.style.top = '6px';
+            removeBtn.style.left = '6px';
+            removeBtn.style.background = 'rgba(0,0,0,0.65)';
+            removeBtn.style.color = '#ffffff';
+            removeBtn.style.border = 'none';
+            removeBtn.style.borderRadius = '50%';
+            removeBtn.style.width = '24px';
+            removeBtn.style.height = '24px';
+            removeBtn.style.fontSize = '12px';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.style.display = 'flex';
+            removeBtn.style.alignItems = 'center';
+            removeBtn.style.justifyContent = 'center';
+            removeBtn.style.lineHeight = '1';
+
+            removeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                removeFileAt(index);
+            });
+
+            item.appendChild(removeBtn);
+            previewGrid.appendChild(item);
+        });
+    }
+
+    function removeFileAt(indexToRemove) {
+        const newDt = new DataTransfer();
+        Array.from(dt.files).forEach((file, index) => {
+            if (index !== indexToRemove) {
+                newDt.items.add(file);
+            }
+        });
+        dt = newDt;
+        input.files = dt.files;
+        renderPreviews();
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            dt = new DataTransfer();
+            input.files = dt.files;
+            renderPreviews();
+        });
+    }
+});
+</script>
+@endpush

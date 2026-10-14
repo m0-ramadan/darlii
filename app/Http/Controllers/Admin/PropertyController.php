@@ -581,6 +581,11 @@ class PropertyController extends Controller
                 continue;
             }
 
+            if (blank($translation['short_description'] ?? null) && filled($translation['description'] ?? null)) {
+                $plain = trim(strip_tags((string) $translation['description']));
+                $translation['short_description'] = \Illuminate\Support\Str::limit($plain, 180);
+            }
+
             $translation['slug'] = $this->uniqueSlug(
                 ($translation['slug'] ?? null) ?: $translation['name'],
                 \App\Models\PropertyTranslation::class,

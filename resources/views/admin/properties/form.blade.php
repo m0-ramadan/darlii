@@ -465,22 +465,18 @@
                     <div class="ap-card__body">
                         <h3 style="font-size: 14px;">العربية</h3>
                         <div class="ap-field">
-                            <label class="ap-label">اسم العقار (عربي) <span>*</span></label>
+                            <label class="ap-label">عنوان العقار <span>*</span></label>
                             <input type="text" name="translations[ar][name]" class="ap-input" required
+                                placeholder="مثال: شقة للبيع 140م تشطيب سوبر لوكس بالحي الأول"
                                 value="{{ old('translations.ar.name', $ar->name) }}">
                         </div>
                         <div class="ap-field">
-                            <label class="ap-label">الرابط اللطيف (Slug)</label>
-                            <input type="text" name="translations[ar][slug]" class="ap-input" value="{{ old('translations.ar.slug', $ar->slug) }}">
-                        </div>
-                        <div class="ap-field">
-                            <label class="ap-label">وصف مختصر</label>
-                            <input type="text" name="translations[ar][short_description]" class="ap-input"
-                                value="{{ old('translations.ar.short_description', $ar->short_description) }}">
-                        </div>
-                        <div class="ap-field">
-                            <label class="ap-label">الوصف الكامل</label>
-                            <textarea name="translations[ar][description]" class="ap-textarea" rows="5">{{ old('translations.ar.description', $ar->description) }}</textarea>
+                            <label class="ap-label">الوصف التفصيلي للعقار</label>
+                            <textarea name="translations[ar][description]" class="ap-textarea" rows="5"
+                                placeholder="اكتب وصفاً مفصلاً وشاملاً للعقار ومميزاته ومواصفاته...">{{ old('translations.ar.description', $ar->description) }}</textarea>
+                            <small style="color: var(--ap-muted); font-size: 12px; display: block; margin-top: 5px;">
+                                💡 يتم توليد الرابط اللطيف (Slug) واستنتاج الوصف المختصر تلقائياً وبدقة من العنوان والوصف التفصيلي.
+                            </small>
                         </div>
                         <div class="ap-grid ap-grid--2">
                             <div class="ap-field">
@@ -500,17 +496,10 @@
 
                         <h3 style="font-size: 14px;">English</h3>
                         <div class="ap-field">
-                            <label class="ap-label">Property name (EN)</label>
-                            <input type="text" name="translations[en][name]" class="ap-input" value="{{ old('translations.en.name', $en->name) }}">
-                        </div>
-                        <div class="ap-field">
-                            <label class="ap-label">Slug (EN)</label>
-                            <input type="text" name="translations[en][slug]" class="ap-input" value="{{ old('translations.en.slug', $en->slug) }}">
-                        </div>
-                        <div class="ap-field">
-                            <label class="ap-label">Short description (EN)</label>
-                            <input type="text" name="translations[en][short_description]" class="ap-input"
-                                value="{{ old('translations.en.short_description', $en->short_description) }}">
+                            <label class="ap-label">Property Title (EN)</label>
+                            <input type="text" name="translations[en][name]" class="ap-input"
+                                placeholder="e.g. Luxury Apartment 140m for Sale"
+                                value="{{ old('translations.en.name', $en->name) }}">
                         </div>
                         <div class="ap-field">
                             <label class="ap-label">Full description (EN)</label>

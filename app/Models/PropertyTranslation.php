@@ -35,6 +35,13 @@ class PropertyTranslation extends Model
 
             $translation->slug = $slug;
         });
+
+        static::saving(function (PropertyTranslation $translation): void {
+            if (blank($translation->short_description) && filled($translation->description)) {
+                $plain = trim(strip_tags((string) $translation->description));
+                $translation->short_description = Str::limit($plain, 180);
+            }
+        });
     }
 
     public function property()

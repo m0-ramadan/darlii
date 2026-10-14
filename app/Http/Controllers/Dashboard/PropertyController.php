@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 
 class PropertyController extends Controller
 {
+    use \App\Http\Controllers\Admin\Concerns\UploadsImages;
+
     public function __construct(protected LegacyFrontendRenderer $renderer)
     {
     }
@@ -114,6 +116,31 @@ class PropertyController extends Controller
                 'image' => $imagePath,
                 'description' => $request->input('floor_plan_description'),
             ]]);
+        }
+
+        if ($request->hasFile('images')) {
+            $hasPrimary = $p->media()->where('is_primary', true)->exists();
+            $sort = (int) $p->media()->max('sort_order');
+
+            foreach ($request->file('images') as $index => $image) {
+                if (! $image || ! $image->isValid()) {
+                    continue;
+                }
+
+                $path = $this->uploadImage($image, 'properties/' . $p->id);
+                if (! $path) {
+                    continue;
+                }
+
+                $p->media()->create([
+                    'path' => $path,
+                    'disk' => $this->uploadDisk(),
+                    'mime_type' => $image->getClientMimeType(),
+                    'size' => $image->getSize(),
+                    'sort_order' => ++$sort,
+                    'is_primary' => ! $hasPrimary && $index === 0,
+                ]);
+            }
         }
 
         // العميل العادي لا يظهر عقاره في الموقع مباشرة بل يخضع لمراجعة وتأكيد الأدمن

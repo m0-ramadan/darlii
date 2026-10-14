@@ -51,6 +51,8 @@ class StorePropertyRequest extends FormRequest
             'floor_plan_name' => ['nullable', 'string', 'max:190'],
             'floor_plan_image' => ['nullable', 'image', 'max:10240'],
             'floor_plan_description' => ['nullable', 'string', 'max:1000'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
         ];
     }
 }

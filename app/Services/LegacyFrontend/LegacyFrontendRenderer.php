@@ -865,6 +865,9 @@ HTML;
         $html = $this->removeHomepageSelector($html);
         $html = $this->applyLocalizedSeo($html, $request);
         $html = $this->normalizeBrandColours($html);
+        $html = $this->renderHomepageFeaturedProperties($html, $request);
+        $html = $this->renderHomepageRecommendedProperty($html, $request);
+        $html = $this->renderHomepageTestimonials($html, $request);
         $html = $this->renderHomepagePosts($html, $request);
         $html = $this->renderHomepagePartners($html, $request);
         $html = $this->renderAboutUsDynamicContent($html, $request);
@@ -877,6 +880,124 @@ HTML;
         $html = $this->removeCloudflareChallengeScript($html);
 
         return $this->deduplicateFormFieldIds($html);
+    }
+
+    private function renderHomepageFeaturedProperties(string $html, Request $request): string
+    {
+        if (! str_contains($html, 'darli-featured-section')) {
+            return $html;
+        }
+
+        $locale = $this->localeFromRequest($request);
+
+        $properties = Property::query()
+            ->with(['translations', 'media', 'location.translations'])
+            ->where('status', 'published')
+            ->orderByDesc('is_featured')
+            ->latest('id')
+            ->limit(6)
+            ->get();
+
+        if ($properties->isEmpty()) {
+            return $html;
+        }
+
+        try {
+            $section = view('legacy.homepage-featured-properties', compact('properties', 'locale'))->render();
+
+            return preg_replace(
+                '~<section\b[^>]*class=["\'][^"\']*darli-featured-section[^"\']*["\'][^>]*>.*?</section>~is',
+                $section,
+                $html,
+                1
+            ) ?? $html;
+        } catch (\Throwable) {
+            return $html;
+        }
+    }
+
+    private function renderHomepageRecommendedProperty(string $html, Request $request): string
+    {
+        if (! str_contains($html, 'darli-recommended-section')) {
+            return $html;
+        }
+
+        $locale = $this->localeFromRequest($request);
+
+        $property = Property::query()
+            ->with(['translations', 'media', 'location.translations'])
+            ->where('status', 'published')
+            ->where('is_featured', true)
+            ->first();
+
+        if (! $property) {
+            $property = Property::query()
+                ->with(['translations', 'media', 'location.translations'])
+                ->where('status', 'published')
+                ->where('purpose', 'sale')
+                ->whereNotNull('bedrooms')
+                ->has('media')
+                ->latest('id')
+                ->first();
+        }
+
+        if (! $property) {
+            $property = Property::query()
+                ->with(['translations', 'media', 'location.translations'])
+                ->where('status', 'published')
+                ->latest('id')
+                ->first();
+        }
+
+        if (! $property) {
+            return $html;
+        }
+
+        try {
+            $section = view('legacy.homepage-recommended-property', compact('property', 'locale'))->render();
+
+            return preg_replace(
+                '~<section\b[^>]*class=["\'][^"\']*darli-recommended-section[^"\']*["\'][^>]*>.*?</section>~is',
+                $section,
+                $html,
+                1
+            ) ?? $html;
+        } catch (\Throwable) {
+            return $html;
+        }
+    }
+
+    private function renderHomepageTestimonials(string $html, Request $request): string
+    {
+        if (! str_contains($html, 'darli-testimonials-section')) {
+            return $html;
+        }
+
+        $locale = $this->localeFromRequest($request);
+
+        $testimonials = Testimonial::query()
+            ->with('translations')
+            ->where('status', true)
+            ->orderBy('sort_order')
+            ->limit(6)
+            ->get();
+
+        if ($testimonials->isEmpty()) {
+            return $html;
+        }
+
+        try {
+            $section = view('legacy.homepage-testimonials', compact('testimonials', 'locale'))->render();
+
+            return preg_replace(
+                '~<section\b[^>]*class=["\'][^"\']*darli-testimonials-section[^"\']*["\'][^>]*>.*?</section>~is',
+                $section,
+                $html,
+                1
+            ) ?? $html;
+        } catch (\Throwable) {
+            return $html;
+        }
     }
 
     private function renderHomepagePosts(string $html, Request $request): string

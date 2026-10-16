@@ -1,9 +1,14 @@
 {
   "$schema": "https://getcomposer.org/schema.json",
-  "name": "mrz/homzen-laravel",
+  "name": "mrz/darlii-laravel",
   "type": "project",
-  "description": "Modular multilingual real-estate platform rebuilt from the provided Homzen static mirror.",
-  "keywords": ["laravel", "real-estate", "multilingual", "homzen"],
+  "description": "Modular multilingual real-estate platform for Darlii.",
+  "keywords": [
+    "laravel",
+    "real-estate",
+    "multilingual",
+    "darlii"
+  ],
   "license": "proprietary",
   "require": {
     "php": "^8.3",
@@ -28,7 +33,11 @@
       "app/Support/helpers.php"
     ]
   },
-  "autoload-dev": {"psr-4": {"Tests\\": "tests/"}},
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "scripts": {
     "setup": [
       "composer install",
@@ -43,13 +52,31 @@
       "Composer\\Config::disableProcessTimeout",
       "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"npm run dev\" --names=server,queue,vite --kill-others"
     ],
-    "test": ["@php artisan config:clear --ansi @no_additional_args", "@php artisan test"],
-    "post-autoload-dump": ["Illuminate\\Foundation\\ComposerScripts::postAutoloadDump", "@php artisan package:discover --ansi"],
-    "post-root-package-install": ["@php -r \"file_exists('.env') || copy('.env.example', '.env');\""],
-    "post-create-project-cmd": ["@php artisan key:generate --ansi" ]
+    "test": [
+      "@php artisan config:clear --ansi @no_additional_args",
+      "@php artisan test"
+    ],
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi"
+    ]
   },
-  "extra": {"laravel": {"dont-discover": []}},
-  "config": {"optimize-autoloader": true, "preferred-install": "dist", "sort-packages": true},
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
   "minimum-stability": "stable",
   "prefer-stable": true
 }

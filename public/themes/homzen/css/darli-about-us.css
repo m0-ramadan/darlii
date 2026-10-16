@@ -1,754 +1,731 @@
 /* ==========================================================================
-   Darli About Us Styles - Pixel-perfect match for /ar/about-us
-   Matches reference image media_1791878920416_d52ba4b2.png
+   Darli About Us - Exact Reference Design Match
+   Mockup Reference: media_1792153904269_fb4ebd24.png
    ========================================================================== */
 
-.about-page-wrapper {
+:root {
+  --darli-about-gold: #c58d34;
+  --darli-about-gold-hover: #b07d2c;
+  --darli-about-gold-soft: #fdf8f0;
+  --darli-about-gold-border: rgba(197, 141, 52, 0.25);
+  --darli-about-navy: #102038;
+  --darli-about-navy-dark: #0d1726;
+  --darli-about-gray: #64748b;
+  --darli-about-light-gray: #94a3b8;
+  --darli-about-border: #edf2f7;
+  --darli-about-card-bg: #ffffff;
+  --darli-about-body-bg: #ffffff;
+  --darli-about-shadow-sm: 0 4px 18px rgba(16, 32, 56, 0.04);
+  --darli-about-shadow-md: 0 10px 28px rgba(16, 32, 56, 0.08);
+  --darli-about-shadow-lg: 0 16px 40px rgba(16, 32, 56, 0.16);
+  --darli-about-radius: 16px;
+}
+
+/* Force exact light theme palette matching reference mockup */
+.darli-about-page {
   background-color: #ffffff !important;
-  color: #161e2d !important;
+  color: #102038 !important;
   font-family: inherit;
+  overflow-x: hidden;
+  direction: rtl;
 }
 
-/* Force light styling for about-us content regardless of global dark mode */
-html[data-theme="dark"] .flat-banner-about,
-html[data-theme="dark"] .flat-service-about,
-html[data-theme="dark"] .flat-testimonials-about,
-html[data-theme="dark"] .flat-agents-about,
-html[data-theme="dark"] .flat-cta-about,
-html[data-theme="dark"] .about-page-wrapper {
-  background-color: #ffffff !important;
-  color: #161e2d !important;
-}
-
-html[data-theme="dark"] .flat-service-about .section-title,
-html[data-theme="dark"] .flat-testimonials-about .section-title,
-html[data-theme="dark"] .flat-agents-about .section-title,
-html[data-theme="dark"] .flat-cta-about .section-title,
-html[data-theme="dark"] .about-agent-name,
-html[data-theme="dark"] .service-feature-content h3,
-html[data-theme="dark"] .about-testi-quote,
-html[data-theme="dark"] .about-testi-user .user-name {
-  color: #161e2d !important;
-}
-
-html[data-theme="dark"] .flat-service-about p,
-html[data-theme="dark"] .service-feature-content p,
-html[data-theme="dark"] .about-agent-role,
-html[data-theme="dark"] .about-testi-user .user-role {
-  color: #64748b !important;
-}
-
-/* --------------------------------------------------------------------------
-   Section 1: Hero & Intro
-   -------------------------------------------------------------------------- */
-.flat-banner-about {
-  padding: 60px 0 80px !important;
+.darli-about-page .darli-about-intro-section,
+.darli-about-page .darli-about-why-section,
+.darli-about-page .darli-about-vision-section,
+.darli-about-page .darli-about-steps-section {
   background-color: #ffffff !important;
 }
 
-.flat-banner-about .section-title {
-  color: #161e2d !important;
-  line-height: 1.25 !important;
-  margin-bottom: 0 !important;
+/* Common Typography & Badges */
+.darli-about-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--darli-about-gold) !important;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
 }
 
-.flat-banner-about .section-title .title-sub {
-  font-size: 24px !important;
-  font-weight: 700 !important;
-  display: block !important;
-  margin-bottom: 6px !important;
-  color: #161e2d !important;
+.darli-about-heading {
+  font-size: 34px;
+  font-weight: 800;
+  color: #102038 !important;
+  line-height: 1.35;
+  margin-bottom: 16px;
 }
 
-.flat-banner-about .section-title .title-main {
-  font-size: 42px !important;
-  font-weight: 800 !important;
-  color: #161e2d !important;
-  display: block !important;
-}
-
-.flat-banner-about .desc-text {
-  font-size: 15px !important;
-  line-height: 1.85 !important;
+.darli-about-desc {
+  font-size: 16px;
+  line-height: 1.85;
   color: #64748b !important;
-  margin: 0 !important;
+  margin-bottom: 24px;
 }
 
-.about-video-card {
-  margin-top: 36px !important;
-  border-radius: 20px !important;
-  overflow: hidden !important;
-  background: #fbfbfb !important;
-  position: relative !important;
-  border: 1px solid #edf2f7 !important;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04) !important;
-  text-align: center !important;
-}
-
-.about-video-card-img {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 520px !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-.about-video-card .btn-play-badge {
-  position: absolute !important;
-  top: 48% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 68px !important;
-  height: 68px !important;
-  border-radius: 50% !important;
-  background: #cca352 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: 0 4px 20px rgba(204, 163, 82, 0.5) !important;
+.darli-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: var(--darli-about-gold);
   color: #ffffff !important;
-  font-size: 22px !important;
-  text-decoration: none !important;
-  cursor: pointer !important;
-  z-index: 5 !important;
-  transition: transform 0.2s ease, background 0.2s ease !important;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(197, 141, 52, 0.25);
 }
 
-.about-video-card .btn-play-badge:hover {
-  transform: translate(-50%, -50%) scale(1.08) !important;
-  background: #b08738 !important;
+.darli-btn-gold:hover {
+  background-color: var(--darli-about-gold-hover);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(197, 141, 52, 0.35);
 }
 
-/* --------------------------------------------------------------------------
-   Section 2: Why Choose Us
-   -------------------------------------------------------------------------- */
-.flat-service-about {
-  padding: 80px 0 90px !important;
-  background-color: #ffffff !important;
+.darli-btn-gold svg {
+  transition: transform 0.25s ease;
 }
 
-.flat-service-about .text-subtitle {
-  color: #c49a45 !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  margin-bottom: 8px !important;
+.darli-btn-gold:hover svg {
+  transform: translateX(-4px);
 }
 
-.flat-service-about .section-title {
-  font-size: 34px !important;
-  font-weight: 800 !important;
-  color: #161e2d !important;
-  line-height: 1.3 !important;
-  margin-bottom: 16px !important;
+/* ==========================================================================
+   Section 1: Hero Header
+   ========================================================================== */
+.darli-about-hero {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.86) 100%),
+              url('/themes/homzen/images/darli-hero-cairo-photo-clean.png') center 35% / cover no-repeat !important;
+  padding: 90px 20px 85px;
+  text-align: center;
+  border-bottom: 1px solid var(--darli-about-border);
 }
 
-.flat-service-about .main-desc {
-  font-size: 14.5px !important;
-  line-height: 1.85 !important;
-  color: #64748b !important;
-  margin-bottom: 36px !important;
+.darli-about-hero-title {
+  font-size: 42px;
+  font-weight: 800;
+  color: #102038 !important;
+  margin-top: 8px;
+  margin-bottom: 14px;
 }
 
-.service-feature-row {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 20px !important;
-  margin-bottom: 28px !important;
+.darli-about-hero-sub {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #334155 !important;
+  max-width: 620px;
+  margin: 0 auto;
+  font-weight: 500;
 }
 
-.service-feature-icon {
-  width: 64px !important;
-  height: 64px !important;
-  min-width: 64px !important;
-  border-radius: 50% !important;
-  background: #faf5ed !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02) !important;
+/* ==========================================================================
+   Section 2: About Darli Intro
+   ========================================================================== */
+.darli-about-intro-section {
+  padding: 80px 0 30px;
 }
 
-.service-feature-icon img {
-  width: 34px !important;
-  height: 34px !important;
-  object-fit: contain !important;
+.darli-about-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
 }
 
-.service-feature-content h3 {
-  font-size: 18px !important;
-  font-weight: 700 !important;
-  color: #161e2d !important;
-  margin-bottom: 6px !important;
+.darli-about-image-wrap {
+  position: relative;
+  border-radius: var(--darli-about-radius);
+  overflow: hidden;
+  box-shadow: var(--darli-about-shadow-md);
 }
 
-.service-feature-content p {
-  font-size: 14px !important;
-  line-height: 1.7 !important;
-  color: #64748b !important;
-  margin-bottom: 8px !important;
-}
-
-.service-feature-content .btn-learn-more {
-  color: #c49a45 !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  text-decoration: none !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  transition: color 0.2s ease !important;
-}
-
-.service-feature-content .btn-learn-more:hover {
-  color: #b08738 !important;
-}
-
-.about-arch-box {
-  width: 100% !important;
-  max-width: 440px !important;
-  height: 490px !important;
-  border-radius: 220px 220px 24px 24px !important;
-  overflow: hidden !important;
-  background: #fbfbfb !important;
-  position: relative !important;
-  border: 1px solid #edf2f7 !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
-  margin: 0 auto !important;
-}
-
-.about-arch-box-img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center !important;
-  display: block !important;
-}
-
-/* --------------------------------------------------------------------------
-   Section 3: Testimonials
-   -------------------------------------------------------------------------- */
-.flat-testimonials-about {
-  padding: 80px 0 90px !important;
-  background-color: #ffffff !important;
-}
-
-.flat-testimonials-about .text-subtitle {
-  color: #c49a45 !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  margin-bottom: 8px !important;
-}
-
-.flat-testimonials-about .section-title {
-  font-size: 34px !important;
-  font-weight: 800 !important;
-  color: #161e2d !important;
-  margin-bottom: 40px !important;
-}
-
-#darli-about-testimonials-container {
-  display: flex !important;
-  flex-direction: row !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
+.darli-about-image-wrap img {
   width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
 }
 
-#darli-about-testimonials-container::-webkit-scrollbar {
-  display: none;
-}
-
-#darli-about-testimonials-container.is-dragging {
-  cursor: grabbing !important;
-  scroll-behavior: auto !important;
-  scroll-snap-type: none !important;
-}
-
-.about-testi-slide {
-  flex: 0 0 100% !important;
-  min-width: 100% !important;
-  max-width: 100% !important;
-  display: flex !important;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.about-testi-slide * {
-  user-drag: none;
-  -webkit-user-drag: none;
-}
-
-.about-testi-card {
+/* ==========================================================================
+   Section 3: Stats Bar
+   ========================================================================== */
+.darli-about-stats-wrap {
+  margin: 40px auto 70px;
   background: #ffffff !important;
-  border-radius: 16px !important;
-  padding: 32px 30px !important;
   border: 1px solid #edf2f7 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  height: 100% !important;
-  min-height: 220px !important;
+  border-radius: var(--darli-about-radius);
+  box-shadow: var(--darli-about-shadow-sm);
+  padding: 36px 20px;
 }
 
-.about-testi-stars {
-  color: #eab308 !important;
-  font-size: 16px !important;
-  letter-spacing: 3px !important;
-  margin-bottom: 16px !important;
+.darli-about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
 }
 
-.about-testi-quote {
-  font-size: 15px !important;
-  line-height: 1.8 !important;
-  color: #161e2d !important;
-  margin-bottom: 24px !important;
-  flex-grow: 1 !important;
+.darli-stat-item {
+  text-align: center;
+  position: relative;
+  padding: 10px 20px;
 }
 
-.about-testi-user {
-  display: flex !important;
-  align-items: center !important;
-  gap: 14px !important;
+.darli-stat-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: #edf2f7;
 }
 
-.about-testi-user img {
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+.darli-stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--darli-about-gold);
+  margin-bottom: 12px;
 }
 
-.about-testi-user .user-name {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: #161e2d !important;
-  margin-bottom: 2px !important;
+.darli-stat-icon svg {
+  width: 32px;
+  height: 32px;
 }
 
-.about-testi-user .user-role {
-  font-size: 13px !important;
-  color: #718096 !important;
+.darli-stat-number {
+  font-size: 34px;
+  font-weight: 800;
+  color: #102038 !important;
+  line-height: 1.2;
+  margin-bottom: 6px;
 }
 
-.darli-about-dots {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 12px !important;
-  margin-top: 36px !important;
-  height: 24px !important;
+.darli-stat-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b !important;
 }
 
-.darli-about-dot {
-  position: relative !important;
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 50% !important;
-  background-color: #cbd5e1 !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: none !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
+/* ==========================================================================
+   Section 4: Why Darli Section
+   ========================================================================== */
+.darli-about-why-section {
+  padding: 30px 0 80px;
 }
 
-.darli-about-dot::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 18px !important;
-  height: 18px !important;
-  border-radius: 50% !important;
-  border: 2px solid #cca352 !important;
-  background: transparent !important;
-  opacity: 0 !important;
-  transition: all 0.3s ease !important;
-  pointer-events: none !important;
-  box-sizing: border-box !important;
+.darli-about-section-header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 45px;
 }
 
-.darli-about-dot.active {
-  background-color: #cca352 !important;
+.darli-about-why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
 }
 
-.darli-about-dot.active::before {
-  opacity: 1 !important;
-}
-
-/* --------------------------------------------------------------------------
-   Section 4: Contact Form Banner
-   -------------------------------------------------------------------------- */
-.flat-contact-about {
-  background-image: url('/storage/pages/about-us-contact.jpg') !important;
-  background-size: cover !important;
-  background-position: center bottom !important;
-  position: relative !important;
-  padding: 100px 0 !important;
-}
-
-.flat-contact-about::before {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background: rgba(11, 26, 48, 0.45) !important;
-  pointer-events: none !important;
-}
-
-.flat-contact-about .container {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-.flat-contact-about .text-subtitle {
-  color: #cca352 !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  margin-bottom: 10px !important;
-}
-
-.flat-contact-about .section-title {
-  font-size: 38px !important;
-  font-weight: 800 !important;
-  color: #ffffff !important;
-  line-height: 1.3 !important;
-  margin-bottom: 20px !important;
-}
-
-.flat-contact-about .desc-text {
-  font-size: 15px !important;
-  line-height: 1.85 !important;
-  color: rgba(255, 255, 255, 0.85) !important;
-  max-width: 500px !important;
-}
-
-.about-contact-card {
+.darli-why-card {
   background: #ffffff !important;
-  border-radius: 16px !important;
-  padding: 36px 32px !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25) !important;
-  max-width: 480px !important;
-  margin: 0 auto !important;
-}
-
-.about-contact-card label {
-  color: #161e2d !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-  margin-bottom: 6px !important;
-  display: block !important;
-}
-
-.about-contact-card label.required::after {
-  content: ' *' !important;
-  color: #ef4444 !important;
-}
-
-.about-contact-card input,
-.about-contact-card select,
-.about-contact-card textarea {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 8px !important;
-  color: #161e2d !important;
-  font-size: 14px !important;
-  padding: 10px 14px !important;
-  width: 100% !important;
-  outline: none !important;
-  transition: all 0.2s ease !important;
-  box-sizing: border-box !important;
-}
-
-.about-contact-card input:focus,
-.about-contact-card select:focus,
-.about-contact-card textarea:focus {
-  border-color: #cca352 !important;
-  box-shadow: 0 0 0 3px rgba(204, 163, 82, 0.15) !important;
-}
-
-.phone-prefix-badge {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 8px !important;
-  padding: 10px 12px !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  color: #161e2d !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  white-space: nowrap !important;
-}
-
-.about-contact-card .btn-submit-contact {
-  background: #cca352 !important;
-  border: none !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  font-size: 15px !important;
-  padding: 12px 32px !important;
-  border-radius: 8px !important;
-  cursor: pointer !important;
-  transition: background 0.2s ease, transform 0.2s ease !important;
-  display: inline-block !important;
-}
-
-.about-contact-card .btn-submit-contact:hover {
-  background: #b08738 !important;
-  transform: translateY(-1px) !important;
-}
-
-.about-contact-card .btn-submit-contact:disabled {
-  opacity: 0.7 !important;
-  cursor: not-allowed !important;
-}
-
-.about-contact-card .form-check-label {
-  font-size: 13px !important;
-  color: #475569 !important;
-  font-weight: 500 !important;
-  display: inline !important;
-  cursor: pointer !important;
-}
-
-.about-contact-card .form-check-input {
-  width: 18px !important;
-  height: 18px !important;
-  accent-color: #cca352 !important;
-  cursor: pointer !important;
-  vertical-align: middle !important;
-  margin-left: 8px !important;
-}
-
-/* --------------------------------------------------------------------------
-   Section 5: Our Agents
-   -------------------------------------------------------------------------- */
-.flat-agents-about {
-  padding: 80px 0 90px !important;
-  background-color: #ffffff !important;
-}
-
-.flat-agents-about .text-subtitle {
-  color: #cca352 !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  margin-bottom: 8px !important;
-}
-
-.flat-agents-about .section-title {
-  font-size: 34px !important;
-  font-weight: 800 !important;
-  color: #161e2d !important;
-  margin-bottom: 40px !important;
-}
-
-.about-agent-card {
-  background: #ffffff !important;
-  border-radius: 16px !important;
   border: 1px solid #edf2f7 !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  height: 100% !important;
+  border-radius: var(--darli-about-radius);
+  padding: 36px 24px 32px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--darli-about-shadow-sm);
 }
 
-.about-agent-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+.darli-why-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--darli-about-shadow-md);
+  border-color: var(--darli-about-gold-border) !important;
 }
 
-.about-agent-img-box {
-  height: 180px !important;
-  background: #f8fafc !important;
-  position: relative !important;
-  overflow: hidden !important;
+.darli-why-icon-wrap {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fdf8f0 !important;
+  color: var(--darli-about-gold);
+  transition: transform 0.3s ease;
 }
 
-.about-agent-img-box img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
+.darli-why-card:hover .darli-why-icon-wrap {
+  transform: scale(1.08);
 }
 
-.about-agent-body {
-  padding: 16px 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 6px !important;
-  flex-grow: 1 !important;
+.darli-why-icon-wrap svg {
+  width: 30px;
+  height: 30px;
 }
 
-.about-agent-name {
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  color: #161e2d !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  text-decoration: none !important;
+.darli-why-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #102038 !important;
+  margin-bottom: 10px;
 }
 
-.about-agent-name:hover {
-  color: #cca352 !important;
+.darli-why-card-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #64748b !important;
+  margin: 0;
 }
 
-.about-agent-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  background: #10b981 !important;
-  color: #ffffff !important;
-  font-size: 10px !important;
-  font-weight: 700 !important;
+/* ==========================================================================
+   Section 5: Vision & Mission Section
+   ========================================================================== */
+.darli-about-vision-section {
+  padding: 40px 0 80px;
 }
 
-.about-agent-role {
-  font-size: 13px !important;
-  color: #161e2d !important;
-  font-weight: 500 !important;
+.darli-about-vision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
 }
 
-.about-agent-email {
-  font-size: 12px !important;
-  color: #cca352 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  text-decoration: none !important;
-  margin-top: 4px !important;
+.darli-vision-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 30px;
 }
 
-.about-agent-email:hover {
-  color: #b08738 !important;
-}
-
-.about-agent-footer {
-  padding: 12px 20px !important;
-  border-top: 1px solid #f1f5f9 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-}
-
-.about-agent-props {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #161e2d !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-.about-agent-props i {
-  color: #cca352 !important;
-}
-
-.about-agent-btn-view {
-  padding: 4px 16px !important;
+.darli-vision-card {
   background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #161e2d !important;
-  border-radius: 6px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  text-decoration: none !important;
-  transition: all 0.2s ease !important;
+  border: 1px solid #edf2f7 !important;
+  border-radius: var(--darli-about-radius);
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: var(--darli-about-shadow-sm);
+  transition: all 0.3s ease;
 }
 
-.about-agent-btn-view:hover {
-  background: #161e2d !important;
+.darli-vision-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--darli-about-shadow-md);
+}
+
+.darli-vision-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fdf8f0 !important;
+  color: var(--darli-about-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.darli-vision-card-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.darli-vision-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #102038 !important;
+  margin-bottom: 12px;
+}
+
+.darli-vision-card-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #64748b !important;
+  margin: 0;
+}
+
+.darli-vision-image-wrap {
+  border-radius: var(--darli-about-radius);
+  overflow: hidden;
+  box-shadow: var(--darli-about-shadow-md);
+  max-height: 420px;
+}
+
+.darli-vision-image-wrap img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================================================================
+   Section 6: Consultation & Contact Section
+   ========================================================================== */
+.darli-about-consult-section {
+  position: relative;
+  background: linear-gradient(135deg, rgba(13, 23, 38, 0.92) 0%, rgba(13, 23, 38, 0.82) 50%, rgba(13, 23, 38, 0.95) 100%),
+              url('/legacy/storage/pages/about-us-contact.jpg') center / cover no-repeat !important;
+  padding: 85px 0;
   color: #ffffff !important;
-  border-color: #161e2d !important;
 }
 
-/* --------------------------------------------------------------------------
-   Section 6: Call To Action
-   -------------------------------------------------------------------------- */
-.flat-cta-about {
-  padding: 80px 0 70px !important;
+.darli-about-consult-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.darli-consult-content .darli-about-eyebrow {
+  color: var(--darli-about-gold) !important;
+}
+
+.darli-consult-content .darli-about-heading {
+  color: #ffffff !important;
+  font-size: 38px;
+  margin-bottom: 16px;
+}
+
+.darli-consult-content .darli-about-desc {
+  color: #cbd5e1 !important;
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 520px;
+  margin-bottom: 35px;
+}
+
+.darli-consult-features-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.darli-consult-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.darli-consult-feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.darli-consult-feature-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.darli-consult-feature-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff !important;
+  white-space: nowrap;
+}
+
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card,
+.darli-about-page .darli-consult-form-card {
+  background: #ffffff !important;
+  border-radius: var(--darli-about-radius);
+  padding: 36px 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25) !important;
+  color: #102038 !important;
+}
+
+.darli-consult-form-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #102038 !important;
+  margin-bottom: 6px;
+}
+
+.darli-consult-form-sub {
+  font-size: 14px;
+  color: #64748b !important;
+  margin-bottom: 24px;
+}
+
+.darli-consult-form-group {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.darli-consult-form-group .form-icon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.darli-consult-form-group .form-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card input,
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card textarea,
+.darli-about-page .darli-consult-input {
+  width: 100%;
+  padding: 13px 44px 13px 16px;
   background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #102038 !important;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  outline: none;
 }
 
-.flat-cta-about .text-subtitle {
-  color: #cca352 !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  margin-bottom: 8px !important;
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card input::placeholder,
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card textarea::placeholder,
+.darli-about-page .darli-consult-input::placeholder {
+  color: #94a3b8 !important;
 }
 
-.flat-cta-about .section-title {
-  font-size: 32px !important;
-  font-weight: 800 !important;
-  color: #161e2d !important;
-  line-height: 1.3 !important;
-  margin-bottom: 24px !important;
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card input:focus,
+html[data-theme="dark"] .darli-about-page .darli-consult-form-card textarea:focus,
+.darli-about-page .darli-consult-input:focus {
+  background-color: #ffffff !important;
+  border-color: var(--darli-about-gold) !important;
+  box-shadow: 0 0 0 3px rgba(197, 141, 52, 0.15) !important;
 }
 
-.flat-cta-about .btn-cta {
-  background: #cca352 !important;
-  border: none !important;
-  border-radius: 8px !important;
-  font-weight: 700 !important;
-  font-size: 15px !important;
-  padding: 12px 32px !important;
+.darli-consult-textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.darli-btn-submit-consult {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Section 7: Process Steps Section
+   ========================================================================== */
+.darli-about-steps-section {
+  padding: 85px 0 50px;
+}
+
+.darli-about-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.darli-step-card {
+  background: #ffffff !important;
+  border: 1px solid #edf2f7 !important;
+  border-radius: var(--darli-about-radius);
+  overflow: hidden;
+  box-shadow: var(--darli-about-shadow-sm);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.darli-step-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--darli-about-shadow-md);
+  border-color: var(--darli-about-gold-border) !important;
+}
+
+.darli-step-card-image-wrap {
+  height: 140px;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+
+.darli-step-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.darli-step-card:hover .darli-step-card-image-wrap img {
+  transform: scale(1.05);
+}
+
+.darli-step-number-badge {
+  position: absolute;
+  bottom: -18px;
+  right: 24px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--darli-about-gold);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(197, 141, 52, 0.35);
+  border: 3px solid #ffffff;
+  z-index: 3;
+}
+
+.darli-step-card-body {
+  padding: 30px 24px 28px;
+  text-align: right;
+  flex-grow: 1;
+}
+
+.darli-step-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #102038 !important;
+  margin-bottom: 10px;
+}
+
+.darli-step-card-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #64748b !important;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Section 8: Bottom CTA Banner
+   ========================================================================== */
+.darli-about-cta-section {
+  padding: 20px 0 85px;
+}
+
+.darli-about-cta-box {
+  position: relative;
+  background: #0e1b2c url('/themes/homzen/images/about/darli-cta-clean-banner.png') center / cover no-repeat !important;
+  border-radius: 20px;
+  padding: 50px 60px;
+  overflow: hidden;
+  box-shadow: var(--darli-about-shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.darli-about-cta-content {
+  max-width: 550px;
+  z-index: 2;
+}
+
+.darli-about-cta-content .darli-about-eyebrow {
+  color: var(--darli-about-gold) !important;
+  margin-bottom: 10px;
+}
+
+.darli-about-cta-title {
   color: #ffffff !important;
-  display: inline-block !important;
-  text-decoration: none !important;
-  box-shadow: 0 4px 14px rgba(204, 163, 82, 0.3) !important;
-  transition: all 0.2s ease !important;
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  line-height: 1.35;
 }
 
-.flat-cta-about .btn-cta:hover {
-  background: #b08738 !important;
-  color: #ffffff !important;
-  transform: translateY(-1px) !important;
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .darli-about-intro-grid,
+  .darli-about-vision-grid,
+  .darli-about-consult-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .darli-about-why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .darli-about-steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .darli-about-cta-box {
+    padding: 40px 30px;
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+  }
+
+  .darli-about-cta-content {
+    max-width: 100%;
+  }
 }
 
-.flat-cta-about img {
-  max-height: 250px !important;
-  width: auto !important;
-  object-fit: contain !important;
-}
+@media (max-width: 768px) {
+  .darli-about-hero {
+    padding: 60px 16px 50px;
+  }
 
-/* --------------------------------------------------------------------------
-   Responsive adjustments
-   -------------------------------------------------------------------------- */
-@media (max-width: 991px) {
-  .about-arch-box {
-    margin-top: 40px !important;
-    height: 380px !important;
+  .darli-about-hero-title {
+    font-size: 30px;
   }
-  .flat-contact-about .section-title {
-    font-size: 28px !important;
+
+  .darli-about-hero-sub {
+    font-size: 15px;
   }
-  .about-contact-card {
-    margin-top: 30px !important;
+
+  .darli-about-heading {
+    font-size: 26px;
   }
-  .flat-cta-about img {
-    margin-top: 30px !important;
+
+  .darli-about-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .darli-stat-item:not(:last-child)::after {
+    display: none;
+  }
+
+  .darli-about-why-grid,
+  .darli-vision-cards-grid,
+  .darli-about-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .darli-consult-content .darli-about-heading {
+    font-size: 28px;
+  }
+
+  .darli-consult-features-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .darli-consult-form-card {
+    padding: 24px 18px;
+  }
+
+  .darli-about-cta-title {
+    font-size: 24px;
   }
 }

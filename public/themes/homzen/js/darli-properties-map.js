@@ -104,22 +104,20 @@
         });
         themeObserver.observe(document.documentElement, { attributes: true });
 
-        // 3. Render Center City Marker (Golden Pin with Home Icon)
+        // 3. Render Center City Marker (Matches Pill Mockup in Reference Photo)
+        const currentCityName = window.__DARLI_CURRENT_CITY__ || 'بني سويف';
         const centerIcon = L.divIcon({
-            className: 'darli-custom-marker center-marker',
+            className: 'darli-center-city-marker',
             html: `
-                <div class="darli-marker-wrapper" style="cursor: default;">
-                    <div class="darli-marker-pin center">
-                        <div class="darli-marker-thumb" style="background: transparent; border: none; font-size: 15px;">
-                            🏠
-                        </div>
-                    </div>
+                <div class="darli-center-city-pill-wrap">
+                    <div class="darli-center-city-pill">${currentCityName}</div>
+                    <div class="darli-center-city-dot"></div>
                 </div>
             `,
-            iconSize: [38, 38],
-            iconAnchor: [19, 36]
+            iconSize: [110, 42],
+            iconAnchor: [55, 38]
         });
-        L.marker([29.0661, 31.0994], { icon: centerIcon, zIndexOffset: 40 }).addTo(map);
+        L.marker([29.072, 31.096], { icon: centerIcon, zIndexOffset: 500 }).addTo(map);
 
         // 4. Load Property Data
         const properties = window.__DARLI_MAP_PROPERTIES__ || [];
@@ -150,7 +148,9 @@
                         <span class="darli-marker-price">${prop.formatted_price}</span>
                     </div>
                     <div class="darli-marker-pin ${purposeClass}">
-                        <div class="darli-marker-thumb" style="background-image: url('${thumbUrl}');"></div>
+                        <svg class="darli-marker-house-svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" style="transform: rotate(45deg);">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
                     </div>
                 </div>
             `;
@@ -215,6 +215,23 @@
                 createMarker(prop, idx);
             }
         });
+
+        // Filter initially by active mobile purpose tab if on mobile screen
+        const activeMobPill = document.querySelector('.darli-mob-purpose-pill.active');
+        const initialPurpose = activeMobPill ? activeMobPill.getAttribute('data-purpose') : 'sale';
+        if (window.innerWidth <= 991 && initialPurpose) {
+            markersGroup.clearLayers();
+            Object.values(markerMap).forEach(function (item) {
+                if (item.data.purpose === initialPurpose) {
+                    markersGroup.addLayer(item.marker);
+                }
+            });
+
+            const logoImg = document.querySelector('.logo img');
+            if (logoImg) {
+                logoImg.src = '/themes/homzen/images/logo/darli-logo-ar.png';
+            }
+        }
 
         // Open first marker popup by default on desktop screens to match mockup design
         if (firstMarker && window.innerWidth > 768) {
@@ -439,6 +456,164 @@
                 }
             });
         });
+
+        // 13. Mobile Map Floating Layer Switcher
+        const mobLayerBtn = document.getElementById('darli-mob-layer-btn');
+        const mobLayerPopover = document.getElementById('darli-mob-layer-popover');
+        if (mobLayerBtn && mobLayerPopover) {
+            mobLayerBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                mobLayerPopover.classList.toggle('open');
+            });
+
+            document.addEventListener('click', function () {
+                mobLayerPopover.classList.remove('open');
+            });
+
+            mobLayerPopover.querySelectorAll('.darli-mob-layer-opt').forEach(function (opt) {
+                opt.addEventListener('click', function () {
+                    const layerKey = this.getAttribute('data-layer');
+                    mobLayerPopover.querySelectorAll('.darli-mob-layer-opt').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (map.hasLayer(lightGroup)) map.removeLayer(lightGroup);
+                    if (map.hasLayer(darkGroup)) map.removeLayer(darkGroup);
+                    if (map.hasLayer(satTile)) map.removeLayer(satTile);
+
+                    if (layerKey === 'satellite') {
+                        satTile.addTo(map);
+                    } else if (layerKey === 'dark') {
+                        darkGroup.addTo(map);
+                    } else {
+                        lightGroup.addTo(map);
+                    }
+                    mobLayerPopover.classList.remove('open');
+                });
+            });
+        }
+
+        // 14. Mobile Map Fullscreen / Expand Toggle
+        const mobFullscreenBtn = document.getElementById('darli-mob-fullscreen-btn');
+        const mapFrameCard = document.getElementById('darli-map-frame-card');
+        if (mobFullscreenBtn && mapFrameCard) {
+            mobFullscreenBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const isFull = mapFrameCard.classList.toggle('is-fullscreen');
+                const iconExpand = mobFullscreenBtn.querySelector('.icon-expand');
+                const iconCompress = mobFullscreenBtn.querySelector('.icon-compress');
+                if (iconExpand && iconCompress) {
+                    iconExpand.style.display = isFull ? 'none' : 'block';
+                    iconCompress.style.display = isFull ? 'block' : 'none';
+                }
+                setTimeout(function () {
+                    map.invalidateSize();
+                }, 120);
+            });
+        }
+
+        // 15. Mobile "عرض الخريطة" Button
+        const mobShowMapBtn = document.getElementById('darli-mob-show-map-btn');
+        if (mobShowMapBtn && mapFrameCard) {
+            mobShowMapBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                mapFrameCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                mapFrameCard.classList.toggle('is-expanded');
+                setTimeout(function () {
+                    map.invalidateSize();
+                }, 380);
+            });
+        }
+
+        // 16. Mobile "فلترة متقدمة" Bottom Sheet
+        const mobAdvFilterBtn = document.getElementById('darli-mob-adv-filter-btn');
+        const mobFilterSheet = document.getElementById('darli-mob-filter-sheet');
+        const mobFilterBackdrop = document.getElementById('darli-mob-filter-backdrop');
+        const mobFilterClose = document.getElementById('darli-mob-filter-close');
+
+        function openAdvFilter() {
+            if (mobFilterSheet && mobFilterBackdrop) {
+                mobFilterSheet.classList.add('open');
+                mobFilterBackdrop.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeAdvFilter() {
+            if (mobFilterSheet && mobFilterBackdrop) {
+                mobFilterSheet.classList.remove('open');
+                mobFilterBackdrop.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (mobAdvFilterBtn) mobAdvFilterBtn.addEventListener('click', openAdvFilter);
+        if (mobFilterClose) mobFilterClose.addEventListener('click', closeAdvFilter);
+        if (mobFilterBackdrop) mobFilterBackdrop.addEventListener('click', closeAdvFilter);
+
+        // Chip selection for bedrooms and bathrooms
+        document.querySelectorAll('.sheet-chips').forEach(function (group) {
+            const targetId = group.getAttribute('data-target') === 'bedrooms' ? 'darli-adv-bedrooms' : 'darli-adv-bathrooms';
+            const hiddenInput = document.getElementById(targetId);
+            group.querySelectorAll('.sheet-chip').forEach(function (chip) {
+                chip.addEventListener('click', function () {
+                    group.querySelectorAll('.sheet-chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    if (hiddenInput) {
+                        hiddenInput.value = this.getAttribute('data-val');
+                    }
+                });
+            });
+        });
+
+        // 17. Mobile Purpose Segmented Tabs (للبيع / للإيجار)
+        const mobPurposePills = document.querySelectorAll('.darli-mob-purpose-pill');
+        const mobInputPurpose = document.getElementById('darli-mob-input-purpose');
+        const mobSearchForm = document.getElementById('darli-mob-search-form');
+
+        mobPurposePills.forEach(function (pill) {
+            pill.addEventListener('click', function () {
+                const targetPurpose = this.getAttribute('data-purpose');
+                mobPurposePills.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+
+                if (mobInputPurpose) mobInputPurpose.value = targetPurpose;
+                const advPurpose = document.getElementById('darli-adv-purpose');
+                if (advPurpose) advPurpose.value = targetPurpose;
+
+                // Immediately filter markers on map
+                markersGroup.clearLayers();
+                Object.values(markerMap).forEach(function (item) {
+                    if (!targetPurpose || item.data.purpose === targetPurpose) {
+                        markersGroup.addLayer(item.marker);
+                    }
+                });
+
+                // Submit search form
+                if (mobSearchForm) {
+                    mobSearchForm.submit();
+                }
+            });
+        });
+
+        // 18. Mobile Custom Select Dropdowns Sync
+        const mobLocSelect = document.getElementById('darli-mob-location-select');
+        const mobLocDisplay = document.getElementById('darli-mob-location-display');
+        if (mobLocSelect && mobLocDisplay) {
+            mobLocSelect.addEventListener('change', function () {
+                const text = this.options[this.selectedIndex] ? this.options[this.selectedIndex].text.trim() : '';
+                mobLocDisplay.textContent = text || 'كل المناطق';
+            });
+        }
+
+        const mobCatSelect = document.getElementById('darli-mob-category-select');
+        const mobCatDisplay = document.getElementById('darli-mob-category-display');
+        if (mobCatSelect && mobCatDisplay) {
+            mobCatSelect.addEventListener('change', function () {
+                const text = this.options[this.selectedIndex] ? this.options[this.selectedIndex].text.trim() : '';
+                mobCatDisplay.textContent = text || 'أي نوع';
+            });
+        }
     }
 
     if (document.readyState === 'loading') {

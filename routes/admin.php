@@ -222,6 +222,8 @@ Route::prefix('reviews')->name('reviews.')->group(function (): void {
 // ----------------------------------------------------------- الإشعارات
 Route::prefix('notifications')->name('notifications.')->group(function (): void {
     Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::get('/devices', [NotificationController::class, 'devices'])->name('devices');
+    Route::delete('/devices/{device}', [NotificationController::class, 'destroyDevice'])->name('devices.destroy');
     Route::get('/create', [NotificationController::class, 'create'])->name('create');
     Route::post('/', [NotificationController::class, 'store'])->name('store');
     Route::get('/settings', [NotificationController::class, 'settings'])->name('settings');

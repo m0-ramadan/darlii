@@ -1787,10 +1787,10 @@ HTML;
             $current = $code === $locale ? ' is-active' : '';
             $ariaCurrent = $code === $locale ? ' aria-current="page"' : '';
 
-            $links .= '<a class="homzen-footer-languages__link' . $current . '" href="' . e($href) . '" lang="' . e($code) . '" hreflang="' . e($code) . '"' . $ariaCurrent . '>' . e($name) . '</a>';
+            $links .= '<a class="homzen-footer-languages__link darli-footer-languages__link' . $current . '" href="' . e($href) . '" lang="' . e($code) . '" hreflang="' . e($code) . '"' . $ariaCurrent . '>' . e($name) . '</a>';
         }
 
-        $switcher = '<div class="homzen-footer-languages" aria-label="' . e($label) . '"><div class="container homzen-footer-languages__inner"><span class="homzen-footer-languages__label">' . e($label) . '</span><nav class="homzen-footer-languages__links" aria-label="' . e($label) . '">' . $links . '</nav></div></div>';
+        $switcher = '<div class="homzen-footer-languages darli-footer-languages" aria-label="' . e($label) . '"><div class="container homzen-footer-languages__inner darli-footer-languages__inner"><span class="homzen-footer-languages__label darli-footer-languages__label">' . e($label) . '</span><nav class="homzen-footer-languages__links darli-footer-languages__links" aria-label="' . e($label) . '">' . $links . '</nav></div></div>';
 
         return preg_replace('/(?=<div\b[^>]*class\s*=\s*(["\'])[^"\']*\bbottom-footer\b[^"\']*\1)/i', $switcher, $html, 1) ?? $html;
     }
@@ -1988,7 +1988,7 @@ HTML;
     private function injectCustomAssets(string $html): string
     {
         $themeBoot = <<<'HTML'
-<script id="homzen-theme-bootstrap">(function(){try{var t=localStorage.getItem('homzen-theme');if(t!=='dark'&&t!=='light'){var c=document.cookie.match(/(?:^|;\s*)homzen_theme=(dark|light)(?:;|$)/);t=c?c[1]:null}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='light'}})();</script>
+<script id="darli-theme-bootstrap">(function(){try{var t=localStorage.getItem('darli-theme')||localStorage.getItem('darlii-theme')||localStorage.getItem('homzen-theme');if(t!=='dark'&&t!=='light'){var c=document.cookie.match(/(?:^|;\s*)(?:darlii?|homzen)_theme=(dark|light)(?:;|$)/);t=c?c[1]:null}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='light'}})();</script>
 HTML;
 
         /*

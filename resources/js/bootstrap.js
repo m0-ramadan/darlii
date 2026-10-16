@@ -1,1 +1,1 @@
-// Intentionally lightweight; legacy theme JS is loaded from /public/themes/homzen.
+// Intentionally lightweight; theme JS is loaded from /public/themes/darlii.

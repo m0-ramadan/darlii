@@ -53,13 +53,19 @@ class NotificationController extends Controller
         $stats = [
             'total_sent' => SiteNotification::count(),
             'total_devices' => FcmToken::count(),
+            'web_push_count' => FcmToken::where('device_type', 'web_push')->count(),
+            'web_visitor_count' => FcmToken::where('device_type', 'web_visitor')->count(),
+            'registered_users_count' => FcmToken::whereNotNull('user_id')->count(),
             'is_firebase_enabled' => (bool) setting('firebase.enabled', true),
             'has_server_key' => !empty(setting('firebase.server_key')),
         ];
 
+        $modalDevices = FcmToken::with('user')->latest('id')->take(100)->get();
+
         return view('admin.notifications.index', [
             'notifications' => $notifications,
             'stats' => $stats,
+            'modalDevices' => $modalDevices,
             'search' => $request->input('search', ''),
             'selectedTarget' => $request->input('target_type', ''),
             'title' => 'نظام الإشعارات',
@@ -257,5 +263,74 @@ class NotificationController extends Controller
                 ]
             );
         }
+    }
+
+    /**
+     * عرض قائمة الأجهزة والمشتركين مع الفلترة والبحث.
+     */
+    public function devices(Request $request)
+    {
+        $this->authorizePermission('settings.manage');
+
+        $query = FcmToken::query()->with('user');
+
+        if ($search = trim((string) $request->input('search'))) {
+            $query->where(function ($q) use ($search) {
+                $q->where('token', 'like', "%{$search}%")
+                    ->orWhere('user_agent', 'like', "%{$search}%")
+                    ->orWhere('device_type', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($type = $request->input('type')) {
+            if ($type === 'registered') {
+                $query->whereNotNull('user_id');
+            } elseif ($type === 'guest') {
+                $query->whereNull('user_id');
+            } elseif (in_array($type, ['web_push', 'web_visitor', 'android', 'ios'], true)) {
+                $query->where('device_type', $type);
+            }
+        }
+
+        $devices = $query->latest('id')->paginate(25)->withQueryString();
+
+        $stats = [
+            'total' => FcmToken::count(),
+            'web_push' => FcmToken::where('device_type', 'web_push')->count(),
+            'web_visitor' => FcmToken::where('device_type', 'web_visitor')->count(),
+            'registered' => FcmToken::whereNotNull('user_id')->count(),
+            'guests' => FcmToken::whereNull('user_id')->count(),
+        ];
+
+        return view('admin.notifications.devices', [
+            'devices' => $devices,
+            'stats' => $stats,
+            'search' => $search,
+            'selectedType' => $request->input('type', ''),
+            'title' => 'المشتركون ورموز الأجهزة',
+            'subtitle' => 'قائمة تفصيلية بجميع الأجهزة والمتصفحات المشتركة في الإشعارات والزوار',
+        ]);
+    }
+
+    /**
+     * حذف رمز جهاز / اشتراك معين.
+     */
+    public function destroyDevice(FcmToken $device)
+    {
+        $this->authorizePermission('settings.manage');
+
+        AuditLogger::log('fcm_token.deleted', $device, [], [], "Deleted device token ID #{$device->id} (type: {$device->device_type})");
+        $device->delete();
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json(['success' => true, 'message' => 'تم حذف رمز الجهاز بنجاح.']);
+        }
+
+        return back()->with('success', 'تم حذف رمز الجهاز بنجاح.');
     }
 }

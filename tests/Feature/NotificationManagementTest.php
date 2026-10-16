@@ -54,7 +54,30 @@ class NotificationManagementTest extends TestCase
         $response->assertSee('نظام الإشعارات');
         $response->assertSee('سجل الإشعارات');
         $response->assertSee('المشتركون (رموز الأجهزة)');
+        $response->assertSee('devicesModal');
+        $response->assertSee('data-bs-target="#devicesModal"', false);
         $response->assertSee('إرسال إشعار جديد');
+    }
+
+    public function test_admin_can_access_devices_page_and_delete_device(): void
+    {
+        $token = FcmToken::create([
+            'token' => 'test_device_token_' . uniqid(),
+            'device_type' => 'web_push',
+            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36',
+            'last_used_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->admin)->get('/admin/notifications/devices');
+        $response->assertStatus(200);
+        $response->assertSee('المشتركون ورموز الأجهزة');
+        $response->assertSee('سجل الأجهزة والمشتركين');
+        $response->assertSee('Web Push');
+        $response->assertSee('Chrome');
+
+        $deleteResponse = $this->actingAs($this->admin)->delete('/admin/notifications/devices/' . $token->id);
+        $deleteResponse->assertRedirect();
+        $this->assertDatabaseMissing('fcm_tokens', ['id' => $token->id]);
     }
 
     public function test_admin_can_access_notifications_create_page(): void
@@ -281,7 +304,7 @@ class NotificationManagementTest extends TestCase
         $notification = SiteNotification::where('title', 'like', '%فيلا فاخرة للبيع بالشيخ زايد%')->first();
         $this->assertNotNull($notification);
         $this->assertStringContainsString('فيلا فاخرة', $notification->title);
-        $this->assertStringContainsString('/ar/properties/', $notification->action_url);
+        $this->assertStringContainsString('/properties/', $notification->action_url);
     }
 
     public function test_creating_career_with_broadcast_notification_creates_broadcast_notification(): void
@@ -302,7 +325,7 @@ class NotificationManagementTest extends TestCase
         $notification = SiteNotification::where('title', 'like', '%مهندس مبيعات عقارية%')->first();
         $this->assertNotNull($notification);
         $this->assertEquals('all', $notification->target_type);
-        $this->assertStringContainsString('/ar/careers/', $notification->action_url);
+        $this->assertStringContainsString('/careers/', $notification->action_url);
     }
 
     public function test_creating_post_with_broadcast_notification_creates_broadcast_notification(): void
@@ -330,7 +353,7 @@ class NotificationManagementTest extends TestCase
         $notification = SiteNotification::where('title', 'like', '%أفضل مناطق الاستثمار العقاري%')->first();
         $this->assertNotNull($notification);
         $this->assertEquals('all', $notification->target_type);
-        $this->assertStringContainsString('/ar/blog/', $notification->action_url);
+        $this->assertStringContainsString('/blog/', $notification->action_url);
     }
 
     public function test_updating_property_with_broadcast_notification_creates_broadcast_notification(): void

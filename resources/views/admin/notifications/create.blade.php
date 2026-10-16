@@ -1,4 +1,4 @@
-عايز امسك بالماوس واسكرول بيه @extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', $title)
 @section('page_title', $title)

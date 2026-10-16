@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-    <?xml-stylesheet href="https://homzen.botble.com/vendor/core/packages/sitemap/styles/sitemapindex.xsl" type="text/xsl"?>
+    <?xml-stylesheet href="https://darlii.com/vendor/core/packages/sitemap/styles/sitemapindex.xsl" type="text/xsl"?>
 
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <sitemap>
-            <loc>https://homzen.botble.com/pages.xml</loc>
+            <loc>https://darlii.com/pages.xml</loc>
                             <lastmod>2025-04-17T00:00:00+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/blog-posts-2025-12.xml</loc>
+            <loc>https://darlii.com/blog-posts-2025-12.xml</loc>
                             <lastmod>2025-12-17T07:31:24+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/blog-categories.xml</loc>
+            <loc>https://darlii.com/blog-categories.xml</loc>
                             <lastmod>2025-12-17T07:31:24+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/blog-tags.xml</loc>
+            <loc>https://darlii.com/blog-tags.xml</loc>
                             <lastmod>2025-12-17T07:31:24+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/careers.xml</loc>
+            <loc>https://darlii.com/careers.xml</loc>
                             <lastmod>2025-12-17T07:31:34+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/properties-2026-01.xml</loc>
+            <loc>https://darlii.com/properties-2026-01.xml</loc>
                             <lastmod>2026-01-07T17:23:00+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/properties-2025-12.xml</loc>
+            <loc>https://darlii.com/properties-2025-12.xml</loc>
                             <lastmod>2025-12-17T07:31:20+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/projects-2025-12.xml</loc>
+            <loc>https://darlii.com/projects-2025-12.xml</loc>
                             <lastmod>2025-12-17T07:31:19+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/agents.xml</loc>
+            <loc>https://darlii.com/agents.xml</loc>
                             <lastmod>2026-01-07T13:00:22+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/properties-city.xml</loc>
+            <loc>https://darlii.com/properties-city.xml</loc>
                             <lastmod>2026-01-05T23:28:29+00:00</lastmod>
                     </sitemap>
             <sitemap>
-            <loc>https://homzen.botble.com/projects-city.xml</loc>
+            <loc>https://darlii.com/projects-city.xml</loc>
                             <lastmod>2026-01-05T23:28:29+00:00</lastmod>
                     </sitemap>
     </sitemapindex>

@@ -87,6 +87,7 @@ Route::middleware(['set.locale', 'set.currency'])
         Route::get('/privacy-policy', [ContentController::class, 'privacyPolicy'])->name('privacy-policy.index');
         Route::get('/terms-and-conditions', [ContentController::class, 'terms'])->name('terms.index');
         Route::get('/terms', fn() => redirect()->route('terms.index'));
+        Route::get('/about-us', [ContentController::class, 'aboutUs'])->name('about-us.index');
         Route::get('/contact-us', [ContentController::class, 'contactUs'])->name('contact-us.index');
         Route::post('/contact-us', [ContentController::class, 'submitContact'])->name('contact-us.submit');
         Route::get('/wishlist', fn(Request $request) => app(LegacyFrontendController::class)->page($request, 'wishlist'))->name('wishlist');

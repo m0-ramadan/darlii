@@ -500,16 +500,13 @@
                         </button>
                         <button type="button" class="darli-mob-action-btn" id="darli-mob-adv-filter-btn">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e293b"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="4" y1="21" x2="4" y2="14"></line>
-                                <line x1="4" y1="10" x2="4" y2="3"></line>
-                                <line x1="12" y1="21" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12" y2="3"></line>
-                                <line x1="20" y1="21" x2="20" y2="16"></line>
-                                <line x1="20" y1="12" x2="20" y2="3"></line>
-                                <line x1="1" y1="14" x2="7" y2="14"></line>
-                                <line x1="9" y1="8" x2="15" y2="8"></line>
-                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                                stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="3" y1="7" x2="21" y2="7"></line>
+                                <circle cx="16" cy="7" r="2.5" fill="#ffffff" stroke="#1e293b" stroke-width="2"></circle>
+                                <line x1="3" y1="12" x2="21" y2="12"></line>
+                                <circle cx="8" cy="12" r="2.5" fill="#ffffff" stroke="#1e293b" stroke-width="2"></circle>
+                                <line x1="3" y1="17" x2="21" y2="17"></line>
+                                <circle cx="15" cy="17" r="2.5" fill="#ffffff" stroke="#1e293b" stroke-width="2"></circle>
                             </svg>
                             <span>{{ $isAr ? 'فلترة متقدمة' : 'Advanced filter' }}</span>
                         </button>
@@ -616,13 +613,13 @@
 
                             {{-- Submit Search Button --}}
                             <button type="submit" class="darli-mob-search-submit-btn">
-                                <span>{{ $isAr ? 'بحث عن عقارات' : 'Search properties' }}</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
+                                <span>{{ $isAr ? 'بحث عن عقارات' : 'Search properties' }}</span>
                             </button>
                         </form>
                     </div>

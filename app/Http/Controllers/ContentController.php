@@ -150,6 +150,18 @@ class ContentController extends Controller
         ]);
     }
 
+    public function aboutUs()
+    {
+        PageViewTracker::track('about-us');
+
+        $page = Page::with('translations')->where('key', 'about-us')->first();
+
+        return view('about.index', [
+            'page' => $page,
+            'shell' => $this->shell('about-us'),
+        ]);
+    }
+
     public function contactUs()
     {
         $locale = app()->getLocale();

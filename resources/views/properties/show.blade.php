@@ -96,15 +96,13 @@
         <div class="box-navigation">
             <div class="navigation swiper-nav-next nav-next-location">
                 <svg class="icon svg-icon-ti-ti-chevron-left" width="24" height="24" viewBox="0 0 24 24"
-                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                    stroke-linejoin="round">
+                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M15 6l-6 6l6 6"></path>
                 </svg>
             </div>
             <div class="navigation swiper-nav-prev nav-prev-location">
                 <svg class="icon svg-icon-ti-ti-chevron-right" width="24" height="24" viewBox="0 0 24 24"
-                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                    stroke-linejoin="round">
+                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 6l6 6l-6 6"></path>
                 </svg>
             </div>
@@ -554,7 +552,7 @@
                     {{-- 5. الموقع على الخريطة --}}
                     <div class="single-property-map single-property-element">
                         <div class="h7 title fw-7">{{ $isAr ? 'الموقع' : 'Location' }}</div>
-                        <div id="homzen-property-map" style="min-height: 400px; border-radius: 8px; width: 100%;"></div>
+                        <div id="darli-property-map" style="min-height: 400px; border-radius: 8px; width: 100%;"></div>
                         @if ($address)
                             <ul class="info-map">
                                 <li>
@@ -790,7 +788,8 @@
     {{-- تفعيل خريطة الموقع التفاعلية --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var mapEl = document.getElementById('homzen-property-map');
+            var mapEl = document.getElementById('darli-property-map') || document.getElementById(
+                'homzen-property-map');
             if (mapEl && typeof L !== 'undefined') {
                 var lat = {{ $hasCoords ? (float) $property->latitude : 29.0661 }};
                 var lng = {{ $hasCoords ? (float) $property->longitude : 31.0994 }};
@@ -800,7 +799,7 @@
                     'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}' :
                     'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
-                var map = L.map('homzen-property-map', {
+                var map = L.map(mapEl, {
                     center: [lat, lng],
                     zoom: 15,
                     scrollWheelZoom: false,

@@ -889,37 +889,40 @@
                             $phone = $agent->user?->phone ?: $agent->agency?->phone ?: '01034905812';
                             $whatsapp = $agent->whatsapp ?: preg_replace('/[^0-9]/', '', $phone);
 
-                            // Visual metadata from our map or sensible defaults
-                            $meta = $agentMeta[$agent->id] ?? [
-                                'initials' => strtoupper(substr($agent->slug ?? 'DL', 0, 2)),
-                                'role' => $agent->agency_id ? 'شركة' : 'شخص',
-                                'is_company' => (bool) $agent->agency_id,
-                                'color' => $agent->id % 2 === 0 ? 'gold' : 'blue',
-                                'props' => $agent->user?->properties()->where('status', 'published')->count() ?: 6,
-                                'city' => 'بني سويف',
-                            ];
+                            // Visual metadata from our map or sensible defaults with live database priority
+                            $meta = $agentMeta[$agent->id] ?? [];
+                            $initials = $meta['initials'] ?? strtoupper(substr($agent->slug ?? 'DL', 0, 2));
+                            $color = $meta['color'] ?? ($agent->id % 2 === 0 ? 'gold' : 'blue');
+                            $role = $agent->agent_type === 'individual' ? 'شخص' : ($agent->agent_type === 'broker' ? 'سمسار' : ($agent->agency_id ? 'شركة' : ($meta['role'] ?? 'شركة')));
+                            $city = $agent->city ?: ($meta['city'] ?? 'بني سويف');
+                            $realPropsCount = $agent->user?->properties()->where('status', 'published')->count();
+                            $propsCount = $realPropsCount > 0 ? $realPropsCount : ($meta['props'] ?? 6);
                         @endphp
 
                         <div class="darli-agency-card">
                             <div>
                                 {{-- Top Row: Verified Badge (Right in RTL) & Icon Box (Left in RTL) --}}
                                 <div class="darli-agency-card__top">
-                                    <span class="darli-agency-badge-verified">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path d="M20 6 9 17l-5-5" />
-                                        </svg>
-                                        <span>موثق</span>
-                                    </span>
+                                    @if ($agent->isVerified())
+                                        <span class="darli-agency-badge-verified">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M20 6 9 17l-5-5" />
+                                            </svg>
+                                            <span>موثق</span>
+                                        </span>
+                                    @else
+                                        <span></span>
+                                    @endif
 
-                                    <div class="darli-agency-avatar-box theme-{{ $meta['color'] }}">
+                                    <div class="darli-agency-avatar-box theme-{{ $color }}">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round">
                                             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                                             <polyline points="9 22 9 12 15 12 15 22" />
                                         </svg>
-                                        <span class="darli-agency-avatar-initials">{{ $meta['initials'] }}</span>
+                                        <span class="darli-agency-avatar-initials">{{ $initials }}</span>
                                     </div>
                                 </div>
 
@@ -933,7 +936,7 @@
 
                                 {{-- Middle Tags / Metadata Row --}}
                                 <div class="darli-agency-card__tags">
-                                    <span class="darli-agency-tag-role">{{ $meta['role'] }}</span>
+                                    <span class="darli-agency-tag-role">{{ $role }}</span>
 
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="darli-agency-card__meta-item">
@@ -943,7 +946,7 @@
                                                 <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                                                 <circle cx="12" cy="10" r="3" />
                                             </svg>
-                                            <span>{{ $meta['city'] }}</span>
+                                            <span>{{ $city }}</span>
                                         </div>
 
                                         <div class="darli-agency-card__meta-item">
@@ -954,7 +957,7 @@
                                                 <path d="M3 9h18" />
                                                 <path d="M9 21V9" />
                                             </svg>
-                                            <span>{{ $meta['props'] }} عقارات</span>
+                                            <span>{{ $propsCount }} عقارات</span>
                                         </div>
                                     </div>
                                 </div>

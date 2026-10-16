@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AdminUsersSeeder::class,
             BeniSuefAgenciesSeeder::class,
             ContentPagesSeeder::class,
+            CornicheYasmineApartmentSeeder::class,
         ]);
     }
 }

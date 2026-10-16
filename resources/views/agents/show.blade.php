@@ -64,6 +64,43 @@
             font-size: 15px !important;
             line-height: 1.85 !important;
         }
+        .darli-agent-detail-section {
+            padding: 32px 0 60px;
+            margin-top: 0 !important;
+            position: relative;
+        }
+        @media (max-width: 767px) {
+            .darli-agent-detail-section {
+                padding-top: 20px;
+                padding-bottom: 40px;
+            }
+            .agent-detail-card {
+                padding: 20px 16px;
+                margin-bottom: 24px;
+            }
+            .agent-detail-title {
+                font-size: 20px !important;
+            }
+            .agent-detail-subtitle {
+                font-size: 14px !important;
+            }
+            .agent-detail-facts {
+                gap: 10px;
+            }
+            .agent-detail-fact {
+                padding: 10px 14px;
+                min-width: calc(50% - 6px);
+                flex: 1 1 calc(50% - 6px);
+            }
+            .agent-detail-actions {
+                width: 100%;
+            }
+            .agent-detail-actions > a {
+                flex: 1 1 100%;
+                justify-content: center;
+                text-align: center;
+            }
+        }
         html[data-theme="dark"] .agent-detail-card {
             background: #0e1e34 !important;
             border-color: #1a3152 !important;
@@ -85,10 +122,10 @@
         }
     </style>
 
-    <section class="flat-section-v5 flat-recommended flat-recommended-v2 pt-4">
+    <section class="darli-agent-detail-section">
         <div class="container">
             {{-- مسار التنقل --}}
-            <div class="mb-3 darli-muted" style="font-size:14px;">
+            <div class="mb-3 darli-muted" style="font-size:14px;word-break:break-word;">
                 <a href="{{ route('home', ['locale' => $locale]) }}">{{ $isAr ? 'الرئيسية' : 'Home' }}</a>
                 <span> › </span>
                 <a href="{{ route('agents.index', ['locale' => $locale]) }}">{{ $isAr ? 'الوكلاء والشركات' : 'Agents & Partners' }}</a>
@@ -144,7 +181,7 @@
                             @endif
                         </div>
 
-                        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                        <div class="agent-detail-actions" style="display:flex;gap:12px;flex-wrap:wrap;">
                             @if ($agent->whatsapp || $agent->user?->phone)
                                 <a class="darli-whatsapp" dir="ltr" target="_blank" rel="noopener"
                                     href="https://wa.me/{{ preg_replace('/\D/', '', $agent->whatsapp ?: $agent->user->phone) }}"

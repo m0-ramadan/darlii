@@ -530,6 +530,7 @@ HTML;
 
         $header = $this->applyAuthenticatedHeader($header, $locale);
         $header = $this->applyAnnouncementsSettings($header);
+        $header = $this->removeHeaderPricingNavigation($header);
 
         return $this->pageSpeedStylesUsedBy($header, $source) . $header;
     }
@@ -916,6 +917,7 @@ HTML;
         $html = $this->removeHomepageSelector($html);
         $html = $this->normalizeInternalUrls($html, $request);
         $html = $this->linkHeaderBlogNavigation($html, $request);
+        $html = $this->removeHeaderPricingNavigation($html);
         $html = $this->activateHeaderNavigationItem($html, $request);
         $html = $this->injectFooterLanguageSwitcher($html, $request);
         $html = $this->sanitizeHeaderLanguageDropdown($html, $request);
@@ -1654,6 +1656,24 @@ HTML;
         return preg_replace(
             '/(<li\b[^>]*class\s*=\s*(["\'])[^"\']*\bdropdown2\b[^"\']*\2[^>]*>\s*<a\b[^>]*\bhref\s*=\s*)(["\'])#\3([^>]*>\s*(?:المدونة|Blog)\s*<\/a>)/iu',
             '$1"/blog"$4',
+            $html
+        ) ?? $html;
+    }
+
+    private function removeHeaderPricingNavigation(string $html): string
+    {
+        $pattern = '#\s*<li\b[^>]*>\s*<a\b[^>]*href=["\'][^"\']*pricing-plans[^"\']*["\'][^>]*>.*?</a>\s*</li>#iu';
+
+        // Strip pricing item specifically from within <header> or main navigation containers
+        $html = preg_replace_callback(
+            '#<header\b[^>]*>.*?</header>#is',
+            fn(array $m): string => preg_replace($pattern, '', $m[0]) ?? $m[0],
+            $html
+        ) ?? $html;
+
+        return preg_replace_callback(
+            '#<nav\b[^>]*class=["\'][^"\']*\bmain-menu\b[^"\']*["\'][^>]*>.*?</nav>#is',
+            fn(array $m): string => preg_replace($pattern, '', $m[0]) ?? $m[0],
             $html
         ) ?? $html;
     }

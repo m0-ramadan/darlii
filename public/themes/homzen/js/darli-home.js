@@ -23,6 +23,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  document.querySelectorAll('.darli-mobile-advanced').forEach(function (button) {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      const form = button.closest('.darli-mobile-search');
+      const panel = form ? form.querySelector('.darli-mobile-advanced-panel') : null;
+      if (!panel) return;
+
+      const isOpen = panel.classList.toggle('is-open');
+      button.classList.toggle('active', isOpen);
+      button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+
   // ==========================================
   // MORTGAGE CALCULATOR
   // ==========================================

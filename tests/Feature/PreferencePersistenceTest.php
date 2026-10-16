@@ -77,15 +77,13 @@ class PreferencePersistenceTest extends TestCase
             ->assertCookie('homzen_locale', 'ar');
     }
 
-    public function test_legacy_page_urls_redirect_to_the_saved_locale(): void
+    public function test_clean_page_urls_render_using_the_saved_locale(): void
     {
         $this->withCookie('homzen_locale', 'en')
             ->get('/about-us')
-            ->assertMovedPermanently()
-            ->assertRedirect('/en/about-us');
+            ->assertOk();
 
         $this->withCookie('homzen_locale', 'unsupported')->get('/contact-us')
-            ->assertMovedPermanently()
-            ->assertRedirect('/ar/contact-us');
+            ->assertOk();
     }
 }

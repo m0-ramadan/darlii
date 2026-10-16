@@ -14,7 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.5">
+  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.6">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -266,7 +266,7 @@
             </a>
           </div>
 
-          <form action="/ar/properties" method="GET" class="darli-mobile-search" aria-label="البحث عن عقار">
+          <form action="/properties" method="GET" class="darli-mobile-search" aria-label="البحث عن عقار">
             <label class="darli-mobile-field">
               <span><i data-lucide="search"></i> الكلمة المفتاحية</span>
               <span class="darli-mobile-control">
@@ -301,14 +301,27 @@
             </label>
 
             <div class="darli-mobile-search-actions">
-              <a href="/ar/properties" class="darli-mobile-advanced">
+              <button type="button" class="darli-mobile-advanced" aria-expanded="false" aria-controls="darli-mobile-advanced-panel">
                 <i data-lucide="sliders-horizontal"></i>
                 <span>متقدم</span>
-              </a>
+              </button>
               <button type="submit" class="darli-mobile-submit">
                 <i data-lucide="search"></i>
                 <span>بحث</span>
               </button>
+            </div>
+
+            <div class="darli-mobile-advanced-panel" id="darli-mobile-advanced-panel">
+              <label class="darli-mobile-field">
+                <span>نوع العملية</span>
+                <span class="darli-mobile-control"><select name="type"><option value="">الكل (للبيع وللإيجار)</option><option value="sale">للبيع</option><option value="rent">للإيجار</option></select><i data-lucide="chevron-down"></i></span>
+              </label>
+              <div class="darli-mobile-advanced-grid">
+                <label class="darli-mobile-field"><span>السعر من</span><span class="darli-mobile-control"><input type="number" name="min_price" placeholder="0" min="0"></span></label>
+                <label class="darli-mobile-field"><span>السعر إلى</span><span class="darli-mobile-control"><input type="number" name="max_price" placeholder="أقصى سعر" min="0"></span></label>
+                <label class="darli-mobile-field"><span>غرف النوم</span><span class="darli-mobile-control"><select name="bedrooms"><option value="">الكل</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select><i data-lucide="chevron-down"></i></span></label>
+                <label class="darli-mobile-field"><span>الحمامات</span><span class="darli-mobile-control"><select name="bathrooms"><option value="">الكل</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option></select><i data-lucide="chevron-down"></i></span></label>
+              </div>
             </div>
           </form>
 
@@ -1443,7 +1456,7 @@
 
   <!-- SCRIPTS -->
   <script src="/themes/homzen/js/jquery.min.js"></script>
-  <script src="/themes/homzen/js/darli-home.js?v=2.0.1"></script>
+  <script src="/themes/homzen/js/darli-home.js?v=2.0.2"></script>
 </body>
 
 </html>

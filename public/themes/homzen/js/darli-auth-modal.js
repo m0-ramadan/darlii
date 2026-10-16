@@ -251,33 +251,40 @@
                         remember: remember
                     })
                 })
-                .then(function (res) {
-                    return res.json().then(function (data) {
-                        return { status: res.status, data: data };
-                    });
-                })
-                .then(function (res) {
-                    setLoading(submitBtn, false, isAr ? 'تسجيل الدخول' : 'Sign In');
-                    if (res.status === 200 && res.data.success) {
-                        showSuccess(alertBox, isAr ? 'تم تسجيل الدخول بنجاح! جاري التحويل...' : 'Logged in successfully! Redirecting...');
-                        setTimeout(function () {
-                            if (res.data.redirect) {
-                                window.location.href = res.data.redirect;
-                            } else {
-                                window.location.reload();
+                    .then(function (res) {
+                        return res.json().then(function (data) {
+                            return { status: res.status, data: data };
+                        });
+                    })
+                    .then(function (res) {
+                        setLoading(submitBtn, false, isAr ? 'تسجيل الدخول' : 'Sign In');
+                        if (res.status === 200 && res.data.success) {
+                            showSuccess(alertBox, isAr ? 'تم تسجيل الدخول بنجاح! جاري التحويل...' : 'Logged in successfully! Redirecting...');
+                            setTimeout(function () {
+                                if (res.data.redirect) {
+                                    window.location.href = res.data.redirect;
+                                } else {
+                                    window.location.reload();
+                                }
+                            }, 500);
+                        } else {
+                            var msg = (res.data && res.data.errors && (res.data.errors.login || res.data.errors.email))
+                                ? (res.data.errors.login ? res.data.errors.login[0] : res.data.errors.email[0])
+                                : ((res.data && res.data.message) || (isAr ? 'بيانات تسجيل الدخول غير صحيحة.' : 'Invalid credentials.'));
+
+                            if (res.status >= 500 || /call_user_func|SQLSTATE|PDOException|Exception|ErrorException|TypeError|Argument #/i.test(msg)) {
+                                msg = isAr
+                                    ? 'حدث خطأ غير متوقع أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.'
+                                    : 'An unexpected error occurred. Please try again.';
                             }
-                        }, 500);
-                    } else {
-                        var msg = (res.data.errors && (res.data.errors.login || res.data.errors.email))
-                            ? (res.data.errors.login ? res.data.errors.login[0] : res.data.errors.email[0])
-                            : (res.data.message || (isAr ? 'بيانات تسجيل الدخول غير صحيحة.' : 'Invalid credentials.'));
-                        showError(alertBox, msg);
-                    }
-                })
-                .catch(function () {
-                    setLoading(submitBtn, false, isAr ? 'تسجيل الدخول' : 'Sign In');
-                    showError(alertBox, isAr ? 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً.' : 'Network error. Please try again.');
-                });
+
+                            showError(alertBox, msg);
+                        }
+                    })
+                    .catch(function () {
+                        setLoading(submitBtn, false, isAr ? 'تسجيل الدخول' : 'Sign In');
+                        showError(alertBox, isAr ? 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً.' : 'Network error. Please try again.');
+                    });
             });
         }
 
@@ -456,47 +463,71 @@
                     },
                     body: formData
                 })
-                .then(function (res) {
-                    return res.json().then(function (data) {
-                        return { status: res.status, data: data };
-                    });
-                })
-                .then(function (res) {
-                    setLoading(submitBtn, false, defaultBtnText);
-                    if (res.status === 200 && res.data.success) {
-                        showSuccess(alertBox, res.data.message || (isAr ? 'تم إنشاء الحساب وتسجيل الدخول بنجاح! جاري التحويل...' : 'Account created successfully! Redirecting...'));
-                        setTimeout(function () {
-                            if (res.data.redirect) {
-                                window.location.href = res.data.redirect;
+                    .then(function (res) {
+                        return res.json().then(function (data) {
+                            return { status: res.status, data: data };
+                        });
+                    })
+                    .then(function (res) {
+                        setLoading(submitBtn, false, defaultBtnText);
+                        if (res.status === 200 && res.data.success) {
+                            showSuccess(alertBox, res.data.message || (isAr ? 'تم إنشاء الحساب وتسجيل الدخول بنجاح! جاري التحويل...' : 'Account created successfully! Redirecting...'));
+                            setTimeout(function () {
+                                if (res.data.redirect) {
+                                    window.location.href = res.data.redirect;
+                                } else {
+                                    window.location.reload();
+                                }
+                            }, 700);
+                        } else {
+                            var errors = res.data ? (res.data.errors || {}) : {};
+                            var errorMsg = '';
+
+                            // 1. Check specific validation field errors
+                            if (errors.company_name && errors.company_name.length) {
+                                errorMsg = errors.company_name[0];
+                            } else if (errors.company_email && errors.company_email.length) {
+                                errorMsg = errors.company_email[0];
+                            } else if (errors.national_id_image && errors.national_id_image.length) {
+                                errorMsg = errors.national_id_image[0];
+                            } else if (errors.phone && errors.phone.length) {
+                                errorMsg = errors.phone[0];
+                            } else if (errors.email && errors.email.length) {
+                                errorMsg = errors.email[0];
+                            } else if (errors.password && errors.password.length) {
+                                errorMsg = errors.password[0];
+                            } else if (errors.name && errors.name.length) {
+                                errorMsg = errors.name[0];
                             } else {
-                                window.location.reload();
+                                var errorKeys = Object.keys(errors);
+                                if (errorKeys.length > 0 && errors[errorKeys[0]] && errors[errorKeys[0]][0]) {
+                                    errorMsg = errors[errorKeys[0]][0];
+                                }
                             }
-                        }, 700);
-                    } else {
-                        var errors = res.data.errors || {};
-                        var errorMsg = res.status >= 500
-                            ? (isAr ? 'تعذر إنشاء الحساب حاليًا. يرجى المحاولة مرة أخرى بعد قليل.' : 'We could not create your account right now. Please try again shortly.')
-                            : (res.data.message || '');
-                        if (errors.company_email) {
-                            errorMsg = errors.company_email[0];
-                        } else if (errors.national_id_image) {
-                            errorMsg = errors.national_id_image[0];
-                        } else if (errors.phone) {
-                            errorMsg = errors.phone[0];
-                        } else if (errors.email) {
-                            errorMsg = errors.email[0];
-                        } else if (errors.password) {
-                            errorMsg = errors.password[0];
-                        } else if (errors.name) {
-                            errorMsg = errors.name[0];
+
+                            // 2. Fallback to general message if no field error
+                            if (!errorMsg && res.data && res.data.message) {
+                                errorMsg = res.data.message;
+                            }
+
+                            // 3. Technical error detection & sanitization:
+                            // Never display raw PHP, SQL, callback, or framework trace messages to the user!
+                            var isTechnical = res.status >= 500 ||
+                                /call_user_func|SQLSTATE|PDOException|Exception|ErrorException|Stack trace|syntax error|TypeError|Argument #/i.test(errorMsg);
+
+                            if (isTechnical || !errorMsg) {
+                                errorMsg = isAr
+                                    ? 'تعذر إتمام عملية التسجيل حالياً. يرجى التأكد من صحة البيانات والمحاولة مرة أخرى.'
+                                    : 'We could not complete your registration. Please verify your information and try again.';
+                            }
+
+                            showError(alertBox, errorMsg);
                         }
-                        showError(alertBox, errorMsg || (isAr ? 'يرجى مراجعة البيانات المدخلة.' : 'Please review entered data.'));
-                    }
-                })
-                .catch(function () {
-                    setLoading(submitBtn, false, defaultBtnText);
-                    showError(alertBox, isAr ? 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً.' : 'Network error. Please try again.');
-                });
+                    })
+                    .catch(function () {
+                        setLoading(submitBtn, false, defaultBtnText);
+                        showError(alertBox, isAr ? 'حدث خطأ أثناء الاتصال بالخادم، يرجى المحاولة لاحقاً.' : 'Network error. Please try again.');
+                    });
             });
         }
 

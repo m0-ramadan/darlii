@@ -2,15 +2,6 @@
     @php $locale = app()->getLocale(); @endphp
     <nav role="navigation" aria-label="{{ $locale === 'ar' ? 'التنقل بين الصفحات' : 'Pagination Navigation' }}"
          class="ap-pagination-bar">
-        {{-- معلومات النتائج --}}
-        <span class="ap-pagination-info">
-            @if ($locale === 'ar')
-                عرض {{ number_format($paginator->firstItem()) }}–{{ number_format($paginator->lastItem()) }} من {{ number_format($paginator->total()) }}
-            @else
-                Showing {{ number_format($paginator->firstItem()) }}–{{ number_format($paginator->lastItem()) }} of {{ number_format($paginator->total()) }}
-            @endif
-        </span>
-
         {{-- أزرار التنقل --}}
         <ul class="pagination">
             {{-- السابق --}}

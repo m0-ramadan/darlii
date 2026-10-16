@@ -78,7 +78,9 @@ class LegacyFrontendController extends Controller
         if (! preg_match('/\.(?:xml|txt|json|rss|atom)$/i', $path)) {
             $locale = $this->visitorPreferences->locale($request);
 
-            return redirect('/' . $this->localizedUrlResolver->forLocale($path, $locale), 301);
+            // Public URLs are intentionally locale-free. Rendering here avoids
+            // redirecting /about-us (and similar legacy pages) back to itself.
+            return $this->page($request, $locale, $path);
         }
 
         return $this->html($request, trim($path, '/'));

@@ -8,8 +8,8 @@
 
         var locale = document.documentElement.lang || 'ar';
         var isArabic = locale === 'ar';
-        var base = '/' + locale;
-        var path = window.location.pathname.replace(/\/$/, '') || base;
+        var base = '';
+        var path = window.location.pathname.replace(/\/$/, '') || '/';
         var icons = {
             home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/>',
             properties: '<path d="M5 21V4h10v17"/><path d="M15 8h4v13"/><path d="M8 8h4M8 12h4M8 16h4M3 21h18"/>',
@@ -38,7 +38,7 @@
             ['Privacy Policy', base + '/privacy-policy']
         ];
         var links = [
-            ['home', base], ['properties', base + '/properties'], ['projects', base + '/projects'],
+            ['home', '/'], ['properties', base + '/properties'], ['projects', base + '/projects'],
             ['agents', base + '/agents'], ['blog', base + '/blog'], ['pages', '#', pageLinks]
         ];
         var outer = menu.querySelector('.menu-outer');
@@ -50,7 +50,7 @@
                 var key = item[0];
                 var href = item[1];
                 var children = item[2] || [];
-                var active = key === 'home' ? path === base : (children.length
+                var active = key === 'home' ? path === '/' : (children.length
                     ? children.some(function (child) { return path.indexOf(child[1]) === 0; })
                     : path.indexOf(href) === 0);
                 var classes = (active ? 'current ' : '') + (children.length ? 'darli-has-submenu' + (active ? ' open' : '') : '');
@@ -95,14 +95,14 @@
         if (tools) {
             tools.innerHTML =
                 '<button type="button" class="darli-theme-toggle darli-mobile-theme" aria-label="' + (isArabic ? 'تبديل الوضع الليلي' : 'Toggle dark mode') + '"></button>' +
-                '<a class="darli-mobile-tool" href="' + base + '/language">' +
+                '<div class="darli-mobile-tool" aria-label="' + (isArabic ? 'اللغة الحالية' : 'Current language') + '">' +
                     '<span class="darli-tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>' +
                     '<span class="darli-tool-title">' + (isArabic ? 'اللغة' : 'Language') + '</span>' +
-                    '<span class="darli-tool-value">' + (isArabic ? 'العربية 🇸🇦' : 'English 🇺🇸') + '</span><span class="darli-tool-arrow">⌄</span></a>' +
-                '<a class="darli-mobile-tool" href="' + base + '/currency/switch/SAR">' +
+                    '<span class="darli-tool-value">' + (isArabic ? 'العربية 🇪🇬' : 'English') + '</span></div>' +
+                '<div class="darli-mobile-tool" aria-label="' + (isArabic ? 'العملة الحالية' : 'Current currency') + '">' +
                     '<span class="darli-tool-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>' +
                     '<span class="darli-tool-title">' + (isArabic ? 'العملة' : 'Currency') + '</span>' +
-                    '<span class="darli-tool-value">' + (isArabic ? 'ريال سعودي (SAR)' : 'Saudi Riyal (SAR)') + '</span><span class="darli-tool-arrow">⌄</span></a>' +
+                    '<span class="darli-tool-value">' + (isArabic ? 'جنيه مصري (EGP)' : 'Egyptian Pound (EGP)') + '</span></div>' +
                 '<a class="darli-mobile-tool darli-mobile-help" href="' + base + '/contact-us">' +
                     '<span class="darli-tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.3 2.3 0 1 1 3.5 2c-.8.5-1.3 1-1.3 2M12 17h.01"/></svg></span>' +
                     '<span class="darli-tool-title">' + (isArabic ? 'مركز المساعدة' : 'Help Center') + '</span><span class="darli-mobile-chevron">‹</span></a>';

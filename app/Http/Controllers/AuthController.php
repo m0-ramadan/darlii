@@ -44,7 +44,7 @@ class AuthController
                 ->where('phone', $loginInput)
                 ->when($digits !== '', function ($q) use ($digits) {
                     $q->orWhere('phone', $digits)
-                      ->orWhereRaw("REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '+', '') = ?", [$digits]);
+                        ->orWhereRaw("REPLACE(REPLACE(REPLACE(phone, ' ', ''), '-', ''), '+', '') = ?", [$digits]);
                 })
                 ->first();
 
@@ -90,10 +90,12 @@ class AuthController
         $locale = app()->getLocale();
         // Every website account has a private dashboard. CMS staff keep using /admin.
         $targetUrl = route('dashboard.index', ['locale' => $locale]);
-        if ($user
+        if (
+            $user
             && $user->hasAnyRole(\App\Support\PermissionCatalog::panelRoles())
             && ! $user->hasRole('agency-manager')
-            && ! $user->hasRole('agent')) {
+            && ! $user->hasRole('agent')
+        ) {
             $targetUrl = url('/admin');
         }
         $targetUrl = redirect()->intended($targetUrl)->getTargetUrl();
@@ -127,7 +129,7 @@ class AuthController
         $isAr = $locale === 'ar';
         $submittedName = trim((string) $r->input('name', ''));
         if ($submittedName === '') {
-            $submittedName = trim((string) $r->input('first_name', '').' '.(string) $r->input('last_name', ''));
+            $submittedName = trim((string) $r->input('first_name', '') . ' ' . (string) $r->input('last_name', ''));
         }
         $r->merge([
             'name' => $submittedName,
@@ -138,236 +140,256 @@ class AuthController
             $accountType = 'client';
         }
 
-        if ($accountType === 'company') {
-            // -------------------------------- COMPANY REGISTRATION --------------------------------
-            $validated = $r->validate([
-                'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
-                'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
-                'company_name' => ['required', 'string', 'max:190'],
-                'company_email' => ['required', 'email', 'max:190', 'unique:users,email'],
-                'password' => ['required', 'confirmed', 'min:8'],
-            ], [
-                'name.required' => $isAr ? 'يرجى إدخال اسم المسؤول.' : 'Contact name is required.',
-                'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
-                'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
-                'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
-                'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
-                'company_name.required' => $isAr ? 'يرجى إدخال اسم الشركة.' : 'Company name is required.',
-                'company_email.required' => $isAr ? 'يرجى إدخال البريد الإلكتروني للشركة.' : 'Company email is required.',
-                'company_email.unique' => $isAr ? 'البريد الإلكتروني للشركة مسجل لدينا بالفعل.' : 'Company email is already registered.',
-                'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
-                'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
-                'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
-            ]);
-
-            $u = User::create([
-                'name' => trim($validated['name']),
-                'email' => strtolower(trim($validated['company_email'])),
-                'password' => $validated['password'],
-                'phone' => trim($validated['phone']),
-                'job_title' => 'مسؤول شركة / وكالة عقارية',
-                'status' => 'pending', // معلق حتى اعتماد الإدارة
-            ]);
-
-            if ($role = Role::where('slug', 'agency-manager')->first()) {
-                $u->roles()->syncWithoutDetaching([$role->id]);
-            }
-
-            // Create Company Agency record
-            $agency = \App\Models\Agency::create([
-                'name' => trim($validated['company_name']),
-                'slug' => \Illuminate\Support\Str::slug($validated['company_name']) . '-' . $u->id,
-                'email' => strtolower(trim($validated['company_email'])),
-                'phone' => trim($validated['phone']),
-                'status' => 'pending',
-            ]);
-            $agency->users()->syncWithoutDetaching([$u->id => ['role' => 'manager']]);
-
-            event(new Registered($u));
-            Auth::login($u);
-
-            $msg = $isAr
-                ? 'تم تسجيل حساب الشركة بنجاح! حسابك حالياً قيد المراجعة والاعتماد من قبل إدارة المنصة.'
-                : 'Company registered successfully! Your account is pending admin approval.';
-
-            $redirectUrl = route('dashboard.index', ['locale' => $locale]);
-
-            if ($r->wantsJson() || $r->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => $msg,
-                    'redirect' => $redirectUrl,
-                    'user' => [
-                        'id' => $u->id,
-                        'name' => $u->name,
-                        'email' => $u->email,
-                        'status' => 'pending',
-                        'is_pending' => true,
-                    ],
+        try {
+            if ($accountType === 'company') {
+                // -------------------------------- COMPANY REGISTRATION --------------------------------
+                $validated = $r->validate([
+                    'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
+                    'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
+                    'company_name' => ['required', 'string', 'max:190'],
+                    'company_email' => ['required', 'email', 'max:190', 'unique:users,email'],
+                    'password' => ['required', 'confirmed', 'min:8'],
+                ], [
+                    'name.required' => $isAr ? 'يرجى إدخال اسم المسؤول.' : 'Contact name is required.',
+                    'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
+                    'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
+                    'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
+                    'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
+                    'company_name.required' => $isAr ? 'يرجى إدخال اسم الشركة.' : 'Company name is required.',
+                    'company_email.required' => $isAr ? 'يرجى إدخال البريد الإلكتروني للشركة.' : 'Company email is required.',
+                    'company_email.unique' => $isAr ? 'البريد الإلكتروني للشركة مسجل لدينا بالفعل.' : 'Company email is already registered.',
+                    'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
+                    'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
+                    'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
                 ]);
-            }
 
-            return redirect($redirectUrl)->with('status_warning', $msg);
+                $u = User::create([
+                    'name' => trim($validated['name']),
+                    'email' => strtolower(trim($validated['company_email'])),
+                    'password' => $validated['password'],
+                    'phone' => trim($validated['phone']),
+                    'job_title' => 'مسؤول شركة / وكالة عقارية',
+                    'status' => 'pending', // معلق حتى اعتماد الإدارة
+                ]);
 
-        } elseif ($accountType === 'broker') {
-            // -------------------------------- BROKER REGISTRATION --------------------------------
-            $validated = $r->validate([
-                'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
-                'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
-                'national_id_image' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf,webp', 'max:10240'],
-                'email' => ['nullable', 'email', 'max:190', 'unique:users,email'],
-                'password' => ['required', 'confirmed', 'min:8'],
-            ], [
-                'name.required' => $isAr ? 'يرجى إدخال الاسم بالكامل كما في بطاقة الرقم القومي.' : 'Full name is required.',
-                'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
-                'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
-                'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
-                'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
-                'national_id_image.required' => $isAr ? 'يرجى رفع صورة بطاقة الرقم القومي لاعتماد الحساب.' : 'National ID card image is required.',
-                'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
-                'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
-                'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
-            ]);
-
-            // Save National ID card image
-            $idCardPath = null;
-            if ($r->hasFile('national_id_image')) {
-                $file = $r->file('national_id_image');
-                $idCardPath = $file->store('agents/national_ids/' . now()->format('Y/m'), 'public');
-            }
-
-            // Fallback email for phone-based brokers
-            $email = $validated['email'] ?? null;
-            if (! $email) {
-                $digits = preg_replace('/\D+/', '', $validated['phone']) ?: time();
-                $candidate = "broker_{$digits}@darlii.eg";
-                if (User::where('email', $candidate)->exists()) {
-                    $candidate = "broker_{$digits}_" . \Illuminate\Support\Str::random(4) . "@darlii.eg";
+                if ($role = Role::where('slug', 'agency-manager')->first()) {
+                    $u->roles()->syncWithoutDetaching([$role->id]);
                 }
-                $email = strtolower($candidate);
-            }
 
-            $u = User::create([
-                'name' => trim($validated['name']),
-                'email' => $email,
-                'password' => $validated['password'],
-                'phone' => trim($validated['phone']),
-                'job_title' => 'وسيط عقاري / سمسار',
-                'status' => 'pending', // معلق حتى اعتماد الإدارة
-            ]);
-
-            if ($role = Role::where('slug', 'agent')->first()) {
-                $u->roles()->syncWithoutDetaching([$role->id]);
-            }
-
-            // Create Agent Profile with national ID image
-            $profile = \App\Models\AgentProfile::create([
-                'user_id' => $u->id,
-                'slug' => \Illuminate\Support\Str::slug($validated['name']) . '-' . $u->id,
-                'job_title' => 'وسيط عقاري',
-                'status' => 'pending',
-                'whatsapp' => trim($validated['phone']),
-                'contract_terms' => $idCardPath,
-            ]);
-            $profile->setAgentTypeAttribute('broker');
-            $profile->save();
-
-            event(new Registered($u));
-            Auth::login($u);
-
-            $msg = $isAr
-                ? 'تم تسجيل حساب السمسار بنجاح! حسابك حالياً قيد المراجعة والاعتماد من قبل إدارة المنصة.'
-                : 'Broker registered successfully! Your account is pending admin approval.';
-
-            $redirectUrl = route('dashboard.index', ['locale' => $locale]);
-
-            if ($r->wantsJson() || $r->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => $msg,
-                    'redirect' => $redirectUrl,
-                    'user' => [
-                        'id' => $u->id,
-                        'name' => $u->name,
-                        'email' => $u->email,
-                        'status' => 'pending',
-                        'is_pending' => true,
-                    ],
+                // Create Company Agency record
+                $agency = \App\Models\Agency::create([
+                    'name' => trim($validated['company_name']),
+                    'slug' => \Illuminate\Support\Str::slug($validated['company_name']) . '-' . $u->id,
+                    'email' => strtolower(trim($validated['company_email'])),
+                    'phone' => trim($validated['phone']),
+                    'status' => 'pending',
                 ]);
-            }
+                $agency->users()->syncWithoutDetaching([$u->id => ['role' => 'manager']]);
 
-            return redirect($redirectUrl)->with('status_warning', $msg);
+                event(new Registered($u));
+                Auth::login($u);
 
-        } else {
-            // -------------------------------- CLIENT / CUSTOMER REGISTRATION --------------------------------
-            $validated = $r->validate([
-                'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
-                'first_name' => ['nullable', 'string', 'max:120'],
-                'last_name' => ['nullable', 'string', 'max:120'],
-                'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
-                'email' => ['nullable', 'email', 'max:190', 'unique:users,email'],
-                'password' => ['required', 'confirmed', 'min:8'],
-            ], [
-                'name.required' => $isAr ? 'يرجى إدخال الاسم بالكامل.' : 'Full name is required.',
-                'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
-                'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
-                'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
-                'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
-                'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
-                'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
-                'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
-            ]);
+                $msg = $isAr
+                    ? 'تم تسجيل حساب الشركة بنجاح! حسابك حالياً قيد المراجعة والاعتماد من قبل إدارة المنصة.'
+                    : 'Company registered successfully! Your account is pending admin approval.';
 
-            $name = trim((string) ($validated['name'] ?? trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? ''))));
-            if ($name === '') {
-                $name = $validated['phone'];
-            }
+                $redirectUrl = route('dashboard.index', ['locale' => $locale]);
 
-            // Fallback email for phone-based clients
-            $email = $validated['email'] ?? null;
-            if (! $email) {
-                $digits = preg_replace('/\D+/', '', $validated['phone']) ?: time();
-                $candidate = "client_{$digits}@darlii.eg";
-                if (User::where('email', $candidate)->exists()) {
-                    $candidate = "client_{$digits}_" . \Illuminate\Support\Str::random(4) . "@darlii.eg";
+                if ($r->wantsJson() || $r->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => $msg,
+                        'redirect' => $redirectUrl,
+                        'user' => [
+                            'id' => $u->id,
+                            'name' => $u->name,
+                            'email' => $u->email,
+                            'status' => 'pending',
+                            'is_pending' => true,
+                        ],
+                    ]);
                 }
-                $email = strtolower($candidate);
-            }
 
-            $u = User::create([
-                'name' => $name,
-                'email' => $email,
-                'password' => $validated['password'],
-                'phone' => trim($validated['phone']),
-                'status' => 'active', // العميل العادي نشط فوراً
+                return redirect($redirectUrl)->with('status_warning', $msg);
+            } elseif ($accountType === 'broker') {
+                // -------------------------------- BROKER REGISTRATION --------------------------------
+                $validated = $r->validate([
+                    'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
+                    'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
+                    'national_id_image' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf,webp', 'max:10240'],
+                    'email' => ['nullable', 'email', 'max:190', 'unique:users,email'],
+                    'password' => ['required', 'confirmed', 'min:8'],
+                ], [
+                    'name.required' => $isAr ? 'يرجى إدخال الاسم بالكامل كما في بطاقة الرقم القومي.' : 'Full name is required.',
+                    'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
+                    'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
+                    'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
+                    'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
+                    'national_id_image.required' => $isAr ? 'يرجى رفع صورة بطاقة الرقم القومي لاعتماد الحساب.' : 'National ID card image is required.',
+                    'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
+                    'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
+                    'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
+                ]);
+
+                // Save National ID card image
+                $idCardPath = null;
+                if ($r->hasFile('national_id_image')) {
+                    $file = $r->file('national_id_image');
+                    $idCardPath = $file->store('agents/national_ids/' . now()->format('Y/m'), 'public');
+                }
+
+                // Fallback email for phone-based brokers
+                $email = $validated['email'] ?? null;
+                if (! $email) {
+                    $digits = preg_replace('/\D+/', '', $validated['phone']) ?: time();
+                    $candidate = "broker_{$digits}@darlii.eg";
+                    if (User::where('email', $candidate)->exists()) {
+                        $candidate = "broker_{$digits}_" . \Illuminate\Support\Str::random(4) . "@darlii.eg";
+                    }
+                    $email = strtolower($candidate);
+                }
+
+                $u = User::create([
+                    'name' => trim($validated['name']),
+                    'email' => $email,
+                    'password' => $validated['password'],
+                    'phone' => trim($validated['phone']),
+                    'job_title' => 'وسيط عقاري / سمسار',
+                    'status' => 'pending', // معلق حتى اعتماد الإدارة
+                ]);
+
+                if ($role = Role::where('slug', 'agent')->first()) {
+                    $u->roles()->syncWithoutDetaching([$role->id]);
+                }
+
+                // Create Agent Profile with national ID image
+                $profile = \App\Models\AgentProfile::create([
+                    'user_id' => $u->id,
+                    'slug' => \Illuminate\Support\Str::slug($validated['name']) . '-' . $u->id,
+                    'job_title' => 'وسيط عقاري',
+                    'status' => 'pending',
+                    'whatsapp' => trim($validated['phone']),
+                    'contract_terms' => $idCardPath,
+                ]);
+                $profile->setAgentTypeAttribute('broker');
+                $profile->save();
+
+                event(new Registered($u));
+                Auth::login($u);
+
+                $msg = $isAr
+                    ? 'تم تسجيل حساب السمسار بنجاح! حسابك حالياً قيد المراجعة والاعتماد من قبل إدارة المنصة.'
+                    : 'Broker registered successfully! Your account is pending admin approval.';
+
+                $redirectUrl = route('dashboard.index', ['locale' => $locale]);
+
+                if ($r->wantsJson() || $r->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => $msg,
+                        'redirect' => $redirectUrl,
+                        'user' => [
+                            'id' => $u->id,
+                            'name' => $u->name,
+                            'email' => $u->email,
+                            'status' => 'pending',
+                            'is_pending' => true,
+                        ],
+                    ]);
+                }
+
+                return redirect($redirectUrl)->with('status_warning', $msg);
+            } else {
+                // -------------------------------- CLIENT / CUSTOMER REGISTRATION --------------------------------
+                $validated = $r->validate([
+                    'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
+                    'first_name' => ['nullable', 'string', 'max:120'],
+                    'last_name' => ['nullable', 'string', 'max:120'],
+                    'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
+                    'email' => ['nullable', 'email', 'max:190', 'unique:users,email'],
+                    'password' => ['required', 'confirmed', 'min:8'],
+                ], [
+                    'name.required' => $isAr ? 'يرجى إدخال الاسم بالكامل.' : 'Full name is required.',
+                    'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
+                    'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
+                    'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
+                    'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
+                    'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
+                    'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
+                    'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
+                ]);
+
+                $name = trim((string) ($validated['name'] ?? trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? ''))));
+                if ($name === '') {
+                    $name = $validated['phone'];
+                }
+
+                // Fallback email for phone-based clients
+                $email = $validated['email'] ?? null;
+                if (! $email) {
+                    $digits = preg_replace('/\D+/', '', $validated['phone']) ?: time();
+                    $candidate = "client_{$digits}@darlii.eg";
+                    if (User::where('email', $candidate)->exists()) {
+                        $candidate = "client_{$digits}_" . \Illuminate\Support\Str::random(4) . "@darlii.eg";
+                    }
+                    $email = strtolower($candidate);
+                }
+
+                $u = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => $validated['password'],
+                    'phone' => trim($validated['phone']),
+                    'status' => 'active', // العميل العادي نشط فوراً
+                ]);
+
+                if ($role = Role::where('slug', 'customer')->first()) {
+                    $u->roles()->syncWithoutDetaching([$role->id]);
+                }
+
+                event(new Registered($u));
+                Auth::login($u);
+
+                $msg = $isAr ? 'تم إنشاء الحساب بنجاح!' : 'Account registered successfully!';
+                $redirectUrl = route('dashboard.index', ['locale' => $locale]);
+
+                if ($r->wantsJson() || $r->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => $msg,
+                        'redirect' => $redirectUrl,
+                        'user' => [
+                            'id' => $u->id,
+                            'name' => $u->name,
+                            'email' => $u->email,
+                            'status' => 'active',
+                            'is_pending' => false,
+                        ],
+                    ]);
+                }
+
+                return redirect($redirectUrl);
+            }
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            throw $ve;
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Registration error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'account_type' => $accountType,
             ]);
 
-            if ($role = Role::where('slug', 'customer')->first()) {
-                $u->roles()->syncWithoutDetaching([$role->id]);
-            }
-
-            event(new Registered($u));
-            Auth::login($u);
-
-            $msg = $isAr ? 'تم إنشاء الحساب بنجاح!' : 'Account registered successfully!';
-            $redirectUrl = route('dashboard.index', ['locale' => $locale]);
+            $errMsg = $isAr
+                ? 'تعذر إتمام عملية التسجيل حالياً. يرجى التأكد من البيانات والمحاولة مرة أخرى.'
+                : 'Could not complete registration. Please verify your data and try again.';
 
             if ($r->wantsJson() || $r->ajax()) {
                 return response()->json([
-                    'success' => true,
-                    'message' => $msg,
-                    'redirect' => $redirectUrl,
-                    'user' => [
-                        'id' => $u->id,
-                        'name' => $u->name,
-                        'email' => $u->email,
-                        'status' => 'active',
-                        'is_pending' => false,
-                    ],
-                ]);
+                    'success' => false,
+                    'message' => $errMsg,
+                ], 422);
             }
 
-            return redirect($redirectUrl);
+            return back()->withInput()->withErrors(['name' => $errMsg]);
         }
     }
 
@@ -382,7 +404,7 @@ class AuthController
         }
 
         return strlen($digits) === 10 && str_starts_with($digits, '1')
-            ? '0'.$digits
+            ? '0' . $digits
             : $digits;
     }
 

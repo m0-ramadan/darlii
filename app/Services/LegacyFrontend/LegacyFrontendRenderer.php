@@ -468,7 +468,7 @@ HTML;
             }
         }
 
-        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.js?v=2.0.2"></script>';
+        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.js?v=2.0.4"></script>';
 
         if (str_contains($html, '</body>')) {
             $html = preg_replace('/<\/body>/i', $authModalsHtml . "\n" . $authScript . "\n</body>", $html, 1) ?? $html;

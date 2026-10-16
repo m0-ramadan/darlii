@@ -3,17 +3,6 @@
     <nav role="navigation" aria-label="<?php echo e($locale === 'ar' ? 'التنقل بين الصفحات' : 'Pagination Navigation'); ?>"
          class="ap-pagination-bar">
         
-        <span class="ap-pagination-info">
-            <?php if($locale === 'ar'): ?>
-                عرض <?php echo e(number_format($paginator->firstItem())); ?>–<?php echo e(number_format($paginator->lastItem())); ?> من <?php echo e(number_format($paginator->total())); ?>
-
-            <?php else: ?>
-                Showing <?php echo e(number_format($paginator->firstItem())); ?>–<?php echo e(number_format($paginator->lastItem())); ?> of <?php echo e(number_format($paginator->total())); ?>
-
-            <?php endif; ?>
-        </span>
-
-        
         <ul class="pagination">
             
             <?php if($paginator->onFirstPage()): ?>

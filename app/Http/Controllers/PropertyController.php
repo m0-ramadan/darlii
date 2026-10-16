@@ -20,7 +20,7 @@ class PropertyController extends Controller
         $search = app(PropertySearchQuery::class);
 
         // Normalize filters (support 'k' alias for 'q', and resolve 'location' name to 'location_id' if needed)
-        $filterData = $request->only(['q', 'k', 'purpose', 'category_id', 'location_id', 'location', 'min_price', 'max_price', 'bedrooms', 'sort']);
+        $filterData = $request->only(['q', 'k', 'purpose', 'category_id', 'location_id', 'location', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'sort']);
         if (empty($filterData['q']) && !empty($filterData['k'])) {
             $filterData['q'] = $filterData['k'];
         }

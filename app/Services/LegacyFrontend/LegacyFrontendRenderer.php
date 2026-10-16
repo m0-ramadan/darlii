@@ -2001,7 +2001,7 @@ HTML;
 <link rel="stylesheet" href="/themes/homzen/css/rtl-custom.css?v=2.0.1">
 <link rel="stylesheet" href="/themes/homzen/css/locale-switcher.css?v=1.0.0">
 <link rel="stylesheet" href="/themes/homzen/css/dark-mode.css?v=2.0.1">
-<link rel="stylesheet" href="/themes/homzen/css/darli-unified.css?v=2.1.8">
+<link rel="stylesheet" href="/themes/homzen/css/darli-unified.css?v=2.1.9">
 <link rel="stylesheet" href="/themes/homzen/css/darli-about-us.css?v=2.2.0">
 <link rel="stylesheet" href="/themes/homzen/css/darli-services.css?v=1.0.0">
 HTML;
@@ -2046,7 +2046,7 @@ HTML;
     });
 })();
 </script>
-<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.js?v=1.1.2"></script><script defer src="/themes/homzen/js/theme-mode.js?v=2.0.2"></script><script defer src="/themes/homzen/js/wishlist.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.js?v=2.3.4"></script></body>
+<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.js?v=1.2.0"></script><script defer src="/themes/homzen/js/theme-mode.js?v=2.0.2"></script><script defer src="/themes/homzen/js/wishlist.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.js?v=2.3.4"></script></body>
 HTML,
             $html,
             1

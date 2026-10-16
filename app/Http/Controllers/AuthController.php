@@ -125,6 +125,14 @@ class AuthController
     {
         $locale = app()->getLocale();
         $isAr = $locale === 'ar';
+        $submittedName = trim((string) $r->input('name', ''));
+        if ($submittedName === '') {
+            $submittedName = trim((string) $r->input('first_name', '').' '.(string) $r->input('last_name', ''));
+        }
+        $r->merge([
+            'name' => $submittedName,
+            'phone' => $this->normalizeEgyptianPhone((string) $r->input('phone', '')),
+        ]);
         $accountType = $r->input('account_type', 'client');
         if (! in_array($accountType, ['client', 'company', 'broker'], true)) {
             $accountType = 'client';
@@ -133,19 +141,23 @@ class AuthController
         if ($accountType === 'company') {
             // -------------------------------- COMPANY REGISTRATION --------------------------------
             $validated = $r->validate([
-                'name' => ['required', 'string', 'max:120'],
-                'phone' => ['required', 'string', 'max:50'],
+                'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
+                'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
                 'company_name' => ['required', 'string', 'max:190'],
                 'company_email' => ['required', 'email', 'max:190', 'unique:users,email'],
                 'password' => ['required', 'confirmed', 'min:8'],
             ], [
                 'name.required' => $isAr ? 'يرجى إدخال اسم المسؤول.' : 'Contact name is required.',
+                'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
                 'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
+                'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
+                'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
                 'company_name.required' => $isAr ? 'يرجى إدخال اسم الشركة.' : 'Company name is required.',
                 'company_email.required' => $isAr ? 'يرجى إدخال البريد الإلكتروني للشركة.' : 'Company email is required.',
                 'company_email.unique' => $isAr ? 'البريد الإلكتروني للشركة مسجل لدينا بالفعل.' : 'Company email is already registered.',
                 'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
                 'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
+                'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
             ]);
 
             $u = User::create([
@@ -200,17 +212,21 @@ class AuthController
         } elseif ($accountType === 'broker') {
             // -------------------------------- BROKER REGISTRATION --------------------------------
             $validated = $r->validate([
-                'name' => ['required', 'string', 'max:120'],
-                'phone' => ['required', 'string', 'max:50'],
+                'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
+                'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
                 'national_id_image' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf,webp', 'max:10240'],
                 'email' => ['nullable', 'email', 'max:190', 'unique:users,email'],
                 'password' => ['required', 'confirmed', 'min:8'],
             ], [
                 'name.required' => $isAr ? 'يرجى إدخال الاسم بالكامل كما في بطاقة الرقم القومي.' : 'Full name is required.',
+                'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
                 'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
+                'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
+                'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
                 'national_id_image.required' => $isAr ? 'يرجى رفع صورة بطاقة الرقم القومي لاعتماد الحساب.' : 'National ID card image is required.',
                 'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
                 'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
+                'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
             ]);
 
             // Save National ID card image
@@ -285,16 +301,21 @@ class AuthController
         } else {
             // -------------------------------- CLIENT / CUSTOMER REGISTRATION --------------------------------
             $validated = $r->validate([
-                'name' => ['nullable', 'string', 'max:120'],
+                'name' => ['required', 'string', 'max:120', 'regex:/^\S+(?:\s+\S+)+$/u'],
                 'first_name' => ['nullable', 'string', 'max:120'],
                 'last_name' => ['nullable', 'string', 'max:120'],
-                'phone' => ['required', 'string', 'max:50'],
+                'phone' => ['required', 'regex:/^01[0125][0-9]{8}$/', 'unique:users,phone'],
                 'email' => ['nullable', 'email', 'max:190', 'unique:users,email'],
                 'password' => ['required', 'confirmed', 'min:8'],
             ], [
+                'name.required' => $isAr ? 'يرجى إدخال الاسم بالكامل.' : 'Full name is required.',
+                'name.regex' => $isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.',
                 'phone.required' => $isAr ? 'يرجى إدخال رقم الهاتف.' : 'Phone number is required.',
+                'phone.regex' => $isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.',
+                'phone.unique' => $isAr ? 'رقم الهاتف مسجل لدينا بالفعل. يمكنك تسجيل الدخول به.' : 'This phone number is already registered. You can sign in with it.',
                 'password.required' => $isAr ? 'يرجى إدخال كلمة المرور.' : 'Password is required.',
                 'password.confirmed' => $isAr ? 'كلمات المرور غير متطابقة.' : 'Passwords do not match.',
+                'password.min' => $isAr ? 'يجب ألا تقل كلمة المرور عن 8 أحرف.' : 'Password must be at least 8 characters.',
             ]);
 
             $name = trim((string) ($validated['name'] ?? trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? ''))));
@@ -349,6 +370,22 @@ class AuthController
             return redirect($redirectUrl);
         }
     }
+
+    private function normalizeEgyptianPhone(string $phone): string
+    {
+        $digits = preg_replace('/\D+/', '', $phone) ?? '';
+
+        if (str_starts_with($digits, '0020')) {
+            $digits = substr($digits, 4);
+        } elseif (str_starts_with($digits, '20')) {
+            $digits = substr($digits, 2);
+        }
+
+        return strlen($digits) === 10 && str_starts_with($digits, '1')
+            ? '0'.$digits
+            : $digits;
+    }
+
     public function logout(Request $r)
     {
         Auth::logout();

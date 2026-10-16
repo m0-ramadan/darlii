@@ -24,21 +24,71 @@
         } : {
             home: 'Home', properties: 'Properties', projects: 'Projects', agents: 'Agents', blog: 'Blog', pages: 'Pages'
         };
+        var pageLinks = isArabic ? [
+            ['من نحن', base + '/about-us'],
+            ['خدماتنا', base + '/our-services'],
+            ['تواصل معنا', base + '/contact-us'],
+            ['الأسئلة الشائعة', base + '/faqs'],
+            ['سياسة الخصوصية', base + '/privacy-policy']
+        ] : [
+            ['About Us', base + '/about-us'],
+            ['Our Services', base + '/our-services'],
+            ['Contact Us', base + '/contact-us'],
+            ['FAQ', base + '/faqs'],
+            ['Privacy Policy', base + '/privacy-policy']
+        ];
         var links = [
             ['home', base], ['properties', base + '/properties'], ['projects', base + '/projects'],
-            ['agents', base + '/agents'], ['blog', base + '/blog'], ['pages', base + '/about-us']
+            ['agents', base + '/agents'], ['blog', base + '/blog'], ['pages', '#', pageLinks]
         ];
         var outer = menu.querySelector('.menu-outer');
 
-        if (outer) {
+        function renderNavigation() {
+            if (!outer) return;
+
             outer.innerHTML = '<ul class="navigation darli-mobile-navigation">' + links.map(function (item) {
                 var key = item[0];
                 var href = item[1];
-                var active = key === 'home' ? path === base : path.indexOf(href) === 0;
-                return '<li class="' + (active ? 'current' : '') + '"><a href="' + href + '">' +
+                var children = item[2] || [];
+                var active = key === 'home' ? path === base : (children.length
+                    ? children.some(function (child) { return path.indexOf(child[1]) === 0; })
+                    : path.indexOf(href) === 0);
+                var classes = (active ? 'current ' : '') + (children.length ? 'darli-has-submenu' + (active ? ' open' : '') : '');
+                var submenu = children.length ? '<ul class="darli-mobile-submenu">' + children.map(function (child) {
+                    var childActive = path.indexOf(child[1]) === 0;
+                    return '<li class="' + (childActive ? 'current' : '') + '"><a href="' + child[1] + '">' + child[0] + '</a></li>';
+                }).join('') + '</ul>' : '';
+
+                return '<li class="' + classes.trim() + '"><a href="' + href + '"' + (children.length ? ' aria-expanded="' + (active ? 'true' : 'false') + '"' : '') + '>' +
                     '<span class="darli-mobile-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">' + icons[key] + '</svg></span>' +
-                    '<span>' + labels[key] + '</span><span class="darli-mobile-chevron">‹</span></a></li>';
+                    '<span>' + labels[key] + '</span><span class="darli-mobile-chevron">‹</span></a>' + submenu + '</li>';
             }).join('') + '</ul>';
+        }
+
+        renderNavigation();
+
+        // The legacy theme also clones the desktop menu on DOM ready. Re-assert
+        // the single Darli menu after it runs so a second navigation is never shown.
+        window.setTimeout(renderNavigation, 0);
+        window.setTimeout(renderNavigation, 250);
+        window.addEventListener('load', renderNavigation, { once: true });
+
+        if (outer) {
+            outer.addEventListener('click', function (event) {
+                var parentLink = event.target.closest('.darli-has-submenu > a');
+                if (!parentLink) return;
+
+                event.preventDefault();
+                var parent = parentLink.parentElement;
+                var shouldOpen = !parent.classList.contains('open');
+                outer.querySelectorAll('.darli-has-submenu.open').forEach(function (item) {
+                    item.classList.remove('open');
+                    var link = item.querySelector(':scope > a');
+                    if (link) link.setAttribute('aria-expanded', 'false');
+                });
+                parent.classList.toggle('open', shouldOpen);
+                parentLink.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+            });
         }
 
         var tools = menu.querySelector('.mobi-icon-box');

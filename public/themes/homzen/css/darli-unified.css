@@ -574,6 +574,36 @@ header.main-header,
     font-weight: 300 !important;
     margin-inline-start: auto !important;
 }
+.mobile-menu .darli-has-submenu > a .darli-mobile-chevron {
+    transition: transform .2s ease !important;
+}
+.mobile-menu .darli-has-submenu.open > a .darli-mobile-chevron {
+    transform: rotate(-90deg) !important;
+}
+.mobile-menu .darli-mobile-submenu {
+    background: rgba(255, 255, 255, .045) !important;
+    display: none !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+    padding: 5px 34px 7px 8px !important;
+    position: static !important;
+    transform: none !important;
+    visibility: visible !important;
+    width: 100% !important;
+}
+.mobile-menu .darli-has-submenu.open > .darli-mobile-submenu {
+    display: block !important;
+}
+.mobile-menu .darli-mobile-submenu li > a {
+    border-bottom-color: rgba(202, 215, 231, .18) !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+    height: 39px !important;
+    padding-inline: 10px !important;
+}
+.mobile-menu .darli-mobile-submenu li:last-child > a {
+    border-bottom: 0 !important;
+}
 .mobile-menu .mobi-icon-box {
     border-top: 1px solid rgba(202, 215, 231, .36) !important;
     margin-top: 8px !important;

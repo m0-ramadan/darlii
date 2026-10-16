@@ -438,7 +438,7 @@
                         <label class="darli-auth-label" for="reg-phone">
                             <span id="darli-label-phone"><?php echo e($isAr ? 'رقم الهاتف' : 'Phone Number'); ?></span> <span class="text-danger">*</span>
                         </label>
-                        <input type="tel" id="reg-phone" name="phone" class="darli-auth-input" placeholder="01012345678" required dir="ltr">
+                        <input type="tel" id="reg-phone" name="phone" class="darli-auth-input" placeholder="01012345678" required dir="ltr" inputmode="numeric" autocomplete="tel" maxlength="14" pattern="(?:01[0125][0-9]{8}|(?:\+20|0020)1[0125][0-9]{8})" title="<?php echo e($isAr ? 'أدخل رقم موبايل مصري صحيح، مثل 01012345678' : 'Enter a valid Egyptian mobile number, such as 01012345678'); ?>">
                     </div>
 
                     <!-- COMPANY SPECIFIC FIELDS (Hidden for client & broker) -->

@@ -69,7 +69,7 @@
                 <label class="form-label fw-semibold" style="font-size: 14px;">
                     <span id="page-label-phone">{{ $isAr ? 'رقم الهاتف' : 'Phone Number' }}</span> <span class="text-danger">*</span>
                 </label>
-                <input name="phone" type="tel" class="form-control" style="border-radius: 10px; padding: 11px 14px;" value="{{ old('phone') }}" placeholder="01012345678" required dir="ltr">
+                <input name="phone" type="tel" class="form-control" style="border-radius: 10px; padding: 11px 14px;" value="{{ old('phone') }}" placeholder="01012345678" required dir="ltr" inputmode="numeric" autocomplete="tel" maxlength="14" pattern="(?:01[0125][0-9]{8}|(?:\+20|0020)1[0125][0-9]{8})" title="{{ $isAr ? 'أدخل رقم موبايل مصري صحيح، مثل 01012345678' : 'Enter a valid Egyptian mobile number, such as 01012345678' }}">
             </div>
 
             <!-- Company Fields -->

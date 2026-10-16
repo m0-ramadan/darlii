@@ -396,6 +396,11 @@
                 var password = (form.querySelector('input[name="password"]') || {}).value || '';
                 var passwordConfirmation = (form.querySelector('input[name="password_confirmation"]') || {}).value || '';
 
+                if (name.trim().split(/\s+/).length < 2) {
+                    showError(alertBox, isAr ? 'يرجى إدخال الاسم ثنائيًا على الأقل.' : 'Please enter at least a first and last name.');
+                    return;
+                }
+
                 if (role === 'broker') {
                     var fileInput = form.querySelector('input[name="national_id_image"]');
                     if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
@@ -415,6 +420,15 @@
 
                 if (!phone.trim()) {
                     showError(alertBox, isAr ? 'يرجى إدخال رقم الهاتف.' : 'Please enter phone number.');
+                    return;
+                }
+
+                var egyptianPhone = phone.replace(/\D/g, '').replace(/^0020/, '').replace(/^20/, '');
+                if (egyptianPhone.length === 10 && egyptianPhone.charAt(0) === '1') {
+                    egyptianPhone = '0' + egyptianPhone;
+                }
+                if (!/^01[0125][0-9]{8}$/.test(egyptianPhone)) {
+                    showError(alertBox, isAr ? 'يرجى إدخال رقم موبايل مصري صحيح مكوّن من 11 رقمًا، مثل 01012345678.' : 'Enter a valid Egyptian mobile number, such as 01012345678.');
                     return;
                 }
 
@@ -460,7 +474,9 @@
                         }, 700);
                     } else {
                         var errors = res.data.errors || {};
-                        var errorMsg = res.data.message || '';
+                        var errorMsg = res.status >= 500
+                            ? (isAr ? 'تعذر إنشاء الحساب حاليًا. يرجى المحاولة مرة أخرى بعد قليل.' : 'We could not create your account right now. Please try again shortly.')
+                            : (res.data.message || '');
                         if (errors.company_email) {
                             errorMsg = errors.company_email[0];
                         } else if (errors.national_id_image) {

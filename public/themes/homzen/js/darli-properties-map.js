@@ -71,6 +71,23 @@
             position: 'topleft'
         }).addTo(map);
 
+        // Invalidate map size on initialization and window resize (crucial for mobile layout rendering)
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 150);
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 500);
+
+        window.addEventListener('resize', function () {
+            map.invalidateSize();
+        });
+        window.addEventListener('orientationchange', function () {
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 200);
+        });
+
         // Theme change observer for automatic dark/light map switching
         const themeObserver = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
@@ -199,8 +216,8 @@
             }
         });
 
-        // Open first marker popup by default to match mockup design
-        if (firstMarker) {
+        // Open first marker popup by default on desktop screens to match mockup design
+        if (firstMarker && window.innerWidth > 768) {
             setTimeout(function () {
                 firstMarker.openPopup();
             }, 600);

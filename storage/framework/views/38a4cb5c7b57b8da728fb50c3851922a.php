@@ -8,7 +8,7 @@
 <?php $__env->startSection('content'); ?>
     
     <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/plugins/leaflet/leaflet.css')); ?>">
-    <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/css/darli-properties-map.css')); ?>?v=1.0.2">
+    <link rel="stylesheet" href="<?php echo e(asset('themes/homzen/css/darli-properties-map.css')); ?>?v=1.0.4">
 
     <div class="darli-properties-page">
         <div class="darli-properties-split-container">
@@ -450,7 +450,7 @@
         window.__DARLI_MAP_PROPERTIES__ = <?php echo json_encode($mapProperties, 15, 512) ?>;
     </script>
     <script src="<?php echo e(asset('themes/homzen/plugins/leaflet/leaflet.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/homzen/js/darli-properties-map.js')); ?>?v=1.0.3"></script>
+    <script src="<?php echo e(asset('themes/homzen/js/darli-properties-map.js')); ?>?v=1.0.5"></script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.public-shell', ['shellHead' => $shell['head'] ?? '', 'shellFooter' => $shell['footer'] ?? '', 'bodyClass' => 'body counter-scroll'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/resources/views/properties/index.blade.php ENDPATH**/ ?>

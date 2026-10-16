@@ -10,7 +10,7 @@
 @section('content')
     {{-- Leaflet CSS & Custom Properties Map CSS --}}
     <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/leaflet/leaflet.css') }}">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.css') }}?v=1.0.2">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.css') }}?v=1.0.4">
 
     <div class="darli-properties-page">
         <div class="darli-properties-split-container">
@@ -435,5 +435,5 @@
         window.__DARLI_MAP_PROPERTIES__ = @json($mapProperties);
     </script>
     <script src="{{ asset('themes/homzen/plugins/leaflet/leaflet.js') }}"></script>
-    <script src="{{ asset('themes/homzen/js/darli-properties-map.js') }}?v=1.0.3"></script>
+    <script src="{{ asset('themes/homzen/js/darli-properties-map.js') }}?v=1.0.5"></script>
 @endsection

@@ -155,6 +155,52 @@
   display: block;
 }
 
+.darli-about-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 3;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.darli-about-badge-text {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.darli-about-badge-text .badge-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #102038;
+  line-height: 1.2;
+}
+
+.darli-about-badge-text .badge-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.darli-about-badge-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(197, 141, 52, 0.12);
+  color: var(--darli-about-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ==========================================================================
    Section 3: Stats Bar
    ========================================================================== */
@@ -555,6 +601,7 @@ html[data-theme="dark"] .darli-about-page .darli-consult-form-card textarea:focu
 }
 
 .darli-step-card-image-wrap {
+  position: relative;
   height: 140px;
   border-radius: 16px 16px 0 0;
   overflow: hidden;
@@ -574,20 +621,20 @@ html[data-theme="dark"] .darli-about-page .darli-consult-form-card textarea:focu
 
 .darli-step-number-badge {
   position: absolute;
-  bottom: -18px;
-  right: 24px;
-  width: 38px;
-  height: 38px;
+  bottom: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: var(--darli-about-gold);
+  background: linear-gradient(135deg, #d89f4b 0%, #b88230 100%);
   color: #ffffff;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(197, 141, 52, 0.35);
-  border: 3px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+  border: 2px solid rgba(255, 255, 255, 0.95);
   z-index: 3;
 }
 

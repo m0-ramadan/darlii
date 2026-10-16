@@ -51,6 +51,18 @@
                 <!-- Image Column (Left in RTL) -->
                 <div class="darli-about-image-wrap">
                     <img src="/themes/homzen/images/about/darli-about-villa.png" alt="شركة دارلي للاستثمار العقاري">
+                    <div class="darli-about-badge">
+                        <div class="darli-about-badge-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
+                        <div class="darli-about-badge-text">
+                            <span class="badge-title">خبرة محلية</span>
+                            <span class="badge-subtitle">برؤية مستقبلية</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -357,6 +369,7 @@
                 <div class="darli-step-card">
                     <div class="darli-step-card-image-wrap">
                         <img src="/themes/homzen/images/about/step-1.png" alt="استشارة مخصصة">
+                        <span class="darli-step-number-badge">01</span>
                     </div>
                     <div class="darli-step-card-body">
                         <h3 class="darli-step-card-title">استشارة مخصصة</h3>
@@ -368,6 +381,7 @@
                 <div class="darli-step-card">
                     <div class="darli-step-card-image-wrap">
                         <img src="/themes/homzen/images/about/step-2.png" alt="إجراءات سهلة">
+                        <span class="darli-step-number-badge">02</span>
                     </div>
                     <div class="darli-step-card-body">
                         <h3 class="darli-step-card-title">إجراءات سهلة</h3>
@@ -379,6 +393,7 @@
                 <div class="darli-step-card">
                     <div class="darli-step-card-image-wrap">
                         <img src="/themes/homzen/images/about/step-3.png" alt="متابعة ما بعد البيع">
+                        <span class="darli-step-number-badge">03</span>
                     </div>
                     <div class="darli-step-card-body">
                         <h3 class="darli-step-card-title">متابعة ما بعد البيع</h3>

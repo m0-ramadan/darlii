@@ -714,8 +714,25 @@ class PropertyController extends Controller
             $imageUrl = $property->primaryImageUrl('ar');
             $translation = $property->translation('ar');
             $name = $property->displayName('ar') ?: 'عقار مميز في دارلي';
-            $title = ($action === 'created' ? 'عقار جديد: ' : 'تحديث عقار: ') . $name;
-            $body = Str::limit(strip_tags((string) $translation?->description), 150) ?: 'تم إضافة عقار جديد ومميز على منصة دارلي، تصفح التفاصيل والأسعار الآن.';
+
+            $priceStr = '';
+            if ($property->price && $property->price > 0) {
+                $priceStr = 'السعر: ' . number_format((float) $property->price) . ' ' . ($property->currency ?: 'ج.م');
+            }
+
+            if ($action === 'created') {
+                $title = 'عقار جديد: ' . $name;
+            } else {
+                $title = ($priceStr ? 'تحديث أسعار وعقار: ' : 'تحديث عقار: ') . $name;
+            }
+
+            $desc = Str::limit(strip_tags((string) $translation?->description), 120);
+            if ($priceStr) {
+                $body = $desc ? ($priceStr . ' — ' . $desc) : ($priceStr . ' — تم تحديث تفاصيل وأسعار العقار، تصفح الآن.');
+            } else {
+                $body = $desc ?: 'تم إضافة وتحديث عقار مميز على منصة دارلي، تصفح التفاصيل والأسعار الآن.';
+            }
+
             $slug = $property->slug('ar') ?: ($property->reference_code ?: $property->id);
 
             app(\App\Services\Notifications\FcmNotificationService::class)->send([

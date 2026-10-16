@@ -26350,3 +26350,161 @@ Stack trace:
 #48 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('/var/www/html/p...')
 #49 {main}
 "} 
+[2026-10-16 23:35:49] local.WARNING: FCM Send Failed: <HTML>
+<HEAD>
+<TITLE>Not Found</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+<!-- GSE Default Error -->
+<H1>Not Found</H1>
+<H2>Error 404</H2>
+</BODY>
+</HTML>
+  
+[2026-10-16 23:39:58] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:39:59] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:39:59] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:00] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:00] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "Device unregistered.",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:00] local.INFO: FCM v1 Broadcast finished. Sent 0/5 successfully.  
+[2026-10-16 23:40:56] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:56] local.INFO: FCM v1: Pruned expired token: eN1B4JNIW7ADaaVOS3xEiY:APA91bG5QkCXjUAK7ZAYAH3_la3c6v7xgjj19Am3xKYWL9QBajgdFXiUdB7l0skyB0u1Y6wyMcxvL5IfClYEuEFiAFV22giKgy6Wuk_RSRvPMN9w5yEX_Lc  
+[2026-10-16 23:40:57] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:57] local.INFO: FCM v1: Pruned expired token: eN1B4JNIW7ADaaVOS3xEiY:APA91bG0_XHR0CfQbn3bNl3wxFmftD8JmDUxOXnfjDEtIW-aa77ASkqKqMIcPdAVkJ29JSJpfDHdqDX-s_jsVX8rp8AxB71yw5D_xJRSnNQQbBEFBPHmaWU  
+[2026-10-16 23:40:57] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:57] local.INFO: FCM v1: Pruned expired token: eN1B4JNIW7ADaaVOS3xEiY:APA91bEha8H2sjL24XAhxxMfq1RuLfBUrDgcykJXhjx1gGhwAEu1Uv3HQXbR7jTNgHsn5xba4CpIOJ2XIQnP9J2DBJ_UP_p87EnGlsuwqYz7xHA6Xqtducw  
+[2026-10-16 23:40:58] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "NotRegistered",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:58] local.INFO: FCM v1: Pruned expired token: eN1B4JNIW7ADaaVOS3xEiY:APA91bFrVNzUp3q2F8CVBQUnI_UG2K4aXXD6UI7GRfImRgq4omRZ6OpX8koWsj8YHDE5so_7HxmUihx1m-gPZra78_WvUM1QaOqHXj8RWqDF1_anlDfbJTE  
+[2026-10-16 23:40:58] local.WARNING: FCM v1 Single Send Failed: {
+  "error": {
+    "code": 404,
+    "message": "Device unregistered.",
+    "status": "NOT_FOUND",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+        "errorCode": "UNREGISTERED"
+      }
+    ]
+  }
+}
+  
+[2026-10-16 23:40:58] local.INFO: FCM v1: Pruned expired token: eN1B4JNIW7ADaaVOS3xEiY:APA91bF9q8vLbU2QZsQObHIm-YloGIuVPUAUZPzFNE1kQaeMVsv_cL2L4p8px4MgNQmovfDYFk73mfL5PX9LrRfd4WCUJ5Kz5-1VEYyHAq-gpT6afvltuPY  
+[2026-10-16 23:40:58] local.INFO: FCM v1 Broadcast finished. Sent 0/5 successfully.  

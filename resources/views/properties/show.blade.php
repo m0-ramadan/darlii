@@ -66,6 +66,18 @@
 
 @section('content')
 
+    <style>
+        .darli-gallery-viewer{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,.94);padding:64px 20px 28px}
+        .darli-gallery-viewer.is-open{display:flex}
+        .darli-gallery-viewer__image{display:block;max-width:min(1200px,94vw);max-height:calc(100vh - 100px);object-fit:contain;border-radius:8px;box-shadow:0 18px 60px rgba(0,0,0,.45)}
+        .darli-gallery-viewer__close,.darli-gallery-viewer__nav{position:absolute;z-index:2;display:flex;align-items:center;justify-content:center;border:0;background:rgba(255,255,255,.96);color:#0f172a;box-shadow:0 4px 18px rgba(0,0,0,.3);cursor:pointer}
+        .darli-gallery-viewer__close{top:16px;right:16px;width:46px;height:46px;border-radius:50%;font-size:30px;line-height:1}
+        .darli-gallery-viewer__nav{top:50%;width:48px;height:48px;border-radius:50%;font-size:34px;transform:translateY(-50%)}
+        .darli-gallery-viewer__prev{left:18px}.darli-gallery-viewer__next{right:18px}
+        .darli-gallery-viewer__counter{position:absolute;bottom:18px;left:50%;padding:6px 12px;border-radius:999px;background:rgba(15,23,42,.75);color:#fff;font-weight:700;direction:ltr;transform:translateX(-50%)}
+        @media(max-width:767px){.darli-gallery-viewer{padding:70px 10px 52px}.darli-gallery-viewer__nav{width:42px;height:42px}.darli-gallery-viewer__prev{left:8px}.darli-gallery-viewer__next{right:8px}}
+    </style>
+
     {{-- ===================== 1. معرض الصور المتنقل الأصلي لهومزن ===================== --}}
     <section class="flat-location flat-slider-detail-v1">
         <div class="swiper tf-sw-location" data-preview-lg="2.03" data-preview-md="2" data-preview-sm="2" data-space="20"
@@ -77,7 +89,7 @@
                             $imgUrl = $mediaUrl($item);
                         @endphp
                         <div class="swiper-slide">
-                            <a href="{{ $imgUrl }}" class="box-imgage-detail d-block" data-fancybox="gallery">
+                            <a href="{{ $imgUrl }}" class="box-imgage-detail d-block" data-property-gallery>
                                 <img src="{{ $imgUrl }}" alt="{{ $tr?->name }}" width="100%" loading="lazy"
                                     onerror="this.onerror=null;this.src='{{ $placeholder }}';">
                             </a>
@@ -85,7 +97,7 @@
                     @endforeach
                 @else
                     <div class="swiper-slide">
-                        <a href="{{ $heroImage }}" class="box-imgage-detail d-block" data-fancybox="gallery">
+                        <a href="{{ $heroImage }}" class="box-imgage-detail d-block" data-property-gallery>
                             <img src="{{ $heroImage }}" alt="{{ $tr?->name }}" width="100%" loading="lazy"
                                 onerror="this.onerror=null;this.src='{{ $placeholder }}';">
                         </a>
@@ -108,6 +120,18 @@
             </div>
         </div>
     </section>
+
+    <div class="darli-gallery-viewer" id="darli-gallery-viewer" role="dialog" aria-modal="true"
+        aria-label="{{ $isAr ? 'معرض صور العقار' : 'Property image gallery' }}" aria-hidden="true">
+        <button type="button" class="darli-gallery-viewer__close" data-gallery-close
+            aria-label="{{ $isAr ? 'إغلاق' : 'Close' }}">×</button>
+        <button type="button" class="darli-gallery-viewer__nav darli-gallery-viewer__prev" data-gallery-prev
+            aria-label="{{ $isAr ? 'الصورة السابقة' : 'Previous image' }}">‹</button>
+        <img class="darli-gallery-viewer__image" alt="{{ $tr?->name }}">
+        <button type="button" class="darli-gallery-viewer__nav darli-gallery-viewer__next" data-gallery-next
+            aria-label="{{ $isAr ? 'الصورة التالية' : 'Next image' }}">›</button>
+        <span class="darli-gallery-viewer__counter" aria-live="polite"></span>
+    </div>
 
     {{-- ===================== 2. قسم تفاصيل العقار بهيكل هومزن الأصلي ===================== --}}
     <section class="flat-section pt-0 flat-property-detail">
@@ -788,6 +812,53 @@
     {{-- تفعيل خريطة الموقع التفاعلية --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var galleryLinks = Array.from(document.querySelectorAll('[data-property-gallery]'));
+            var galleryViewer = document.getElementById('darli-gallery-viewer');
+            if (galleryLinks.length && galleryViewer) {
+                var galleryImage = galleryViewer.querySelector('.darli-gallery-viewer__image');
+                var galleryCounter = galleryViewer.querySelector('.darli-gallery-viewer__counter');
+                var galleryIndex = 0;
+
+                function showGalleryImage(index) {
+                    galleryIndex = (index + galleryLinks.length) % galleryLinks.length;
+                    galleryImage.src = galleryLinks[galleryIndex].href;
+                    galleryCounter.textContent = (galleryIndex + 1) + ' / ' + galleryLinks.length;
+                }
+
+                function openGallery(index) {
+                    showGalleryImage(index);
+                    galleryViewer.classList.add('is-open');
+                    galleryViewer.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                    galleryViewer.querySelector('[data-gallery-close]').focus();
+                }
+
+                function closeGallery() {
+                    galleryViewer.classList.remove('is-open');
+                    galleryViewer.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                }
+
+                galleryLinks.forEach(function(link, index) {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        openGallery(index);
+                    });
+                });
+                galleryViewer.querySelector('[data-gallery-close]').addEventListener('click', closeGallery);
+                galleryViewer.querySelector('[data-gallery-prev]').addEventListener('click', function() { showGalleryImage(galleryIndex - 1); });
+                galleryViewer.querySelector('[data-gallery-next]').addEventListener('click', function() { showGalleryImage(galleryIndex + 1); });
+                galleryViewer.addEventListener('click', function(event) {
+                    if (event.target === galleryViewer) closeGallery();
+                });
+                document.addEventListener('keydown', function(event) {
+                    if (!galleryViewer.classList.contains('is-open')) return;
+                    if (event.key === 'Escape') closeGallery();
+                    if (event.key === 'ArrowLeft') showGalleryImage(galleryIndex - 1);
+                    if (event.key === 'ArrowRight') showGalleryImage(galleryIndex + 1);
+                });
+            }
+
             var mapEl = document.getElementById('darli-property-map') || document.getElementById(
                 'homzen-property-map');
             if (mapEl && typeof L !== 'undefined') {

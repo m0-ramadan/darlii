@@ -19,21 +19,69 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function (payload) {
-    const notificationTitle = payload.notification?.title || payload.data?.title || 'إشعار جديد من منصة دارلي';
-    const notificationOptions = {
-        body: payload.notification?.body || payload.data?.body || '',
-        icon: payload.notification?.icon || '/themes/homzen/images/logo/logo-darli.png',
-        image: payload.notification?.image || payload.data?.image || null,
+function extractNotificationData(payload) {
+    const title = payload.notification?.title || payload.data?.title || 'إشعار جديد من منصة دارلي';
+    const body = payload.notification?.body || payload.data?.body || '';
+    const icon = payload.notification?.icon || payload.data?.icon || '/themes/homzen/images/logo/logo-darli.png';
+    const image = payload.notification?.image || payload.data?.image || null;
+    const url = payload.data?.url || payload.notification?.click_action || '/ar';
+    const tag = payload.data?.tag || ('darli-notif-' + (payload.data?.id || Date.now()));
+
+    const options = {
+        body: body,
+        icon: icon,
         badge: '/themes/homzen/images/logo/favicon.png',
         dir: 'rtl',
         lang: 'ar',
+        vibrate: [300, 100, 300, 100, 300],
+        renotify: true,
+        requireInteraction: true,
+        silent: false,
+        tag: tag,
         data: {
-            url: payload.data?.url || payload.notification?.click_action || '/ar'
+            url: url,
+            time: Date.now()
         }
     };
 
-    return self.registration.showNotification(notificationTitle, notificationOptions);
+    if (image) {
+        options.image = image;
+    }
+
+    return { title, options };
+}
+
+// Handle FCM background message
+messaging.onBackgroundMessage(function (payload) {
+    console.log('[DarliSW] Background message received: ', payload);
+    const { title, options } = extractNotificationData(payload);
+    return self.registration.showNotification(title, options);
+});
+
+// Fallback native push listener for standard Web Push payloads
+self.addEventListener('push', function (event) {
+    if (!event.data) return;
+
+    try {
+        const payload = event.data.json();
+        // If message has notification or data
+        if (payload.notification || payload.data) {
+            const { title, options } = extractNotificationData(payload);
+            event.waitUntil(self.registration.showNotification(title, options));
+        }
+    } catch (e) {
+        // Plain text message
+        const text = event.data.text();
+        if (text) {
+            event.waitUntil(self.registration.showNotification('إشعار جديد من دارلي', {
+                body: text,
+                icon: '/themes/homzen/images/logo/logo-darli.png',
+                vibrate: [300, 100, 300, 100, 300],
+                tag: 'darli-raw-' + Date.now(),
+                data: { url: '/ar' }
+            }));
+        }
+    }
 });
 
 self.addEventListener('notificationclick', function (event) {
@@ -54,4 +102,3 @@ self.addEventListener('notificationclick', function (event) {
         })
     );
 });
-

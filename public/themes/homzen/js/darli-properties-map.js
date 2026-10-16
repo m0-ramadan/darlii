@@ -8,6 +8,35 @@
     'use strict';
 
     function initDarliProperties() {
+        document.querySelectorAll('[data-card-gallery]').forEach(function (gallery) {
+            const slides = Array.from(gallery.querySelectorAll('.darli-card-gallery-slide'));
+            const counter = gallery.querySelector('.darli-card-gallery-count');
+            let activeIndex = 0;
+
+            function showCardImage(index) {
+                activeIndex = (index + slides.length) % slides.length;
+                slides.forEach(function (slide, slideIndex) {
+                    const isActive = slideIndex === activeIndex;
+                    slide.classList.toggle('is-active', isActive);
+                    slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+                });
+                if (counter) counter.textContent = (activeIndex + 1) + ' / ' + slides.length;
+            }
+
+            const previous = gallery.querySelector('.darli-card-gallery-prev');
+            const next = gallery.querySelector('.darli-card-gallery-next');
+            if (previous) previous.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                showCardImage(activeIndex - 1);
+            });
+            if (next) next.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                showCardImage(activeIndex + 1);
+            });
+        });
+
         const mapEl = document.getElementById('darli-properties-map');
         if (!mapEl || typeof L === 'undefined') {
             return;
@@ -495,33 +524,54 @@
         // 14. Mobile Map Fullscreen / Expand Toggle
         const mobFullscreenBtn = document.getElementById('darli-mob-fullscreen-btn');
         const mapFrameCard = document.getElementById('darli-map-frame-card');
-        if (mobFullscreenBtn && mapFrameCard) {
-            mobFullscreenBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const isFull = mapFrameCard.classList.toggle('is-fullscreen');
+        const mapFullscreenClose = document.getElementById('darli-map-fullscreen-close');
+
+        function setMapFullscreen(isFull) {
+            if (!mapFrameCard) return;
+
+            mapFrameCard.classList.toggle('is-fullscreen', isFull);
+            document.body.style.overflow = isFull ? 'hidden' : '';
+
+            if (mobFullscreenBtn) {
                 const iconExpand = mobFullscreenBtn.querySelector('.icon-expand');
                 const iconCompress = mobFullscreenBtn.querySelector('.icon-compress');
                 if (iconExpand && iconCompress) {
                     iconExpand.style.display = isFull ? 'none' : 'block';
                     iconCompress.style.display = isFull ? 'block' : 'none';
                 }
-                setTimeout(function () {
-                    map.invalidateSize();
-                }, 120);
+            }
+
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 120);
+        }
+
+        if (mobFullscreenBtn && mapFrameCard) {
+            mobFullscreenBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                setMapFullscreen(!mapFrameCard.classList.contains('is-fullscreen'));
             });
         }
+
+        if (mapFullscreenClose) {
+            mapFullscreenClose.addEventListener('click', function () {
+                setMapFullscreen(false);
+            });
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && mapFrameCard && mapFrameCard.classList.contains('is-fullscreen')) {
+                setMapFullscreen(false);
+            }
+        });
 
         // 15. Mobile "عرض الخريطة" Button
         const mobShowMapBtn = document.getElementById('darli-mob-show-map-btn');
         if (mobShowMapBtn && mapFrameCard) {
             mobShowMapBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                mapFrameCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                mapFrameCard.classList.toggle('is-expanded');
-                setTimeout(function () {
-                    map.invalidateSize();
-                }, 380);
+                setMapFullscreen(true);
             });
         }
 

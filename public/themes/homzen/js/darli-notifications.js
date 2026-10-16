@@ -13,6 +13,8 @@
     let isSubscribed = false;
     let notificationsList = [];
     let unreadCount = 0;
+    let swRegistration = null;
+    let lastSeenNotificationId = parseInt(localStorage.getItem('darli_last_seen_notif_id') || '0', 10);
 
     // Elements
     let bellDropdown = null;
@@ -33,6 +35,95 @@
     }
 
     /**
+     * Play notification chime using Web Audio API synthesis
+     */
+    function playNotificationChime() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+
+            const now = ctx.currentTime;
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(659.25, now); // E5
+            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(880, now + 0.12); // A5
+            osc2.frequency.exponentialRampToValueAtTime(1318.51, now + 0.32); // E6
+
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc1.start(now);
+            osc1.stop(now + 0.16);
+            osc2.start(now + 0.12);
+            osc2.stop(now + 0.65);
+        } catch (e) {
+            console.log('[DarliNotifications] Audio notice:', e);
+        }
+    }
+
+    /**
+     * Trigger native system notification in the OS notification curtain / tray ("الستارة")
+     */
+    function triggerSystemPushNotification(title, body, image, url, tagId) {
+        // Physical vibration pattern on supported mobile devices
+        if ('vibrate' in navigator) {
+            try { navigator.vibrate([300, 100, 300, 100, 300]); } catch (e) {}
+        }
+
+        // Native notification in system tray / notification shade
+        if ('Notification' in window && Notification.permission === 'granted') {
+            const options = {
+                body: body || '',
+                icon: '/themes/homzen/images/logo/logo-darli.png',
+                badge: '/themes/homzen/images/logo/favicon.png',
+                dir: 'rtl',
+                lang: 'ar',
+                vibrate: [300, 100, 300, 100, 300],
+                renotify: true,
+                requireInteraction: true,
+                silent: false,
+                tag: 'darli-notif-' + (tagId || Date.now()),
+                data: {
+                    url: url || '/ar'
+                }
+            };
+            if (image) {
+                options.image = image;
+            }
+
+            if (swRegistration && swRegistration.showNotification) {
+                swRegistration.showNotification(title, options);
+            } else if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+                navigator.serviceWorker.ready.then(function (reg) {
+                    reg.showNotification(title, options);
+                });
+            } else {
+                try {
+                    const n = new Notification(title, options);
+                    n.onclick = function () {
+                        window.focus();
+                        window.location.href = options.data.url;
+                    };
+                } catch (e) {}
+            }
+        }
+    }
+
+    /**
      * Initialize Firebase and Service Worker
      */
     function initFirebase() {
@@ -46,6 +137,8 @@
 
         navigator.serviceWorker.register(swUrl)
             .then(function (registration) {
+                swRegistration = registration;
+
                 // Initialize Firebase Web App if firebase compat is loaded
                 if (window.firebase) {
                     try {
@@ -63,11 +156,19 @@
 
                         const messaging = firebase.messaging();
 
-                        // Listen for foreground messages
+                        // Listen for foreground push messages
                         messaging.onMessage(function (payload) {
-                            console.log('[DarliNotifications] Message received: ', payload);
+                            console.log('[DarliNotifications] Push message received: ', payload);
+                            const title = payload.notification?.title || payload.data?.title || 'إشعار جديد من منصة دارلي';
+                            const body = payload.notification?.body || payload.data?.body || '';
+                            const image = payload.notification?.image || payload.data?.image || null;
+                            const targetUrl = payload.data?.url || payload.notification?.click_action || '/ar';
+                            const notifId = payload.data?.id || Date.now();
+
+                            playNotificationChime();
+                            triggerSystemPushNotification(title, body, image, targetUrl, notifId);
                             showForegroundToast(payload);
-                            fetchNotifications();
+                            fetchNotifications(false);
                         });
 
                         // If already granted, ensure token is refreshed/synced
@@ -134,9 +235,11 @@
             .then(function (currentToken) {
                 if (currentToken) {
                     const lastToken = localStorage.getItem('darli_fcm_token');
-                    if (lastToken !== currentToken) {
+                    const lastVapid = localStorage.getItem('darli_fcm_vapid');
+                    if (lastToken !== currentToken || lastVapid !== (config.vapidKey || '')) {
                         saveTokenToBackend(currentToken, oldToken || visitorDeviceId, 'web_push', function () {
                             localStorage.setItem('darli_fcm_token', currentToken);
+                            localStorage.setItem('darli_fcm_vapid', config.vapidKey || '');
                         });
                     }
                 }
@@ -194,7 +297,7 @@
                         </div>
                         <div style="flex: 1;">
                             <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: var(--text-primary, #0f172a);">تفعيل إشعارات دارلي</h4>
-                            <p style="margin: 0 0 12px 0; font-size: 12.5px; color: var(--text-muted, #64748b); line-height: 1.45;">ابقَ على اطلاع بأحدث العقارات المعروضة والخصومات الفورية في منطقتك فور إضافتها.</p>
+                            <p style="margin: 0 0 12px 0; font-size: 12.5px; color: var(--text-muted, #64748b); line-height: 1.45;">ابقَ على اطلاع بأحدث العقارات وتحديثات الأسعار الفورية في منطقتك فور إضافتها.</p>
                             <div style="display: flex; gap: 8px;">
                                 <button id="darli-enable-push-btn" style="background: linear-gradient(135deg, var(--brand-navy, #0b1f3a) 0%, var(--brand-navy-dark, #071527) 100%); color: #fff; border: none; padding: 7px 16px; border-radius: var(--radius-sm, 8px); font-size: 13px; font-weight: 700; cursor: pointer; flex: 1; transition: background 0.2s; box-shadow: 0 3px 10px rgba(11, 31, 58, 0.2);">
                                     تفعيل الإشعارات
@@ -282,9 +385,9 @@
     }
 
     /**
-     * Fetch In-App Notifications
+     * Fetch In-App Notifications with periodic new-item detection
      */
-    function fetchNotifications() {
+    function fetchNotifications(isPeriodicCheck = false) {
         fetch('/api/notifications/list', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -297,6 +400,33 @@
                     notificationsList = data.notifications || [];
                     updateNotificationBadge();
                     renderNotificationsDropdown();
+
+                    // If periodic check finds a brand-new notification that hasn't been presented
+                    if (notificationsList.length > 0) {
+                        const newest = notificationsList[0];
+                        const newestId = parseInt(newest.id, 10);
+
+                        if (isPeriodicCheck && lastSeenNotificationId > 0 && newestId > lastSeenNotificationId && !newest.is_read) {
+                            playNotificationChime();
+                            triggerSystemPushNotification(newest.title, newest.body, newest.image_url, newest.action_url, newest.id);
+                            showForegroundToast({
+                                notification: {
+                                    title: newest.title,
+                                    body: newest.body,
+                                    image: newest.image_url
+                                },
+                                data: {
+                                    url: newest.action_url || '/ar',
+                                    id: newest.id
+                                }
+                            });
+                        }
+
+                        if (newestId > lastSeenNotificationId) {
+                            lastSeenNotificationId = newestId;
+                            localStorage.setItem('darli_last_seen_notif_id', newestId.toString());
+                        }
+                    }
                 }
             })
             .catch(err => console.log('[DarliNotifications] fetch error:', err));
@@ -411,8 +541,12 @@
     // Run on page load
     document.addEventListener('DOMContentLoaded', function () {
         initFirebase();
-        fetchNotifications();
+        fetchNotifications(false);
+
+        // Periodic check every 45s for instant live notifications while page is open
+        setInterval(function () {
+            fetchNotifications(true);
+        }, 45000);
     });
 
 })();
-

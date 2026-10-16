@@ -461,9 +461,61 @@
 .darli-prop-card-media {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 285px;
   overflow: hidden;
   background: #e2e8f0;
+}
+
+.darli-card-gallery-track,
+.darli-card-gallery-slide { width: 100%; height: 100%; }
+.darli-card-gallery-slide { display: none; }
+.darli-card-gallery-slide.is-active { display: block; }
+
+.darli-card-gallery-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  display: flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #1e293b;
+  font-size: 28px;
+  line-height: 1;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.2);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.darli-card-gallery-prev { left: 10px; }
+.darli-card-gallery-next { right: 10px; }
+.darli-prop-card-media:hover .darli-card-gallery-nav,
+.darli-card-gallery-nav:focus-visible { opacity: 1; }
+.darli-card-gallery-nav:active { transform: translateY(-50%) scale(0.92); }
+
+.darli-card-gallery-count {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  direction: ltr;
+}
+
+@media (hover: none), (max-width: 991px) {
+  .darli-card-gallery-nav { opacity: 1; }
 }
 
 .darli-prop-card-media img {
@@ -1241,6 +1293,10 @@ html[data-theme="dark"] .darli-marker-price {
   position: relative;
 }
 
+.darli-map-fullscreen-close {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    RESPONSIVE DESIGN (Tablets & Mobile)
    -------------------------------------------------------------------------- */
@@ -1406,6 +1462,33 @@ html[data-theme="dark"] .darli-marker-price {
     max-height: 100vh !important;
     z-index: 99999 !important;
     border-radius: 0 !important;
+  }
+
+  .darli-map-frame-card.is-fullscreen .darli-map-fullscreen-close {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    z-index: 1020;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #1e293b;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+    cursor: pointer;
+    transform: translateX(-50%);
+  }
+
+  .darli-map-frame-card.is-fullscreen .darli-map-fullscreen-close:active {
+    transform: translateX(-50%) scale(0.96);
   }
 
   #darli-properties-map {

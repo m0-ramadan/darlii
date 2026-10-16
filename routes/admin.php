@@ -228,6 +228,7 @@ Route::prefix('notifications')->name('notifications.')->group(function (): void 
     Route::post('/', [NotificationController::class, 'store'])->name('store');
     Route::get('/settings', [NotificationController::class, 'settings'])->name('settings');
     Route::put('/settings', [NotificationController::class, 'updateSettings'])->name('settings.update');
+    Route::post('/test-push', [NotificationController::class, 'testPush'])->name('test-push');
     Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
 });
 

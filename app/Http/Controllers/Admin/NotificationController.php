@@ -50,6 +50,8 @@ class NotificationController extends Controller
 
         $notifications = $query->latest()->paginate(15)->withQueryString();
 
+        $credentials = $this->fcmService->resolveFirebaseCredentials();
+
         $stats = [
             'total_sent' => SiteNotification::count(),
             'total_devices' => FcmToken::count(),
@@ -57,7 +59,8 @@ class NotificationController extends Controller
             'web_visitor_count' => FcmToken::where('device_type', 'web_visitor')->count(),
             'registered_users_count' => FcmToken::whereNotNull('user_id')->count(),
             'is_firebase_enabled' => (bool) setting('firebase.enabled', true),
-            'has_server_key' => !empty(setting('firebase.server_key')),
+            'has_server_key' => $credentials['type'] !== 'none',
+            'credentials_type' => $credentials['type'],
         ];
 
         $modalDevices = FcmToken::with('user')->latest('id')->take(100)->get();
@@ -189,17 +192,40 @@ class NotificationController extends Controller
             'firebase.measurement_id',
             'firebase.vapid_public_key',
             'firebase.server_key',
+            'firebase.service_account_json',
         ];
+
+        // Handle uploaded JSON file if provided
+        $serviceAccountFileContent = null;
+        if ($request->hasFile('firebase_service_account_file')) {
+            $file = $request->file('firebase_service_account_file');
+            if ($file->isValid() && str_ends_with(strtolower($file->getClientOriginalName()), '.json')) {
+                $serviceAccountFileContent = (string) file_get_contents($file->getRealPath());
+                // Also store file on disk in storage/app/
+                try {
+                    file_put_contents(storage_path('app/firebase-service-account.json'), $serviceAccountFileContent);
+                } catch (\Throwable $e) {}
+            }
+        }
 
         foreach ($allowedKeys as $key) {
             if ($key === 'firebase.enabled') {
                 $val = $request->boolean('firebase_enabled') ? '1' : '0';
+            } elseif ($key === 'firebase.service_account_json') {
+                if ($serviceAccountFileContent !== null) {
+                    $val = $serviceAccountFileContent;
+                } else {
+                    $val = (string) $request->input('firebase_service_account_json', '');
+                }
             } else {
                 $inputName = str_replace('.', '_', $key);
                 $val = (string) $request->input($inputName, '');
             }
 
-            Setting::query()->where('key', $key)->update(['value' => $val]);
+            Setting::query()->updateOrCreate(
+                ['key' => $key],
+                ['value' => $val, 'group' => 'firebase', 'is_public' => !str_contains($key, 'key') && !str_contains($key, 'json')]
+            );
         }
 
         $this->settingsRepo->flush();
@@ -208,6 +234,42 @@ class NotificationController extends Controller
 
         return redirect()->route('admin.notifications.settings')
             ->with('success', 'تم حفظ وتحديث إعدادات Firebase والإشعارات بنجاح.');
+    }
+
+    /**
+     * إرسال إشعار تجريبي لاختبار الستارة والتنبيه الصوتي على الأجهزة المسجلة.
+     */
+    public function testPush(Request $request): RedirectResponse
+    {
+        $this->authorizePermission('settings.manage');
+
+        $credentials = $this->fcmService->resolveFirebaseCredentials();
+        if ($credentials['type'] === 'none') {
+            return redirect()->route('admin.notifications.settings')
+                ->with('error', 'تعذر إرسال الإشعار التجريبي: لم يتم إدخال مفتاح الخادم (Server Key) أو ملف الاعتماد (Service Account JSON) بعد. يرجى إدخال أحدهما أولاً.');
+        }
+
+        $result = $this->fcmService->send([
+            'title' => '🔔 تجربة إشعار دارلي الفوري',
+            'body' => 'تهانينا! الإشعار يعمل بنجاح ويظهر في ستارة جهازك مع التنبيه الصوتي والاهتزاز.',
+            'image_path' => '/themes/homzen/images/logo/logo-darli.png',
+            'action_url' => url('/ar/properties'),
+            'target_type' => 'all',
+        ]);
+
+        $sentCount = $result['sent_count'] ?? 0;
+        $status = $result['fcm_status'] ?? 'unknown';
+
+        if ($sentCount > 0) {
+            return redirect()->route('admin.notifications.settings')
+                ->with('success', "تم إرسال الإشعار التجريبي بنجاح إلى {$sentCount} جهاز مسجل! تحقق الآن من ستارة هاتفك أو حاسوبك.");
+        } elseif ($status === 'no_registered_devices') {
+            return redirect()->route('admin.notifications.settings')
+                ->with('warning', 'تم إعداد المفاتيح بنجاح، لكن لا توجد أجهزة مشتركة حالياً بإذن إشعارات Web Push مفعل. افتح الموقع واضغط "تفعيل الإشعارات" ثم أعد الاختبار.');
+        } else {
+            return redirect()->route('admin.notifications.settings')
+                ->with('warning', "تم تنفيذ الطلب بحالة ({$status}). إذا لم يظهر في الستارة، يرجى التأكد من تفعيل أذونات الإشعارات للمتصفح في هاتفك والتأكد من صحة المفتاح.");
+        }
     }
 
     /**
@@ -247,6 +309,7 @@ class NotificationController extends Controller
             ['key' => 'firebase.measurement_id', 'value' => 'G-01HJBBQZP7', 'type' => 'text', 'label' => 'Measurement ID (Analytics)', 'help' => 'معرف القياس والتحليلات', 'sort' => 8],
             ['key' => 'firebase.vapid_public_key', 'value' => '', 'type' => 'text', 'label' => 'Firebase Web Push VAPID Public Key', 'help' => 'مفتاح Web Push العام (Key pair من تبويب Cloud Messaging في لوحة تحكم Firebase)', 'sort' => 9],
             ['key' => 'firebase.server_key', 'value' => '', 'type' => 'text', 'label' => 'Firebase Cloud Messaging Server Key (مفتاح السيرفر)', 'help' => 'مفتاح خادم FCM أو التوكن المعتمد لإرسال الإشعارات من السيرفر مباشرة', 'sort' => 10],
+            ['key' => 'firebase.service_account_json', 'value' => '', 'type' => 'textarea', 'label' => 'Firebase Service Account JSON (حساب الخدمة المعتمد v1)', 'help' => 'محتوى ملف JSON لحساب الخدمة من Firebase Console > Project Settings > Service accounts > Generate new private key', 'sort' => 11],
         ];
 
         foreach ($definitions as $def) {

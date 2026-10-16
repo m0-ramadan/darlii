@@ -10,7 +10,7 @@
 @section('content')
     {{-- Leaflet CSS & Custom Properties Map CSS --}}
     <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/leaflet/leaflet.css') }}">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.css') }}?v=1.0.4">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.css') }}?v=1.0.7">
 
     <div class="darli-properties-page">
         <div class="darli-properties-split-container">
@@ -194,6 +194,15 @@
                                 $slug = $tr?->slug;
                                 $url = $slug ? route('properties.show', ['locale' => $locale, 'slug' => $slug]) : '#';
                                 $image = $property->primaryImageUrl($locale);
+                                $cardImages = $property->media->map(function ($media) {
+                                    $path = ltrim((string) $media->path, '/');
+                                    if (str_starts_with($path, 'http')) return $path;
+
+                                    return ($media->disk ?? 'public') === 'legacy'
+                                        ? asset('legacy/' . $path)
+                                        : asset('storage/' . $path);
+                                })->filter()->values();
+                                if ($cardImages->isEmpty()) $cardImages = collect([$image]);
                                 $purposeLabel = $isRent
                                     ? ($isAr
                                         ? 'للإيجار'
@@ -221,11 +230,24 @@
                                 data-purpose="{{ $property->purpose }}" data-lat="{{ $property->latitude }}"
                                 data-lng="{{ $property->longitude }}">
                                 {{-- Media Container --}}
-                                <div class="darli-prop-card-media">
-                                    <a href="{{ $url }}">
-                                        <img src="{{ $image }}" alt="{{ $tr?->name }}" loading="lazy"
-                                            onerror="this.onerror=null;this.src='{{ $property->placeholderUrl($locale) }}';">
-                                    </a>
+                                <div class="darli-prop-card-media" data-card-gallery>
+                                    <div class="darli-card-gallery-track">
+                                        @foreach ($cardImages as $cardImage)
+                                            <a href="{{ $url }}" class="darli-card-gallery-slide {{ $loop->first ? 'is-active' : '' }}"
+                                                aria-hidden="{{ $loop->first ? 'false' : 'true' }}">
+                                                <img src="{{ $cardImage }}" alt="{{ $tr?->name }}" loading="lazy"
+                                                    onerror="this.onerror=null;this.src='{{ $property->placeholderUrl($locale) }}';">
+                                            </a>
+                                        @endforeach
+                                    </div>
+
+                                    @if ($cardImages->count() > 1)
+                                        <button type="button" class="darli-card-gallery-nav darli-card-gallery-prev"
+                                            aria-label="{{ $isAr ? 'الصورة السابقة' : 'Previous image' }}"><span aria-hidden="true">‹</span></button>
+                                        <button type="button" class="darli-card-gallery-nav darli-card-gallery-next"
+                                            aria-label="{{ $isAr ? 'الصورة التالية' : 'Next image' }}"><span aria-hidden="true">›</span></button>
+                                        <span class="darli-card-gallery-count" aria-live="polite">1 / {{ $cardImages->count() }}</span>
+                                    @endif
 
                                     {{-- Top-Left: Badges (Sold + Purpose) --}}
                                     <div class="darli-badges-top-left">
@@ -390,6 +412,16 @@
                 <div class="darli-map-frame-card" id="darli-map-frame-card">
                     {{-- The Leaflet Map Element --}}
                     <div id="darli-properties-map"></div>
+
+                    {{-- Visible only while the map fills the screen. --}}
+                    <button type="button" class="darli-map-fullscreen-close" id="darli-map-fullscreen-close"
+                        aria-label="{{ $isAr ? 'إغلاق الخريطة' : 'Close map' }}">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                        <span>{{ $isAr ? 'إغلاق الخريطة' : 'Close map' }}</span>
+                    </button>
 
                     {{-- Mobile Floating Layer Switcher (Top-Left) --}}
                     <button type="button" class="darli-mob-ctrl-btn darli-mob-btn-layer" id="darli-mob-layer-btn"
@@ -751,5 +783,5 @@
         window.__DARLI_CURRENT_CITY__ = @json($currentCity ?? ($isAr ? 'بني سويف' : 'Beni Suef'));
     </script>
     <script src="{{ asset('themes/homzen/plugins/leaflet/leaflet.js') }}"></script>
-    <script src="{{ asset('themes/homzen/js/darli-properties-map.js') }}?v=1.0.6"></script>
+    <script src="{{ asset('themes/homzen/js/darli-properties-map.js') }}?v=1.0.8"></script>
 @endsection

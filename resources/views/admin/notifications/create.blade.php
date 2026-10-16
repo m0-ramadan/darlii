@@ -12,6 +12,28 @@
 @endsection
 
 @section('content')
+    @php
+        $cred = app(\App\Services\Notifications\FcmNotificationService::class)->resolveFirebaseCredentials();
+    @endphp
+
+    @if($cred['type'] === 'none')
+        <div class="alert alert-warning border-0 d-flex align-items-center justify-content-between p-3 mb-4 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-warning">
+                    @include('admin.partials.icon', ['iconName' => 'alert', 'size' => 24])
+                </div>
+                <div>
+                    <strong class="d-block text-dark">تنبيه: مفتاح الخادم (Server Key) غير مُدخل!</strong>
+                    <span class="text-muted small">سيتم حفظ هذا الإشعار داخل الموقع للمستخدمين، ولكنه لن يُرسل كإشعار فوري (Web Push) إلى ستارة الهواتف حتى يتم إضافة مفتاح Firebase في الإعدادات.</span>
+                </div>
+            </div>
+            <a href="{{ admin_route('admin.notifications.settings') }}" class="ap-btn ap-btn--sm ap-btn--primary text-nowrap">
+                @include('admin.partials.icon', ['iconName' => 'settings', 'size' => 14])
+                إدخال المفتاح
+            </a>
+        </div>
+    @endif
+
     <div class="row g-4">
         {{-- Notification Form --}}
         <div class="col-lg-7">

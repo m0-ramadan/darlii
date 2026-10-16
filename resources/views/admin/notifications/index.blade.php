@@ -38,6 +38,24 @@
         </a>
     </div>
 
+    @if(!$stats['has_server_key'])
+        <div class="alert alert-warning border-0 d-flex align-items-center justify-content-between p-3 mb-4 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-warning">
+                    @include('admin.partials.icon', ['iconName' => 'alert', 'size' => 24])
+                </div>
+                <div>
+                    <strong class="d-block text-dark">مفتاح إرسال الإشعارات إلى ستارة الهاتف (Server Key) غير مُدخل!</strong>
+                    <span class="text-muted small">حالياً الإشعارات تُحفظ في صندوق الموقع الداخلي فقط، ولن تصل إلى ستارة هواتف المستخدمين كإشعار فوري (Web Push) مع الصوت والاهتزاز حتى يتم إدخال مفتاح الخادم.</span>
+                </div>
+            </div>
+            <a href="{{ admin_route('admin.notifications.settings') }}" class="ap-btn ap-btn--sm ap-btn--primary text-nowrap">
+                @include('admin.partials.icon', ['iconName' => 'settings', 'size' => 14])
+                إدخال المفتاح الآن
+            </a>
+        </div>
+    @endif
+
     {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3">

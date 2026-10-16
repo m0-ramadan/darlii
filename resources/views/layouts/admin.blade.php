@@ -227,9 +227,11 @@
                             <a href="{{ admin_route('admin.profile.edit') }}" class="ap-dropdown__item">
                                 @include('admin.partials.icon', ['iconName' => 'users', 'size' => 16]) الملف الشخصي
                             </a>
-                            <a href="{{ admin_route('admin.settings.general') }}" class="ap-dropdown__item">
-                                @include('admin.partials.icon', ['iconName' => 'settings', 'size' => 16]) الإعدادات
-                            </a>
+                            @if ($user?->hasPermission('settings.manage'))
+                                <a href="{{ admin_route('admin.settings.general') }}" class="ap-dropdown__item">
+                                    @include('admin.partials.icon', ['iconName' => 'settings', 'size' => 16]) الإعدادات
+                                </a>
+                            @endif
                             <form method="post" action="{{ route('admin.logout') }}">
                                 @csrf
                                 <button type="submit" class="ap-dropdown__item ap-dropdown__item--danger">

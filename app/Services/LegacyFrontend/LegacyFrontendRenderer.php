@@ -529,8 +529,68 @@ HTML;
         ) ?? $header;
 
         $header = $this->applyAuthenticatedHeader($header, $locale);
+        $header = $this->applyAnnouncementsSettings($header);
 
         return $this->pageSpeedStylesUsedBy($header, $source) . $header;
+    }
+
+    private function applyAnnouncementsSettings(string $header): string
+    {
+        $enabled = (bool) setting('announcements.enabled', true);
+        if (! $enabled) {
+            // Hide the entire announcement wrapper
+            return preg_replace(
+                '~<div\b(?=[^>]*class=["\'][^"\']*\bae-anno-announcement-wrapper\b)[^>]*>.*?</div>\s*</div>~is',
+                '',
+                $header
+            ) ?? $header;
+        }
+
+        $items = [];
+        for ($i = 1; $i <= 6; $i++) {
+            $text = trim((string) setting("announcements.item_{$i}", ''));
+            if ($text !== '') {
+                $items[] = $text;
+            }
+        }
+
+        if (empty($items)) {
+            // Fallback to default if no custom text was set
+            return $header;
+        }
+
+        $delay = (int) setting('announcements.autoplay_delay', 5000);
+        if ($delay < 1000) {
+            $delay = 5000;
+        }
+
+        $controlsHtml = '<div class="ae-anno-announcement__controls page_speed_1991149973"><button class="ae-anno-announcement__arrow ae-anno-announcement__next-button" title="Next button"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path></svg></button><button class="ae-anno-announcement__arrow ae-anno-announcement__previous-button" title="Previous button"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg></button></div>';
+
+        $itemsHtml = '';
+        foreach ($items as $index => $itemText) {
+            $id = $index + 1;
+            $displayStyle = $index === 0 ? 'display: block !important; opacity: 1;' : 'display: none !important;';
+            $itemsHtml .= sprintf(
+                '<div data-announcement-id="%d" class="page_speed_945444355 ae-anno-announcement" style="%s"><div class="ae-anno-announcement__content"><p class="ae-anno-announcement__text">%s</p></div></div>',
+                $id,
+                $displayStyle,
+                e($itemText)
+            );
+        }
+
+        $newWrapper = sprintf(
+            '<div data-announcement-autoplay="1" data-announcement-autoplay-delay="%d" class="ae-anno-announcement-wrapper page_speed_1852436130"><div class="ae-anno-announcement__items page_speed_541816278">%s%s</div></div>',
+            $delay,
+            $controlsHtml,
+            $itemsHtml
+        );
+
+        return preg_replace(
+            '~<div\b(?=[^>]*class=["\'][^"\']*\btop-header-left\b)[^>]*>.*?(?=<div\b(?=[^>]*class=["\'][^"\']*\btop-header-right\b))~is',
+            '<div class="top-header-left">' . $newWrapper . '</div>',
+            $header,
+            1
+        ) ?? $header;
     }
 
     private function applyAuthenticatedHeader(string $header, string $locale): string
@@ -897,10 +957,6 @@ HTML;
             ->latest('id')
             ->limit(6)
             ->get();
-
-        if ($properties->isEmpty()) {
-            return $html;
-        }
 
         try {
             $section = view('legacy.homepage-featured-properties', compact('properties', 'locale'))->render();

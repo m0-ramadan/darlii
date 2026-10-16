@@ -27,9 +27,9 @@ class AgentController
         if ($request->filled('q')) {
             $term = trim((string) $request->input('q'));
             $query->where(function ($q) use ($term) {
-                $q->whereHas('translations', fn ($t) => $t->where('display_name', 'like', "%{$term}%"))
-                    ->orWhereHas('agency', fn ($a) => $a->where('name', 'like', "%{$term}%"))
-                    ->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$term}%"))
+                $q->whereHas('translations', fn($t) => $t->where('display_name', 'like', "%{$term}%"))
+                    ->orWhereHas('agency', fn($a) => $a->where('name', 'like', "%{$term}%"))
+                    ->orWhereHas('user', fn($u) => $u->where('name', 'like', "%{$term}%"))
                     ->orWhere('job_title', 'like', "%{$term}%")
                     ->orWhere('license_number', 'like', "%{$term}%")
                     ->orWhere('bio', 'like', "%{$term}%");
@@ -39,16 +39,32 @@ class AgentController
         if ($request->filled('location')) {
             $loc = trim((string) $request->input('location'));
             $query->where(function ($q) use ($loc) {
-                $q->whereHas('translations', fn ($t) => $t->where('bio', 'like', "%{$loc}%")->orWhere('display_name', 'like', "%{$loc}%"))
-                    ->orWhereHas('agency', fn ($a) => $a->where('description', 'like', "%{$loc}%")->orWhere('name', 'like', "%{$loc}%"))
+                $q->whereHas('translations', fn($t) => $t->where('bio', 'like', "%{$loc}%")->orWhere('display_name', 'like', "%{$loc}%"))
+                    ->orWhereHas('agency', fn($a) => $a->where('description', 'like', "%{$loc}%")->orWhere('name', 'like', "%{$loc}%")->orWhere('city', 'like', "%{$loc}%"))
                     ->orWhere('bio', 'like', "%{$loc}%");
             });
         }
 
-        $agents = $query->orderByRaw('CASE WHEN verified_at IS NOT NULL THEN 0 ELSE 1 END')
-            ->latest('id')
-            ->paginate(12)
-            ->withQueryString();
+        if ($request->filled('specialty')) {
+            $spec = trim((string) $request->input('specialty'));
+            $query->where(function ($q) use ($spec) {
+                $q->where('job_title', 'like', "%{$spec}%")
+                    ->orWhereHas('agency', fn($a) => $a->where('description', 'like', "%{$spec}%"))
+                    ->orWhereHas('translations', fn($t) => $t->where('bio', 'like', "%{$spec}%"));
+            });
+        }
+
+        $sort = $request->input('sort', 'latest');
+        $query->orderByRaw('CASE WHEN verified_at IS NOT NULL THEN 0 ELSE 1 END');
+        if ($sort === 'oldest') {
+            $query->oldest('id');
+        } elseif ($sort === 'name') {
+            $query->orderBy('display_name', 'asc');
+        } else {
+            $query->latest('id');
+        }
+
+        $agents = $query->paginate(12)->withQueryString();
 
         return view('agents.index', [
             'agents' => $agents,

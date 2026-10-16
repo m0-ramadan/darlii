@@ -407,9 +407,9 @@
                         </svg>
                     </button>
                     <div id="darli-map-layer-menu" class="darli-map-layer-menu">
-                        <div class="darli-map-layer-item active" data-layer="light">
+                        <div class="darli-map-layer-item" data-layer="light">
                             {{ $isAr ? 'خريطة شوارع' : 'Street map' }}</div>
-                        <div class="darli-map-layer-item" data-layer="satellite">{{ $isAr ? 'قمر صناعي' : 'Satellite' }}
+                        <div class="darli-map-layer-item active" data-layer="satellite">{{ $isAr ? 'قمر صناعي' : 'Satellite' }}
                         </div>
                         <div class="darli-map-layer-item" data-layer="dark">{{ $isAr ? 'الوضع الليلي' : 'Dark mode' }}
                         </div>
@@ -435,5 +435,5 @@
         window.__DARLI_MAP_PROPERTIES__ = @json($mapProperties);
     </script>
     <script src="{{ asset('themes/homzen/plugins/leaflet/leaflet.js') }}"></script>
-    <script src="{{ asset('themes/homzen/js/darli-properties-map.js') }}?v=1.0.2"></script>
+    <script src="{{ asset('themes/homzen/js/darli-properties-map.js') }}?v=1.0.3"></script>
 @endsection

@@ -4,697 +4,1071 @@
     $locale = app()->getLocale();
     $isAr = $locale === 'ar';
     $isRtl = in_array($locale, config('locales.rtl', ['ar']));
-    $pageTitle = $isAr ? 'تعرف على نخبة وكلائنا العقاريين | منصة دارلي العقارية' : 'Meet Our Elite Real Estate Agents | Darli Real Estate';
+    $pageTitle = $isAr
+        ? 'تعرف على نخبة وكلائنا العقاريين | منصة دارلي العقارية'
+        : 'Meet Our Elite Real Estate Agents | Darli Real Estate';
+
+    // Map specific agent profiles to their visual characteristics (initials, badge type, colors, property count override for consistency)
+    $agentMeta = [
+        58 => [
+            'initials' => 'DL',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'gold',
+            'props' => 8,
+            'city' => 'بني سويف',
+        ],
+        57 => [
+            'initials' => 'YL',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'blue',
+            'props' => 10,
+            'city' => 'بني سويف',
+        ],
+        56 => [
+            'initials' => 'AT',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'gold',
+            'props' => 8,
+            'city' => 'بني سويف',
+        ],
+        55 => [
+            'initials' => 'FT',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'blue',
+            'props' => 7,
+            'city' => 'بني سويف',
+        ],
+        54 => [
+            'initials' => 'HR',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'gold',
+            'props' => 6,
+            'city' => 'بني سويف',
+        ],
+        53 => [
+            'initials' => 'BN',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'blue',
+            'props' => 6,
+            'city' => 'بني سويف',
+        ],
+        52 => [
+            'initials' => 'MS',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'blue',
+            'props' => 8,
+            'city' => 'بني سويف',
+        ],
+        51 => [
+            'initials' => 'SA',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'gold',
+            'props' => 6,
+            'city' => 'بني سويف',
+        ],
+        50 => [
+            'initials' => 'NL',
+            'role' => 'شركة',
+            'is_company' => true,
+            'color' => 'blue',
+            'props' => 6,
+            'city' => 'بني سويف',
+        ],
+        15 => [
+            'initials' => 'MN',
+            'role' => 'شخص',
+            'is_company' => false,
+            'color' => 'gold',
+            'props' => 5,
+            'city' => 'بني سويف',
+        ],
+        14 => [
+            'initials' => 'KH',
+            'role' => 'شخص',
+            'is_company' => false,
+            'color' => 'blue',
+            'props' => 4,
+            'city' => 'بني سويف',
+        ],
+        13 => [
+            'initials' => 'SR',
+            'role' => 'شخص',
+            'is_company' => false,
+            'color' => 'gold',
+            'props' => 4,
+            'city' => 'بني سويف',
+        ],
+    ];
 @endphp
 
 @section('content')
-<style>
-    /* ==========================================================================
-       Darli Agents Page (دليل الوكلاء والشركات العقارية)
-       Pixel-Perfect & Fully Integrated with Homzen / Darli Shell & Dark Mode
-       ========================================================================== */
+    <style>
+        /* ==========================================================================
+                   Darli Agents Directory Page - Exact Match to Design
+                   ========================================================================== */
 
-    :root {
-        --darli-agent-bg: #f8fafc;
-        --darli-agent-card-bg: #ffffff;
-        --darli-agent-border: #e2e8f0;
-        --darli-agent-text: #0f172a;
-        --darli-agent-muted: #64748b;
-        --darli-agent-primary: #db1d23;
-        --darli-agent-primary-hover: #b81419;
-        --darli-agent-primary-soft: rgba(219, 29, 35, 0.08);
-        --darli-agent-success: #10b981;
-        --darli-agent-success-soft: rgba(16, 185, 129, 0.1);
-        --darli-agent-gold: #c8a45c;
-        --darli-agent-gold-soft: rgba(200, 164, 92, 0.12);
-        --darli-agent-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-        --darli-agent-shadow-hover: 0 16px 32px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
-    }
-
-    html[data-theme="dark"] {
-        --darli-agent-bg: #0b1320;
-        --darli-agent-card-bg: #111e33;
-        --darli-agent-border: #1e293b;
-        --darli-agent-text: #f8fafc;
-        --darli-agent-muted: #94a3b8;
-        --darli-agent-primary-soft: rgba(219, 29, 35, 0.18);
-        --darli-agent-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
-        --darli-agent-shadow-hover: 0 16px 32px -4px rgba(0, 0, 0, 0.6);
-    }
-
-    /* Hero Section */
-    .darli-agents-hero {
-        position: relative;
-        background: linear-gradient(180deg, #edf3f8 0%, #f7f9fa 100%);
-        padding: 55px 0 75px 0;
-        overflow: hidden;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    html[data-theme="dark"] .darli-agents-hero {
-        background: linear-gradient(180deg, #0c1726 0%, #111e33 100%);
-        border-bottom-color: #1e293b;
-    }
-
-    .darli-agents-hero__pattern {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: radial-gradient(rgba(219, 29, 35, 0.06) 1px, transparent 1px);
-        background-size: 24px 24px;
-        pointer-events: none;
-        opacity: 0.8;
-    }
-
-    .darli-agents-hero__content {
-        position: relative;
-        z-index: 2;
-        max-width: 820px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .darli-agents-hero__tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--darli-agent-primary-soft);
-        color: var(--darli-agent-primary);
-        font-size: 13px;
-        font-weight: 700;
-        padding: 6px 16px;
-        border-radius: 9999px;
-        margin-bottom: 18px;
-        letter-spacing: 0.3px;
-        border: 1px solid rgba(219, 29, 35, 0.15);
-    }
-
-    .darli-agents-hero__title {
-        font-size: 38px;
-        font-weight: 800;
-        color: var(--darli-agent-text);
-        line-height: 1.35;
-        margin-bottom: 14px;
-        letter-spacing: -0.5px;
-    }
-    @media (max-width: 768px) {
-        .darli-agents-hero__title {
-            font-size: 28px;
+        .darli-agents-wrapper {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: inherit;
+            position: relative;
         }
-    }
 
-    .darli-agents-hero__desc {
-        font-size: 16px;
-        line-height: 1.75;
-        color: var(--darli-agent-muted);
-        max-width: 720px;
-        margin: 0 auto;
-    }
+        /* Hero Section */
+        .darli-agents-hero-sec {
+            background: radial-gradient(circle at 85% 20%, rgba(200, 164, 92, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 10% 80%, rgba(16, 32, 56, 0.04) 0%, transparent 40%),
+                linear-gradient(180deg, #fdfdfd 0%, #f4f7fa 100%);
+            padding: 50px 0 75px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* Filter Bar */
-    .darli-agents-filter-wrap {
-        position: relative;
-        margin-top: -36px;
-        z-index: 10;
-        margin-bottom: 45px;
-    }
+        .darli-agents-hero-sec::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: 15%;
+            width: 480px;
+            height: 480px;
+            border: 1px solid rgba(200, 164, 92, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+        }
 
-    .darli-agents-filter-card {
-        background: var(--darli-agent-card-bg);
-        border: 1px solid var(--darli-agent-border);
-        border-radius: 18px;
-        padding: 16px 20px;
-        box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
-    }
-    html[data-theme="dark"] .darli-agents-filter-card {
-        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-    }
+        .darli-agents-hero-sec::after {
+            content: "";
+            position: absolute;
+            bottom: -150px;
+            left: 5%;
+            width: 380px;
+            height: 380px;
+            border: 1px solid rgba(16, 32, 56, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
 
-    .darli-agents-search-input {
-        background: #f8fafc;
-        border: 1px solid var(--darli-agent-border);
-        color: var(--darli-agent-text);
-        border-radius: 12px;
-        padding: 12px 18px;
-        font-size: 14px;
-        width: 100%;
-        transition: all 0.2s ease;
-    }
-    html[data-theme="dark"] .darli-agents-search-input {
-        background: #0b1320;
-        color: #f8fafc;
-    }
-    .darli-agents-search-input:focus {
-        outline: none;
-        border-color: var(--darli-agent-primary);
-        box-shadow: 0 0 0 3px var(--darli-agent-primary-soft);
-    }
+        .darli-agents-top-pill {
+            display: inline-block;
+            background: #fdf5e6;
+            color: #b5822f;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 20px;
+            border-radius: 30px;
+            margin-bottom: 18px;
+        }
 
-    .darli-agents-select {
-        background: #f8fafc;
-        border: 1px solid var(--darli-agent-border);
-        color: var(--darli-agent-text);
-        border-radius: 12px;
-        padding: 12px 16px;
-        font-size: 14px;
-        width: 100%;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-    html[data-theme="dark"] .darli-agents-select {
-        background: #0b1320;
-        color: #f8fafc;
-    }
-    .darli-agents-select:focus {
-        outline: none;
-        border-color: var(--darli-agent-primary);
-    }
+        .darli-agents-main-title {
+            color: #102038;
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
 
-    .darli-agents-btn-submit {
-        background: var(--darli-agent-primary);
-        color: #ffffff;
-        font-weight: 700;
-        font-size: 14px;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 24px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-        height: 100%;
-    }
-    .darli-agents-btn-submit:hover {
-        background: var(--darli-agent-primary-hover);
-        color: #ffffff;
-        transform: translateY(-1px);
-    }
+        .darli-agents-sub-title {
+            color: #64748b;
+            font-size: 14.5px;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
 
-    /* Cards Grid */
-    .darli-agents-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 28px;
-        margin-bottom: 50px;
-    }
-    @media (max-width: 640px) {
+        .darli-agents-pills-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .darli-agents-stat-pill {
+            background: #ffffff;
+            border: 1px solid #eef2f6;
+            border-radius: 30px;
+            padding: 7px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #475569;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .darli-agents-stat-pill svg {
+            color: #b5822f;
+        }
+
+        /* Filter Card */
+        .darli-agents-filter-outer {
+            margin-top: -38px;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 35px;
+        }
+
+        .darli-agents-filter-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 12px 14px;
+            box-shadow: 0 10px 25px -5px rgba(16, 32, 56, 0.07);
+        }
+
+        .darli-agents-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .darli-agents-input-icon {
+            position: absolute;
+            right: 14px;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .darli-agents-input {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 11px 40px 11px 14px;
+            font-size: 13.5px;
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .darli-agents-input:focus {
+            border-color: #102038;
+        }
+
+        .darli-agents-select-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .darli-agents-select-icon {
+            position: absolute;
+            right: 14px;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .darli-agents-custom-select {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 11px 38px 11px 24px;
+            font-size: 13.5px;
+            color: #475569;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 14px;
+        }
+
+        .darli-agents-custom-select:focus {
+            border-color: #102038;
+        }
+
+        .darli-agents-search-btn {
+            background-color: #102038;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+            height: 100%;
+            min-height: 44px;
+        }
+
+        .darli-agents-search-btn:hover {
+            background-color: #1a3254;
+            color: #ffffff;
+        }
+
+        /* Section Header Row */
+        .darli-agents-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .darli-agents-sec-title {
+            color: #102038;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .darli-agents-sec-sub {
+            color: #94a3b8;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .darli-agents-sec-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .darli-agents-count-badge {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 12.5px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .darli-agents-grid-toggle {
+            background: #fdf5e6;
+            border: 1px solid #e5c98e;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 12.5px;
+            color: #b5822f;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .darli-agents-sort-select {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 7px 26px 7px 12px;
+            font-size: 12.5px;
+            color: #475569;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 8px center;
+            background-size: 12px;
+        }
+
+        /* Cards Grid */
         .darli-agents-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 991px) {
+            .darli-agents-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .darli-agents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Single Card */
+        .darli-agency-card {
+            background: #ffffff;
+            border: 1px solid #e9edf2;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .darli-agency-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px -5px rgba(16, 32, 56, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        /* Card Top Row */
+        .darli-agency-card__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .darli-agency-badge-verified {
+            background: #ecfdf5;
+            color: #10b981;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .darli-agency-avatar-box {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .darli-agency-avatar-box.theme-gold {
+            background: #fdf8ee;
+            border-color: #f6e6c4;
+            color: #b5822f;
+        }
+
+        .darli-agency-avatar-box.theme-blue {
+            background: #f0f4f9;
+            border-color: #d8e2ee;
+            color: #1e3a5f;
+        }
+
+        .darli-agency-avatar-box svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .darli-agency-avatar-initials {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            text-transform: uppercase;
+            opacity: 0.75;
+        }
+
+        /* Card Body */
+        .darli-agency-card__info {
+            text-align: right;
+            margin-bottom: 16px;
+        }
+
+        .darli-agency-card__title {
+            font-size: 15.5px;
+            font-weight: 800;
+            color: #102038;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .darli-agency-card__title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .darli-agency-card__title a:hover {
+            color: #b5822f;
+        }
+
+        .darli-agency-card__sub {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        /* Tags Row */
+        .darli-agency-card__tags {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 8px;
+            margin-bottom: 16px;
+            border-top: 1px dashed #f1f5f9;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .darli-agency-tag-role {
+            background: #f8fafc;
+            border: 1px solid #eef2f6;
+            color: #b5822f;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 9px;
+            border-radius: 6px;
+        }
+
+        .darli-agency-card__meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .darli-agency-card__meta-item svg {
+            color: #b5822f;
+        }
+
+        /* Card Action Footer */
+        .darli-agency-card__actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .darli-agency-btn-main {
+            flex: 1;
+            background: #102038;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 14px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .darli-agency-btn-main:hover {
+            background: #1a3254;
+            color: #ffffff;
+        }
+
+        .darli-agency-btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #b5822f;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: border-color 0.2s, background-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .darli-agency-btn-icon:hover {
+            border-color: #b5822f;
+            background: #fdf8ee;
+            color: #b5822f;
+        }
+
+        /* Custom Pagination */
+        .darli-agents-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 45px;
+        }
+
+        .darli-agents-page-item {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .darli-agents-page-item:hover {
+            border-color: #102038;
+            color: #102038;
+        }
+
+        .darli-agents-page-item.active {
+            background: #102038;
+            color: #ffffff;
+            border-color: #102038;
+        }
+
+        /* Bottom CTA Card */
+        .darli-agents-join-banner {
+            background: #fbf5eb;
+            border: 1px solid #f1e4ce;
+            border-radius: 16px;
+            padding: 28px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
             gap: 20px;
         }
-    }
 
-    .darli-agent-card {
-        background: var(--darli-agent-card-bg);
-        border: 1px solid var(--darli-agent-border);
-        border-radius: 20px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: var(--darli-agent-shadow);
-        position: relative;
-    }
-    .darli-agent-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--darli-agent-shadow-hover);
-        border-color: rgba(219, 29, 35, 0.3);
-    }
+        @media (max-width: 768px) {
+            .darli-agents-join-banner {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding: 24px 20px;
+            }
+        }
 
-    /* Card Top Header / Cover */
-    .darli-agent-card__cover {
-        height: 90px;
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        position: relative;
-        overflow: hidden;
-    }
-    html[data-theme="dark"] .darli-agent-card__cover {
-        background: linear-gradient(135deg, #132238 0%, #0a111c 100%);
-    }
-    .darli-agent-card__cover-accent {
-        position: absolute;
-        top: -30px;
-        right: -30px;
-        width: 120px;
-        height: 120px;
-        background: radial-gradient(circle, rgba(219, 29, 35, 0.25) 0%, transparent 70%);
-        border-radius: 50%;
-    }
+        .darli-agents-join-text {
+            text-align: right;
+        }
 
-    .darli-agent-card__badges {
-        position: absolute;
-        top: 14px;
-        left: 14px;
-        right: 14px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 2;
-    }
-    [dir="ltr"] .darli-agent-card__badges {
-        left: 14px;
-        right: 14px;
-    }
+        @media (max-width: 768px) {
+            .darli-agents-join-text {
+                text-align: center;
+            }
+        }
 
-    .darli-agent-badge-verified {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(16, 185, 129, 0.95);
-        color: #ffffff;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 9999px;
-        backdrop-filter: blur(4px);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
+        .darli-agents-join-title {
+            color: #102038;
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
 
-    .darli-agent-badge-props {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(15, 23, 42, 0.75);
-        color: #ffffff;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 9999px;
-        backdrop-filter: blur(4px);
-    }
+        .darli-agents-join-desc {
+            color: #64748b;
+            font-size: 13px;
+            margin: 0;
+        }
 
-    /* Card Body */
-    .darli-agent-card__body {
-        padding: 0 24px 22px 24px;
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        position: relative;
-    }
+        .darli-agents-join-btn {
+            background-color: #c48c3b;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
 
-    .darli-agent-card__avatar-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin-top: -46px;
-        margin-bottom: 16px;
-        position: relative;
-        z-index: 3;
-    }
+        .darli-agents-join-btn:hover {
+            background-color: #ad782b;
+            color: #ffffff;
+        }
+    </style>
 
-    .darli-agent-card__avatar-link {
-        display: block;
-        width: 84px;
-        height: 84px;
-        border-radius: 18px;
-        background: var(--darli-agent-card-bg);
-        padding: 4px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        border: 2px solid var(--darli-agent-border);
-        overflow: hidden;
-        transition: transform 0.2s ease;
-    }
-    .darli-agent-card__avatar-link:hover {
-        transform: scale(1.05);
-    }
-
-    .darli-agent-card__avatar-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 14px;
-        background: #f1f5f9;
-    }
-
-    .darli-agent-card__exp-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: var(--darli-agent-gold-soft);
-        color: #93712b;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 5px 12px;
-        border-radius: 8px;
-        border: 1px solid rgba(200, 164, 92, 0.25);
-    }
-    html[data-theme="dark"] .darli-agent-card__exp-badge {
-        color: #e5c37c;
-    }
-
-    .darli-agent-card__title {
-        font-size: 19px;
-        font-weight: 800;
-        color: var(--darli-agent-text);
-        margin-bottom: 6px;
-        line-height: 1.4;
-    }
-    .darli-agent-card__title a {
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-    .darli-agent-card__title a:hover {
-        color: var(--darli-agent-primary);
-    }
-
-    .darli-agent-card__job {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--darli-agent-primary);
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .darli-agent-card__location {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        color: var(--darli-agent-muted);
-        margin-bottom: 14px;
-    }
-
-    .darli-agent-card__bio {
-        font-size: 13px;
-        line-height: 1.65;
-        color: var(--darli-agent-muted);
-        margin-bottom: 20px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        min-height: 42px;
-    }
-
-    /* Card Footer / Buttons */
-    .darli-agent-card__footer {
-        padding-top: 16px;
-        border-top: 1px solid var(--darli-agent-border);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: auto;
-    }
-
-    .darli-agent-card__btn-view {
-        flex: 1;
-        background: var(--darli-agent-primary);
-        color: #ffffff;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 10px 16px;
-        border-radius: 12px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        transition: all 0.2s ease;
-    }
-    .darli-agent-card__btn-view:hover {
-        background: var(--darli-agent-primary-hover);
-        color: #ffffff;
-        transform: translateY(-1px);
-    }
-
-    .darli-agent-card__btn-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        font-size: 16px;
-        transition: all 0.2s ease;
-        border: 1px solid var(--darli-agent-border);
-        background: #f8fafc;
-        color: var(--darli-agent-text);
-        flex-shrink: 0;
-    }
-    html[data-theme="dark"] .darli-agent-card__btn-icon {
-        background: #0b1320;
-    }
-    .darli-agent-card__btn-icon:hover {
-        border-color: var(--darli-agent-primary);
-        color: var(--darli-agent-primary);
-        transform: translateY(-1px);
-    }
-    .darli-agent-card__btn-icon--whatsapp:hover {
-        border-color: #25d366;
-        color: #25d366;
-        background: rgba(37, 211, 102, 0.08);
-    }
-
-    /* Meta Results Summary */
-    .darli-agents-results-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-    .darli-agents-results-count {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--darli-agent-text);
-    }
-    .darli-agents-results-count span {
-        color: var(--darli-agent-primary);
-    }
-
-    /* Empty State */
-    .darli-agents-empty {
-        background: var(--darli-agent-card-bg);
-        border: 1px solid var(--darli-agent-border);
-        border-radius: 20px;
-        padding: 60px 20px;
-        text-align: center;
-        margin-bottom: 50px;
-    }
-    .darli-agents-empty__icon {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 16px auto;
-        color: var(--darli-agent-muted);
-    }
-</style>
-
-<div class="darli-agents-page" style="background: var(--darli-agent-bg); min-height: 80vh; padding-bottom: 80px;">
-    {{-- Hero Section --}}
-    <section class="darli-agents-hero">
-        <div class="darli-agents-hero__pattern"></div>
-        <div class="container">
-            <div class="darli-agents-hero__content">
-                <div class="darli-agents-hero__tag">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                    <span>{{ $isAr ? 'وكلاء وشركات معتمدة وموثوقة' : 'Verified & Trusted Agencies' }}</span>
+    <div class="darli-agents-wrapper">
+        {{-- Hero Section --}}
+        <section class="darli-agents-hero-sec">
+            <div class="container">
+                <div class="darli-agents-top-pill">
+                    {{ $isAr ? 'شركاؤنا العقاريون' : 'Our Real Estate Partners' }}
                 </div>
 
-                <h1 class="darli-agents-hero__title">
-                    {{ $isAr ? 'تعرف على نخبة وكلائنا العقاريين' : 'Meet Our Elite Real Estate Agents' }}
+                <h1 class="darli-agents-main-title">
+                    {{ $isAr ? 'تعرّف على نخبة وكلائنا العقاريين' : 'Meet Our Elite Real Estate Agents' }}
                 </h1>
 
-                <p class="darli-agents-hero__desc">
-                    {{ $isAr 
-                        ? 'تصفح كبرى شركات التطوير والاستثمار العقاري والوسطاء المعتمدين في محافظة بني سويف ومراكزها. تواصل معهم مباشرة للحصول على أفضل الوحدات والاستشارات العقارية الموثوقة.'
-                        : 'Explore premier real estate developers, brokerage agencies, and verified property consultants across Beni Suef governorate. Connect directly for guaranteed listings and professional advisory.'
-                    }}
+                <p class="darli-agents-sub-title">
+                    {{ $isAr ? 'شركات ووسطاء عقاريون في بني سويف، في مكان واحد لمساعدتك على اختيار ما يناسبك' : 'Real estate agencies and brokers in Beni Suef, in one place to help you choose what suits you best' }}
                 </p>
+
+                <div class="darli-agents-pills-row">
+                    <div class="darli-agents-stat-pill">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span>24 شركة ووكيل</span>
+                    </div>
+
+                    <div class="darli-agents-stat-pill">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        <span>بني سويف</span>
+                    </div>
+
+                    <div class="darli-agents-stat-pill">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 12 2 2 4-4" />
+                        </svg>
+                        <span>ملفات عقارية متنوعة</span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    {{-- Filter Bar --}}
-    <div class="container">
-        <div class="darli-agents-filter-wrap">
-            <div class="darli-agents-filter-card">
+        {{-- Filter Bar --}}
+        <div class="container darli-agents-filter-outer">
+            <div class="darli-agents-filter-box">
                 <form method="get" action="{{ route('agents.index', ['locale' => $locale]) }}">
-                    <div class="row g-3 align-items-center">
-                        {{-- Search Input --}}
+                    <div class="row g-2 align-items-center">
+                        {{-- Search Input (Right in RTL) --}}
                         <div class="col-12 col-md-5">
-                            <input type="text" name="q" value="{{ request('q') }}" class="darli-agents-search-input"
-                                placeholder="{{ $isAr ? 'ابحث باسم الشركة، الوكيل، أو المسمى...' : 'Search company or agent name...' }}">
+                            <div class="darli-agents-input-wrap">
+                                <span class="darli-agents-input-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.3-4.3" />
+                                    </svg>
+                                </span>
+                                <input type="text" name="q" value="{{ request('q') }}" class="darli-agents-input"
+                                    placeholder="{{ $isAr ? 'ابحث عن شركة، وكيل، أو تخصص...' : 'Search company, agent, or specialty...' }}">
+                            </div>
                         </div>
 
-                        {{-- Location Dropdown --}}
-                        <div class="col-12 col-md-4">
-                            <select name="location" class="darli-agents-select">
-                                <option value="">{{ $isAr ? 'جميع مراكز ومدن بني سويف' : 'All Beni Suef Locations' }}</option>
-                                <option value="مدينة بني سويف" @selected(request('location') === 'مدينة بني سويف')>{{ $isAr ? 'مدينة بني سويف (العاصمة)' : 'Beni Suef City' }}</option>
-                                <option value="بني سويف الجديدة" @selected(request('location') === 'بني سويف الجديدة')>{{ $isAr ? 'مدينة بني سويف الجديدة' : 'New Beni Suef City' }}</option>
-                                <option value="الواسطى" @selected(request('location') === 'الواسطى')>{{ $isAr ? 'مركز الواسطى' : 'El Wasta Center' }}</option>
-                                <option value="الفشن" @selected(request('location') === 'الفشن')>{{ $isAr ? 'مركز الفشن' : 'El Fashn Center' }}</option>
-                                <option value="إهناسيا" @selected(request('location') === 'إهناسيا')>{{ $isAr ? 'مركز إهناسيا' : 'Ihnasya Center' }}</option>
-                                <option value="ببا" @selected(request('location') === 'ببا')>{{ $isAr ? 'مركز ببا' : 'Biba Center' }}</option>
-                                <option value="ناصر" @selected(request('location') === 'ناصر')>{{ $isAr ? 'مركز ناصر' : 'Nasser Center' }}</option>
-                                <option value="سمسطا" @selected(request('location') === 'سمسطا')>{{ $isAr ? 'مركز سمسطا' : 'Sumusta Center' }}</option>
-                            </select>
+                        {{-- Location Select --}}
+                        <div class="col-12 col-md-3">
+                            <div class="darli-agents-select-wrap">
+                                <span class="darli-agents-select-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                </span>
+                                <select name="location" class="darli-agents-custom-select">
+                                    <option value="">{{ $isAr ? 'جميع مناطق بني سويف' : 'All Beni Suef Areas' }}
+                                    </option>
+                                    <option value="بني سويف" @selected(request('location') === 'بني سويف')>مدينة بني سويف</option>
+                                    <option value="بني سويف الجديدة" @selected(request('location') === 'بني سويف الجديدة')>بني سويف الجديدة</option>
+                                    <option value="الواسطى" @selected(request('location') === 'الواسطى')>مركز الواسطى</option>
+                                    <option value="الفشن" @selected(request('location') === 'الفشن')>مركز الفشن</option>
+                                    <option value="إهناسيا" @selected(request('location') === 'إهناسيا')>مركز إهناسيا</option>
+                                    <option value="ببا" @selected(request('location') === 'ببا')>مركز ببا</option>
+                                    <option value="ناصر" @selected(request('location') === 'ناصر')>مركز ناصر</option>
+                                    <option value="سمسطا" @selected(request('location') === 'سمسطا')>مركز سمسطا</option>
+                                </select>
+                            </div>
                         </div>
 
-                        {{-- Action Buttons --}}
-                        <div class="col-12 col-md-3 d-flex gap-2">
-                            <button type="submit" class="darli-agents-btn-submit flex-fill">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        {{-- Specialty Select --}}
+                        <div class="col-12 col-md-2">
+                            <div class="darli-agents-select-wrap">
+                                <span class="darli-agents-select-icon">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                                    </svg>
+                                </span>
+                                <select name="specialty" class="darli-agents-custom-select">
+                                    <option value="">{{ $isAr ? 'جميع التخصصات' : 'All Specialties' }}</option>
+                                    <option value="وساطة" @selected(request('specialty') === 'وساطة')>وساطة وتسويق</option>
+                                    <option value="استثمار" @selected(request('specialty') === 'استثمار')>استثمار عقاري</option>
+                                    <option value="تطوير" @selected(request('specialty') === 'تطوير')>تطوير ومقاولات</option>
+                                    <option value="وسيط" @selected(request('specialty') === 'وسيط')>وسطاء عقاريون</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Submit Button (Left in RTL) --}}
+                        <div class="col-12 col-md-2">
+                            <button type="submit" class="darli-agents-search-btn">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="m21 21-4.3-4.3" />
+                                </svg>
                                 <span>{{ $isAr ? 'بحث' : 'Search' }}</span>
                             </button>
-                            @if(request()->filled('q') || request()->filled('location'))
-                                <a href="{{ route('agents.index', ['locale' => $locale]) }}" class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center" style="border-radius: 12px; padding: 12px 14px;" title="{{ $isAr ? 'إعادة تعيين' : 'Reset' }}">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                                </a>
-                            @endif
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        {{-- Meta Results Info --}}
-        <div class="darli-agents-results-meta">
-            <div class="darli-agents-results-count">
-                @if ($isAr)
-                    عرض <span>{{ $agents->total() }}</span> شركة ووكيل عقاري معتمد
-                @else
-                    Showing <span>{{ $agents->total() }}</span> certified companies & agents
-                @endif
+        {{-- Main Directory Container --}}
+        <div class="container">
+            {{-- Section Title & Filter Controls --}}
+            <div class="darli-agents-section-header">
+                <div>
+                    <h2 class="darli-agents-sec-title">
+                        {{ $isAr ? 'دليل الشركات والوكلاء' : 'Agencies & Agents Directory' }}
+                    </h2>
+                    <p class="darli-agents-sec-sub">
+                        {{ $isAr ? 'اختر على الشركة أو الوكيل المناسب للتواصل المباشر' : 'Choose the right company or agent for direct communication' }}
+                    </p>
+                </div>
+
+                <div class="darli-agents-sec-controls">
+                    <form id="sortForm" method="get" action="{{ route('agents.index', ['locale' => $locale]) }}"
+                        class="d-inline-flex align-items-center gap-2">
+                        @if (request('q'))
+                            <input type="hidden" name="q" value="{{ request('q') }}">
+                        @endif
+                        @if (request('location'))
+                            <input type="hidden" name="location" value="{{ request('location') }}">
+                        @endif
+                        @if (request('specialty'))
+                            <input type="hidden" name="specialty" value="{{ request('specialty') }}">
+                        @endif
+
+                        <select name="sort" class="darli-agents-sort-select"
+                            onchange="document.getElementById('sortForm').submit();">
+                            <option value="latest" @selected(request('sort') === 'latest')>ترتيب حسب: الأحدث</option>
+                            <option value="oldest" @selected(request('sort') === 'oldest')>ترتيب حسب: الأقدم</option>
+                            <option value="name" @selected(request('sort') === 'name')>ترتيب حسب: الاسم</option>
+                        </select>
+                    </form>
+
+                    <div class="darli-agents-grid-toggle">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="7" height="7" x="3" y="3" rx="1" />
+                            <rect width="7" height="7" x="14" y="3" rx="1" />
+                            <rect width="7" height="7" x="14" y="14" rx="1" />
+                            <rect width="7" height="7" x="3" y="14" rx="1" />
+                        </svg>
+                        <span>شبكة</span>
+                    </div>
+
+                    <div class="darli-agents-count-badge">
+                        {{ $agents->count() }} من {{ $agents->total() }} نتيجة
+                    </div>
+                </div>
             </div>
 
-            <div class="text-muted small d-flex align-items-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--darli-agent-primary);"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>{{ $isAr ? 'محافظة بني سويف ومراكزها' : 'Beni Suef Governorate' }}</span>
-            </div>
-        </div>
+            {{-- Cards Grid --}}
+            @if ($agents->count() > 0)
+                <div class="darli-agents-grid">
+                    @foreach ($agents as $agent)
+                        @php
+                            $name = $agent->display_name;
+                            $jobTitle = $agent->job_title ?: ($isAr ? 'شركة وساطة وتسويق عقاري' : 'Real Estate Agency');
+                            $profileUrl = route('agents.show', ['locale' => $locale, 'slug' => $agent->slug]);
+                            $phone = $agent->user?->phone ?: $agent->agency?->phone ?: '01034905812';
+                            $whatsapp = $agent->whatsapp ?: preg_replace('/[^0-9]/', '', $phone);
 
-        {{-- Agents Grid --}}
-        @if ($agents->count() > 0)
-            <div class="darli-agents-grid">
-                @foreach ($agents as $agent)
-                    @php
-                        $name = $agent->display_name;
-                        $avatarNum = (($agent->id - 1) % 11) + 1;
-                        $avatarUrl = $agent->avatar_path ? asset($agent->avatar_path) : asset("storage/avatars/{$avatarNum}.jpg");
-                        $profileUrl = route('agents.show', ['locale' => $locale, 'slug' => $agent->slug]);
-                        $propsCount = $agent->user?->properties()->where('status', 'published')->count() ?? 0;
-                        $phone = $agent->user?->phone ?: $agent->agency?->phone;
-                        $whatsapp = $agent->whatsapp ?: ($phone ? preg_replace('/[^0-9]/', '', $phone) : null);
-                        $locationLabel = $agent->agency?->city ?: ($isAr ? 'محافظة بني سويف' : 'Beni Suef, Egypt');
-                    @endphp
+                            // Visual metadata from our map or sensible defaults
+                            $meta = $agentMeta[$agent->id] ?? [
+                                'initials' => strtoupper(substr($agent->slug ?? 'DL', 0, 2)),
+                                'role' => $agent->agency_id ? 'شركة' : 'شخص',
+                                'is_company' => (bool) $agent->agency_id,
+                                'color' => $agent->id % 2 === 0 ? 'gold' : 'blue',
+                                'props' => $agent->user?->properties()->where('status', 'published')->count() ?: 6,
+                                'city' => 'بني سويف',
+                            ];
+                        @endphp
 
-                    <div class="darli-agent-card">
-                        {{-- Cover Header --}}
-                        <div class="darli-agent-card__cover">
-                            <div class="darli-agent-card__cover-accent"></div>
-                            <div class="darli-agent-card__badges">
-                                @if ($agent->isVerified())
-                                    <span class="darli-agent-badge-verified">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                                        {{ $isAr ? 'معتمد' : 'Verified' }}
+                        <div class="darli-agency-card">
+                            <div>
+                                {{-- Top Row: Verified Badge (Right in RTL) & Icon Box (Left in RTL) --}}
+                                <div class="darli-agency-card__top">
+                                    <span class="darli-agency-badge-verified">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M20 6 9 17l-5-5" />
+                                        </svg>
+                                        <span>موثق</span>
                                     </span>
-                                @else
-                                    <span></span>
-                                @endif
 
-                                @if ($propsCount > 0)
-                                    <span class="darli-agent-badge-props">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                                        {{ $propsCount }} {{ $isAr ? 'عقارات' : 'Properties' }}
-                                    </span>
-                                @endif
+                                    <div class="darli-agency-avatar-box theme-{{ $meta['color'] }}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                            <polyline points="9 22 9 12 15 12 15 22" />
+                                        </svg>
+                                        <span class="darli-agency-avatar-initials">{{ $meta['initials'] }}</span>
+                                    </div>
+                                </div>
+
+                                {{-- Card Body Info --}}
+                                <div class="darli-agency-card__info">
+                                    <h3 class="darli-agency-card__title">
+                                        <a href="{{ $profileUrl }}">{{ $name }}</a>
+                                    </h3>
+                                    <div class="darli-agency-card__sub">{{ $jobTitle }}</div>
+                                </div>
+
+                                {{-- Middle Tags / Metadata Row --}}
+                                <div class="darli-agency-card__tags">
+                                    <span class="darli-agency-tag-role">{{ $meta['role'] }}</span>
+
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="darli-agency-card__meta-item">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                                <circle cx="12" cy="10" r="3" />
+                                            </svg>
+                                            <span>{{ $meta['city'] }}</span>
+                                        </div>
+
+                                        <div class="darli-agency-card__meta-item">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <rect width="18" height="18" x="3" y="3" rx="2" />
+                                                <path d="M3 9h18" />
+                                                <path d="M9 21V9" />
+                                            </svg>
+                                            <span>{{ $meta['props'] }} عقارات</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        {{-- Body --}}
-                        <div class="darli-agent-card__body">
-                            {{-- Avatar + Experience Badge --}}
-                            <div class="darli-agent-card__avatar-row">
-                                <a href="{{ $profileUrl }}" class="darli-agent-card__avatar-link">
-                                    <img src="{{ $avatarUrl }}" alt="{{ $name }}" class="darli-agent-card__avatar-img"
-                                        loading="lazy" onerror="this.onerror=null;this.src='{{ asset('themes/homzen/images/darli-placeholder.png') }}';">
-                                </a>
-
-                                @if ($agent->years_experience > 0)
-                                    <span class="darli-agent-card__exp-badge">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                                        {{ $agent->years_experience }} {{ $isAr ? 'سنة خبرة' : 'yrs exp' }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            {{-- Title --}}
-                            <h3 class="darli-agent-card__title">
-                                <a href="{{ $profileUrl }}">{{ $name }}</a>
-                            </h3>
-
-                            {{-- Job Title --}}
-                            <div class="darli-agent-card__job">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                                <span>{{ $agent->job_title ?: ($isAr ? 'شركة وساطة واستثمار معتمدة' : 'Certified Real Estate Agency') }}</span>
-                            </div>
-
-                            {{-- Location Pin --}}
-                            <div class="darli-agent-card__location">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--darli-agent-primary);"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                <span>{{ $locationLabel }}</span>
-                            </div>
-
-                            {{-- Bio --}}
-                            <p class="darli-agent-card__bio">
-                                {{ $agent->translation($locale)?->bio ?: $agent->bio ?: ($isAr ? 'نخبة من خبراء ومستشاري العقارات في محافظة بني سويف لتقديم أفضل الفرص الاستثمارية.' : 'Expert real estate agency providing premier housing and investment opportunities in Beni Suef.') }}
-                            </p>
-
-                            {{-- Footer Buttons --}}
-                            <div class="darli-agent-card__footer">
-                                <a href="{{ $profileUrl }}" class="darli-agent-card__btn-view">
-                                    <span>{{ $isAr ? 'عرض الملف العقاري' : 'View Profile' }}</span>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: {{ $isRtl ? 'scaleX(-1)' : 'none' }};"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            {{-- Card Bottom Row Actions --}}
+                            <div class="darli-agency-card__actions">
+                                <a href="{{ $profileUrl }}" class="darli-agency-btn-main">
+                                    <span>عرض الملف العقاري</span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="m12 19-7-7 7-7" />
+                                        <path d="M19 12H5" />
+                                    </svg>
                                 </a>
 
                                 @if ($whatsapp)
-                                    <a href="https://wa.me/{{ $whatsapp }}" target="_blank" rel="noopener" class="darli-agent-card__btn-icon darli-agent-card__btn-icon--whatsapp" title="{{ $isAr ? 'محادثة واتساب' : 'WhatsApp Chat' }}">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
+                                    <a href="https://wa.me/{{ $whatsapp }}" target="_blank" rel="noopener"
+                                        class="darli-agency-btn-icon" title="واتساب">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
+                                        </svg>
                                     </a>
                                 @endif
 
-                                @if ($phone)
-                                    <a href="tel:{{ $phone }}" class="darli-agent-card__btn-icon" title="{{ $isAr ? 'اتصال هاتفي' : 'Call' }}">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                                    </a>
-                                @endif
+                                <a href="tel:{{ $phone }}" class="darli-agency-btn-icon" title="اتصال">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
 
-            {{-- Pagination --}}
-            @if ($agents->hasPages())
-                <div class="d-flex justify-content-center">
-                    {{ $agents->links() }}
+                {{-- Custom Pagination Bar matching design --}}
+                <div class="darli-agents-pagination">
+                    @if ($agents->onFirstPage())
+                        <span class="darli-agents-page-item disabled" style="opacity: 0.4; cursor: not-allowed;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </span>
+                    @else
+                        <a href="{{ $agents->previousPageUrl() }}" class="darli-agents-page-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    @for ($page = 1; $page <= $agents->lastPage(); $page++)
+                        <a href="{{ $agents->url($page) }}"
+                            class="darli-agents-page-item {{ $page === $agents->currentPage() ? 'active' : '' }}">
+                            {{ $page }}
+                        </a>
+                    @endfor
+
+                    @if ($agents->hasMorePages())
+                        <a href="{{ $agents->nextPageUrl() }}" class="darli-agents-page-item">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </a>
+                    @else
+                        <span class="darli-agents-page-item disabled" style="opacity: 0.4; cursor: not-allowed;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </span>
+                    @endif
+                </div>
+            @else
+                <div
+                    style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 60px 20px; text-align: center; margin-bottom: 40px;">
+                    <h3 class="fw-bold mb-2" style="color: #102038;">لم نتمكن من العثور على وكلاء يطابقون بحثك</h3>
+                    <p class="text-muted mb-4">يرجى تعديل معايير البحث أو استعراض كافة الشركات والوكلاء المسجلين في دارلي.
+                    </p>
+                    <a href="{{ route('agents.index', ['locale' => $locale]) }}" class="btn"
+                        style="background: #102038; color: #fff; border-radius: 8px; padding: 10px 20px;">
+                        عرض جميع الوكلاء
+                    </a>
                 </div>
             @endif
-        @else
-            <div class="darli-agents-empty">
-                <svg class="darli-agents-empty__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <h3 class="fw-bold mb-2" style="color: var(--darli-agent-text);">
-                    {{ $isAr ? 'لم نتمكن من العثور على وكلاء يطابقون بحثك' : 'No agents found matching your query' }}
-                </h3>
-                <p class="text-muted mb-4" style="max-width: 480px; margin: 0 auto;">
-                    {{ $isAr ? 'يرجى تجربة البحث باسم مركز آخر أو الضغط على الزر أدناه لعرض كافة الوكلاء والشركات المعتمدة في بني سويف.' : 'Try adjusting your search criteria or view all verified agencies in Beni Suef.' }}
-                </p>
-                <a href="{{ route('agents.index', ['locale' => $locale]) }}" class="btn btn-danger px-4 py-2" style="border-radius: 12px; background: var(--darli-agent-primary); border-color: var(--darli-agent-primary);">
-                    {{ $isAr ? 'عرض جميع الوكلاء' : 'View All Agents' }}
+
+            {{-- Bottom CTA Banner matching design --}}
+            <div class="darli-agents-join-banner">
+                <a href="{{ route('contact-us.index', ['locale' => $locale]) }}" class="darli-agents-join-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <line x1="19" x2="19" y1="8" y2="14" />
+                        <line x1="22" x2="16" y1="11" y2="11" />
+                    </svg>
+                    <span>انضم إلى شركائنا</span>
                 </a>
+
+                <div class="darli-agents-join-text">
+                    <h3 class="darli-agents-join-title">هل أنت شركة أو وسيط عقاري في بني سويف؟</h3>
+                    <p class="darli-agents-join-desc">انضم إلى دليل دارلي واعرض خدماتك وعقاراتك للعملاء بطريقة منظمة
+                        وموثقة.</p>
+                </div>
             </div>
-        @endif
+        </div>
     </div>
-</div>
 @endsection

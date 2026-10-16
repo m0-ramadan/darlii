@@ -269,7 +269,7 @@ html {
   display: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .darli-hero-section {
     align-items: stretch;
     background: #eef3f7 !important;
@@ -287,8 +287,9 @@ html {
   }
 
   .darli-hero-stage > .hero-hotspot,
-  .darli-hero-stage > .hero-search-overlay {
-    display: none;
+  .darli-hero-stage > .hero-search-overlay,
+  .hero-hotspot {
+    display: none !important;
   }
 
   .darli-mobile-hero {
@@ -623,7 +624,7 @@ html {
   z-index: 10;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .darli-hero-centers-bar {
     display: none !important;
   }

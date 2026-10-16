@@ -57,10 +57,11 @@
         const isDark = document.documentElement.dataset.theme === 'dark';
         let currentGroup = isDark ? darkGroup : lightGroup;
 
+        // Default layer is Satellite as requested
         const map = L.map('darli-properties-map', {
             center: beniSuefCoords,
             zoom: defaultZoom,
-            layers: [currentGroup],
+            layers: [satTile],
             zoomControl: false,
             attributionControl: false
         });

@@ -92,21 +92,21 @@
                     </div>
                 @endif
             </div>
-            <div class="box-navigation">
-                <div class="navigation swiper-nav-next nav-next-location">
-                    <svg class="icon svg-icon-ti-ti-chevron-left" width="24" height="24" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M15 6l-6 6l6 6"></path>
-                    </svg>
-                </div>
-                <div class="navigation swiper-nav-prev nav-prev-location">
-                    <svg class="icon svg-icon-ti-ti-chevron-right" width="24" height="24" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M9 6l6 6l-6 6"></path>
-                    </svg>
-                </div>
+        </div>
+        <div class="box-navigation">
+            <div class="navigation swiper-nav-next nav-next-location">
+                <svg class="icon svg-icon-ti-ti-chevron-left" width="24" height="24" viewBox="0 0 24 24"
+                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M15 6l-6 6l6 6"></path>
+                </svg>
+            </div>
+            <div class="navigation swiper-nav-prev nav-prev-location">
+                <svg class="icon svg-icon-ti-ti-chevron-right" width="24" height="24" viewBox="0 0 24 24"
+                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M9 6l6 6l-6 6"></path>
+                </svg>
             </div>
         </div>
     </section>
@@ -619,51 +619,50 @@
                                     </div>
                                     <div class="text-muted" style="font-size: 12px; margin-bottom: 4px;">
                                         {{ $displayRole }}</div>
-                                    @if ($contactPhone)
-                                        <a class="info-item" href="tel:{{ $contactPhone }}"
-                                            dir="ltr">{{ $contactPhone }}</a>
-                                    @endif
-                                    @if ($email && $contactMode !== 'agent_direct')
-                                        <a class="info-item" href="mailto:{{ $email }}">{{ $email }}</a>
-                                    @endif
                                 </div>
                             </div>
 
                             <div class="property-direct-contact-actions mt-3 pt-3 border-top">
-                                @if ($contactPhone)
-                                    <div class="mb-2">
-                                        <a class="tf-btn primary w-100 justify-content-center"
-                                            href="tel:{{ preg_replace('/[^\d+]/', '', $contactPhone) }}" dir="ltr">
-                                            <svg class="icon me-2 ms-2" width="18" height="18"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path
-                                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                                </path>
-                                            </svg>
-                                            <span>{{ $isAr ? 'اتصل الآن بالإدارة' : 'Call Platform' }}</span>
-                                        </a>
-                                    </div>
-                                @endif
+                                <div class="d-flex align-items-center gap-2" style="width: 100%;">
+                                    @if ($contactPhone)
+                                        <div class="flex-fill" style="flex: 1 1 50%; min-width: 0;">
+                                            <a class="tf-btn primary w-100 justify-content-center text-nowrap"
+                                                style="height: 46px; font-size: 14px; padding: 0 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;"
+                                                href="tel:{{ preg_replace('/[^\d+]/', '', $contactPhone) }}"
+                                                dir="ltr">
+                                                <svg class="icon" width="17" height="17" viewBox="0 0 24 24"
+                                                    fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                    style="flex-shrink: 0;">
+                                                    <path
+                                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                                    </path>
+                                                </svg>
+                                                <span>{{ $isAr ? 'اتصال' : 'Call' }}</span>
+                                            </a>
+                                        </div>
+                                    @endif
 
-                                @if ($contactWhatsappDigits !== '')
-                                    <div>
-                                        <a class="contact-whatsapp-btn w-100 justify-content-center"
-                                            href="https://wa.me/{{ $contactWhatsappDigits }}?text={{ rawurlencode(($isAr ? 'مرحباً إدارة دارلي، أود الاستفسار عن عقار: ' : 'Hi Darli, I want to inquire about: ') . ($tr?->name ?? $property->reference_code) . ' - ' . url()->current()) }}"
-                                            target="_blank" rel="noopener">
-                                            <svg class="icon svg-icon-ti-ti-brand-whatsapp me-2 ms-2" width="20"
-                                                height="20" viewBox="0 0 24 24" stroke-width="2"
-                                                stroke="currentColor" fill="none" stroke-linecap="round"
-                                                stroke-linejoin="round">
-                                                <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"></path>
-                                                <path
-                                                    d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1">
-                                                </path>
-                                            </svg>
-                                            <span>{{ $isAr ? 'مراسلة عبر واتساب' : 'Chat via WhatsApp' }}</span>
-                                        </a>
-                                    </div>
-                                @endif
+                                    @if ($contactWhatsappDigits !== '')
+                                        <div class="flex-fill" style="flex: 1 1 50%; min-width: 0;">
+                                            <a class="contact-whatsapp-btn w-100 justify-content-center text-nowrap"
+                                                style="height: 46px; font-size: 14px; padding: 0 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;"
+                                                href="https://wa.me/{{ $contactWhatsappDigits }}?text={{ rawurlencode(($isAr ? 'مرحباً إدارة دارلي، أود الاستفسار عن عقار: ' : 'Hi Darli, I want to inquire about: ') . ($tr?->name ?? $property->reference_code) . ' - ' . url()->current()) }}"
+                                                target="_blank" rel="noopener">
+                                                <svg class="icon svg-icon-ti-ti-brand-whatsapp" width="18"
+                                                    height="18" viewBox="0 0 24 24" stroke-width="2"
+                                                    stroke="currentColor" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" style="flex-shrink: 0;">
+                                                    <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9"></path>
+                                                    <path
+                                                        d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1">
+                                                    </path>
+                                                </svg>
+                                                <span>{{ $isAr ? 'واتساب' : 'WhatsApp' }}</span>
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

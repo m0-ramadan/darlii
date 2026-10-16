@@ -569,7 +569,7 @@
         <div class="darli-section-header-flex">
           <div>
             <span class="darli-section-tag">— Discover More —</span>
-            <h2 class="darli-section-title">Our Presence in Prime Locations</h2>
+            <h2 class="darli-section-title">Explore Beni Suef Districts</h2>
           </div>
           <div>
             <a href="/en/properties" class="darli-view-all-link">
@@ -580,41 +580,41 @@
         </div>
 
         <div class="darli-locations-grid">
-          <a href="/en/properties?location=sheikh-zayed" class="darli-location-card">
-            <img src="/storage/locations/5-400x560.jpg" alt="Sheikh Zayed" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/4.jpg';">
+          <a href="/en/properties?location=beni-suef" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/beni-suef.jpg" alt="Beni Suef District"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">Sheikh Zayed</h4>
+              <h4 class="darli-location-card-name">Beni Suef</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/en/properties?location=cairo" class="darli-location-card">
-            <img src="/storage/locations/3-400x560.jpg" alt="Cairo" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/1.jpg';">
+          <a href="/en/properties?location=al-wasta" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/al-wasta.jpg" alt="Al Wasta District"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">Cairo</h4>
+              <h4 class="darli-location-card-name">Al Wasta</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/en/properties?location=giza" class="darli-location-card">
-            <img src="/storage/pages/slider-1.jpg" alt="Giza" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/2.jpg';">
+          <a href="/en/properties?location=nasser" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/nasser.jpg" alt="Nasser District"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">Giza</h4>
+              <h4 class="darli-location-card-name">Nasser</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/en/properties?location=new-cairo" class="darli-location-card">
-            <img src="/storage/properties/11.jpg" alt="New Cairo" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/3.jpg';">
+          <a href="/en/properties?location=ihnasia" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/ihnasia.jpg" alt="Ihnasia District"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">New Cairo</h4>
+              <h4 class="darli-location-card-name">Ihnasia</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
@@ -756,501 +756,528 @@
     </section>
 
     <!-- =========================================================================
-       6. MORTGAGE CALCULATOR SECTION
+       6. MORTGAGE CALCULATOR SECTION [Temporarily Commented Out]
        ========================================================================= -->
+    <!--
     <section class="darli-calculator-section">
       <div class="darli-container">
         <div class="darli-calculator-box">
           <!-- Form Container -->
-          <div class="darli-calc-form-container">
-            <h3>Mortgage Calculator</h3>
-            <p>Get an accurate estimate of your monthly installment to make confident financial decisions.</p>
+    <div class="darli-calc-form-container">
+      <h3>Mortgage Calculator</h3>
+      <p>Get an accurate estimate of your monthly installment to make confident financial decisions.</p>
 
-            <form id="darli-mortgage-form">
-              <div class="darli-calc-grid">
-                <div class="darli-input-wrapper">
-                  <label for="calc-price">Property Price</label>
-                  <input type="text" id="calc-price" class="darli-input-control" value="2,500,000">
-                  <span class="darli-input-suffix">EGP</span>
-                </div>
-
-                <div class="darli-input-wrapper">
-                  <label for="calc-down-payment">Down Payment</label>
-                  <input type="text" id="calc-down-payment" class="darli-input-control" value="500,000">
-                  <span class="darli-input-suffix">EGP</span>
-                </div>
-
-                <div class="darli-range-wrapper">
-                  <div class="darli-range-header">
-                    <span>0%</span>
-                    <span>Down Payment Percentage</span>
-                    <span id="calc-slider-percent">20%</span>
-                  </div>
-                  <input type="range" id="calc-slider" class="darli-range-slider" min="0" max="100" value="20">
-                </div>
-
-                <div class="darli-input-wrapper">
-                  <label for="calc-period">Loan Tenure</label>
-                  <select id="calc-period" class="darli-input-control">
-                    <option value="10">10 Years</option>
-                    <option value="15">15 Years</option>
-                    <option value="20" selected>20 Years</option>
-                    <option value="25">25 Years</option>
-                    <option value="30">30 Years</option>
-                  </select>
-                </div>
-
-                <div class="darli-input-wrapper">
-                  <label for="calc-interest">Annual Interest Rate</label>
-                  <select id="calc-interest" class="darli-input-control">
-                    <option value="5.0">5.0 %</option>
-                    <option value="6.5">6.5 %</option>
-                    <option value="8.5" selected>8.5 %</option>
-                    <option value="10.0">10.0 %</option>
-                    <option value="12.0">12.0 %</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="darli-calc-actions-row">
-                <button type="button" id="calc-submit-btn" class="darli-btn-calc">
-                  <i data-lucide="calculator" style="width: 18px; height: 18px;"></i>
-                  <span>Calculate Now</span>
-                </button>
-
-                <div class="darli-calc-result-box">
-                  <div>
-                    <div class="darli-result-label">Estimated Monthly Installment</div>
-                    <div class="darli-result-val" id="calc-result-value">19,088 EGP</div>
-                  </div>
-                  <div class="calc-icon"><i data-lucide="calculator" style="width: 36px; height: 36px;"></i></div>
-                </div>
-              </div>
-            </form>
+      <form id="darli-mortgage-form">
+        <div class="darli-calc-grid">
+          <div class="darli-input-wrapper">
+            <label for="calc-price">Property Price</label>
+            <input type="text" id="calc-price" class="darli-input-control" value="2,500,000">
+            <span class="darli-input-suffix">EGP</span>
           </div>
 
-          <!-- Sidebar Blueprint -->
-          <div class="darli-calc-sidebar">
-            <div>
-              <div class="darli-calc-sidebar-icon">
-                <i data-lucide="calculator" style="width: 24px; height: 24px;"></i>
-              </div>
-              <h3>Plan Your Mortgage With Clarity</h3>
-              <p>Calculate your loan repayments easily based on total property price, down payment, and repayment
-                tenure.</p>
+          <div class="darli-input-wrapper">
+            <label for="calc-down-payment">Down Payment</label>
+            <input type="text" id="calc-down-payment" class="darli-input-control" value="500,000">
+            <span class="darli-input-suffix">EGP</span>
+          </div>
+
+          <div class="darli-range-wrapper">
+            <div class="darli-range-header">
+              <span>0%</span>
+              <span>Down Payment Percentage</span>
+              <span id="calc-slider-percent">20%</span>
             </div>
-            <div class="darli-calc-wireframe">
-              <svg viewBox="0 0 200 120" fill="none" stroke="#C99A45" stroke-width="1.5">
-                <path d="M20 100 L100 30 L180 100 Z M40 100 L40 60 L100 15 L160 60 L160 100 Z" />
-                <line x1="70" y1="100" x2="70" y2="75" />
-                <line x1="90" y1="100" x2="90" y2="75" />
-                <line x1="70" y1="75" x2="90" y2="75" />
-                <rect x="120" y="65" width="25" height="20" />
-              </svg>
-            </div>
+            <input type="range" id="calc-slider" class="darli-range-slider" min="0" max="100" value="20">
+          </div>
+
+          <div class="darli-input-wrapper">
+            <label for="calc-period">Loan Tenure</label>
+            <select id="calc-period" class="darli-input-control">
+              <option value="10">10 Years</option>
+              <option value="15">15 Years</option>
+              <option value="20" selected>20 Years</option>
+              <option value="25">25 Years</option>
+              <option value="30">30 Years</option>
+            </select>
+          </div>
+
+          <div class="darli-input-wrapper">
+            <label for="calc-interest">Annual Interest Rate</label>
+            <select id="calc-interest" class="darli-input-control">
+              <option value="5.0">5.0 %</option>
+              <option value="6.5">6.5 %</option>
+              <option value="8.5" selected>8.5 %</option>
+              <option value="10.0">10.0 %</option>
+              <option value="12.0">12.0 %</option>
+            </select>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- =========================================================================
+        <div class="darli-calc-actions-row">
+          <button type="button" id="calc-submit-btn" class="darli-btn-calc">
+            <i data-lucide="calculator" style="width: 18px; height: 18px;"></i>
+            <span>Calculate Now</span>
+          </button>
+
+          <div class="darli-calc-result-box">
+            <div>
+              <div class="darli-result-label">Estimated Monthly Installment</div>
+              <div class="darli-result-val" id="calc-result-value">19,088 EGP</div>
+            </div>
+            <div class="calc-icon"><i data-lucide="calculator" style="width: 36px; height: 36px;"></i></div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Sidebar Blueprint -->
+    <div class="darli-calc-sidebar">
+      <div>
+        <div class="darli-calc-sidebar-icon">
+          <i data-lucide="calculator" style="width: 24px; height: 24px;"></i>
+        </div>
+        <h3>Plan Your Mortgage With Clarity</h3>
+        <p>Calculate your loan repayments easily based on total property price, down payment, and repayment
+          tenure.</p>
+      </div>
+      <div class="darli-calc-wireframe">
+        <svg viewBox="0 0 200 120" fill="none" stroke="#C99A45" stroke-width="1.5">
+          <path d="M20 100 L100 30 L180 100 Z M40 100 L40 60 L100 15 L160 60 L160 100 Z" />
+          <line x1="70" y1="100" x2="70" y2="75" />
+          <line x1="90" y1="100" x2="90" y2="75" />
+          <line x1="70" y1="75" x2="90" y2="75" />
+          <rect x="120" y="65" width="25" height="20" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  </div>
+  </section>
+  -->
+
+  <!-- =========================================================================
        7. RECOMMENDED FOR YOU
        ========================================================================= -->
-    <section class="darli-recommended-section">
-      <div class="darli-container">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <span class="darli-section-tag">— Featured Listing —</span>
-          <h2 class="darli-section-title">Recommended For You</h2>
-          <p class="darli-section-subtitle">Explore a curated selection tailored to your lifestyle</p>
+  <section class="darli-recommended-section">
+    <div class="darli-container">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <span class="darli-section-tag">— Featured Listing —</span>
+        <h2 class="darli-section-title">Recommended For You</h2>
+        <p class="darli-section-subtitle">Explore a curated selection tailored to your lifestyle</p>
+      </div>
+
+      <div class="darli-recommended-card">
+        <!-- Content: Info -->
+        <div class="darli-rec-content">
+          <div class="darli-rec-badges">
+            <span class="darli-card-badge" style="position: static;">For Sale</span>
+            <span class="darli-card-badge badge-gold" style="position: static;">Featured</span>
+          </div>
+
+          <h3 class="darli-rec-title">Ultra-Luxury Villa in Sheikh Zayed</h3>
+          <div class="darli-rec-location">
+            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
+            <span>Sheikh Zayed, Giza</span>
+          </div>
+
+          <div class="darli-rec-features">
+            <div class="darli-feature-item"><i data-lucide="bed"
+                style="width: 18px; height: 18px; color: var(--darli-gold);"></i><span>5</span></div>
+            <div class="darli-feature-item"><i data-lucide="bath"
+                style="width: 18px; height: 18px; color: var(--darli-gold);"></i><span>4</span></div>
+            <div class="darli-feature-item"><i data-lucide="maximize"
+                style="width: 18px; height: 18px; color: var(--darli-gold);"></i><span>420 m²</span></div>
+          </div>
+
+          <div class="darli-rec-price">25,000,000 EGP</div>
+
+          <div class="darli-rec-actions">
+            <a href="/en/properties/2" class="darli-btn-details"
+              style="padding: 10px 24px; font-size: 0.95rem; border-color: var(--darli-navy);">
+              <span>View Details</span>
+              <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+            <button class="darli-card-heart" style="position: static; border: 1px solid var(--darli-border);"
+              aria-label="Add to Wishlist">
+              <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
         </div>
 
-        <div class="darli-recommended-card">
-          <!-- Content: Info -->
-          <div class="darli-rec-content">
-            <div class="darli-rec-badges">
-              <span class="darli-card-badge" style="position: static;">For Sale</span>
-              <span class="darli-card-badge badge-gold" style="position: static;">Featured</span>
-            </div>
-
-            <h3 class="darli-rec-title">Ultra-Luxury Villa in Sheikh Zayed</h3>
-            <div class="darli-rec-location">
-              <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
-              <span>Sheikh Zayed, Giza</span>
-            </div>
-
-            <div class="darli-rec-features">
-              <div class="darli-feature-item"><i data-lucide="bed"
-                  style="width: 18px; height: 18px; color: var(--darli-gold);"></i><span>5</span></div>
-              <div class="darli-feature-item"><i data-lucide="bath"
-                  style="width: 18px; height: 18px; color: var(--darli-gold);"></i><span>4</span></div>
-              <div class="darli-feature-item"><i data-lucide="maximize"
-                  style="width: 18px; height: 18px; color: var(--darli-gold);"></i><span>420 m²</span></div>
-            </div>
-
-            <div class="darli-rec-price">25,000,000 EGP</div>
-
-            <div class="darli-rec-actions">
-              <a href="/en/properties/2" class="darli-btn-details"
-                style="padding: 10px 24px; font-size: 0.95rem; border-color: var(--darli-navy);">
-                <span>View Details</span>
-                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-              </a>
-              <button class="darli-card-heart" style="position: static; border: 1px solid var(--darli-border);"
-                aria-label="Add to Wishlist">
-                <i data-lucide="heart" style="width: 18px; height: 18px;"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Media Slider -->
-          <div class="darli-rec-media">
-            <img id="rec-slider-img" src="/storage/properties/2.jpg" alt="Luxury Villa in Sheikh Zayed"
-              class="darli-rec-img" onerror="this.onerror=null;this.src='/storage/pages/slider-1.jpg';">
-            <button id="rec-prev-btn" class="darli-media-nav-arrow darli-media-prev" aria-label="Previous"><i
-                data-lucide="chevron-left" style="width: 20px; height: 20px;"></i></button>
-            <button id="rec-next-btn" class="darli-media-nav-arrow darli-media-next" aria-label="Next"><i
-                data-lucide="chevron-right" style="width: 20px; height: 20px;"></i></button>
-          </div>
+        <!-- Media Slider -->
+        <div class="darli-rec-media">
+          <img id="rec-slider-img" src="/storage/properties/2.jpg" alt="Luxury Villa in Sheikh Zayed"
+            class="darli-rec-img" onerror="this.onerror=null;this.src='/storage/pages/slider-1.jpg';">
+          <button id="rec-prev-btn" class="darli-media-nav-arrow darli-media-prev" aria-label="Previous"><i
+              data-lucide="chevron-left" style="width: 20px; height: 20px;"></i></button>
+          <button id="rec-next-btn" class="darli-media-nav-arrow darli-media-next" aria-label="Next"><i
+              data-lucide="chevron-right" style="width: 20px; height: 20px;"></i></button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- =========================================================================
+  <!-- =========================================================================
        8. TESTIMONIALS SECTION
        ========================================================================= -->
-    <section class="darli-testimonials-section">
-      <div class="darli-container">
-        <span class="darli-section-tag">— Client Stories —</span>
-        <h2 class="darli-section-title">What Our Clients Say</h2>
-        <p class="darli-section-subtitle">Genuine experiences from homebuyers and investors across Egypt</p>
+  <section class="darli-testimonials-section">
+    <div class="darli-container">
+      <span class="darli-section-tag">— Client Stories —</span>
+      <h2 class="darli-section-title">What Our Clients Say</h2>
+      <p class="darli-section-subtitle">Genuine experiences from homebuyers and investors across Egypt</p>
 
-        <div class="darli-testimonials-grid">
-          <!-- Testimonial 1 -->
-          <div class="darli-testimonial-card">
-            <div>
-              <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"A truly professional experience from start to finish. The Darlii team was
-                supportive, simplifying the closing process with exceptional after-sales care. Highly recommended for
-                trusted investments."</p>
-            </div>
-            <div class="darli-testi-watermark">”</div>
-            <div class="darli-testi-user">
-              <img src="/storage/avatars/7.jpg" alt="Ali Abdulrahman" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-              <div>
-                <h5 class="darli-testi-name">Ali Abdulrahman</h5>
-                <span class="darli-testi-role">Property Investor</span>
-              </div>
-            </div>
+      <div class="darli-testimonials-grid">
+        <!-- Testimonial 1 -->
+        <div class="darli-testimonial-card">
+          <div>
+            <div class="darli-stars-row">★★★★★</div>
+            <p class="darli-testi-quote">"A truly professional experience from start to finish. The Darlii team was
+              supportive, simplifying the closing process with exceptional after-sales care. Highly recommended for
+              trusted investments."</p>
           </div>
-
-          <!-- Testimonial 2 -->
-          <div class="darli-testimonial-card">
+          <div class="darli-testi-watermark">”</div>
+          <div class="darli-testi-user">
+            <img src="/storage/avatars/7.jpg" alt="Ali Abdulrahman" class="darli-testi-avatar"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
             <div>
-              <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"Remarkable and easy-to-use platform. Found an impressive selection of
-                verified properties tailored to my budget. The advisory support was prompt, knowledgeable, and reliable
-                throughout."</p>
-            </div>
-            <div class="darli-testi-watermark">”</div>
-            <div class="darli-testi-user">
-              <img src="/storage/avatars/2.jpg" alt="Ahmed Mahmoud" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-              <div>
-                <h5 class="darli-testi-name">Ahmed Mahmoud</h5>
-                <span class="darli-testi-role">Homeowner</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 3 -->
-          <div class="darli-testimonial-card">
-            <div>
-              <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"I am impressed by the level of expertise and commitment demonstrated by this real estate team. Their insights into the market helped me make informed investment decisions, and I couldn't be happier with the results."</p>
-            </div>
-            <div class="darli-testi-watermark">”</div>
-            <div class="darli-testi-user">
-              <img src="/storage/avatars/10.jpg" alt="Robert Evans" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-              <div>
-                <h5 class="darli-testi-name">Robert Evans</h5>
-                <span class="darli-testi-role">Property Investor</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 4 -->
-          <div class="darli-testimonial-card">
-            <div>
-              <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"Selling my home with the help of this real estate team was a breeze. They provided valuable advice, staged my property beautifully, and negotiated a great deal. I highly recommend their services!"</p>
-            </div>
-            <div class="darli-testi-watermark">”</div>
-            <div class="darli-testi-user">
-              <img src="/storage/avatars/9.jpg" alt="Jessica White" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-              <div>
-                <h5 class="darli-testi-name">Jessica White</h5>
-                <span class="darli-testi-role">Delighted Home Seller</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 5 -->
-          <div class="darli-testimonial-card">
-            <div>
-              <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"From the initial consultation to closing day, the real estate team went above and beyond to ensure I found the perfect home. Their dedication and professionalism made the entire process seamless."</p>
-            </div>
-            <div class="darli-testi-watermark">”</div>
-            <div class="darli-testi-user">
-              <img src="/storage/avatars/1.jpg" alt="Jennifer Lee" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-              <div>
-                <h5 class="darli-testi-name">Jennifer Lee</h5>
-                <span class="darli-testi-role">Happy Home Seeker</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 6 -->
-          <div class="darli-testimonial-card">
-            <div>
-              <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"Thanks to the expertise and guidance of this team, I am now the proud owner of my dream home. They listened to my preferences, answered all my questions, and made the entire buying process a positive experience."</p>
-            </div>
-            <div class="darli-testi-watermark">”</div>
-            <div class="darli-testi-user">
-              <img src="/storage/avatars/11.jpg" alt="Daniel Miller" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-              <div>
-                <h5 class="darli-testi-name">Daniel Miller</h5>
-                <span class="darli-testi-role">New Homeowner</span>
-              </div>
+              <h5 class="darli-testi-name">Ali Abdulrahman</h5>
+              <span class="darli-testi-role">Property Investor</span>
             </div>
           </div>
         </div>
 
-        <div class="darli-slider-dots">
-          <span class="darli-dot active"></span>
-          <span class="darli-dot"></span>
-          <span class="darli-dot"></span>
+        <!-- Testimonial 2 -->
+        <div class="darli-testimonial-card">
+          <div>
+            <div class="darli-stars-row">★★★★★</div>
+            <p class="darli-testi-quote">"Remarkable and easy-to-use platform. Found an impressive selection of
+              verified properties tailored to my budget. The advisory support was prompt, knowledgeable, and reliable
+              throughout."</p>
+          </div>
+          <div class="darli-testi-watermark">”</div>
+          <div class="darli-testi-user">
+            <img src="/storage/avatars/2.jpg" alt="Ahmed Mahmoud" class="darli-testi-avatar"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            <div>
+              <h5 class="darli-testi-name">Ahmed Mahmoud</h5>
+              <span class="darli-testi-role">Homeowner</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="darli-testimonial-card">
+          <div>
+            <div class="darli-stars-row">★★★★★</div>
+            <p class="darli-testi-quote">"I am impressed by the level of expertise and commitment demonstrated by this
+              real estate team. Their insights into the market helped me make informed investment decisions, and I
+              couldn't be happier with the results."</p>
+          </div>
+          <div class="darli-testi-watermark">”</div>
+          <div class="darli-testi-user">
+            <img src="/storage/avatars/10.jpg" alt="Robert Evans" class="darli-testi-avatar"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            <div>
+              <h5 class="darli-testi-name">Robert Evans</h5>
+              <span class="darli-testi-role">Property Investor</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 4 -->
+        <div class="darli-testimonial-card">
+          <div>
+            <div class="darli-stars-row">★★★★★</div>
+            <p class="darli-testi-quote">"Selling my home with the help of this real estate team was a breeze. They
+              provided valuable advice, staged my property beautifully, and negotiated a great deal. I highly recommend
+              their services!"</p>
+          </div>
+          <div class="darli-testi-watermark">”</div>
+          <div class="darli-testi-user">
+            <img src="/storage/avatars/9.jpg" alt="Jessica White" class="darli-testi-avatar"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            <div>
+              <h5 class="darli-testi-name">Jessica White</h5>
+              <span class="darli-testi-role">Delighted Home Seller</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 5 -->
+        <div class="darli-testimonial-card">
+          <div>
+            <div class="darli-stars-row">★★★★★</div>
+            <p class="darli-testi-quote">"From the initial consultation to closing day, the real estate team went above
+              and beyond to ensure I found the perfect home. Their dedication and professionalism made the entire
+              process seamless."</p>
+          </div>
+          <div class="darli-testi-watermark">”</div>
+          <div class="darli-testi-user">
+            <img src="/storage/avatars/1.jpg" alt="Jennifer Lee" class="darli-testi-avatar"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            <div>
+              <h5 class="darli-testi-name">Jennifer Lee</h5>
+              <span class="darli-testi-role">Happy Home Seeker</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 6 -->
+        <div class="darli-testimonial-card">
+          <div>
+            <div class="darli-stars-row">★★★★★</div>
+            <p class="darli-testi-quote">"Thanks to the expertise and guidance of this team, I am now the proud owner of
+              my dream home. They listened to my preferences, answered all my questions, and made the entire buying
+              process a positive experience."</p>
+          </div>
+          <div class="darli-testi-watermark">”</div>
+          <div class="darli-testi-user">
+            <img src="/storage/avatars/11.jpg" alt="Daniel Miller" class="darli-testi-avatar"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            <div>
+              <h5 class="darli-testi-name">Daniel Miller</h5>
+              <span class="darli-testi-role">New Homeowner</span>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
 
-    <!-- =========================================================================
+      <div class="darli-slider-dots">
+        <span class="darli-dot active"></span>
+        <span class="darli-dot"></span>
+        <span class="darli-dot"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
        9. WHY CHOOSE DARLI (FULL WIDTH BANNER)
        ========================================================================= -->
-    <section class="darli-why-us-banner">
-      <div class="darli-container">
-        <h2 class="darli-why-us-title">Why Choose Darlii?</h2>
+  <section class="darli-why-us-banner">
+    <div class="darli-container">
+      <h2 class="darli-why-us-title">Why Choose Darlii?</h2>
 
-        <div class="darli-why-us-grid">
-          <div class="darli-why-us-item">
-            <div class="darli-why-us-icon">
-              <i data-lucide="gem" style="width: 44px; height: 44px;"></i>
-            </div>
-            <h4>Trust & Transparency</h4>
-            <p>Verified information, authentic listings, and transparent pricing.</p>
+      <div class="darli-why-us-grid">
+        <div class="darli-why-us-item">
+          <div class="darli-why-us-icon">
+            <i data-lucide="gem" style="width: 44px; height: 44px;"></i>
           </div>
+          <h4>Trust & Transparency</h4>
+          <p>Verified information, authentic listings, and transparent pricing.</p>
+        </div>
 
-          <div class="darli-why-us-item">
-            <div class="darli-why-us-icon">
-              <i data-lucide="shield-check" style="width: 44px; height: 44px;"></i>
-            </div>
-            <h4>Diverse Properties</h4>
-            <p>Homes, villas, and apartments for all lifestyle needs.</p>
+        <div class="darli-why-us-item">
+          <div class="darli-why-us-icon">
+            <i data-lucide="shield-check" style="width: 44px; height: 44px;"></i>
           </div>
+          <h4>Diverse Properties</h4>
+          <p>Homes, villas, and apartments for all lifestyle needs.</p>
+        </div>
 
-          <div class="darli-why-us-item">
-            <div class="darli-why-us-icon">
-              <i data-lucide="headphones" style="width: 44px; height: 44px;"></i>
-            </div>
-            <h4>Dedicated Support</h4>
-            <p>Specialized consultants ready to assist you end-to-end.</p>
+        <div class="darli-why-us-item">
+          <div class="darli-why-us-icon">
+            <i data-lucide="headphones" style="width: 44px; height: 44px;"></i>
           </div>
+          <h4>Dedicated Support</h4>
+          <p>Specialized consultants ready to assist you end-to-end.</p>
+        </div>
 
-          <div class="darli-why-us-item">
-            <div class="darli-why-us-icon">
-              <i data-lucide="star" style="width: 44px; height: 44px;"></i>
-            </div>
-            <h4>Tailored Solutions</h4>
-            <p>Personalized property matching to meet your criteria.</p>
+        <div class="darli-why-us-item">
+          <div class="darli-why-us-icon">
+            <i data-lucide="star" style="width: 44px; height: 44px;"></i>
           </div>
+          <h4>Tailored Solutions</h4>
+          <p>Personalized property matching to meet your criteria.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- =========================================================================
+  <!-- =========================================================================
        10. LATEST ARTICLES
        ========================================================================= -->
-    <section class="darli-blog-section">
-      <div class="darli-container">
-        <span class="darli-section-tag">— Property Pulse —</span>
-        <h2 class="darli-section-title">Latest Articles & Insights</h2>
-        <p class="darli-section-subtitle">Stay informed with the latest real estate trends and market analysis</p>
+  <section class="darli-blog-section">
+    <div class="darli-container">
+      <span class="darli-section-tag">— Property Pulse —</span>
+      <h2 class="darli-section-title">Latest Articles & Insights</h2>
+      <p class="darli-section-subtitle">Stay informed with the latest real estate trends and market analysis</p>
 
-        <div class="darli-blog-grid">
-          <!-- Article 1 -->
-          <div class="darli-blog-card">
-            <div class="darli-blog-img-wrapper">
-              <img src="/storage/posts/1.jpg" alt="Living in Master-Planned Communities" class="darli-blog-img"
-                onerror="this.onerror=null;this.src='/storage/properties/4.jpg';">
-              <span class="darli-blog-date-badge">Jan 10, 2024</span>
-            </div>
-            <div class="darli-blog-body">
-              <a href="/en/blog/1" class="darli-blog-title">Benefits of Living in Master-Planned Communities</a>
-              <p class="darli-blog-excerpt">Discover how integrated compounds provide elevated lifestyles and long-term
-                capital appreciation.</p>
-              <a href="/en/blog/1" class="darli-blog-link">
-                <span>Read More</span>
-                <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
-              </a>
-            </div>
+      <div class="darli-blog-grid">
+        <!-- Article 1 -->
+        <div class="darli-blog-card">
+          <div class="darli-blog-img-wrapper">
+            <img src="/storage/posts/1.jpg" alt="Living in Master-Planned Communities" class="darli-blog-img"
+              onerror="this.onerror=null;this.src='/storage/properties/4.jpg';">
+            <span class="darli-blog-date-badge">Jan 10, 2024</span>
           </div>
-
-          <!-- Article 2 -->
-          <div class="darli-blog-card">
-            <div class="darli-blog-img-wrapper">
-              <img src="/storage/posts/3.jpg" alt="Top Real Estate Investment Zones" class="darli-blog-img"
-                onerror="this.onerror=null;this.src='/storage/properties/5.jpg';">
-              <span class="darli-blog-date-badge">Jan 18, 2024</span>
-            </div>
-            <div class="darli-blog-body">
-              <a href="/en/blog/2" class="darli-blog-title">Top Real Estate Investment Zones for 2024</a>
-              <p class="darli-blog-excerpt">Explore Egypt's highest-growth corridors and expected rental yields for the
-                upcoming cycle.</p>
-              <a href="/en/blog/2" class="darli-blog-link">
-                <span>Read More</span>
-                <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
-              </a>
-            </div>
+          <div class="darli-blog-body">
+            <a href="/en/blog/1" class="darli-blog-title">Benefits of Living in Master-Planned Communities</a>
+            <p class="darli-blog-excerpt">Discover how integrated compounds provide elevated lifestyles and long-term
+              capital appreciation.</p>
+            <a href="/en/blog/1" class="darli-blog-link">
+              <span>Read More</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </a>
           </div>
+        </div>
 
-          <!-- Article 3 -->
-          <div class="darli-blog-card">
-            <div class="darli-blog-img-wrapper">
-              <img src="/storage/posts/4.jpg" alt="Choosing the Right Home for Your Family" class="darli-blog-img"
-                onerror="this.onerror=null;this.src='/storage/properties/1.jpg';">
-              <span class="darli-blog-date-badge">Mar 25, 2024</span>
-            </div>
-            <div class="darli-blog-body">
-              <a href="/en/blog/3" class="darli-blog-title">How to Choose the Right Home for Your Family</a>
-              <p class="darli-blog-excerpt">A comprehensive buyer guide on evaluating schools, amenities, layout, and
-                neighbourhood safety.</p>
-              <a href="/en/blog/3" class="darli-blog-link">
-                <span>Read More</span>
-                <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
-              </a>
-            </div>
+        <!-- Article 2 -->
+        <div class="darli-blog-card">
+          <div class="darli-blog-img-wrapper">
+            <img src="/storage/posts/3.jpg" alt="Top Real Estate Investment Zones" class="darli-blog-img"
+              onerror="this.onerror=null;this.src='/storage/properties/5.jpg';">
+            <span class="darli-blog-date-badge">Jan 18, 2024</span>
+          </div>
+          <div class="darli-blog-body">
+            <a href="/en/blog/2" class="darli-blog-title">Top Real Estate Investment Zones for 2024</a>
+            <p class="darli-blog-excerpt">Explore Egypt's highest-growth corridors and expected rental yields for the
+              upcoming cycle.</p>
+            <a href="/en/blog/2" class="darli-blog-link">
+              <span>Read More</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Article 3 -->
+        <div class="darli-blog-card">
+          <div class="darli-blog-img-wrapper">
+            <img src="/storage/posts/4.jpg" alt="Choosing the Right Home for Your Family" class="darli-blog-img"
+              onerror="this.onerror=null;this.src='/storage/properties/1.jpg';">
+            <span class="darli-blog-date-badge">Mar 25, 2024</span>
+          </div>
+          <div class="darli-blog-body">
+            <a href="/en/blog/3" class="darli-blog-title">How to Choose the Right Home for Your Family</a>
+            <p class="darli-blog-excerpt">A comprehensive buyer guide on evaluating schools, amenities, layout, and
+              neighbourhood safety.</p>
+            <a href="/en/blog/3" class="darli-blog-link">
+              <span>Read More</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- =========================================================================
+  <!-- =========================================================================
        11. ADD PROPERTY CTA BANNER
        ========================================================================= -->
-    <section class="darli-cta-section">
-      <div class="darli-container">
-        <div class="darli-cta-banner">
-          <div class="darli-cta-text">
-            <h3>List Your Property on Darlii Today</h3>
-            <p>Leverage professional proptech marketing to reach serious buyers and tenants.</p>
-          </div>
-          <div>
-            <a href="/en/dashboard/properties/create" class="darli-btn-cta">
-              <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
-              <span>Add Your Property</span>
-            </a>
-          </div>
+  <section class="darli-cta-section">
+    <div class="darli-container">
+      <div class="darli-cta-banner">
+        <div class="darli-cta-text">
+          <h3>List Your Property on Darlii Today</h3>
+          <p>Leverage professional proptech marketing to reach serious buyers and tenants.</p>
+        </div>
+        <div>
+          <a href="/en/dashboard/properties/create" class="darli-btn-cta">
+            <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
+            <span>Add Your Property</span>
+          </a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- =========================================================================
+  <!-- =========================================================================
        12. FOOTER SECTION
        ========================================================================= -->
-    <footer class="darli-footer">
-      <div class="darli-container">
-        <div class="darli-footer-grid">
-          <!-- Col 1: About & Social -->
-          <div class="darli-footer-about">
-            <div style="margin-bottom: 16px;">
-              <img src="/themes/homzen/images/logo/darli-logo-en-dark.png" alt="Darlii"
-                style="height: 48px; width: auto;"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
-            </div>
-            <p>Your trusted real estate platform to buy, sell, and rent premier properties across Egypt.</p>
-            <div class="darli-footer-socials">
-              <a href="https://instagram.com" class="darli-footer-social-btn" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-              <a href="https://linkedin.com" class="darli-footer-social-btn" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-              <a href="https://youtube.com" class="darli-footer-social-btn" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-              <a href="https://wa.me/201234567890" class="darli-footer-social-btn" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.587 1.761.88 2.795.88h.002c3.18 0 5.767-2.587 5.768-5.766.001-3.18-2.585-5.767-5.769-5.767zm7.509 5.766c-.001 4.144-3.373 7.514-7.512 7.515-1.256 0-2.485-.316-3.574-.915l-4.454 1.168 1.189-4.342c-.658-1.144-1.006-2.448-1.006-3.791.001-4.143 3.372-7.514 7.513-7.515 4.141 0 7.512 3.372 7.514 7.515zm-4.316 2.062c-.179-.089-1.058-.523-1.222-.582-.164-.059-.283-.089-.402.089-.119.179-.462.582-.566.702-.104.119-.208.134-.387.045s-.758-.279-1.444-.891c-.534-.476-.895-1.064-.999-1.243-.104-.179-.011-.276.078-.365.08-.08.179-.208.268-.312.09-.104.119-.179.179-.298.059-.119.03-.223-.015-.312-.045-.089-.402-.969-.551-1.327-.145-.348-.292-.3-.402-.305-.104-.005-.223-.006-.342-.006s-.313.045-.476.223c-.164.179-.625.611-.625 1.49 0 .879.64 1.728.729 1.847.09.119 1.259 1.922 3.05 2.695.426.184.759.294 1.018.377.428.136.818.117 1.126.071.344-.052 1.058-.432 1.207-.849.149-.417.149-.774.104-.849-.045-.075-.164-.119-.343-.208z"/></svg></a>
-            </div>
-            <a href="/language/switch/ar" class="darli-btn-details"
-              style="border-color: #1E2D4A; color: #94A3B8; margin-top: 14px; display: inline-flex;">
-              <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
-              <span>العربية</span>
-            </a>
+  <footer class="darli-footer">
+    <div class="darli-container">
+      <div class="darli-footer-grid">
+        <!-- Col 1: About & Social -->
+        <div class="darli-footer-about">
+          <div style="margin-bottom: 16px;">
+            <img src="/themes/homzen/images/logo/darli-logo-en-dark.png" alt="Darlii" style="height: 48px; width: auto;"
+              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
           </div>
-
-          <!-- Col 2: Quick Links -->
-          <div class="darli-footer-col">
-            <h4>Quick Links</h4>
-            <ul class="darli-footer-links">
-              <li><a href="/en">Home</a></li>
-              <li><a href="/en/properties">Search Properties</a></li>
-              <li><a href="/en/blog">Articles & News</a></li>
-              <li><a href="/en/about-us">About Us</a></li>
-              <li><a href="/en/contact-us">Contact Us</a></li>
-            </ul>
+          <p>Your trusted real estate platform to buy, sell, and rent premier properties across Egypt.</p>
+          <div class="darli-footer-socials">
+            <a href="https://instagram.com" class="darli-footer-social-btn" aria-label="Instagram"><svg width="16"
+                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg></a>
+            <a href="https://linkedin.com" class="darli-footer-social-btn" aria-label="LinkedIn"><svg width="16"
+                height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+              </svg></a>
+            <a href="https://youtube.com" class="darli-footer-social-btn" aria-label="YouTube"><svg width="16"
+                height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg></a>
+            <a href="https://wa.me/201234567890" class="darli-footer-social-btn" aria-label="WhatsApp"><svg width="16"
+                height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.587 1.761.88 2.795.88h.002c3.18 0 5.767-2.587 5.768-5.766.001-3.18-2.585-5.767-5.769-5.767zm7.509 5.766c-.001 4.144-3.373 7.514-7.512 7.515-1.256 0-2.485-.316-3.574-.915l-4.454 1.168 1.189-4.342c-.658-1.144-1.006-2.448-1.006-3.791.001-4.143 3.372-7.514 7.513-7.515 4.141 0 7.512 3.372 7.514 7.515zm-4.316 2.062c-.179-.089-1.058-.523-1.222-.582-.164-.059-.283-.089-.402.089-.119.179-.462.582-.566.702-.104.119-.208.134-.387.045s-.758-.279-1.444-.891c-.534-.476-.895-1.064-.999-1.243-.104-.179-.011-.276.078-.365.08-.08.179-.208.268-.312.09-.104.119-.179.179-.298.059-.119.03-.223-.015-.312-.045-.089-.402-.969-.551-1.327-.145-.348-.292-.3-.402-.305-.104-.005-.223-.006-.342-.006s-.313.045-.476.223c-.164.179-.625.611-.625 1.49 0 .879.64 1.728.729 1.847.09.119 1.259 1.922 3.05 2.695.426.184.759.294 1.018.377.428.136.818.117 1.126.071.344-.052 1.058-.432 1.207-.849.149-.417.149-.774.104-.849-.045-.075-.164-.119-.343-.208z" />
+              </svg></a>
           </div>
+          <a href="/language/switch/ar" class="darli-btn-details"
+            style="border-color: #1E2D4A; color: #94A3B8; margin-top: 14px; display: inline-flex;">
+            <i data-lucide="globe" style="width: 14px; height: 14px;"></i>
+            <span>العربية</span>
+          </a>
+        </div>
 
-          <!-- Col 3: Contact Us -->
-          <div class="darli-footer-col">
-            <h4>Contact Us</h4>
-            <div class="darli-footer-contact-item">
-              <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
-              <span>+20 123 456 789</span>
-            </div>
-            <div class="darli-footer-contact-item">
-              <i data-lucide="mail" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
-              <span>info@darli.com</span>
-            </div>
-            <div class="darli-footer-contact-item">
-              <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
-              <span>Cairo, Egypt</span>
-            </div>
+        <!-- Col 2: Quick Links -->
+        <div class="darli-footer-col">
+          <h4>Quick Links</h4>
+          <ul class="darli-footer-links">
+            <li><a href="/en">Home</a></li>
+            <li><a href="/en/properties">Search Properties</a></li>
+            <li><a href="/en/blog">Articles & News</a></li>
+            <li><a href="/en/about-us">About Us</a></li>
+            <li><a href="/en/contact-us">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Contact Us -->
+        <div class="darli-footer-col">
+          <h4>Contact Us</h4>
+          <div class="darli-footer-contact-item">
+            <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
+            <span>+20 123 456 789</span>
           </div>
-
-          <!-- Col 4: Newsletter -->
-          <div class="darli-footer-col">
-            <h4>Newsletter</h4>
-            <p style="font-size: 0.85rem; margin-bottom: 12px;">Get the latest market updates and exclusive listings
-              delivered to your inbox.</p>
-            <form action="/newsletter/subscribe" method="POST" class="darli-newsletter-form">
-              <input type="hidden" name="_token" value="">
-              <input type="email" name="email" class="darli-newsletter-input" placeholder="Your email address" required>
-              <button type="submit" class="darli-btn-newsletter" aria-label="Subscribe">
-                <i data-lucide="send" style="width: 16px; height: 16px;"></i>
-              </button>
-            </form>
+          <div class="darli-footer-contact-item">
+            <i data-lucide="mail" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
+            <span>info@darli.com</span>
+          </div>
+          <div class="darli-footer-contact-item">
+            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--darli-gold);"></i>
+            <span>Cairo, Egypt</span>
           </div>
         </div>
 
-        <!-- Bottom Bar -->
-        <div class="darli-footer-bottom">
-          <div>All Rights Reserved © 2024 Darlii</div>
-          <div class="darli-footer-bottom-links">
-            <a href="/en/privacy-policy">Privacy Policy</a>
-            <a href="/en/cookie-policy">Cookie Policy</a>
-          </div>
+        <!-- Col 4: Newsletter -->
+        <div class="darli-footer-col">
+          <h4>Newsletter</h4>
+          <p style="font-size: 0.85rem; margin-bottom: 12px;">Get the latest market updates and exclusive listings
+            delivered to your inbox.</p>
+          <form action="/newsletter/subscribe" method="POST" class="darli-newsletter-form">
+            <input type="hidden" name="_token" value="">
+            <input type="email" name="email" class="darli-newsletter-input" placeholder="Your email address" required>
+            <button type="submit" class="darli-btn-newsletter" aria-label="Subscribe">
+              <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+            </button>
+          </form>
         </div>
       </div>
-    </footer>
+
+      <!-- Bottom Bar -->
+      <div class="darli-footer-bottom">
+        <div>All Rights Reserved © 2024 Darlii</div>
+        <div class="darli-footer-bottom-links">
+          <a href="/en/privacy-policy">Privacy Policy</a>
+          <a href="/en/cookie-policy">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   </div>
 

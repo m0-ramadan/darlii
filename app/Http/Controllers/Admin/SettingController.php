@@ -23,6 +23,7 @@ class SettingController extends Controller
         'branding' => ['label' => 'الهوية', 'route' => 'admin.settings.branding', 'icon' => 'photo', 'permission' => 'settings.manage'],
         'contact' => ['label' => 'التواصل', 'route' => 'admin.settings.contact', 'icon' => 'phone', 'permission' => 'settings.manage'],
         'footer' => ['label' => 'الفوتر', 'route' => 'admin.settings.footer', 'icon' => 'layout', 'permission' => 'settings.manage'],
+        'announcements' => ['label' => 'الإعلانات العلوية', 'route' => 'admin.settings.announcements', 'icon' => 'alert', 'permission' => 'settings.manage'],
         'services' => ['label' => 'صفحة خدماتنا', 'route' => 'admin.settings.services', 'icon' => 'briefcase', 'permission' => 'settings.manage'],
         'partners' => ['label' => 'شركاؤنا ووكلائنا', 'route' => 'admin.settings.partners', 'icon' => 'users', 'permission' => 'settings.manage'],
         'seo' => ['label' => 'SEO', 'route' => 'admin.settings.seo', 'icon' => 'search', 'permission' => 'settings.manage'],
@@ -57,7 +58,9 @@ class SettingController extends Controller
 
     public function contact()
     {
-        return $this->render('contact', 'بيانات التواصل', 'الهاتف والواتساب والبريد والعنوان وحسابات التواصل الاجتماعي');
+        $this->ensureContactSettings();
+
+        return $this->render('contact', 'بيانات التواصل', 'الهاتف والواتساب والبريد والعنوان وحسابات التواصل الاجتماعي ومحتوى صفحة اتصل بنا');
     }
 
     public function footer()
@@ -65,6 +68,13 @@ class SettingController extends Controller
         $this->ensureFooterSettings();
 
         return $this->render('footer', 'إعدادات الفوتر', 'النبذة التعريفية، روابط الفوتر، نصوص النشرة الإخبارية وحقوق النشر');
+    }
+
+    public function announcements()
+    {
+        $this->ensureAnnouncementsSettings();
+
+        return $this->render('announcements', 'شريط الإعلانات العلوي', 'تفعيل وتخصيص نصوص الإعلانات والعروض الترويجية في أعلى الموقع');
     }
 
     public function services()
@@ -97,7 +107,7 @@ class SettingController extends Controller
 
         return view('admin.settings.integrations', [
             'groups' => $groups,
-            'settingsByGroup' => collect($groups)->mapWithKeys(fn ($group) => [$group => $this->fields($group)]),
+            'settingsByGroup' => collect($groups)->mapWithKeys(fn($group) => [$group => $this->fields($group)]),
             'tabs' => self::TABS,
             'active' => 'integrations',
             'title' => 'التكاملات',
@@ -234,7 +244,7 @@ class SettingController extends Controller
         $fields = Setting::query()->where('group', $group)->orderBy('sort_order')->get();
 
         if (! config('locales.admin_english_enabled')) {
-            $fields = $fields->reject(fn (Setting $setting): bool => str_ends_with($setting->key, '_en'))->values();
+            $fields = $fields->reject(fn(Setting $setting): bool => str_ends_with($setting->key, '_en'))->values();
         }
 
         return $fields;
@@ -242,10 +252,12 @@ class SettingController extends Controller
 
     private function ensureLanguageSettings(): void
     {
-        foreach ([
-            ['key' => 'general.language_ar_enabled', 'value' => '1', 'label' => 'تفعيل اللغة العربية', 'help' => 'اللغة الأساسية للموقع.', 'sort' => 6],
-            ['key' => 'general.language_en_enabled', 'value' => '0', 'label' => 'تفعيل اللغة الإنجليزية', 'help' => 'عند التعطيل يختفي محوّل الإنجليزية ويُمنع الوصول إلى روابط /en.', 'sort' => 7],
-        ] as $definition) {
+        foreach (
+            [
+                ['key' => 'general.language_ar_enabled', 'value' => '1', 'label' => 'تفعيل اللغة العربية', 'help' => 'اللغة الأساسية للموقع.', 'sort' => 6],
+                ['key' => 'general.language_en_enabled', 'value' => '0', 'label' => 'تفعيل اللغة الإنجليزية', 'help' => 'عند التعطيل يختفي محوّل الإنجليزية ويُمنع الوصول إلى روابط /en.', 'sort' => 7],
+            ] as $definition
+        ) {
             Setting::query()->firstOrCreate(
                 ['key' => $definition['key']],
                 [
@@ -265,11 +277,13 @@ class SettingController extends Controller
 
     private function ensureMaintenanceSettings(): void
     {
-        foreach ([
-            ['key' => 'general.maintenance_mode', 'value' => '0', 'type' => 'boolean', 'label' => 'تفعيل وضع الصيانة', 'help' => 'عند التفعيل تظهر صفحة الصيانة للزوار، وتظل لوحة التحكم عاملة.', 'sort' => 1],
-            ['key' => 'maintenance.title', 'value' => 'الموقع تحت الصيانة', 'type' => 'text', 'label' => 'عنوان الصفحة', 'help' => null, 'sort' => 2],
-            ['key' => 'maintenance.message', 'value' => 'نعمل حاليًا على تحسين تجربتك. سنعود قريبًا، شكرًا لتفهمك.', 'type' => 'textarea', 'label' => 'رسالة الصيانة', 'help' => null, 'sort' => 3],
-        ] as $definition) {
+        foreach (
+            [
+                ['key' => 'general.maintenance_mode', 'value' => '0', 'type' => 'boolean', 'label' => 'تفعيل وضع الصيانة', 'help' => 'عند التفعيل تظهر صفحة الصيانة للزوار، وتظل لوحة التحكم عاملة.', 'sort' => 1],
+                ['key' => 'maintenance.title', 'value' => 'الموقع تحت الصيانة', 'type' => 'text', 'label' => 'عنوان الصفحة', 'help' => null, 'sort' => 2],
+                ['key' => 'maintenance.message', 'value' => 'نعمل حاليًا على تحسين تجربتك. سنعود قريبًا، شكرًا لتفهمك.', 'type' => 'textarea', 'label' => 'رسالة الصيانة', 'help' => null, 'sort' => 3],
+            ] as $definition
+        ) {
             Setting::query()->firstOrCreate(
                 ['key' => $definition['key']],
                 [
@@ -397,6 +411,63 @@ class SettingController extends Controller
                 ['key' => $def['key']],
                 [
                     'group' => 'partners',
+                    'value' => $def['value'],
+                    'type' => $def['type'],
+                    'label_ar' => $def['label'],
+                    'help_ar' => $def['help'],
+                    'is_public' => true,
+                    'sort_order' => $def['sort'],
+                ]
+            );
+        }
+
+        $this->settings->flush();
+    }
+
+    private function ensureAnnouncementsSettings(): void
+    {
+        $definitions = [
+            ['key' => 'announcements.enabled', 'value' => '1', 'type' => 'boolean', 'label' => 'تفعيل شريط الإعلانات العلوي', 'help' => 'إظهار أو إخفاء شريط الإعلانات المتحرك في أعلى الموقع بالكامل', 'sort' => 1],
+            ['key' => 'announcements.autoplay_delay', 'value' => '5000', 'type' => 'number', 'label' => 'مدة عرض كل إعلان (بالميلي ثانية)', 'help' => 'مثال: 5000 تعني 5 ثوانٍ قبل الانتقال للإعلان التالي', 'sort' => 2],
+            ['key' => 'announcements.item_1', 'value' => 'استفد من العروض لفترة محدودة على المنازل الفاخرة ذات الميزات المذهلة!', 'type' => 'text', 'label' => 'الإعلان الأول', 'help' => 'النص الترويجي الأول في الشريط', 'sort' => 3],
+            ['key' => 'announcements.item_2', 'value' => 'استكشف قوائم عقاراتنا الجديدة والمثيرة المتوفرة الآن في مواقع رئيسية!', 'type' => 'text', 'label' => 'الإعلان الثاني', 'help' => 'النص الترويجي الثاني في الشريط (اتركه فارغاً إن لم ترغب به)', 'sort' => 4],
+            ['key' => 'announcements.item_3', 'value' => 'اكتشف منزل أحلامك من خلال أحدث قوائمنا وخدماتنا المخصصة.', 'type' => 'text', 'label' => 'الإعلان الثالث', 'help' => 'النص الترويجي الثالث في الشريط (اتركه فارغاً إن لم ترغب به)', 'sort' => 5],
+            ['key' => 'announcements.item_4', 'value' => 'انضم إلينا في فعاليات البيت المفتوح الحصرية واعثر على عقارك المثالي.', 'type' => 'text', 'label' => 'الإعلان الرابع', 'help' => 'النص الترويجي الرابع في الشريط (اتركه فارغاً إن لم ترغب به)', 'sort' => 6],
+        ];
+
+        foreach ($definitions as $def) {
+            Setting::query()->firstOrCreate(
+                ['key' => $def['key']],
+                [
+                    'group' => 'announcements',
+                    'value' => $def['value'],
+                    'type' => $def['type'],
+                    'label_ar' => $def['label'],
+                    'help_ar' => $def['help'],
+                    'is_public' => true,
+                    'sort_order' => $def['sort'],
+                ]
+            );
+        }
+
+        $this->settings->flush();
+    }
+
+    private function ensureContactSettings(): void
+    {
+        $definitions = [
+            ['key' => 'contact.hero_badge', 'value' => 'فريق خدمة العملاء والاستشارات', 'type' => 'text', 'label' => 'شارة أعلى صفحة اتصل بنا', 'help' => 'الشارة العلوية باللون الأحمر أعلى عنوان الصفحة', 'sort' => 1],
+            ['key' => 'contact.hero_title', 'value' => 'تواصل معنا - منصة دارلي العقارية', 'type' => 'text', 'label' => 'عنوان صفحة اتصل بنا', 'help' => 'العنوان الرئيسي الذي يظهر في أعلى الصفحة', 'sort' => 2],
+            ['key' => 'contact.hero_desc', 'value' => 'نحن هنا دائماً لاستقبال استفساراتكم ومساعدتكم في اختيار عقاركم المثالي في محافظة بني سويف بكل سهولة واحترافية', 'type' => 'textarea', 'label' => 'وصف صفحة اتصل بنا', 'help' => 'النص التوضيحي أسفل العنوان الرئيسي', 'sort' => 3],
+            ['key' => 'contact.working_hours', 'value' => 'يومياً من 9:00 ص حتى 9:00 م (الجمعة من 4 م إلى 9 م)', 'type' => 'text', 'label' => 'مواعيد العمل الرسمية', 'help' => 'تظهر في بطاقة المقر الرئيسي على صفحة اتصل بنا', 'sort' => 4],
+            ['key' => 'contact.map_embed_url', 'value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111244.75704179374!2d31.0261352!3d29.0660727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145a27845bc8bbcb%3A0xb36ef554a938c35b!2z2KjZhtmKINiz2YjZitmB2Iwg2YXYsdmD2LIg2KjZhtmKINiz2YjZitmB2Iwg2KjZhtmKINiz2YjZitmB2IwgNjc3NDAwMQ!5e0!3m2!1sar!2seg!4v1710000000000!5m2!1sar!2seg', 'type' => 'textarea', 'label' => 'رابط خريطة Google المضمنة (Embed URL)', 'help' => 'رابط تضمين الخريطة src في أسفل صفحة اتصل بنا', 'sort' => 5],
+        ];
+
+        foreach ($definitions as $def) {
+            Setting::query()->firstOrCreate(
+                ['key' => $def['key']],
+                [
+                    'group' => 'contact',
                     'value' => $def['value'],
                     'type' => $def['type'],
                     'label_ar' => $def['label'],

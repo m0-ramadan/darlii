@@ -266,10 +266,10 @@
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <button type="button" id="layer-streets-{{ $containerId }}" class="darli-layer-switcher-btn active" title="خريطة الشوارع">
+                <button type="button" id="layer-streets-{{ $containerId }}" class="darli-layer-switcher-btn" title="خريطة الشوارع">
                     🗺️ شوارع
                 </button>
-                <button type="button" id="layer-satellite-{{ $containerId }}" class="darli-layer-switcher-btn" title="صور القمر الصناعي">
+                <button type="button" id="layer-satellite-{{ $containerId }}" class="darli-layer-switcher-btn active" title="صور القمر الصناعي">
                     🛰️ قمر صناعي
                 </button>
                 <button type="button" id="gps-btn-{{ $containerId }}" class="ap-btn ap-btn--sm ap-btn--secondary" style="font-size: 12px; padding: 6px 12px; border-radius: 6px;" title="تحديد موقعي الحالي عبر الـ GPS">
@@ -411,13 +411,13 @@
             streetLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+            });
 
-            // Satellite tile layer (Esri World Imagery)
+            // Satellite tile layer (Esri World Imagery) - Default
             satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-            });
+            }).addTo(map);
 
             if (hasExisting) {
                 setCoords(rawLat, rawLng, false);

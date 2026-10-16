@@ -25,7 +25,7 @@
     $head = $shellHead ?? '';
 
     // طبقة الأدوات المساعدة الخاصة بصفحات قاعدة البيانات (تُحمَّل بعد ثيم هومزن).
-    $darliCss = '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.css') . '?v=1.0.0">';
+    $darliCss = '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.css') . '?v=1.0.1">';
 
     $pushedHead = (string) $__env->yieldPushContent('head');
     $headInjection = $darliCss . ($pushedHead !== '' ? "\n" . $pushedHead : '');

@@ -1,17 +1,19 @@
 <section class="darli-featured-section">
   <div class="darli-container">
-    <div class="darli-section-header-flex">
-      <div>
-        <span class="darli-section-tag">— {{ $locale === 'ar' ? 'العقارات المميزة' : 'Featured Properties' }} —</span>
-        <h2 class="darli-section-title">{{ $locale === 'ar' ? 'اكتشف أفضل العقارات في دارلي' : 'Discover the Best Properties in Darlii' }}<br>{{ $locale === 'ar' ? 'لمنازل أحلامك' : 'For Your Dream Homes' }}</h2>
+    @if ($properties->isNotEmpty())
+      <div class="darli-section-header-flex">
+        <div>
+          <span class="darli-section-tag">— {{ $locale === 'ar' ? 'العقارات المميزة' : 'Featured Properties' }} —</span>
+          <h2 class="darli-section-title">{{ $locale === 'ar' ? 'اكتشف أفضل العقارات في دارلي' : 'Discover the Best Properties in Darlii' }}<br>{{ $locale === 'ar' ? 'لمنازل أحلامك' : 'For Your Dream Homes' }}</h2>
+        </div>
+        <div>
+          <a href="{{ route('properties.index') }}" class="darli-view-all-link">
+            <span>{{ $locale === 'ar' ? 'عرض جميع العقارات' : 'View All Properties' }}</span>
+            <i data-lucide="{{ $locale === 'ar' ? 'arrow-left' : 'arrow-right' }}" style="width: 16px; height: 16px;"></i>
+          </a>
+        </div>
       </div>
-      <div>
-        <a href="{{ route('properties.index') }}" class="darli-view-all-link">
-          <span>{{ $locale === 'ar' ? 'عرض جميع العقارات' : 'View All Properties' }}</span>
-          <i data-lucide="{{ $locale === 'ar' ? 'arrow-left' : 'arrow-right' }}" style="width: 16px; height: 16px;"></i>
-        </a>
-      </div>
-    </div>
+    @endif
 
     <div class="darli-properties-grid">
       @forelse ($properties as $prop)
@@ -80,8 +82,12 @@
           </div>
         </div>
       @empty
-        <div class="col-12 text-center py-5">
-          <p style="color: var(--darli-muted);">لا توجد عقارات منشورة حالياً</p>
+        <div style="grid-column: 1 / -1; width: 100%; max-width: 1024px; margin: 0 auto;">
+          <img
+            src="{{ asset($locale === 'ar' ? 'themes/homzen/images/darli-placeholder-ar.png' : 'themes/homzen/images/darli-placeholder-en.png') }}"
+            alt="{{ $locale === 'ar' ? 'لا توجد بيانات متاحة حاليًا' : 'No data is currently available' }}"
+            style="display: block; width: 100%; height: auto; border-radius: 28px;"
+          >
         </div>
       @endforelse
     </div>

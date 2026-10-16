@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ $title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { color-scheme: light; --green: #0f3d2e; --gold: #c8a45c; --ink: #18342b; }
         * { box-sizing: border-box; }
-        body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; font-family: Tahoma, Arial, sans-serif; color: var(--ink); background: radial-gradient(circle at 15% 15%, rgba(200,164,92,.18), transparent 28%), linear-gradient(145deg, #f9f7f0, #edf4f0); }
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; font-family: 'Cairo', Tahoma, Arial, sans-serif; color: var(--ink); background: radial-gradient(circle at 15% 15%, rgba(200,164,92,.18), transparent 28%), linear-gradient(145deg, #f9f7f0, #edf4f0); }
         .card { width: min(660px, 100%); padding: clamp(34px, 7vw, 64px); text-align: center; background: rgba(255,255,255,.94); border: 1px solid rgba(15,61,46,.12); border-radius: 28px; box-shadow: 0 24px 70px rgba(15,61,46,.14); }
         .logo { max-width: 180px; max-height: 76px; object-fit: contain; margin-bottom: 28px; }
         .icon { width: 82px; height: 82px; margin: 0 auto 24px; display: grid; place-items: center; color: var(--gold); background: rgba(200,164,92,.12); border-radius: 50%; }

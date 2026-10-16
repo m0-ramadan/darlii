@@ -14,7 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.4">
+  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.5">
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -92,226 +92,240 @@
         <h1 id="darli-hero-heading" class="sr-only">اكتشف أفضل العقارات في جميع أنحاء دارلي</h1>
         <p class="sr-only">منزل أحلامك .. أقرب مما تتخيل</p>
 
-          <!-- Real location buttons cover the old labels baked into the artwork. -->
-          <a href="/ar/properties?location=مدينة+بني+سويف" class="hero-hotspot spot-bns" title="عقارات مدينة بني سويف"><span>مدينة بني سويف</span></a>
-          <a href="/ar/properties?location=ببا" class="hero-hotspot spot-biba" title="عقارات ببا"><span>ببا</span></a>
-          <a href="/ar/properties?location=الفشن" class="hero-hotspot spot-fashn" title="عقارات الفشن"><span>الفشن</span></a>
-          <a href="/ar/properties?location=مدينة+بني+سويف+الجديدة" class="hero-hotspot spot-new-bns" title="عقارات بني سويف الجديدة"><span>بني سويف الجديدة</span></a>
-          <a href="/ar/properties?location=الواسطى" class="hero-hotspot spot-wasta" title="عقارات الواسطى"><span>الواسطى</span></a>
-          <a href="/ar/properties?location=ناصر" class="hero-hotspot spot-nasser" title="عقارات ناصر"><span>ناصر</span></a>
-          <a href="/ar/properties?location=إهناسيا" class="hero-hotspot spot-ihnasya" title="عقارات إهناسيا"><span>إهناسيا</span></a>
-          <a href="/ar/properties?location=سمسطا" class="hero-hotspot spot-sumusta" title="عقارات سمسطا"><span>سمسطا</span></a>
-          <a href="/ar/properties" class="hero-hotspot spot-map-btn" title="عرض الخريطة"></a>
+        <!-- Real location buttons cover the old labels baked into the artwork. -->
+        <a href="/ar/properties?location=مدينة+بني+سويف" class="hero-hotspot spot-bns"
+          title="عقارات مدينة بني سويف"><span>مدينة بني سويف</span></a>
+        <a href="/ar/properties?location=ببا" class="hero-hotspot spot-biba" title="عقارات ببا"><span>ببا</span></a>
+        <a href="/ar/properties?location=الفشن" class="hero-hotspot spot-fashn"
+          title="عقارات الفشن"><span>الفشن</span></a>
+        <a href="/ar/properties?location=مدينة+بني+سويف+الجديدة" class="hero-hotspot spot-new-bns"
+          title="عقارات بني سويف الجديدة"><span>بني سويف الجديدة</span></a>
+        <a href="/ar/properties?location=الواسطى" class="hero-hotspot spot-wasta"
+          title="عقارات الواسطى"><span>الواسطى</span></a>
+        <a href="/ar/properties?location=ناصر" class="hero-hotspot spot-nasser"
+          title="عقارات ناصر"><span>ناصر</span></a>
+        <a href="/ar/properties?location=إهناسيا" class="hero-hotspot spot-ihnasya"
+          title="عقارات إهناسيا"><span>إهناسيا</span></a>
+        <a href="/ar/properties?location=سمسطا" class="hero-hotspot spot-sumusta"
+          title="عقارات سمسطا"><span>سمسطا</span></a>
+        <a href="/ar/properties" class="hero-hotspot spot-map-btn" title="عرض الخريطة"></a>
 
-          <div class="hero-search-overlay">
-            <form action="/ar/properties" method="GET" id="darli-hero-search-form" aria-label="البحث عن عقار">
-              <div class="darli-search-card-grid">
-                <label class="darli-search-lbl lbl-keyword" for="darli-search-keyword"><i data-lucide="search"></i> الكلمة المفتاحية</label>
-                <label class="darli-search-lbl lbl-location" for="darli-search-location"><i data-lucide="map-pin"></i> الموقع</label>
-                <label class="darli-search-lbl lbl-category" for="darli-search-category"><i data-lucide="layers"></i> التصنيف</label>
-                <div class="darli-grid-empty" aria-hidden="true"></div>
-                <div class="darli-grid-empty" aria-hidden="true"></div>
+        <div class="hero-search-overlay">
+          <form action="/ar/properties" method="GET" id="darli-hero-search-form" aria-label="البحث عن عقار">
+            <div class="darli-search-card-grid">
+              <label class="darli-search-lbl lbl-keyword" for="darli-search-keyword"><i data-lucide="search"></i> الكلمة
+                المفتاحية</label>
+              <label class="darli-search-lbl lbl-location" for="darli-search-location"><i data-lucide="map-pin"></i>
+                الموقع</label>
+              <label class="darli-search-lbl lbl-category" for="darli-search-category"><i data-lucide="layers"></i>
+                التصنيف</label>
+              <div class="darli-grid-empty" aria-hidden="true"></div>
+              <div class="darli-grid-empty" aria-hidden="true"></div>
 
-                <div class="darli-input-wrap wrap-keyword">
-                  <input type="text" id="darli-search-keyword" name="k" class="grid-input" placeholder="ابحث بالكلمة المفتاحية..." aria-label="الكلمة المفتاحية">
-                </div>
+              <div class="darli-input-wrap wrap-keyword">
+                <input type="text" id="darli-search-keyword" name="k" class="grid-input"
+                  placeholder="ابحث بالكلمة المفتاحية..." aria-label="الكلمة المفتاحية">
+              </div>
 
-                <div class="darli-input-wrap wrap-location">
-                  <input type="text" id="darli-search-location" name="location" list="darli-locations-list" class="grid-input" placeholder="ابحث بالموقع (بني سويف ومراكزها)..." aria-label="الموقع" autocomplete="off">
-                  <datalist id="darli-locations-list">
-                    <option value="مدينة بني سويف">
-                    <option value="مدينة بني سويف الجديدة">
-                    <option value="الواسطى">
-                    <option value="ناصر">
-                    <option value="إهناسيا">
-                    <option value="ببا">
-                    <option value="سمسطا">
-                    <option value="الفشن">
-                    <option value="حي الزهور">
-                    <option value="حي الجامعة">
-                    <option value="مقبل">
-                    <option value="الحمرايا">
-                    <option value="شرق النيل">
-                  </datalist>
-                </div>
+              <div class="darli-input-wrap wrap-location">
+                <input type="text" id="darli-search-location" name="location" list="darli-locations-list"
+                  class="grid-input" placeholder="ابحث بالموقع (بني سويف ومراكزها)..." aria-label="الموقع"
+                  autocomplete="off">
+                <datalist id="darli-locations-list">
+                  <option value="مدينة بني سويف">
+                  <option value="مدينة بني سويف الجديدة">
+                  <option value="الواسطى">
+                  <option value="ناصر">
+                  <option value="إهناسيا">
+                  <option value="ببا">
+                  <option value="سمسطا">
+                  <option value="الفشن">
+                  <option value="حي الزهور">
+                  <option value="حي الجامعة">
+                  <option value="مقبل">
+                  <option value="الحمرايا">
+                  <option value="شرق النيل">
+                </datalist>
+              </div>
 
-                <div class="darli-input-wrap wrap-category">
-                  <select id="darli-search-category" name="category_id" class="grid-select" aria-label="التصنيف">
-                    <option value="">جميع التصنيفات</option>
-                    <option value="1">شقة</option>
-                    <option value="2">فيلا</option>
-                    <option value="3">شقة كوندو</option>
-                    <option value="4">منزل</option>
-                    <option value="5">أرض</option>
-                    <option value="6">العقارات التجارية</option>
+              <div class="darli-input-wrap wrap-category">
+                <select id="darli-search-category" name="category_id" class="grid-select" aria-label="التصنيف">
+                  <option value="">جميع التصنيفات</option>
+                  <option value="1">شقة</option>
+                  <option value="2">فيلا</option>
+                  <option value="3">شقة كوندو</option>
+                  <option value="4">منزل</option>
+                  <option value="5">أرض</option>
+                  <option value="6">العقارات التجارية</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn-advanced" id="darli-toggle-advanced" aria-expanded="false"
+                aria-controls="darli-advanced-panel" title="خيارات متقدمة">
+                <i data-lucide="sliders-horizontal" style="width: 15px; height: 15px;"></i>
+                <span>متقدم</span>
+              </button>
+
+              <button type="submit" class="btn-search" title="بحث">
+                <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                <span>بحث</span>
+              </button>
+            </div>
+
+            <div class="darli-advanced-filter-panel" id="darli-advanced-panel">
+              <div class="darli-adv-grid">
+                <!-- Type: Sale / Rent -->
+                <div class="darli-adv-field">
+                  <label class="darli-adv-label">نوع العملية</label>
+                  <select name="type" class="darli-adv-select">
+                    <option value="">الكل (للبيع وللإيجار)</option>
+                    <option value="sale">للبيع</option>
+                    <option value="rent">للإيجار</option>
                   </select>
                 </div>
 
-                <button type="button" class="btn-advanced" id="darli-toggle-advanced" aria-expanded="false" aria-controls="darli-advanced-panel" title="خيارات متقدمة">
-                  <i data-lucide="sliders-horizontal" style="width: 15px; height: 15px;"></i>
-                  <span>متقدم</span>
-                </button>
+                <!-- Min Price -->
+                <div class="darli-adv-field">
+                  <label class="darli-adv-label">السعر من (ج.م)</label>
+                  <input type="number" name="min_price" class="darli-adv-input" placeholder="0" min="0" step="10000">
+                </div>
 
-                <button type="submit" class="btn-search" title="بحث">
-                  <i data-lucide="search" style="width: 16px; height: 16px;"></i>
-                  <span>بحث</span>
-                </button>
+                <!-- Max Price -->
+                <div class="darli-adv-field">
+                  <label class="darli-adv-label">السعر إلى (ج.م)</label>
+                  <input type="number" name="max_price" class="darli-adv-input" placeholder="أقصى سعر" min="0"
+                    step="10000">
+                </div>
+
+                <!-- Bedrooms -->
+                <div class="darli-adv-field">
+                  <label class="darli-adv-label">غرف النوم</label>
+                  <select name="bedroom" class="darli-adv-select">
+                    <option value="">أي عدد</option>
+                    <option value="1">1 غرفة</option>
+                    <option value="2">2 غرف</option>
+                    <option value="3">3 غرف</option>
+                    <option value="4">4 غرف</option>
+                    <option value="5">5+ غرف</option>
+                  </select>
+                </div>
+
+                <!-- Bathrooms -->
+                <div class="darli-adv-field">
+                  <label class="darli-adv-label">الحمامات</label>
+                  <select name="bathroom" class="darli-adv-select">
+                    <option value="">أي عدد</option>
+                    <option value="1">1 حمام</option>
+                    <option value="2">2 حمام</option>
+                    <option value="3">3 حمام</option>
+                    <option value="4">4+ حمام</option>
+                  </select>
+                </div>
               </div>
 
-              <div class="darli-advanced-filter-panel" id="darli-advanced-panel">
-                  <div class="darli-adv-grid">
-                    <!-- Type: Sale / Rent -->
-                    <div class="darli-adv-field">
-                      <label class="darli-adv-label">نوع العملية</label>
-                      <select name="type" class="darli-adv-select">
-                        <option value="">الكل (للبيع وللإيجار)</option>
-                        <option value="sale">للبيع</option>
-                        <option value="rent">للإيجار</option>
-                      </select>
-                    </div>
+              <!-- Amenities / Features -->
+              <div class="darli-adv-amenities-title">المميزات والخدمات:</div>
+              <div class="darli-adv-amenities-grid">
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="1"><span>واي
+                    فاي</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="2"><span>وقوف
+                    السيارات</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="3"><span>حمام
+                    السباحة</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
+                    value="4"><span>شرفة</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
+                    value="5"><span>حديقة</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="6"><span>حماية
+                    وأمن</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="7"><span>صالة
+                    لياقة</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
+                    value="8"><span>تكييف</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="9"><span>تدفئة
+                    مركزية</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="10"><span>غرفة
+                    غسيل</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="11"><span>حيوانات
+                    أليفة</span></label>
+                <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="12"><span>سبا
+                    وتدليك</span></label>
+              </div>
+            </div>
+          </form>
+        </div>
 
-                    <!-- Min Price -->
-                    <div class="darli-adv-field">
-                      <label class="darli-adv-label">السعر من (ج.م)</label>
-                      <input type="number" name="min_price" class="darli-adv-input" placeholder="0" min="0"
-                        step="10000">
-                    </div>
-
-                    <!-- Max Price -->
-                    <div class="darli-adv-field">
-                      <label class="darli-adv-label">السعر إلى (ج.م)</label>
-                      <input type="number" name="max_price" class="darli-adv-input" placeholder="أقصى سعر" min="0"
-                        step="10000">
-                    </div>
-
-                    <!-- Bedrooms -->
-                    <div class="darli-adv-field">
-                      <label class="darli-adv-label">غرف النوم</label>
-                      <select name="bedroom" class="darli-adv-select">
-                        <option value="">أي عدد</option>
-                        <option value="1">1 غرفة</option>
-                        <option value="2">2 غرف</option>
-                        <option value="3">3 غرف</option>
-                        <option value="4">4 غرف</option>
-                        <option value="5">5+ غرف</option>
-                      </select>
-                    </div>
-
-                    <!-- Bathrooms -->
-                    <div class="darli-adv-field">
-                      <label class="darli-adv-label">الحمامات</label>
-                      <select name="bathroom" class="darli-adv-select">
-                        <option value="">أي عدد</option>
-                        <option value="1">1 حمام</option>
-                        <option value="2">2 حمام</option>
-                        <option value="3">3 حمام</option>
-                        <option value="4">4+ حمام</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <!-- Amenities / Features -->
-                  <div class="darli-adv-amenities-title">المميزات والخدمات:</div>
-                  <div class="darli-adv-amenities-grid">
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="1"><span>واي
-                        فاي</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="2"><span>وقوف
-                        السيارات</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="3"><span>حمام
-                        السباحة</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
-                        value="4"><span>شرفة</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
-                        value="5"><span>حديقة</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="6"><span>حماية
-                        وأمن</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="7"><span>صالة
-                        لياقة</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
-                        value="8"><span>تكييف</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="9"><span>تدفئة
-                        مركزية</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="10"><span>غرفة
-                        غسيل</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]"
-                        value="11"><span>حيوانات أليفة</span></label>
-                    <label class="darli-adv-amenity-item"><input type="checkbox" name="features[]" value="12"><span>سبا
-                        وتدليك</span></label>
-                  </div>
-                    </div>
-                  </form>
+        <div class="darli-mobile-hero">
+          <div class="darli-mobile-hero-copy">
+            <h2>اكتشف أفضل العقارات<br>في جميع أنحاء دارلي</h2>
+            <p>منزل أحلامك .. أقرب مما تتخيل</p>
+            <a href="/ar/properties" class="darli-mobile-map-button">
+              <i data-lucide="map"></i>
+              <span>عرض الخريطة</span>
+              <i data-lucide="arrow-left"></i>
+            </a>
           </div>
 
-          <div class="darli-mobile-hero">
-            <div class="darli-mobile-hero-copy">
-              <h2>اكتشف أفضل العقارات<br>في جميع أنحاء دارلي</h2>
-              <p>منزل أحلامك .. أقرب مما تتخيل</p>
-              <a href="/ar/properties" class="darli-mobile-map-button">
-                <i data-lucide="map"></i>
-                <span>عرض الخريطة</span>
-                <i data-lucide="arrow-left"></i>
+          <form action="/ar/properties" method="GET" class="darli-mobile-search" aria-label="البحث عن عقار">
+            <label class="darli-mobile-field">
+              <span><i data-lucide="search"></i> الكلمة المفتاحية</span>
+              <span class="darli-mobile-control">
+                <input type="text" name="k" placeholder="ابحث بالكلمة المفتاحية">
+                <i data-lucide="search"></i>
+              </span>
+            </label>
+
+            <label class="darli-mobile-field">
+              <span><i data-lucide="map-pin"></i> الموقع</span>
+              <span class="darli-mobile-control">
+                <input type="text" name="location" list="darli-locations-list"
+                  placeholder="ابحث بالموقع (بني سويف ومراكزها)" autocomplete="off">
+                <i data-lucide="crosshair"></i>
+              </span>
+            </label>
+
+            <label class="darli-mobile-field">
+              <span><i data-lucide="layers"></i> التصنيف</span>
+              <span class="darli-mobile-control">
+                <select name="category_id">
+                  <option value="">الكل</option>
+                  <option value="1">شقة</option>
+                  <option value="2">فيلا</option>
+                  <option value="3">شقة كوندو</option>
+                  <option value="4">منزل</option>
+                  <option value="5">أرض</option>
+                  <option value="6">العقارات التجارية</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </span>
+            </label>
+
+            <div class="darli-mobile-search-actions">
+              <a href="/ar/properties" class="darli-mobile-advanced">
+                <i data-lucide="sliders-horizontal"></i>
+                <span>متقدم</span>
               </a>
+              <button type="submit" class="darli-mobile-submit">
+                <i data-lucide="search"></i>
+                <span>بحث</span>
+              </button>
             </div>
+          </form>
 
-            <form action="/ar/properties" method="GET" class="darli-mobile-search" aria-label="البحث عن عقار">
-              <label class="darli-mobile-field">
-                <span><i data-lucide="search"></i> الكلمة المفتاحية</span>
-                <span class="darli-mobile-control">
-                  <input type="text" name="k" placeholder="ابحث بالكلمة المفتاحية">
-                  <i data-lucide="search"></i>
-                </span>
-              </label>
-
-              <label class="darli-mobile-field">
-                <span><i data-lucide="map-pin"></i> الموقع</span>
-                <span class="darli-mobile-control">
-                  <input type="text" name="location" list="darli-locations-list" placeholder="ابحث بالموقع (بني سويف ومراكزها)" autocomplete="off">
-                  <i data-lucide="crosshair"></i>
-                </span>
-              </label>
-
-              <label class="darli-mobile-field">
-                <span><i data-lucide="layers"></i> التصنيف</span>
-                <span class="darli-mobile-control">
-                  <select name="category_id">
-                    <option value="">الكل</option>
-                    <option value="1">شقة</option>
-                    <option value="2">فيلا</option>
-                    <option value="3">شقة كوندو</option>
-                    <option value="4">منزل</option>
-                    <option value="5">أرض</option>
-                    <option value="6">العقارات التجارية</option>
-                  </select>
-                  <i data-lucide="chevron-down"></i>
-                </span>
-              </label>
-
-              <div class="darli-mobile-search-actions">
-                <a href="/ar/properties" class="darli-mobile-advanced">
-                  <i data-lucide="sliders-horizontal"></i>
-                  <span>متقدم</span>
-                </a>
-                <button type="submit" class="darli-mobile-submit">
-                  <i data-lucide="search"></i>
-                  <span>بحث</span>
-                </button>
-              </div>
-            </form>
-
-            <div class="darli-mobile-centers-chips">
-              <span class="centers-label"><i data-lucide="map-pin"></i> مراكز بني سويف:</span>
-              <div class="chips-scroll">
-                <a href="/ar/properties?location=مدينة+بني+سويف" class="center-chip">مدينة بني سويف</a>
-                <a href="/ar/properties?location=مدينة+بني+سويف+الجديدة" class="center-chip">بني سويف الجديدة</a>
-                <a href="/ar/properties?location=الواسطى" class="center-chip">الواسطى</a>
-                <a href="/ar/properties?location=ناصر" class="center-chip">ناصر</a>
-                <a href="/ar/properties?location=إهناسيا" class="center-chip">إهناسيا</a>
-                <a href="/ar/properties?location=ببا" class="center-chip">ببا</a>
-                <a href="/ar/properties?location=سمسطا" class="center-chip">سمسطا</a>
-                <a href="/ar/properties?location=الفشن" class="center-chip">الفشن</a>
-              </div>
+          <div class="darli-mobile-centers-chips">
+            <span class="centers-label"><i data-lucide="map-pin"></i> مراكز بني سويف:</span>
+            <div class="chips-scroll">
+              <a href="/ar/properties?location=مدينة+بني+سويف" class="center-chip">مدينة بني سويف</a>
+              <a href="/ar/properties?location=مدينة+بني+سويف+الجديدة" class="center-chip">بني سويف الجديدة</a>
+              <a href="/ar/properties?location=الواسطى" class="center-chip">الواسطى</a>
+              <a href="/ar/properties?location=ناصر" class="center-chip">ناصر</a>
+              <a href="/ar/properties?location=إهناسيا" class="center-chip">إهناسيا</a>
+              <a href="/ar/properties?location=ببا" class="center-chip">ببا</a>
+              <a href="/ar/properties?location=سمسطا" class="center-chip">سمسطا</a>
+              <a href="/ar/properties?location=الفشن" class="center-chip">الفشن</a>
             </div>
           </div>
+        </div>
       </div>
     </section>
 
@@ -622,7 +636,7 @@
         <div class="darli-section-header-flex">
           <div>
             <span class="darli-section-tag">— اكتشف المزيد —</span>
-            <h2 class="darli-section-title">موقعنا في أهم المناطق</h2>
+            <h2 class="darli-section-title">اكتشف مراكز بني سويف</h2>
           </div>
           <div>
             <a href="/ar/properties" class="darli-view-all-link">
@@ -633,41 +647,41 @@
         </div>
 
         <div class="darli-locations-grid">
-          <a href="/ar/properties?location=sheikh-zayed" class="darli-location-card">
-            <img src="/storage/locations/5-400x560.jpg" alt="الشيخ زايد" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/4.jpg';">
+          <a href="/ar/properties?location=beni-suef" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/beni-suef.jpg" alt="مركز بني سويف"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">الشيخ زايد</h4>
+              <h4 class="darli-location-card-name">بني سويف</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/ar/properties?location=cairo" class="darli-location-card">
-            <img src="/storage/locations/3-400x560.jpg" alt="القاهرة" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/1.jpg';">
+          <a href="/ar/properties?location=al-wasta" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/al-wasta.jpg" alt="مركز الواسطى"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">القاهرة</h4>
+              <h4 class="darli-location-card-name">الواسطى</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/ar/properties?location=giza" class="darli-location-card">
-            <img src="/storage/pages/slider-1.jpg" alt="الجيزة" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/2.jpg';">
+          <a href="/ar/properties?location=الفشن" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/fashn.jpg" alt="مركز الفشن"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">الجيزة</h4>
+              <h4 class="darli-location-card-name">الفشن</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/ar/properties?location=new-cairo" class="darli-location-card">
-            <img src="/storage/properties/11.jpg" alt="التجمع الخامس" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/3.jpg';">
+          <a href="/ar/properties?location=ihnasia" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/ihnasia.jpg" alt="مركز إهناسيا"
+              class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">التجمع الخامس</h4>
+              <h4 class="darli-location-card-name">إهناسيا</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
@@ -914,12 +928,12 @@
     </section>
 
     <!-- =========================================================================
-       6. MORTGAGE CALCULATOR SECTION (حاسبة التمويل العقاري)
+       6. MORTGAGE CALCULATOR SECTION (حاسبة التمويل العقاري) [موقفة مؤقتاً]
        ========================================================================= -->
+    <!--
     <section class="darli-calculator-section">
       <div class="darli-container">
         <div class="darli-calculator-box">
-          <!-- Right Box (Interactive Calculator Form in RTL) -->
           <div class="darli-calc-form-container">
             <h3>حاسبة التمويل العقاري</h3>
             <p>احصل على تقدير تقريبي للقسط الشهري لمساعدتك في اتخاذ القرار المناسب</p>
@@ -987,7 +1001,6 @@
             </form>
           </div>
 
-          <!-- Left Box (Blueprint Dark Navy in RTL) -->
           <div class="darli-calc-sidebar">
             <div>
               <div class="darli-calc-sidebar-icon">
@@ -1009,6 +1022,7 @@
         </div>
       </div>
     </section>
+    -->
 
     <!-- =========================================================================
        7. RECOMMENDED FOR YOU (موصى به لك)
@@ -1122,7 +1136,8 @@
           <div class="darli-testimonial-card">
             <div>
               <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"لقد أعجبت بمستوى الخبرة والالتزام الذي أظهره هذا الفريق العقاري. ساعدتني رؤيتهم الثاقبة للسوق في اتخاذ قرارات استثمارية مدروسة، وسعيد جداً بالنتائج."</p>
+              <p class="darli-testi-quote">"لقد أعجبت بمستوى الخبرة والالتزام الذي أظهره هذا الفريق العقاري. ساعدتني
+                رؤيتهم الثاقبة للسوق في اتخاذ قرارات استثمارية مدروسة، وسعيد جداً بالنتائج."</p>
             </div>
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
@@ -1139,7 +1154,8 @@
           <div class="darli-testimonial-card">
             <div>
               <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"كان بيع منزلي بمساعدة هذا الفريق سهلاً للغاية. قدموا نصائح قيّمة، وجهزوا العقار بشكل رائع، وتفاوضوا على صفقة ممتازة. أوصي بخدماتهم بشدة!"</p>
+              <p class="darli-testi-quote">"كان بيع منزلي بمساعدة هذا الفريق سهلاً للغاية. قدموا نصائح قيّمة، وجهزوا
+                العقار بشكل رائع، وتفاوضوا على صفقة ممتازة. أوصي بخدماتهم بشدة!"</p>
             </div>
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
@@ -1156,7 +1172,8 @@
           <div class="darli-testimonial-card">
             <div>
               <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"من الاستشارة الأولى حتى يوم الاستلام، بذل فريق دارلي جهداً يفوق التوقعات لضمان إيجاد المنزل المثالي لعائلتي. احترافية عالية وشفافية مطلقة."</p>
+              <p class="darli-testi-quote">"من الاستشارة الأولى حتى يوم الاستلام، بذل فريق دارلي جهداً يفوق التوقعات
+                لضمان إيجاد المنزل المثالي لعائلتي. احترافية عالية وشفافية مطلقة."</p>
             </div>
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
@@ -1173,7 +1190,8 @@
           <div class="darli-testimonial-card">
             <div>
               <div class="darli-stars-row">★★★★★</div>
-              <p class="darli-testi-quote">"بفضل خبرة وإرشاد هذا الفريق، أصبحت الآن المالك الفخور لمنزل أحلامي. استمعوا لكل تفضيلاتي وجعلوا عملية شراء المنزل تجربة ممتازة وسريعة."</p>
+              <p class="darli-testi-quote">"بفضل خبرة وإرشاد هذا الفريق، أصبحت الآن المالك الفخور لمنزل أحلامي. استمعوا
+                لكل تفضيلاتي وجعلوا عملية شراء المنزل تجربة ممتازة وسريعة."</p>
             </div>
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
@@ -1338,10 +1356,28 @@
             </div>
             <p>منصتك العقارية الموثوقة لشراء وبيع واستئجار العقارات في جميع أنحاء المملكة</p>
             <div class="darli-footer-socials">
-              <a href="https://instagram.com" class="darli-footer-social-btn" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-              <a href="https://linkedin.com" class="darli-footer-social-btn" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
-              <a href="https://youtube.com" class="darli-footer-social-btn" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-              <a href="https://wa.me/201234567890" class="darli-footer-social-btn" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.587 1.761.88 2.795.88h.002c3.18 0 5.767-2.587 5.768-5.766.001-3.18-2.585-5.767-5.769-5.767zm7.509 5.766c-.001 4.144-3.373 7.514-7.512 7.515-1.256 0-2.485-.316-3.574-.915l-4.454 1.168 1.189-4.342c-.658-1.144-1.006-2.448-1.006-3.791.001-4.143 3.372-7.514 7.513-7.515 4.141 0 7.512 3.372 7.514 7.515zm-4.316 2.062c-.179-.089-1.058-.523-1.222-.582-.164-.059-.283-.089-.402.089-.119.179-.462.582-.566.702-.104.119-.208.134-.387.045s-.758-.279-1.444-.891c-.534-.476-.895-1.064-.999-1.243-.104-.179-.011-.276.078-.365.08-.08.179-.208.268-.312.09-.104.119-.179.179-.298.059-.119.03-.223-.015-.312-.045-.089-.402-.969-.551-1.327-.145-.348-.292-.3-.402-.305-.104-.005-.223-.006-.342-.006s-.313.045-.476.223c-.164.179-.625.611-.625 1.49 0 .879.64 1.728.729 1.847.09.119 1.259 1.922 3.05 2.695.426.184.759.294 1.018.377.428.136.818.117 1.126.071.344-.052 1.058-.432 1.207-.849.149-.417.149-.774.104-.849-.045-.075-.164-.119-.343-.208z"/></svg></a>
+              <a href="https://instagram.com" class="darli-footer-social-btn" aria-label="Instagram"><svg width="16"
+                  height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg></a>
+              <a href="https://linkedin.com" class="darli-footer-social-btn" aria-label="LinkedIn"><svg width="16"
+                  height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                </svg></a>
+              <a href="https://youtube.com" class="darli-footer-social-btn" aria-label="YouTube"><svg width="16"
+                  height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg></a>
+              <a href="https://wa.me/201234567890" class="darli-footer-social-btn" aria-label="WhatsApp"><svg width="16"
+                  height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.587 1.761.88 2.795.88h.002c3.18 0 5.767-2.587 5.768-5.766.001-3.18-2.585-5.767-5.769-5.767zm7.509 5.766c-.001 4.144-3.373 7.514-7.512 7.515-1.256 0-2.485-.316-3.574-.915l-4.454 1.168 1.189-4.342c-.658-1.144-1.006-2.448-1.006-3.791.001-4.143 3.372-7.514 7.513-7.515 4.141 0 7.512 3.372 7.514 7.515zm-4.316 2.062c-.179-.089-1.058-.523-1.222-.582-.164-.059-.283-.089-.402.089-.119.179-.462.582-.566.702-.104.119-.208.134-.387.045s-.758-.279-1.444-.891c-.534-.476-.895-1.064-.999-1.243-.104-.179-.011-.276.078-.365.08-.08.179-.208.268-.312.09-.104.119-.179.179-.298.059-.119.03-.223-.015-.312-.045-.089-.402-.969-.551-1.327-.145-.348-.292-.3-.402-.305-.104-.005-.223-.006-.342-.006s-.313.045-.476.223c-.164.179-.625.611-.625 1.49 0 .879.64 1.728.729 1.847.09.119 1.259 1.922 3.05 2.695.426.184.759.294 1.018.377.428.136.818.117 1.126.071.344-.052 1.058-.432 1.207-.849.149-.417.149-.774.104-.849-.045-.075-.164-.119-.343-.208z" />
+                </svg></a>
             </div>
             <a href="/language/switch/en" class="darli-btn-details" style="border-color: #1E2D4A; color: #94A3B8;">
               <i data-lucide="globe" style="width: 14px; height: 14px;"></i>

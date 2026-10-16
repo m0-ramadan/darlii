@@ -18,8 +18,8 @@
             image.draggable = false;
         });
 
-        // 1. If this element is a Swiper container, configure Swiper parameters
-        if (slider.swiper || slider.classList.contains('swiper')) {
+        // 1. If this element is a Swiper container, configure Swiper parameters and exit early
+        if (slider.swiper || slider.classList.contains('swiper') || slider.querySelector('.swiper-wrapper')) {
             function configureSwiper() {
                 if (!slider.swiper) return false;
                 slider.swiper.allowTouchMove = true;
@@ -45,6 +45,8 @@
                     }
                 }, 100);
             }
+            slider.scrollLeft = 0;
+            return;
         }
 
         // 2. Generic Drag-to-Scroll for CSS flex/overflow-x containers

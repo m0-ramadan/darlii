@@ -411,3 +411,50 @@ html[data-theme="dark"] .single-property-floor .faq-body .box-img {
     background: #0f172a !important;
     border-color: #2a374a !important;
 }
+
+/* ==========================================================================
+   PROPERTY DETAIL SLIDER NAVIGATION (FIXED ARROWS)
+   ========================================================================== */
+.flat-slider-detail-v1 {
+    position: relative !important;
+}
+
+.flat-slider-detail-v1 .box-navigation {
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 120 !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.flat-slider-detail-v1 .box-navigation .navigation {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 125 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 8px !important;
+    transition: background-color 0.25s ease, border-color 0.25s ease !important;
+}
+
+.flat-slider-detail-v1 .box-navigation .navigation.swiper-nav-next {
+    left: 40px !important;
+    right: auto !important;
+}
+
+.flat-slider-detail-v1 .box-navigation .navigation.swiper-nav-prev {
+    right: 40px !important;
+    left: auto !important;
+}
+
+@media (max-width: 767px) {
+    .flat-slider-detail-v1 .box-navigation .navigation.swiper-nav-next {
+        left: 14px !important;
+    }
+    .flat-slider-detail-v1 .box-navigation .navigation.swiper-nav-prev {
+        right: 14px !important;
+    }
+}

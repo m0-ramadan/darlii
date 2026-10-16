@@ -34,4 +34,5 @@
   </div>
 </section>
 <?php endif; ?>
+
 <?php /**PATH /var/www/html/resources/views/legacy/homepage-testimonials.blade.php ENDPATH**/ ?>

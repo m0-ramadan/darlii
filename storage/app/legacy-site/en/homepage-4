@@ -570,7 +570,7 @@
         <div class="darli-section-header-flex">
           <div>
             <span class="darli-section-tag">— Discover More —</span>
-            <h2 class="darli-section-title">Our Presence in Prime Locations</h2>
+            <h2 class="darli-section-title">Explore Beni Suef Districts</h2>
           </div>
           <div>
             <a href="/en/properties" class="darli-view-all-link">
@@ -581,41 +581,37 @@
         </div>
 
         <div class="darli-locations-grid">
-          <a href="/en/properties?location=sheikh-zayed" class="darli-location-card">
-            <img src="/storage/locations/5-400x560.jpg" alt="Sheikh Zayed" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/4.jpg';">
+          <a href="/en/properties?location=beni-suef" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/beni-suef.jpg" alt="Beni Suef District" class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">Sheikh Zayed</h4>
+              <h4 class="darli-location-card-name">Beni Suef</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/en/properties?location=cairo" class="darli-location-card">
-            <img src="/storage/locations/3-400x560.jpg" alt="Cairo" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/1.jpg';">
+          <a href="/en/properties?location=al-wasta" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/al-wasta.jpg" alt="Al Wasta District" class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">Cairo</h4>
+              <h4 class="darli-location-card-name">Al Wasta</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/en/properties?location=giza" class="darli-location-card">
-            <img src="/storage/pages/slider-1.jpg" alt="Giza" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/2.jpg';">
+          <a href="/en/properties?location=nasser" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/nasser.jpg" alt="Nasser District" class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">Giza</h4>
+              <h4 class="darli-location-card-name">Nasser</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>
           </a>
 
-          <a href="/en/properties?location=new-cairo" class="darli-location-card">
-            <img src="/storage/properties/11.jpg" alt="New Cairo" class="darli-location-card-img"
-              onerror="this.onerror=null;this.src='/storage/properties/3.jpg';">
+          <a href="/en/properties?location=ihnasia" class="darli-location-card">
+            <img src="/themes/homzen/images/locations/beni-suef/ihnasia.jpg" alt="Ihnasia District" class="darli-location-card-img">
             <div class="darli-location-card-overlay">
-              <h4 class="darli-location-card-name">New Cairo</h4>
+              <h4 class="darli-location-card-name">Ihnasia</h4>
               <div class="darli-location-arrow"><i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
               </div>
             </div>

@@ -237,6 +237,7 @@ Route::prefix('settings')->name('settings.')->group(function (): void {
     Route::get('/branding', [SettingController::class, 'branding'])->name('branding');
     Route::get('/contact', [SettingController::class, 'contact'])->name('contact');
     Route::get('/footer', [SettingController::class, 'footer'])->name('footer');
+    Route::get('/announcements', [SettingController::class, 'announcements'])->name('announcements');
     Route::get('/services', [SettingController::class, 'services'])->name('services');
     Route::get('/partners', [SettingController::class, 'partners'])->name('partners');
     Route::get('/seo', [SettingController::class, 'seo'])->name('seo');

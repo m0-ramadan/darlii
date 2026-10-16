@@ -68,11 +68,17 @@ class ContentController extends Controller
             $query->where('employment_type', request('type'));
         }
 
+        if (request()->filled('location')) {
+            $query->where('location', request('location'));
+        }
+
         $departments = Career::query()->where('status', 'published')->whereNotNull('department')->distinct()->pluck('department')->filter();
+        $locations = Career::query()->where('status', 'published')->whereNotNull('location')->distinct()->pluck('location')->filter();
 
         return view('careers.index', [
             'careers' => $query->paginate(12)->withQueryString(),
             'departments' => $departments,
+            'locations' => $locations,
             'shell' => $this->shell('careers'),
         ]);
     }
@@ -158,6 +164,11 @@ class ContentController extends Controller
             'address' => (string) setting($locale === 'ar' ? 'contact.address_ar' : 'contact.address_en', 'شارع صلاح سالم (تقاطع كورنيش النيل)، مدينة بني سويف'),
             'facebook' => (string) setting('contact.facebook', 'https://facebook.com'),
             'instagram' => (string) setting('contact.instagram', 'https://instagram.com'),
+            'hero_badge' => (string) setting('contact.hero_badge', 'فريق خدمة العملاء والاستشارات'),
+            'hero_title' => (string) setting('contact.hero_title', 'تواصل معنا - منصة دارلي العقارية'),
+            'hero_desc' => (string) setting('contact.hero_desc', 'نحن هنا دائماً لاستقبال استفساراتكم ومساعدتكم في اختيار عقاركم المثالي في محافظة بني سويف بكل سهولة واحترافية'),
+            'working_hours' => (string) setting('contact.working_hours', 'يومياً من 9:00 ص حتى 9:00 م (الجمعة من 4 م إلى 9 م)'),
+            'map_embed_url' => (string) setting('contact.map_embed_url', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111244.75704179374!2d31.0261352!3d29.0660727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145a27845bc8bbcb%3A0xb36ef554a938c35b!2z2KjZhtmKINiz2YjZitmB2Iwg2YXYsdmD2LIg2KjZhtmKINiz2YjZitmB2Iwg2KjZhtmKINiz2YjZitmB2IwgNjc3NDAwMQ!5e0!3m2!1sar!2seg!4v1710000000000!5m2!1sar!2seg'),
         ];
 
         return view('contact.index', [

@@ -1,17 +1,19 @@
 <section class="darli-featured-section">
   <div class="darli-container">
-    <div class="darli-section-header-flex">
-      <div>
-        <span class="darli-section-tag">— <?php echo e($locale === 'ar' ? 'العقارات المميزة' : 'Featured Properties'); ?> —</span>
-        <h2 class="darli-section-title"><?php echo e($locale === 'ar' ? 'اكتشف أفضل العقارات في دارلي' : 'Discover the Best Properties in Darlii'); ?><br><?php echo e($locale === 'ar' ? 'لمنازل أحلامك' : 'For Your Dream Homes'); ?></h2>
+    <?php if($properties->isNotEmpty()): ?>
+      <div class="darli-section-header-flex">
+        <div>
+          <span class="darli-section-tag">— <?php echo e($locale === 'ar' ? 'العقارات المميزة' : 'Featured Properties'); ?> —</span>
+          <h2 class="darli-section-title"><?php echo e($locale === 'ar' ? 'اكتشف أفضل العقارات في دارلي' : 'Discover the Best Properties in Darlii'); ?><br><?php echo e($locale === 'ar' ? 'لمنازل أحلامك' : 'For Your Dream Homes'); ?></h2>
+        </div>
+        <div>
+          <a href="<?php echo e(route('properties.index')); ?>" class="darli-view-all-link">
+            <span><?php echo e($locale === 'ar' ? 'عرض جميع العقارات' : 'View All Properties'); ?></span>
+            <i data-lucide="<?php echo e($locale === 'ar' ? 'arrow-left' : 'arrow-right'); ?>" style="width: 16px; height: 16px;"></i>
+          </a>
+        </div>
       </div>
-      <div>
-        <a href="<?php echo e(route('properties.index')); ?>" class="darli-view-all-link">
-          <span><?php echo e($locale === 'ar' ? 'عرض جميع العقارات' : 'View All Properties'); ?></span>
-          <i data-lucide="<?php echo e($locale === 'ar' ? 'arrow-left' : 'arrow-right'); ?>" style="width: 16px; height: 16px;"></i>
-        </a>
-      </div>
-    </div>
+    <?php endif; ?>
 
     <div class="darli-properties-grid">
       <?php $__empty_1 = true; $__currentLoopData = $properties; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prop): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
@@ -83,8 +85,12 @@
           </div>
         </div>
       <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-        <div class="col-12 text-center py-5">
-          <p style="color: var(--darli-muted);">لا توجد عقارات منشورة حالياً</p>
+        <div style="grid-column: 1 / -1; width: 100%; max-width: 1024px; margin: 0 auto;">
+          <img
+            src="<?php echo e(asset($locale === 'ar' ? 'themes/homzen/images/darli-placeholder-ar.png' : 'themes/homzen/images/darli-placeholder-en.png')); ?>"
+            alt="<?php echo e($locale === 'ar' ? 'لا توجد بيانات متاحة حاليًا' : 'No data is currently available'); ?>"
+            style="display: block; width: 100%; height: auto; border-radius: 28px;"
+          >
         </div>
       <?php endif; ?>
     </div>

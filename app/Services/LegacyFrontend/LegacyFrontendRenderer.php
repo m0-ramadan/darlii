@@ -1988,7 +1988,8 @@ HTML;
     private function injectCustomAssets(string $html): string
     {
         $themeBoot = <<<'HTML'
-<script id="darli-theme-bootstrap">(function(){try{var t=localStorage.getItem('darli-theme')||localStorage.getItem('darlii-theme')||localStorage.getItem('homzen-theme');if(t!=='dark'&&t!=='light'){var c=document.cookie.match(/(?:^|;\s*)(?:darlii?|homzen)_theme=(dark|light)(?:;|$)/);t=c?c[1]:null}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='light'}})();</script>
+<!-- Dark mode is temporarily disabled. -->
+<script id="darli-theme-bootstrap">document.documentElement.dataset.theme='light';</script>
 HTML;
 
         /*
@@ -2000,7 +2001,7 @@ HTML;
         $customStyles = <<<'HTML'
 <link rel="stylesheet" href="/themes/homzen/css/rtl-custom.css?v=2.0.1">
 <link rel="stylesheet" href="/themes/homzen/css/locale-switcher.css?v=1.0.0">
-<link rel="stylesheet" href="/themes/homzen/css/dark-mode.css?v=2.0.1">
+<!-- <link rel="stylesheet" href="/themes/homzen/css/dark-mode.css?v=2.0.1"> -->
 <link rel="stylesheet" href="/themes/homzen/css/darli-unified.css?v=2.1.9">
 <link rel="stylesheet" href="/themes/homzen/css/darli-about-us.css?v=2.2.0">
 <link rel="stylesheet" href="/themes/homzen/css/darli-services.css?v=1.0.0">
@@ -2046,7 +2047,7 @@ HTML;
     });
 })();
 </script>
-<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.js?v=1.2.0"></script><script defer src="/themes/homzen/js/theme-mode.js?v=2.0.2"></script><script defer src="/themes/homzen/js/wishlist.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.js?v=2.3.4"></script></body>
+<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.js?v=1.2.0"></script><!-- <script defer src="/themes/homzen/js/theme-mode.js?v=2.0.2"></script> --><script defer src="/themes/homzen/js/wishlist.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.js?v=2.3.4"></script></body>
 HTML,
             $html,
             1

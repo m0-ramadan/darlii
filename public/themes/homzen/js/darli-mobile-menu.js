@@ -94,7 +94,8 @@
         var tools = menu.querySelector('.mobi-icon-box');
         if (tools) {
             tools.innerHTML =
-                '<button type="button" class="darli-theme-toggle darli-mobile-theme" aria-label="' + (isArabic ? 'تبديل الوضع الليلي' : 'Toggle dark mode') + '"></button>' +
+                // Dark-mode toggle is temporarily disabled; keep the mobile menu light-only.
+                // '<button type="button" class="darli-theme-toggle darli-mobile-theme"></button>' +
                 '<div class="darli-mobile-tool" aria-label="' + (isArabic ? 'اللغة الحالية' : 'Current language') + '">' +
                     '<span class="darli-tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>' +
                     '<span class="darli-tool-title">' + (isArabic ? 'اللغة' : 'Language') + '</span>' +

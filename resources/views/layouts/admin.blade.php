@@ -121,7 +121,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/admin-panel.css') }}?v=1.0.2">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3">
+    {{-- Dark mode is temporarily disabled. --}}
+    {{-- <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3"> --}}
     <style>
         :root {
             --ap-primary: {{ $panelPrimary }};
@@ -214,8 +215,8 @@
                             </span>
                         @endif
                     </a>
-                    <button class="darli-theme-toggle btn btn-sm btn-outline-secondary me-2 ms-2" type="button"
-                        aria-label="Toggle theme"></button>
+                    {{-- <button class="darli-theme-toggle btn btn-sm btn-outline-secondary me-2 ms-2" type="button"
+                        aria-label="Toggle theme"></button> --}}
                     <div class="ap-dropdown">
                         <button type="button" class="ap-topbar__user" data-ap-dropdown>
                             <img src="{{ $user?->avatar_url }}" alt="{{ $user?->name }}"

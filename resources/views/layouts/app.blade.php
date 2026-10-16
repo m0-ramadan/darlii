@@ -18,29 +18,14 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script id="Darlii-theme-bootstrap">
-        (function() {
-            try {
-                var theme = localStorage.getItem('darli-theme') || localStorage.getItem('homzen-theme');
-                if (theme !== 'dark' && theme !== 'light') {
-                    var cookie = document.cookie.match(/(?:^|;\s*)(?:Darlii|homzen)_theme=(dark|light)(?:;|$)/);
-                    theme = cookie ? cookie[1] : null;
-                }
-                if (theme !== 'dark' && theme !== 'light') {
-                    theme = 'light';
-                }
-                document.documentElement.dataset.theme = theme;
-            } catch (error) {
-                document.documentElement.dataset.theme = 'light';
-            }
-        })();
-    </script>
+    {{-- Dark mode is temporarily disabled. Keep the site explicitly in light mode. --}}
+    <script>document.documentElement.dataset.theme = 'light';</script>
 
     <link rel="stylesheet"
         href="{{ asset(in_array(app()->getLocale(), config('locales.rtl')) ? 'themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css' : 'themes/homzen/plugins/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-design-system.css') }}?v=2.0.3">
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/style.css') }}?v=2.0.3">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3">
+    {{-- <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3"> --}}
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/rtl-custom.css') }}?v=2.0.3">
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/locale-switcher.css') }}?v=1.0.0">
     {{-- Brand unification layer: same header/footer colours as the legacy pages. --}}
@@ -52,7 +37,7 @@
 
 <body class="darli-body">
     {!! app(\App\Services\LegacyFrontend\LegacyFrontendRenderer::class)->siteHeaderHtml(app()->getLocale()) !!}
-    <button class="darli-theme-toggle" id="theme-toggle-btn" type="button" style="display:none;" aria-label="Toggle theme"></button>
+    {{-- <button class="darli-theme-toggle" id="theme-toggle-btn" type="button" style="display:none;" aria-label="Toggle theme"></button> --}}
 
     @if (session('success'))
         <div class="container mt-3">
@@ -226,7 +211,7 @@
     <script src="{{ asset('themes/homzen/js/popper.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script defer src="{{ asset('themes/homzen/js/darli-mobile-menu.js') }}?v=1.1.2"></script>
-    <script defer src="{{ asset('themes/homzen/js/theme-mode.js') }}?v=2.0.2"></script>
+    {{-- <script defer src="{{ asset('themes/homzen/js/theme-mode.js') }}?v=2.0.2"></script> --}}
 
     @if(setting('firebase.enabled', '1') == '1')
         <script>

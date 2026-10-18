@@ -2378,6 +2378,41 @@ HTML,
         $privacyText = e((string) $settings->get('footer.privacy_text_ar', 'سياسة الخصوصية'));
         $cookieText = e((string) $settings->get('footer.cookie_text_ar', 'سياسة ملفات تعريف الارتباط'));
 
+        // Homepage footer: quick links, contact column heading and short address.
+        $quickTitle = e((string) $settings->get('footer.quick_title_ar', 'روابط سريعة'));
+        $contactTitle = e((string) $settings->get('footer.contact_title_ar', 'تواصل معنا'));
+        $footerAddressSetting = trim((string) $settings->get('footer.address_ar', ''));
+        $footerAddress = e($footerAddressSetting !== '' ? $footerAddressSetting : $address);
+
+        $quickLinkDefaults = [
+            1 => ['الرئيسية', '/'],
+            2 => ['البحث عن عقار', '/properties'],
+            3 => ['المقالات', '/blog'],
+            4 => ['من نحن', '/about-us'],
+            5 => ['تواصل معنا', '/contact-us'],
+        ];
+
+        $quickLinkMarkup = [];
+        for ($i = 1; $i <= 5; $i++) {
+            [$defaultText, $defaultUrl] = $quickLinkDefaults[$i];
+            $text = trim((string) $settings->get('footer.quick_link' . $i . '_text_ar', $defaultText));
+            $url = trim((string) $settings->get('footer.quick_link' . $i . '_url_ar', $defaultUrl));
+
+            if ($text === '') {
+                continue;
+            }
+
+            if ($url === '' || (! str_starts_with($url, '/') && ! str_starts_with($url, 'http') && ! str_starts_with($url, '#'))) {
+                $url = '/';
+            }
+
+            $quickLinkMarkup[] = '<li><a href="' . e($url) . '">' . e($text) . '</a></li>';
+        }
+
+        $quickLinksHtml = $quickLinkMarkup === []
+            ? ''
+            : '<ul class="darli-footer-links">' . implode('', $quickLinkMarkup) . '</ul>';
+
         // Extract CSRF token from page or Laravel helper
         $csrfToken = '';
         if (preg_match('/<input\b[^>]*name=["\']_token["\'][^>]*value=["\']([^"\']+)["\']/i', $html, $tokenMatch)) {
@@ -2412,6 +2447,52 @@ HTML;
             $html = preg_replace(
                 '/(<div\b[^>]*class=["\'][^"\']*darli-footer-about[^"\']*["\'][^>]*>[\s\S]*?<p>)(.*?)(<\/p>)/si',
                 '${1}' . $aboutText . '${3}',
+                $html,
+                1
+            ) ?? $html;
+
+            // Quick links column (title + links) from the footer settings.
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-col[^"\']*["\'][^>]*>\s*<h4>)روابط سريعة(<\/h4>)/si',
+                '${1}' . $quickTitle . '${2}',
+                $html,
+                1
+            ) ?? $html;
+
+            if ($quickLinksHtml !== '') {
+                $html = preg_replace(
+                    '/<ul\b[^>]*class=["\'][^"\']*darli-footer-links[^"\']*["\'][^>]*>.*?<\/ul>/si',
+                    $quickLinksHtml,
+                    $html,
+                    1
+                ) ?? $html;
+            }
+
+            // Contact column heading and its three values.
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-col[^"\']*["\'][^>]*>\s*<h4>)تواصل معنا(<\/h4>)/si',
+                '${1}' . $contactTitle . '${2}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-contact-item[^"\']*["\'][^>]*>\s*<i\b[^>]*data-lucide=["\']phone["\'][^>]*><\/i>\s*<span\b[^>]*>).*?(<\/span>)/si',
+                '${1}' . $phone . '${2}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-contact-item[^"\']*["\'][^>]*>\s*<i\b[^>]*data-lucide=["\']mail["\'][^>]*><\/i>\s*<span\b[^>]*>).*?(<\/span>)/si',
+                '${1}' . $email . '${2}',
+                $html,
+                1
+            ) ?? $html;
+
+            $html = preg_replace(
+                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-contact-item[^"\']*["\'][^>]*>\s*<i\b[^>]*data-lucide=["\']map-pin["\'][^>]*><\/i>\s*<span\b[^>]*>).*?(<\/span>)/si',
+                '${1}' . $footerAddress . '${2}',
                 $html,
                 1
             ) ?? $html;

@@ -329,6 +329,19 @@ class SettingController extends Controller
             ['key' => 'footer.terms_text_ar', 'value' => 'شروط الاستخدام', 'type' => 'text', 'label' => 'رابط شروط الاستخدام (أسفل الفوتر)', 'help' => null, 'sort' => 16],
             ['key' => 'footer.privacy_text_ar', 'value' => 'سياسة الخصوصية', 'type' => 'text', 'label' => 'رابط سياسة الخصوصية (أسفل الفوتر)', 'help' => null, 'sort' => 17],
             ['key' => 'footer.cookie_text_ar', 'value' => 'سياسة ملفات تعريف الارتباط', 'type' => 'text', 'label' => 'رابط ملفات تعريف الارتباط (أسفل الفوتر)', 'help' => null, 'sort' => 18],
+            ['key' => 'footer.quick_title_ar', 'value' => 'روابط سريعة', 'type' => 'text', 'label' => 'عنوان عمود الروابط السريعة', 'help' => 'العنوان الظاهر أعلى روابط الفوتر السريعة.', 'sort' => 19],
+            ['key' => 'footer.quick_link1_text_ar', 'value' => 'الرئيسية', 'type' => 'text', 'label' => 'الرابط السريع 1 — النص', 'help' => null, 'sort' => 20],
+            ['key' => 'footer.quick_link1_url_ar', 'value' => '/', 'type' => 'text', 'label' => 'الرابط السريع 1 — الرابط', 'help' => 'مثال: /properties أو /about-us', 'sort' => 21],
+            ['key' => 'footer.quick_link2_text_ar', 'value' => 'البحث عن عقار', 'type' => 'text', 'label' => 'الرابط السريع 2 — النص', 'help' => null, 'sort' => 22],
+            ['key' => 'footer.quick_link2_url_ar', 'value' => '/properties', 'type' => 'text', 'label' => 'الرابط السريع 2 — الرابط', 'help' => null, 'sort' => 23],
+            ['key' => 'footer.quick_link3_text_ar', 'value' => 'المقالات', 'type' => 'text', 'label' => 'الرابط السريع 3 — النص', 'help' => null, 'sort' => 24],
+            ['key' => 'footer.quick_link3_url_ar', 'value' => '/blog', 'type' => 'text', 'label' => 'الرابط السريع 3 — الرابط', 'help' => null, 'sort' => 25],
+            ['key' => 'footer.quick_link4_text_ar', 'value' => 'من نحن', 'type' => 'text', 'label' => 'الرابط السريع 4 — النص', 'help' => null, 'sort' => 26],
+            ['key' => 'footer.quick_link4_url_ar', 'value' => '/about-us', 'type' => 'text', 'label' => 'الرابط السريع 4 — الرابط', 'help' => null, 'sort' => 27],
+            ['key' => 'footer.quick_link5_text_ar', 'value' => 'تواصل معنا', 'type' => 'text', 'label' => 'الرابط السريع 5 — النص', 'help' => null, 'sort' => 28],
+            ['key' => 'footer.quick_link5_url_ar', 'value' => '/contact-us', 'type' => 'text', 'label' => 'الرابط السريع 5 — الرابط', 'help' => null, 'sort' => 29],
+            ['key' => 'footer.contact_title_ar', 'value' => 'تواصل معنا', 'type' => 'text', 'label' => 'عنوان عمود التواصل في الفوتر', 'help' => null, 'sort' => 30],
+            ['key' => 'footer.address_ar', 'value' => 'بني سويف، مصر', 'type' => 'text', 'label' => 'عنوان الفوتر المختصر', 'help' => 'يظهر في عمود «تواصل معنا» داخل الفوتر. اتركه فارغًا لاستخدام عنوان صفحة التواصل.', 'sort' => 31],
         ];
 
         foreach ($definitions as $def) {

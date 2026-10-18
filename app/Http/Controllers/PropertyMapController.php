@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\Location;
 use App\Models\Project;
 use App\Models\Property;
+use App\Modules\Search\Application\Queries\PropertySearchQuery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -46,6 +48,99 @@ class PropertyMapController extends Controller
                 'bounds' => $bounds,
             ],
         ]);
+    }
+
+    /**
+     * AJAX feed for the in-map filter. Returns every matching property that has
+     * coordinates so the JS can rebuild the markers without reloading the page.
+     */
+    public function filter(Request $request): JsonResponse
+    {
+        $locale = $this->locale($request, null);
+
+        $filters = $request->only([
+            'q', 'purpose', 'category_id', 'category_group', 'student', 'location_id',
+            'min_price', 'max_price', 'bedrooms', 'bathrooms', 'furnished',
+            'nearby', 'nearby_location_id', 'features', 'sort',
+        ]);
+
+        if (empty($filters['purpose']) && $request->filled('type')) {
+            $filters['purpose'] = $request->input('type');
+        }
+
+        if (empty($filters['location_id']) && $request->filled('location')) {
+            $locName = trim((string) $request->input('location'));
+            $matched = Location::query()
+                ->whereHas('translations', fn ($query) => $query->where('name', 'like', "%{$locName}%"))
+                ->first();
+
+            if ($matched) {
+                $filters['location_id'] = $matched->id;
+            }
+        }
+
+        $properties = app(PropertySearchQuery::class)
+            ->build($filters)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->limit(300)
+            ->get();
+
+        $data = $properties
+            ->map(fn (Property $property) => $this->jsMarker($property, $locale))
+            ->values();
+
+        return response()->json([
+            'data' => $data,
+            'meta' => [
+                'count' => $data->count(),
+                'limited' => $data->count() >= 300,
+            ],
+        ]);
+    }
+
+    /** Marker payload consumed by themes/homzen/js/darli-properties-map.js. */
+    private function jsMarker(Property $property, string $locale): array
+    {
+        $translation = $property->translation($locale);
+        $isRent = $property->purpose === 'rent';
+
+        if ($property->isPriceOnContact()) {
+            $priceStr = $locale === 'ar' ? 'السعر عند التواصل' : 'Price on request';
+        } else {
+            $priceStr = number_format((float) $property->price, 0) . ' ' . ($locale === 'ar' ? 'جنيه' : 'EGP');
+            if ($isRent) {
+                $priceStr .= $locale === 'ar' ? ' / شهرياً' : ' / mo';
+            }
+        }
+
+        $slug = $translation?->slug ?? $property->id;
+
+        return [
+            'id' => $property->id,
+            'name' => $translation?->name ?? $property->reference_code,
+            'slug' => $translation?->slug,
+            'url' => route('properties.show', ['locale' => $locale, 'slug' => $slug]),
+            'lat' => (float) $property->latitude,
+            'lng' => (float) $property->longitude,
+            'price' => (float) $property->price,
+            'formatted_price' => $priceStr,
+            'purpose' => $property->purpose,
+            'purpose_label' => $isRent
+                ? ($locale === 'ar' ? 'للإيجار' : 'For rent')
+                : ($locale === 'ar' ? 'للبيع' : 'For sale'),
+            'is_sold' => $property->isSold(),
+            'sold_label' => $locale === 'ar' ? 'تم البيع' : 'Sold',
+            'category' => $property->category?->translation($locale)?->name ?? '',
+            'location' => $translation?->address_text
+                ?: ($property->location?->translation($locale)?->name ?? ''),
+            'image' => $property->primaryImageUrl($locale),
+            'bedrooms' => $property->bedrooms ?? 0,
+            'bathrooms' => $property->bathrooms ?? 0,
+            'area' => $property->area
+                ? rtrim(rtrim(number_format((float) $property->area, 2), '0'), '.')
+                : null,
+        ];
     }
 
     public function governorates(Request $request, ?string $locale = null): JsonResponse

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             BeniSuefAgenciesSeeder::class,
             ContentPagesSeeder::class,
             CornicheYasmineApartmentSeeder::class,
+            StudentHousingPropertySeeder::class,
+            CityLandmarksSeeder::class,
         ]);
     }
 }

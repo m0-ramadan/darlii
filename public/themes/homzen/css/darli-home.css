@@ -3,7 +3,6 @@
    Pixel-perfect match to uploaded UI designs
    ========================================================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap");
 
 :root {
   --darli-navy: #0b1f3a;
@@ -258,7 +257,7 @@ html {
   width: 100%;
   max-width: none;
   aspect-ratio: 1774 / 565;
-  background-image: url('/themes/homzen/images/darli-hero-cairo-photo-clean.png');
+  background-image: url('/themes/homzen/images/darli-hero-cairo-photo-clean.webp');
   background-size: 100% 100%;
   background-position: center center;
   background-repeat: no-repeat;
@@ -280,7 +279,7 @@ html {
     aspect-ratio: auto;
     min-height: 640px;
     max-width: none;
-    background-image: url('/themes/homzen/images/darli-hero-cairo-photo-clean.png') !important;
+    background-image: url('/themes/homzen/images/darli-hero-cairo-photo-clean-900.webp') !important;
     background-size: auto 390px;
     background-position: 50% 0;
     background-repeat: no-repeat;
@@ -731,10 +730,12 @@ html {
 /* Search Card Hotspot Overlay */
 .hero-search-overlay {
   position: absolute;
-  top: 70.09%;
+  top: auto;
+  bottom: 11.8%;
   left: 15.67%;
   width: 68.66%;
-  height: 18.05%;
+  height: auto;
+  min-height: 92px;
   background: #ffffff;
   border-radius: 20px;
   border: 1px solid rgba(201, 147, 59, 0.45);
@@ -756,7 +757,7 @@ html {
 
 .darli-search-card-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1.05fr 0.85fr 104px 112px;
+  grid-template-columns: 1.25fr 1fr 104px 112px;
   grid-template-rows: 20px 48px;
   column-gap: 12px;
   row-gap: 4px;
@@ -3058,7 +3059,7 @@ html[data-theme="dark"] .darli-nav-menu > li.active > a {
 
 html[data-theme="dark"] .darli-hero-section {
   background-color: #0b1a30 !important;
-  background-image: url('/themes/homzen/images/darli-hero-cairo-photo-clean.png') !important;
+  background-image: url('/themes/homzen/images/darli-hero-cairo-photo-clean.webp') !important;
   background-size: cover !important;
   background-position: center bottom !important;
   background-repeat: no-repeat !important;

@@ -31,7 +31,8 @@
 
     $heroImage = $property->primaryImageUrl($locale);
     $placeholder = $property->placeholderUrl($locale);
-    $gallery = $property->media;
+    $gallery = $property->media->filter(fn ($item) => ! in_array((string) $item->type, ['video', 'floor_plan'], true))->values();
+    $videoSource = $property->videoSource();
 
     $address =
         $tr?->address_text ?: $property->location?->translation($locale)?->name ?? ($isAr ? 'بني سويف' : 'Beni Suef');
@@ -132,6 +133,30 @@
             aria-label="{{ $isAr ? 'الصورة التالية' : 'Next image' }}">›</button>
         <span class="darli-gallery-viewer__counter" aria-live="polite"></span>
     </div>
+
+    {{-- ===================== 1.b فيديو العقار (إن وجد) ===================== --}}
+    @if ($videoSource)
+        <section class="flat-section pt-4 darli-property-video">
+            <div class="container">
+                <div class="h7 title fw-7 mb-3">{{ $isAr ? 'فيديو العقار' : 'Property video' }}</div>
+                <div
+                    style="position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 14px; background: #0f172a; box-shadow: 0 14px 40px rgba(15, 23, 42, .16);">
+                    @if ($videoSource['kind'] === 'embed')
+                        <iframe src="{{ $videoSource['url'] }}" title="{{ $tr?->name }}"
+                            style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    @else
+                        <video controls playsinline preload="metadata" poster="{{ $heroImage }}"
+                            style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+                            <source src="{{ $videoSource['url'] }}">
+                            {{ $isAr ? 'متصفحك لا يدعم تشغيل الفيديو.' : 'Your browser does not support the video tag.' }}
+                        </video>
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
 
     {{-- ===================== 2. قسم تفاصيل العقار بهيكل هومزن الأصلي ===================== --}}
     <section class="flat-section pt-0 flat-property-detail">
@@ -573,23 +598,30 @@
                         </div>
                     @endif
 
-                    {{-- 5. الموقع على الخريطة --}}
-                    <div class="single-property-map single-property-element">
-                        <div class="h7 title fw-7">{{ $isAr ? 'الموقع' : 'Location' }}</div>
-                        <div id="darli-property-map" style="min-height: 400px; border-radius: 8px; width: 100%;"></div>
-                        @if ($address)
-                            <ul class="info-map">
-                                <li>
-                                    <div class="fw-7">{{ $isAr ? 'العنوان' : 'Address' }}</div>
-                                    <a class="mt-4 text-variant-1"
-                                        href="{{ $hasCoords ? 'https://maps.google.com/?q=' . $coords : '#' }}"
-                                        target="_blank">
-                                        {{ $address }}
-                                    </a>
-                                </li>
-                            </ul>
-                        @endif
-                    </div>
+                    {{-- 5. الموقع على الخريطة (تظهر الخريطة فقط عند إدخال الإحداثيات) --}}
+                    @if ($hasCoords || $address)
+                        <div class="single-property-map single-property-element">
+                            <div class="h7 title fw-7">{{ $isAr ? 'الموقع' : 'Location' }}</div>
+                            @if ($hasCoords)
+                                <div id="darli-property-map" style="min-height: 400px; border-radius: 8px; width: 100%;"></div>
+                            @endif
+                            @if ($address)
+                                <ul class="info-map">
+                                    <li>
+                                        <div class="fw-7">{{ $isAr ? 'العنوان' : 'Address' }}</div>
+                                        @if ($hasCoords)
+                                            <a class="mt-4 text-variant-1" href="https://maps.google.com/?q={{ $coords }}"
+                                                target="_blank" rel="noopener">
+                                                {{ $address }}
+                                            </a>
+                                        @else
+                                            <span class="mt-4 text-variant-1 d-inline-block">{{ $address }}</span>
+                                        @endif
+                                    </li>
+                                </ul>
+                            @endif
+                        </div>
+                    @endif
                 </div>
 
                 {{-- الشريط الجانبي (تواصل مع الوكالة / السمسار / المنصة وفق إعدادات الإدارة) --}}
@@ -861,9 +893,9 @@
 
             var mapEl = document.getElementById('darli-property-map') || document.getElementById(
                 'homzen-property-map');
-            if (mapEl && typeof L !== 'undefined') {
-                var lat = {{ $hasCoords ? (float) $property->latitude : 29.0661 }};
-                var lng = {{ $hasCoords ? (float) $property->longitude : 31.0994 }};
+            if (mapEl && typeof L !== 'undefined' && {{ $hasCoords ? 'true' : 'false' }}) {
+                var lat = {{ $hasCoords ? (float) $property->latitude : 0 }};
+                var lng = {{ $hasCoords ? (float) $property->longitude : 0 }};
                 var isDark = document.documentElement.dataset.theme === 'dark';
 
                 var tileUrl = isDark ?

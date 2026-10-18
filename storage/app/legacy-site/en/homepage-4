@@ -10,12 +10,16 @@
   <link rel="shortcut icon" href="/themes/homzen/images/logo/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="/themes/homzen/images/darli-hero-cairo-photo-clean.webp" type="image/webp"
+    media="(min-width: 992px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/themes/homzen/images/darli-hero-cairo-photo-clean-900.webp" type="image/webp"
+    media="(max-width: 991px)" fetchpriority="high">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.3">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.min.css?v=2.0.1">
+  <link rel="stylesheet" href="/themes/homzen/css/darli-home.min.css?v=2.0.10">
+  <script defer src="/themes/homzen/plugins/lucide/lucide.min.js?v=1.59.0"></script>
 </head>
 
 <body class="body" id="page-home" dir="ltr">
@@ -127,52 +131,38 @@
 
         <!-- Floating Filter Search Box (Exact Screenshot 1 Design) -->
         <div class="darli-search-card">
-          <form action="/en/properties" method="GET" class="darli-search-form" id="darli-hero-search-form">
+          <form action="/properties" method="GET" class="darli-search-form" id="darli-hero-search-form">
             <div class="darli-search-main-row" style="display: flex; align-items: flex-end; gap: 14px; width: 100%;">
-              <!-- 1. Keyword -->
-              <div class="darli-filter-field darli-field-keyword">
-                <label class="darli-field-label">
-                  <i data-lucide="search" class="label-gold-icon"></i>
-                  <span>Keyword</span>
-                </label>
-                <div class="darli-input-wrapper">
-                  <input type="text" name="k" class="darli-filter-input" placeholder="Search by keyword">
-                  <i data-lucide="search" class="input-inner-icon"></i>
-                </div>
-              </div>
-
-              <!-- 2. Location -->
+              <!-- 1. Location -->
               <div class="darli-filter-field darli-field-location">
                 <label class="darli-field-label">
                   <i data-lucide="map-pin" class="label-gold-icon"></i>
                   <span>Location</span>
                 </label>
-                <div class="darli-input-wrapper">
-                  <input type="text" name="location" class="darli-filter-input" placeholder="Search by location">
-                  <i data-lucide="crosshair" class="input-inner-icon"></i>
-                </div>
-              </div>
-
-              <!-- 3. Category -->
-              <div class="darli-filter-field darli-field-category">
-                <label class="darli-field-label">
-                  <i data-lucide="layers" class="label-gold-icon"></i>
-                  <span>Category</span>
-                </label>
                 <div class="darli-select-wrapper">
-                  <select name="category_id" class="darli-filter-select">
-                    <option value="">All</option>
-                    <option value="1">Apartment</option>
-                    <option value="2">Villa</option>
-                    <option value="3">Condo</option>
-                    <option value="4">House</option>
-                    <option value="5">Land</option>
-                    <option value="6">Commercial property</option>
+                  <select name="location_id" class="darli-filter-select">
+                    <option value="">All cities &amp; districts</option>
+                    <!--DARLI_CITY_OPTIONS-->
                   </select>
                 </div>
               </div>
 
-              <!-- 4. Advanced -->
+              <!-- 2. Request type -->
+              <div class="darli-filter-field darli-field-purpose">
+                <label class="darli-field-label">
+                  <i data-lucide="home" class="label-gold-icon"></i>
+                  <span>Request type</span>
+                </label>
+                <div class="darli-select-wrapper">
+                  <select name="purpose" class="darli-filter-select">
+                    <option value="">All requests</option>
+                    <option value="sale">Buy</option>
+                    <option value="rent">Rent</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 3. Advanced -->
               <div class="darli-btn-advanced-wrapper">
                 <button type="button" class="darli-btn-advanced" id="darli-toggle-advanced" aria-expanded="false"
                   aria-controls="darli-advanced-panel">
@@ -181,7 +171,7 @@
                 </button>
               </div>
 
-              <!-- 5. Search -->
+              <!-- 4. Search -->
               <div>
                 <button type="submit" class="darli-btn-search">
                   <i data-lucide="search" style="width: 18px; height: 18px;"></i>
@@ -193,13 +183,12 @@
             <!-- Advanced Filters Collapsible Panel -->
             <div class="darli-advanced-filter-panel" id="darli-advanced-panel">
               <div class="darli-adv-grid">
-                <!-- Type: Sale / Rent -->
+                <!-- Category -->
                 <div class="darli-adv-field">
-                  <label class="darli-adv-label">Property Type</label>
-                  <select name="type" class="darli-adv-select">
-                    <option value="">All (For Sale & For Rent)</option>
-                    <option value="sale">For Sale</option>
-                    <option value="rent">For Rent</option>
+                  <label class="darli-adv-label">Property category</label>
+                  <select name="category_id" class="darli-adv-select">
+                    <option value="">All categories</option>
+                    <!--DARLI_CATEGORY_OPTIONS-->
                   </select>
                 </div>
 
@@ -218,7 +207,7 @@
                 <!-- Bedrooms -->
                 <div class="darli-adv-field">
                   <label class="darli-adv-label">Bedrooms</label>
-                  <select name="bedroom" class="darli-adv-select">
+                  <select name="bedrooms" class="darli-adv-select">
                     <option value="">Any</option>
                     <option value="1">1 Bed</option>
                     <option value="2">2 Beds</option>
@@ -231,7 +220,7 @@
                 <!-- Bathrooms -->
                 <div class="darli-adv-field">
                   <label class="darli-adv-label">Bathrooms</label>
-                  <select name="bathroom" class="darli-adv-select">
+                  <select name="bathrooms" class="darli-adv-select">
                     <option value="">Any</option>
                     <option value="1">1 Bath</option>
                     <option value="2">2 Baths</option>
@@ -1253,7 +1242,7 @@
 
   <!-- SCRIPTS -->
   <script src="/themes/homzen/js/jquery.min.js"></script>
-  <script src="/themes/homzen/js/darli-home.js?v=2.0.1"></script>
+  <script src="/themes/homzen/js/darli-home.min.js?v=2.0.1"></script>
 </body>
 
 </html>

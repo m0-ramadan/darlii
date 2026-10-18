@@ -197,7 +197,8 @@
     }
     .darli-pwd-toggle {
         position: absolute;
-        top: 36px;
+        top: 50%;
+        transform: translateY(-50%);
         <?php echo e($isAr ? 'left: 12px;' : 'right: 12px;'); ?>
 
         cursor: pointer;
@@ -207,6 +208,7 @@
         align-items: center;
         justify-content: center;
         transition: color 0.2s;
+        line-height: 0;
     }
     .darli-pwd-toggle:hover {
         color: #0f172a;

@@ -361,7 +361,17 @@ header.main-header,
 .mobile-menu-visible {
     overflow: hidden !important;
 }
-.mobile-menu-visible .mobile-menu {
+body.darli-mobile-menu-ready.mobile-menu-visible .mobile-menu {
+    visibility: visible !important;
+}
+
+/* The legacy drawer markup is rewritten by darli-mobile-menu.js right after
+   DOM ready. Keep it hidden until the final Darli menu is rendered so the user
+   never sees the old login/wishlist/currency version flash first. */
+.mobile-menu .menu-box {
+    visibility: hidden !important;
+}
+body.darli-mobile-menu-ready .mobile-menu .menu-box {
     visibility: visible !important;
 }
 .mobile-menu .menu-backdrop {
@@ -380,7 +390,7 @@ header.main-header,
     transition: all .3s ease !important;
     z-index: 1 !important;
 }
-.mobile-menu-visible .mobile-menu .menu-backdrop {
+body.darli-mobile-menu-ready.mobile-menu-visible .mobile-menu .menu-backdrop {
     opacity: 1 !important;
     visibility: visible !important;
 }
@@ -751,6 +761,71 @@ header.main-header,
     visibility: visible !important;
 }
 @media only screen and (max-width: 991px) {
+    .main-header .inner-container {
+        position: relative !important;
+    }
+
+    .darli-mobile-header-actions {
+        display: flex !important;
+        align-items: center;
+        gap: 7px;
+        position: absolute;
+        left: 55px;
+        top: 50%;
+        transform: translateY(-50%);
+        direction: ltr;
+        z-index: 2147483000;
+    }
+
+    .darli-mobile-header-add {
+        min-height: 34px;
+        padding: 7px 10px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #C99A45 0%, #B38636 100%);
+        color: #FFFFFF !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none !important;
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+        box-shadow: 0 3px 10px rgba(201, 154, 69, .25);
+    }
+
+    .darli-mobile-header-notifications-btn {
+        position: relative;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: 1px solid #E2E8F0;
+        border-radius: 50%;
+        background: #FFFFFF;
+        color: var(--darli-navy);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .darli-mobile-header-notifications-btn .darli-notif-badge {
+        top: -5px;
+        left: -5px;
+    }
+
+    body.darli-header-notifications-open .darli-notifications-widget {
+        z-index: 2147483001 !important;
+    }
+
+    body.darli-header-notifications-open #darli-notif-panel {
+        position: fixed;
+        top: 72px;
+        right: 12px;
+        left: auto;
+        bottom: auto;
+        z-index: 2147483002;
+    }
+
     .mobile-button,
     .mobile-nav-toggler {
         display: flex !important;
@@ -774,6 +849,12 @@ header.main-header,
     html[data-theme="dark"] .mobile-button svg,
     html[data-theme="dark"] .mobile-nav-toggler svg {
         color: #f8fafc !important;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .darli-mobile-header-actions {
+        display: none !important;
     }
 }
 .canvas-menu {

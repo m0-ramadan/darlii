@@ -143,6 +143,32 @@ class PropertyController extends Controller
             }
         }
 
+        if (filled($request->input('video_url'))) {
+            $p->setVideoUrl((string) $request->input('video_url'));
+        }
+
+        if ($request->hasFile('video_file') && $request->file('video_file')->isValid()) {
+            $video = $request->file('video_file');
+            $path = $this->uploadImage($video, 'properties/' . $p->id . '/videos');
+
+            if ($path) {
+                foreach ($p->media()->where('type', 'video')->get() as $oldVideo) {
+                    $this->deleteUpload($oldVideo->path);
+                    $oldVideo->delete();
+                }
+
+                $p->media()->create([
+                    'type' => 'video',
+                    'path' => $path,
+                    'disk' => $this->uploadDisk(),
+                    'mime_type' => $video->getClientMimeType(),
+                    'size' => $video->getSize(),
+                    'sort_order' => ((int) $p->media()->max('sort_order')) + 1,
+                    'is_primary' => false,
+                ]);
+            }
+        }
+
         // العميل العادي لا يظهر عقاره في الموقع مباشرة بل يخضع لمراجعة وتأكيد الأدمن
         $isClient = $user && ! $user->hasRole('agent') && ! $user->hasRole('admin');
 

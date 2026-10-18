@@ -128,6 +128,7 @@ class PropertyController extends Controller
 
             $this->syncTranslations($property, $data);
             $this->syncRelations($property, $data, $request);
+            $this->syncVideo($property, $request, $data);
             $this->syncFloorPlans($property, $request);
 
             return $property;
@@ -212,6 +213,7 @@ class PropertyController extends Controller
             ]);
             $this->syncTranslations($property, $data);
             $this->syncRelations($property, $data, $request);
+            $this->syncVideo($property, $request, $data);
             $this->syncFloorPlans($property, $request);
         });
 
@@ -501,6 +503,9 @@ class PropertyController extends Controller
             'is_featured' => ['nullable', 'boolean'],
             'expires_at' => ['nullable', 'date'],
             'admin_note' => ['nullable', 'string', 'max:1000'],
+            'video_url' => ['nullable', 'string', 'max:2048', 'url'],
+            'video_file' => ['nullable', 'file', 'mimetypes:video/mp4,video/webm,video/ogg,video/quicktime,video/x-m4v', 'max:51200'],
+            'remove_video' => ['nullable', 'boolean'],
             'amenities' => ['nullable', 'array'],
             'amenities.*' => ['integer', 'exists:amenities,id'],
             'translations.ar.name' => ['required', 'string', 'max:190'],
@@ -627,6 +632,53 @@ class PropertyController extends Controller
                 ]);
             }
         }
+    }
+
+    private function syncVideo(Property $property, Request $request, array $data): void
+    {
+        $removeUploaded = function () use ($property): void {
+            foreach ($property->media()->where('type', 'video')->get() as $media) {
+                $this->deleteUpload($media->path);
+                $media->delete();
+            }
+        };
+
+        if ($request->boolean('remove_video')) {
+            $property->setVideoUrl(null);
+            $removeUploaded();
+        } elseif (array_key_exists('video_url', $data)) {
+            if (filled($data['video_url'])) {
+                // Keep a single source of truth: a new URL replaces an older upload.
+                $removeUploaded();
+            }
+            $property->setVideoUrl($data['video_url'] ?: null);
+        }
+
+        if (! $request->hasFile('video_file')) {
+            return;
+        }
+
+        $video = $request->file('video_file');
+        if (! $video || ! $video->isValid()) {
+            return;
+        }
+
+        $path = $this->uploadImage($video, 'properties/' . $property->id . '/videos');
+        if (! $path) {
+            return;
+        }
+
+        $removeUploaded();
+
+        $property->media()->create([
+            'type' => 'video',
+            'path' => $path,
+            'disk' => $this->uploadDisk(),
+            'mime_type' => $video->getClientMimeType(),
+            'size' => $video->getSize(),
+            'sort_order' => ((int) $property->media()->max('sort_order')) + 1,
+            'is_primary' => false,
+        ]);
     }
 
     private function syncFloorPlans(Property $property, Request $request): void

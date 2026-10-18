@@ -5,8 +5,10 @@
 namespace App\Services\LegacyFrontend;
 
 use App\Models\AgentProfile;
+use App\Models\Location;
 use App\Models\Post;
 use App\Models\Property;
+use App\Models\PropertyCategory;
 use App\Models\Testimonial;
 use App\Services\Localization\LocalizedUrlResolver;
 use App\Services\Settings\SettingsRepository;
@@ -149,8 +151,55 @@ class LegacyFrontendRenderer
 
         $html = $this->useSiteHeader($html, $root, $request);
         $html = $this->prepareHtml($html, $request);
+        $html = $this->injectSearchOptions($html, app()->getLocale());
 
         return $this->applyCmsSettings($html, $request);
+    }
+
+    /**
+     * Replaces the homepage search placeholders with real CMS data so the
+     * "city" dropdown and the advanced "category" filter always match what is
+     * configured in the admin panel instead of a hard-coded list.
+     */
+    private function injectSearchOptions(string $html, string $locale): string
+    {
+        if (str_contains($html, '<!--DARLI_CITY_OPTIONS-->')) {
+            $cities = Location::query()
+                ->with('translations')
+                ->where('type', 'city')
+                ->where('status', true)
+                ->orderBy('id')
+                ->get()
+                ->map(function (Location $location) use ($locale): string {
+                    $name = $location->translation($locale)?->name
+                        ?? $location->translation('ar')?->name
+                        ?? ('#' . $location->id);
+
+                    return '<option value="' . $location->id . '">' . e($name) . '</option>';
+                })
+                ->implode('');
+
+            $html = str_replace('<!--DARLI_CITY_OPTIONS-->', $cities, $html);
+        }
+
+        if (str_contains($html, '<!--DARLI_CATEGORY_OPTIONS-->')) {
+            $categories = PropertyCategory::query()
+                ->with('translations')
+                ->orderBy('id')
+                ->get()
+                ->map(function (PropertyCategory $category) use ($locale): string {
+                    $name = $category->translation($locale)?->name
+                        ?? $category->translation('ar')?->name
+                        ?? ('#' . $category->id);
+
+                    return '<option value="' . $category->id . '">' . e($name) . '</option>';
+                })
+                ->implode('');
+
+            $html = str_replace('<!--DARLI_CATEGORY_OPTIONS-->', $categories, $html);
+        }
+
+        return $html;
     }
 
     /**
@@ -321,10 +370,10 @@ HTML;
 
             $floatingNotifHtml = view('components.floating-notifications')->render() . "\n" . <<<HTML
 <script>window.DarliFirebaseConfig = {$firebaseConfigJson};</script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
-<script defer src="/themes/homzen/js/darli-notifications.js?v=1.0.1"></script>
-<script defer src="/themes/homzen/js/darli-visitor-tracker.js?v=1.0.0"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+<script defer src="/themes/homzen/js/darli-notifications.min.js?v=1.0.2"></script>
+<script defer src="/themes/homzen/js/darli-visitor-tracker.min.js?v=1.0.0"></script>
 HTML;
 
             if (stripos($html, '</body>') !== false) {
@@ -334,8 +383,19 @@ HTML;
             }
         }
 
-        if (! str_contains($html, 'darli-testimonials-drag.js')) {
-            $testimonialDragScript = '<script defer src="/themes/homzen/js/darli-testimonials-drag.js?v=1.0.0"></script>';
+        // ---------------------------------------------- شات الزوار العائم (الموبايل)
+        if (! str_contains($html, 'darli-chat-widget')) {
+            $floatingChatHtml = view('components.floating-chat')->render();
+
+            if (stripos($html, '</body>') !== false) {
+                $html = str_ireplace('</body>', $floatingChatHtml . "\n</body>", $html);
+            } else {
+                $html .= $floatingChatHtml;
+            }
+        }
+
+        if (! str_contains($html, 'darli-testimonials-drag.min.js')) {
+            $testimonialDragScript = '<script defer src="/themes/homzen/js/darli-testimonials-drag.min.js?v=1.0.0"></script>';
             $html = stripos($html, '</body>') !== false
                 ? str_ireplace('</body>', $testimonialDragScript . "\n</body>", $html)
                 : $html . $testimonialDragScript;
@@ -468,7 +528,7 @@ HTML;
             }
         }
 
-        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.js?v=2.0.4"></script>';
+        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.min.js?v=2.0.4"></script>';
 
         if (str_contains($html, '</body>')) {
             $html = preg_replace('/<\/body>/i', $authModalsHtml . "\n" . $authScript . "\n</body>", $html, 1) ?? $html;
@@ -520,6 +580,24 @@ HTML;
             $match[0],
             1
         ) ?? $match[0];
+
+        $addPropertyUrl = auth()->check() ? route('dashboard.properties.create') : route('login');
+        $addPropertyLabel = $locale === 'ar' ? 'إضافة عقار' : 'Add property';
+        $notificationsLabel = $locale === 'ar' ? 'الإشعارات' : 'Notifications';
+        $mobileHeaderActions = '<div class="darli-mobile-header-actions">'
+            . '<a href="' . e($addPropertyUrl) . '" class="darli-mobile-header-add">'
+            . '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+            . '<span>' . e($addPropertyLabel) . '</span></a>'
+            . '<button type="button" class="darli-mobile-header-notifications-btn" aria-label="' . e($notificationsLabel) . '" title="' . e($notificationsLabel) . '">'
+            . '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>'
+            . '<span class="darli-notif-badge" style="display:none">0</span></button></div>';
+
+        $header = preg_replace(
+            '~(<div\b[^>]*class=["\'][^"\']*\bmobile-nav-toggler\b[^"\']*["\'][^>]*>.*?</div>)~is',
+            '$1' . $mobileHeaderActions,
+            $header,
+            1
+        ) ?? $header;
 
         $header = preg_replace(
             '~<div\b([^>]*class=["\'][^"\']*\bclose-btn\b[^"\']*["\'][^>]*)>~i',
@@ -679,9 +757,14 @@ HTML;
 
         // On the homepage, its own stylesheet must remain last so the body
         // keeps the established homepage design while the header gains its CSS.
-        if (str_contains($html, '/themes/homzen/css/darli-home.css')) {
+        if (str_contains($html, '/themes/homzen/css/darli-home.min.css') || str_contains($html, '/themes/homzen/css/darli-home.css')) {
+            // The canonical header is extracted from /ar/properties, so its
+            // stylesheet URLs are relative ("../themes/..."). Normalise them
+            // before injecting so they also work on the root homepage.
+            $links = str_replace(['href="../themes/', 'href="../vendor/'], ['href="/themes/', 'href="/vendor/'], $links);
+
             return preg_replace(
-                '~<link\b[^>]*href=["\'][^"\']*/themes/homzen/css/darli-home\.css[^"\']*["\'][^>]*>~i',
+                '~<link\b[^>]*href=["\'][^"\']*/themes/homzen/css/darli-home(?:\.min)?\.css[^"\']*["\'][^>]*>~i',
                 $links . '$0',
                 $html,
                 1
@@ -935,6 +1018,8 @@ HTML;
         $html = $this->renderAboutUsDynamicContent($html, $request);
         $html = $this->renderOurServicesDynamicContent($html, $request);
         $html = $this->injectCustomAssets($html);
+        $html = $this->removeUnusedHomepageStyles($html, $request);
+        $html = $this->addLazyLoadingToImages($html);
         $html = $this->attachImagePlaceholders($html);
 
         // Cloudflare challenge code belongs to the old host and can cause
@@ -1951,7 +2036,7 @@ HTML;
      *  - the mortgage-calculator widget paints itself from a JavaScript
      *    config object (`primaryColor: #e31837`).
      *
-     * Both are normalised here so darli-unified.css remains authoritative.
+     * Both are normalised here so darli-unified.min.css remains authoritative.
      */
     private function normalizeBrandColours(string $html): string
     {
@@ -1985,6 +2070,36 @@ HTML;
         );
     }
 
+    /** Defer below-the-fold images so they do not compete with the LCP asset. */
+    private function addLazyLoadingToImages(string $html): string
+    {
+        return preg_replace_callback(
+            '~<img\b(?![^>]*\bloading\s*=)(?![^>]*(?:logo/|darli-logo))[^>]*>~i',
+            static function (array $match): string {
+                return preg_replace('~^<img~i', '<img loading="lazy" decoding="async"', $match[0], 1) ?? $match[0];
+            },
+            $html
+        ) ?? $html;
+    }
+
+    /**
+     * The homepage does not use the theme sliders or WOW animations, yet the
+     * shared header pulls their stylesheets into every page. Drop those two
+     * render-blocking files on the homepage only.
+     */
+    private function removeUnusedHomepageStyles(string $html, Request $request): string
+    {
+        if (! in_array(trim($request->path(), '/'), ['', 'index.html'], true)) {
+            return $html;
+        }
+
+        return preg_replace(
+            '~<link\b[^>]*(?:animate\.min\.css|swiper-bundle\.min\.css)[^>]*>~i',
+            '',
+            $html
+        ) ?? $html;
+    }
+
     private function injectCustomAssets(string $html): string
     {
         $themeBoot = <<<'HTML'
@@ -1993,19 +2108,25 @@ HTML;
 HTML;
 
         /*
-         * darli-unified.css is loaded last on purpose: it is the single
+         * darli-unified.min.css is loaded last on purpose: it is the single
          * source of truth for the site header, footer and brand colours and
          * must win the cascade against style.css, dark-mode.css and the
          * per-page generated `.page_speed_*` inline rules.
          */
         $customStyles = <<<'HTML'
-<link rel="stylesheet" href="/themes/homzen/css/rtl-custom.css?v=2.0.1">
-<link rel="stylesheet" href="/themes/homzen/css/locale-switcher.css?v=1.0.0">
+<link rel="stylesheet" href="/themes/homzen/css/rtl-custom.min.css?v=2.0.1">
+<link rel="stylesheet" href="/themes/homzen/css/locale-switcher.min.css?v=1.0.0">
 <!-- <link rel="stylesheet" href="/themes/homzen/css/dark-mode.css?v=2.0.1"> -->
-<link rel="stylesheet" href="/themes/homzen/css/darli-unified.css?v=2.1.9">
-<link rel="stylesheet" href="/themes/homzen/css/darli-about-us.css?v=2.2.0">
-<link rel="stylesheet" href="/themes/homzen/css/darli-services.css?v=1.0.0">
+<link rel="stylesheet" href="/themes/homzen/css/darli-unified.min.css?v=2.1.11">
 HTML;
+
+        // Page-specific CSS is loaded only on the page that needs it instead of
+        // shipping every stylesheet to every visitor.
+        $currentPath = trim(request()->path(), '/');
+
+        if (str_starts_with($currentPath, 'our-services')) {
+            $customStyles .= '<link rel="stylesheet" href="/themes/homzen/css/darli-services.min.css?v=1.0.0">';
+        }
 
         $html = preg_replace('/<head([^>]*)>/i', '<head$1>' . $themeBoot, $html, 1) ?? $html;
         $html = preg_replace('/<\/head>/i', $customStyles . '</head>', $html, 1) ?? $html;
@@ -2013,8 +2134,8 @@ HTML;
         // The mirror references two different cache-busting versions of the
         // design system; normalise them so the brand tokens cannot go stale.
         $html = str_replace(
-            'darli-design-system.css?v=1.1.0',
-            'darli-design-system.css?v=2.0.1',
+            'darli-design-system.min.css?v=1.1.0',
+            'darli-design-system.min.css?v=2.0.1',
             $html
         );
 
@@ -2024,6 +2145,19 @@ HTML;
 <script id="darli-mobile-menu-bootstrap">
 (function () {
     document.addEventListener('click', function (event) {
+        var notificationsButton = event.target.closest('.darli-mobile-header-notifications-btn');
+        if (notificationsButton) {
+            event.preventDefault();
+            event.stopPropagation();
+            var notificationsPanel = document.getElementById('darli-notif-panel');
+            if (notificationsPanel) {
+                var isOpen = notificationsPanel.style.display !== 'none';
+                notificationsPanel.style.display = isOpen ? 'none' : 'block';
+                document.body.classList.toggle('darli-header-notifications-open', !isOpen);
+            }
+            return;
+        }
+
         var openButton = event.target.closest('.mobile-nav-toggler');
         if (openButton) {
             event.preventDefault();
@@ -2037,6 +2171,11 @@ HTML;
             var toggle = document.querySelector('.mobile-nav-toggler');
             if (toggle) toggle.setAttribute('aria-expanded', 'false');
         }
+
+
+        if (!event.target.closest('#darli-notif-panel')) {
+            document.body.classList.remove('darli-header-notifications-open');
+        }
     }, true);
 
     document.addEventListener('keydown', function (event) {
@@ -2047,7 +2186,7 @@ HTML;
     });
 })();
 </script>
-<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.js?v=1.2.0"></script><!-- <script defer src="/themes/homzen/js/theme-mode.js?v=2.0.2"></script> --><script defer src="/themes/homzen/js/wishlist.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.js?v=2.3.4"></script></body>
+<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.min.js?v=1.2.2"></script><script defer src="/themes/homzen/js/wishlist.min.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.min.js?v=2.3.4"></script></body>
 HTML,
             $html,
             1

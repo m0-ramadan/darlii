@@ -1,5 +1,6 @@
 <?php
 use App\Http\Middleware\ApplyVisitorLocale;
+use App\Http\Middleware\CompressResponse;
 use App\Http\Middleware\EnsureAdminPanel;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\SetCurrency;
@@ -17,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [ApplyVisitorLocale::class, ShowMaintenancePage::class]);
+        $middleware->web(append: [ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class]);
 
         $middleware->redirectTo(
             guests: fn (\Illuminate\Http\Request $request) => $request->is('admin/*') || $request->is('admin')

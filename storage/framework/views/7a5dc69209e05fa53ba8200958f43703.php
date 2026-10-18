@@ -112,17 +112,48 @@
     from { opacity: 0; transform: translateY(-12px); }
     to { opacity: 1; transform: translateY(0); }
 }
-@media (max-width: 576px) {
+@media (max-width: 991px) {
+    /* On mobile the site header already shows a notifications bell, so the
+       floating bell is hidden and the panel opens from the header button. */
+    .darli-notif-toggle-btn {
+        display: none !important;
+    }
     .darli-notifications-widget {
-        bottom: 86px;
-        right: 18px;
+        top: 0;
+        right: 0;
+        bottom: auto;
+        left: auto;
+        width: 100%;
+        pointer-events: none;
     }
     [dir="ltr"] .darli-notifications-widget {
-        right: auto;
-        left: 18px;
+        left: auto;
+        right: 0;
     }
     .darli-notif-panel {
-        width: 310px;
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + 82px);
+        right: 12px;
+        left: 12px;
+        bottom: auto;
+        width: auto;
+        max-width: none;
+        z-index: 100000;
+        pointer-events: auto;
+    }
+    body.darli-header-notifications-open #darli-notif-panel {
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + 82px);
+        right: 12px;
+        left: 12px;
+        bottom: auto;
+        width: auto;
+        max-width: none;
+        z-index: 2147483002;
+    }
+    [dir="ltr"] .darli-notif-panel {
+        right: 12px;
+        left: 12px;
     }
 }
 </style>

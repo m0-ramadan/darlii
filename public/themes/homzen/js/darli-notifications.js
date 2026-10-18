@@ -284,6 +284,12 @@
             return;
         }
 
+        // On mobile the header bell is enough; keep the screen clear for the
+        // floating chat widget instead of showing a push banner.
+        if (window.matchMedia && window.matchMedia('(max-width: 991px)').matches) {
+            return;
+        }
+
         setTimeout(function () {
             if (Notification.permission !== 'default') return;
 

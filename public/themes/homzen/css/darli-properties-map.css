@@ -34,10 +34,13 @@
   max-width: 1680px;
   margin: 0 auto;
   padding: 0 20px;
-  display: flex;
-  flex-direction: row;
+  /* Fixed grid tracks keep the 58/42 split from the first paint. With flex,
+     the content pane filled the whole row until the map pane HTML arrived,
+     which caused the visible layout jump while the page was loading. */
+  display: grid;
+  grid-template-columns: minmax(0, 1.38fr) minmax(0, 1fr);
   gap: 22px;
-  align-items: flex-start;
+  align-items: start;
 }
 
 /* RTL handling: 
@@ -45,14 +48,13 @@
    Map pane is 2nd in DOM, in RTL it sits on the LEFT (~42%).
 */
 .darli-split-content-pane {
-  flex: 1 1 58%;
   min-width: 0;
 }
 
 .darli-split-map-pane {
-  flex: 0 0 42%;
-  width: 42%;
-  min-width: 380px;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
   position: sticky;
   top: 86px;
   height: calc(100vh - 180px);
@@ -1283,7 +1285,11 @@ html[data-theme="dark"] .darli-marker-price {
 .darli-mob-ctrl-btn,
 .darli-mob-layer-popover,
 .darli-mob-sheet-backdrop,
-.darli-mob-filter-sheet {
+.darli-mob-filter-sheet,
+.darli-price-sheet-backdrop,
+.darli-price-sheet,
+.darli-map-filter-fab,
+.darli-map-filter-panel {
   display: none !important;
 }
 
@@ -1297,6 +1303,10 @@ html[data-theme="dark"] .darli-marker-price {
   display: none;
 }
 
+.darli-prop-card-contact-actions {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
    RESPONSIVE DESIGN (Tablets & Mobile)
    -------------------------------------------------------------------------- */
@@ -1304,6 +1314,56 @@ html[data-theme="dark"] .darli-marker-price {
   .darli-props-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .darli-prop-card {
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, .08);
+  }
+
+  .darli-prop-card-media {
+    height: 190px;
+  }
+
+  .darli-badges-top-left {
+    left: auto;
+    right: 10px;
+  }
+
+  .darli-badge-wishlist {
+    right: auto;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    color: #64748b;
+  }
+
+  .darli-prop-card-price { order: -3; font-size: 21px; color: #0b2748; margin-bottom: 5px; }
+  .darli-prop-card-title { order: -2; margin-bottom: 4px; }
+  .darli-prop-card-loc { order: -1; }
+
+  .darli-prop-card-contact-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .darli-prop-card-contact-actions a {
+    flex: 1;
+    min-height: 42px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  .darli-card-contact-call { background: #082747; }
+  .darli-card-contact-whatsapp { background: #16a45b; }
 }
 
 @media (max-width: 991px) {
@@ -1395,7 +1455,8 @@ html[data-theme="dark"] .darli-marker-price {
   .darli-desktop-only,
   .darli-prop-header,
   .darli-prop-filter-card,
-  .darli-prop-subbar {
+  .darli-prop-subbar,
+  .darli-mob-active-filter-bar {
     display: none !important;
   }
 
@@ -1414,6 +1475,7 @@ html[data-theme="dark"] .darli-marker-price {
   }
 
   .darli-properties-split-container {
+    display: flex;
     flex-direction: column-reverse;
     padding: 12px 16px 40px 16px;
     gap: 16px;
@@ -1448,6 +1510,12 @@ html[data-theme="dark"] .darli-marker-price {
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
     border: 1px solid rgba(226, 232, 240, 0.8);
     transition: height 0.35s ease;
+    display: none;
+  }
+
+  .darli-map-frame-card.is-mobile-visible,
+  .darli-map-frame-card.is-fullscreen {
+    display: block;
   }
 
   .darli-map-frame-card.is-expanded {
@@ -1466,7 +1534,7 @@ html[data-theme="dark"] .darli-marker-price {
 
   .darli-map-frame-card.is-fullscreen .darli-map-fullscreen-close {
     position: absolute;
-    top: 14px;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
     left: 50%;
     z-index: 1020;
     display: inline-flex;
@@ -1489,6 +1557,256 @@ html[data-theme="dark"] .darli-marker-price {
 
   .darli-map-frame-card.is-fullscreen .darli-map-fullscreen-close:active {
     transform: translateX(-50%) scale(0.96);
+  }
+
+  /* Lift the full-screen map above the sticky site header so the close
+     button is always reachable. */
+  body.darli-map-fullscreen .darli-split-map-pane,
+  body.darli-map-fullscreen .darli-map-frame-card.is-fullscreen {
+    z-index: 2147483000 !important;
+  }
+
+  /* Floating filter button inside the full-screen map */
+  .darli-map-frame-card.is-fullscreen .darli-map-filter-fab {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+    left: 50%;
+    z-index: 1030;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 999px;
+    background: #0f2d3c;
+    color: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(15, 45, 60, 0.32);
+    cursor: pointer;
+    transform: translateX(-50%);
+  }
+
+  .darli-map-frame-card.is-fullscreen .darli-map-filter-fab svg {
+    width: 18px;
+    height: 18px;
+    color: #e5b158;
+  }
+
+  .darli-map-frame-card.is-fullscreen .darli-map-filter-fab.active {
+    background: #c9933b;
+    color: #ffffff;
+  }
+
+  /* Filter panel that opens over the map */
+  .darli-map-frame-card.is-fullscreen .darli-map-filter-panel {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 78px);
+    left: 14px;
+    right: 14px;
+    z-index: 1035;
+    display: none;
+    max-height: 62vh;
+    overflow-y: auto;
+    padding: 14px 14px 16px;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 16px 44px rgba(15, 23, 42, 0.26);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+  }
+
+  .darli-map-frame-card.is-fullscreen .darli-map-filter-panel.open {
+    display: block !important;
+    animation: darliMapFilterUp 0.22s ease-out;
+  }
+
+  @keyframes darliMapFilterUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .darli-map-filter-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eef2f7;
+  }
+
+  .darli-map-filter-head strong {
+    color: #0f2d3c;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  .darli-map-filter-close {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .darli-map-filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .darli-map-filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .darli-map-filter-field label,
+  .darli-map-filter-field > span {
+    color: #475569;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .darli-map-filter-field select,
+  .darli-map-filter-field input {
+    width: 100%;
+    height: 42px;
+    padding: 0 10px;
+    border: 1px solid #dbe4ee;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #0f2d3c;
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .darli-map-filter-field select:focus,
+  .darli-map-filter-field input:focus {
+    border-color: #c9933b;
+    box-shadow: 0 0 0 3px rgba(201, 147, 59, 0.16);
+    background: #ffffff;
+  }
+
+  .darli-map-filter-price {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .darli-map-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .darli-map-filter-actions a {
+    flex: 1;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #eef2f7;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .darli-map-filter-actions button {
+    flex: 2;
+    min-height: 44px;
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #d4a03c, #b88628);
+    color: #ffffff;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .darli-map-filter-actions button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .darli-map-filter-loading {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 66px);
+    left: 50%;
+    z-index: 1040;
+    display: none;
+    align-items: center;
+    gap: 9px;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: rgba(15, 45, 60, 0.94);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.24);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .darli-map-filter-loading.is-visible {
+    display: inline-flex !important;
+  }
+
+  .darli-map-filter-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #e5b158;
+    border-radius: 50%;
+    animation: darliMapFilterSpin 0.7s linear infinite;
+  }
+
+  @keyframes darliMapFilterSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .darli-map-filter-toast {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 78px);
+    left: 50%;
+    z-index: 1041;
+    display: none;
+    max-width: calc(100% - 28px);
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: #0f2d3c;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.4;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.28);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .darli-map-filter-toast.is-visible {
+    display: block !important;
+  }
+
+  .darli-map-filter-toast.is-error {
+    background: #b42318;
   }
 
   #darli-properties-map {
@@ -1603,7 +1921,7 @@ html[data-theme="dark"] .darli-marker-price {
   .darli-mob-purpose-wrap {
     display: flex;
     justify-content: center;
-    margin-top: 16px;
+    margin-top: 10px;
   }
 
   .darli-mob-purpose-pills {
@@ -1613,7 +1931,7 @@ html[data-theme="dark"] .darli-marker-price {
     padding: 4px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
-    width: 280px;
+    width: 100%;
     max-width: 100%;
   }
 
@@ -1641,7 +1959,7 @@ html[data-theme="dark"] .darli-marker-price {
   .darli-mob-actions-row {
     display: flex;
     gap: 12px;
-    margin-top: 14px;
+    margin-top: 10px;
   }
 
   .darli-mob-action-btn {
@@ -1660,6 +1978,22 @@ html[data-theme="dark"] .darli-marker-price {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     cursor: pointer;
     transition: all 0.2s;
+  }
+
+  .darli-mob-map-button {
+    flex: 1.65;
+    background: #082747 !important;
+    border-color: #082747 !important;
+    color: #ffffff !important;
+  }
+
+  .darli-mob-map-button.active {
+    background: #c28b2e !important;
+    border-color: #c28b2e !important;
+  }
+
+  .darli-mob-filter-button {
+    flex: 1;
   }
 
   .darli-mob-action-btn:active {
@@ -1700,10 +2034,19 @@ html[data-theme="dark"] .darli-marker-price {
     border: 1px solid #f1f5f9;
   }
 
+  .darli-mob-compact-filter {
+    padding: 0;
+    margin-top: 10px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
   .darli-mob-selects-grid {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 0;
   }
 
   .darli-mob-custom-select-box {
@@ -1712,11 +2055,18 @@ html[data-theme="dark"] .darli-marker-price {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 8px 10px;
+    padding: 7px 8px;
     display: flex;
     align-items: center;
     gap: 8px;
-    min-height: 54px;
+    min-height: 56px;
+    width: 100%;
+    text-align: right;
+    font-family: inherit;
+  }
+
+  .darli-mob-price-trigger {
+    cursor: pointer;
   }
 
   .darli-mob-custom-select-box .select-icon {
@@ -1812,6 +2162,92 @@ html[data-theme="dark"] .darli-marker-price {
     pointer-events: auto !important;
     display: block !important;
   }
+
+  .darli-price-sheet-backdrop {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    z-index: 10020;
+    background: rgba(15, 23, 42, .48);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+  }
+
+  .darli-price-sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .darli-price-sheet {
+    display: block !important;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10021;
+    padding: 12px 18px 24px;
+    border-radius: 24px 24px 0 0;
+    background: #ffffff;
+    box-shadow: 0 -10px 32px rgba(15, 23, 42, .2);
+    transform: translateY(110%);
+    transition: transform .28s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .darli-price-sheet.open {
+    transform: translateY(0);
+  }
+
+  .darli-price-sheet-form {
+    padding-top: 18px;
+  }
+
+  .darli-price-range-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .darli-price-range-fields label span {
+    display: block;
+    margin-bottom: 6px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .darli-price-range-fields input {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid #dbe4ee;
+    border-radius: 11px;
+    color: #0b2748;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    box-sizing: border-box;
+  }
+
+  .darli-price-sheet-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .darli-price-sheet-actions button {
+    height: 46px;
+    border-radius: 11px;
+    border: 0;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .darli-price-clear-btn { flex: 1; background: #edf2f7; color: #475569; }
+  .darli-price-apply-btn { flex: 2; background: #c28b2e; color: #ffffff; }
 
   .darli-mob-filter-sheet {
     position: fixed;
@@ -1970,3 +2406,605 @@ html[data-theme="dark"] .darli-marker-price {
   }
 }
 
+/* ========================================================
+   DARLI MOBILE PROPERTY DISCOVERY WIZARD (MATCHES MOCKUP)
+   ======================================================== */
+.darli-mobile-wizard {
+  display: none !important;
+}
+
+@media (max-width: 991px) {
+  .darli-mobile-wizard.is-active {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 99999;
+    background-color: #f0f4f8;
+    background-image: radial-gradient(#dce6f2 1px, transparent 1px);
+    background-size: 24px 24px;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 65px;
+    box-sizing: border-box;
+    font-family: 'Almarai', -apple-system, BlinkMacSystemFont, sans-serif;
+    direction: rtl;
+  }
+
+  /* Faint background skyline illustration */
+  .darli-wizard-bg-pattern {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .darli-wizard-bg-pattern svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
+    opacity: 0.85;
+  }
+
+  /* Hide external overlays, cookie banners and floating buttons while wizard is active */
+  body.darli-wizard-open .site-notice,
+  body.darli-wizard-open .js-site-notice,
+  body.darli-wizard-open [class*="site-notice"],
+  body.darli-wizard-open #darli-floating-wa,
+  body.darli-wizard-open .darli-floating-wa,
+  body.darli-wizard-open #cookie-consent,
+  body.darli-wizard-open .cookie-consent,
+  body.darli-wizard-open .cookie-notice,
+  body.darli-wizard-open .js-cookie-consent,
+  body.darli-wizard-open [class*="cookie-"],
+  body.darli-wizard-open [id*="cookie-"],
+  body.darli-wizard-open .whatsapp-button-wrapper,
+  body.darli-wizard-open a[href*="wa.me"],
+  body.darli-wizard-open a[href*="whatsapp"],
+  body.darli-wizard-open .notification-bell-btn,
+  body.darli-wizard-open .whatsapp-float,
+  body:has(.darli-mobile-wizard.is-active) .site-notice,
+  body:has(.darli-mobile-wizard.is-active) .js-site-notice,
+  body:has(.darli-mobile-wizard.is-active) [class*="site-notice"],
+  body:has(.darli-mobile-wizard.is-active) #darli-floating-wa,
+  body:has(.darli-mobile-wizard.is-active) .darli-floating-wa,
+  body:has(.darli-mobile-wizard.is-active) #cookie-consent,
+  body:has(.darli-mobile-wizard.is-active) .cookie-consent,
+  body:has(.darli-mobile-wizard.is-active) .cookie-notice,
+  body:has(.darli-mobile-wizard.is-active) .js-cookie-consent,
+  body:has(.darli-mobile-wizard.is-active) [class*="cookie-"],
+  body:has(.darli-mobile-wizard.is-active) [id*="cookie-"],
+  body:has(.darli-mobile-wizard.is-active) .whatsapp-button-wrapper,
+  body:has(.darli-mobile-wizard.is-active) a[href*="wa.me"],
+  body:has(.darli-mobile-wizard.is-active) a[href*="whatsapp"],
+  body:has(.darli-mobile-wizard.is-active) .notification-bell-btn,
+  body:has(.darli-mobile-wizard.is-active) .whatsapp-float {
+    display: none !important;
+  }
+
+  /* Wizard Top Bar */
+  .darli-wizard-topbar {
+    position: relative;
+    z-index: 10;
+    height: 60px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid #e8eef5;
+    box-shadow: 0 1px 4px rgba(11, 31, 58, 0.03);
+    flex-shrink: 0;
+    direction: ltr !important;
+  }
+
+  .darli-wizard-menu-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0b1f3a;
+  }
+
+  .darli-wizard-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: 4px;
+    margin-right: 8px;
+    direction: ltr;
+  }
+
+  .darli-wizard-add-property {
+    min-height: 34px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #c99a45 0%, #b38636 100%);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(201, 154, 69, 0.25);
+  }
+
+  .darli-wizard-add-property:hover,
+  .darli-wizard-add-property:focus-visible {
+    color: #ffffff;
+    background: linear-gradient(135deg, #b38636 0%, #9b722c 100%);
+  }
+
+  .darli-wizard-notifications-btn {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #0b1f3a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .darli-wizard-notifications-btn:hover,
+  .darli-wizard-notifications-btn:focus-visible {
+    color: #c99a45;
+    border-color: rgba(201, 154, 69, 0.55);
+  }
+
+  .darli-wizard-notifications-btn .darli-notif-badge {
+    top: -5px;
+    left: -5px;
+  }
+
+  body.darli-wizard-open #darli-notif-toggle-btn {
+    display: none !important;
+  }
+
+  body.darli-wizard-open .darli-notifications-widget {
+    z-index: 100001 !important;
+  }
+
+  body.darli-wizard-open #darli-notif-panel {
+    position: fixed;
+    top: 68px;
+    right: 12px;
+    left: auto;
+    bottom: auto;
+    z-index: 100002;
+  }
+
+  .darli-wizard-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-left: auto;
+  }
+
+  .darli-wizard-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  @media (max-width: 370px) {
+    .darli-wizard-topbar {
+      padding-inline: 8px;
+    }
+
+    .darli-wizard-header-actions {
+      gap: 4px;
+      margin-inline: 2px 5px;
+    }
+
+    .darli-wizard-add-property {
+      padding-inline: 7px;
+      font-size: 10px;
+    }
+
+    .darli-wizard-logo {
+      height: 35px;
+    }
+  }
+
+  /* Wizard Body */
+  .darli-wizard-body {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 16px 8px 16px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .darli-wizard-step {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: darliWizardFadeIn 0.25s ease-out;
+  }
+
+  @keyframes darliWizardFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Titles */
+  .darli-wizard-heading {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+
+  .darli-wizard-title {
+    font-size: 21px;
+    font-weight: 800;
+    color: #0b1f3a;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+  }
+
+  .darli-wizard-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* Circles Column */
+  .darli-wizard-circles-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .darli-wizard-circles-col.sub-col {
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  /* Circular Buttons */
+  .darli-choice-circle {
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 4px solid #ffffff;
+    box-sizing: border-box;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .darli-choice-circle:active {
+    transform: scale(0.96);
+  }
+
+  /* Step 1 Big Circles */
+  .step-main .darli-choice-circle {
+    width: 138px;
+    height: 138px;
+  }
+
+  /* Step 2 & 3 Sub Circles */
+  .darli-choice-circle.circle-sub {
+    width: 114px;
+    height: 114px;
+  }
+
+  /* Light White Circles */
+  .circle-sale,
+  .circle-rent,
+  .circle-dark,
+  .circle-light {
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(11, 34, 64, 0.08), 0 0 0 4px rgba(255, 255, 255, 0.85);
+  }
+
+  .circle-sale .circle-title,
+  .circle-rent .circle-title,
+  .circle-dark .circle-title,
+  .circle-light .circle-title {
+    color: #0b1f3a;
+  }
+
+  .circle-sale .circle-icon-wrap {
+    color: #0b1f3a;
+  }
+
+  .circle-rent .circle-icon-wrap {
+    color: #c99a45;
+  }
+
+  .circle-dark .circle-icon-wrap {
+    color: #0b1f3a;
+  }
+
+  .step-main .darli-choice-circle:hover,
+  .step-main .darli-choice-circle:focus-visible,
+  .step-main .darli-choice-circle.is-selected {
+    background: linear-gradient(145deg, #0b2240 0%, #061528 100%);
+    box-shadow: 0 12px 28px rgba(11, 34, 64, 0.28), 0 0 0 4px rgba(255, 255, 255, 0.65);
+  }
+
+  .step-main .darli-choice-circle:hover .circle-title,
+  .step-main .darli-choice-circle:focus-visible .circle-title,
+  .step-main .darli-choice-circle.is-selected .circle-title,
+  .step-main .darli-choice-circle:hover .circle-icon-wrap,
+  .step-main .darli-choice-circle:focus-visible .circle-icon-wrap,
+  .step-main .darli-choice-circle.is-selected .circle-icon-wrap {
+    color: #ffffff;
+  }
+
+  .darli-choice-circle.circle-sub:hover,
+  .darli-choice-circle.circle-sub:focus-visible,
+  .darli-choice-circle.circle-sub:active {
+    background: linear-gradient(145deg, #0b2240 0%, #061528 100%);
+    box-shadow: 0 12px 28px rgba(11, 34, 64, 0.28), 0 0 0 4px rgba(255, 255, 255, 0.65);
+  }
+
+  .darli-choice-circle.circle-sub:hover .circle-title,
+  .darli-choice-circle.circle-sub:focus-visible .circle-title,
+  .darli-choice-circle.circle-sub:active .circle-title,
+  .darli-choice-circle.circle-sub:hover .circle-icon-wrap,
+  .darli-choice-circle.circle-sub:focus-visible .circle-icon-wrap,
+  .darli-choice-circle.circle-sub:active .circle-icon-wrap {
+    color: #ffffff;
+  }
+
+  .circle-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  .circle-title {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .circle-sub .circle-title {
+    font-size: 13px;
+  }
+
+  .circle-arrow-badge {
+    position: absolute;
+    bottom: 7px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .circle-sale .circle-arrow-badge,
+  .circle-rent .circle-arrow-badge,
+  .circle-dark .circle-arrow-badge,
+  .circle-light .circle-arrow-badge {
+    background: #edf2f7;
+    color: #64748b;
+  }
+
+  .step-main .darli-choice-circle:hover .circle-arrow-badge,
+  .step-main .darli-choice-circle:focus-visible .circle-arrow-badge,
+  .step-main .darli-choice-circle.is-selected .circle-arrow-badge {
+    background: #ffffff;
+    color: #0b1f3a;
+  }
+
+  .darli-choice-circle.circle-sub:hover .circle-arrow-badge,
+  .darli-choice-circle.circle-sub:focus-visible .circle-arrow-badge,
+  .darli-choice-circle.circle-sub:active .circle-arrow-badge {
+    background: #ffffff;
+    color: #0b1f3a;
+  }
+
+  /* Top Segmented Control (Pill switcher) */
+  .darli-segmented-pills {
+    display: flex;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 4px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin: 0 auto 18px auto;
+    width: 280px;
+    max-width: 90%;
+  }
+
+  .darli-seg-pill {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 14px;
+    font-size: 14.5px;
+    font-weight: 700;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    color: #0b1f3a;
+    font-family: inherit;
+    text-align: center;
+  }
+
+  .darli-seg-pill.active {
+    background: linear-gradient(135deg, #c99a45 0%, #b8860b 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 3px 10px rgba(194, 139, 46, 0.35);
+  }
+
+  /* Skip & Back Action Buttons */
+  .darli-wizard-skip-row,
+  .darli-wizard-back-row {
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .darli-wizard-skip-btn,
+  .darli-wizard-back-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .darli-wizard-back-btn {
+    text-decoration: none;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #0b1f3a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Fixed Bottom Navigation Bar */
+  .darli-wizard-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2147483647 !important;
+    height: 60px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+    padding: 0 8px;
+    direction: rtl !important;
+  }
+
+  .darli-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    width: 48px;
+    height: 100%;
+    position: relative;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .darli-nav-item:active,
+  .darli-nav-item.is-active {
+    color: #0b1f3a;
+  }
+
+  .darli-nav-item .nav-indicator-line {
+    position: absolute;
+    bottom: 6px;
+    width: 14px;
+    height: 3px;
+    background: #c99a45;
+    border-radius: 999px;
+  }
+
+  /* Active Filter Bar on Mobile Properties Page */
+  .darli-mob-active-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(11, 31, 58, 0.03);
+  }
+
+  .darli-mob-filter-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .darli-mob-filter-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c99a45;
+    flex-shrink: 0;
+  }
+
+  .darli-mob-filter-text {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0b1f3a;
+  }
+
+  .darli-mob-change-flow-btn {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0b1f3a;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+}

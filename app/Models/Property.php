@@ -40,7 +40,8 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
     /** Public URL of the primary image, checking the storage disk as well. */
     public function primaryImageUrl(?string $locale = null): string {
         $media = $this->relationLoaded('media') ? $this->media : $this->media()->get();
-        $primary = $media->firstWhere('is_primary', true) ?: $media->first();
+        $images = $media->filter(fn ($item) => ! in_array((string) $item->type, ['video', 'floor_plan'], true));
+        $primary = $images->firstWhere('is_primary', true) ?: $images->first();
 
         if (! $primary) {
             return $this->placeholderUrl($locale);
@@ -358,6 +359,125 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
     public static function clearFloorPlansCache(): void
     {
         static::$floorPlansCache = [];
+    }
+
+    protected static array $videoCache = [];
+
+    /** رابط فيديو العقار (YouTube / Vimeo / MP4) المحفوظ في الإعدادات. */
+    public function getVideoUrl(): ?string
+    {
+        if (! $this->exists || ! $this->id) {
+            return null;
+        }
+
+        if (array_key_exists($this->id, static::$videoCache)) {
+            return static::$videoCache[$this->id];
+        }
+
+        $setting = Setting::query()
+            ->where('group', 'property_video_meta')
+            ->whereIn('key', ['video_' . $this->id, 'property_' . $this->id])
+            ->first();
+
+        $url = $setting && filled($setting->value) ? trim((string) $setting->value) : null;
+
+        return static::$videoCache[$this->id] = ($url !== '' ? $url : null);
+    }
+
+    public function setVideoUrl(?string $url): void
+    {
+        if (! $this->exists || ! $this->id) {
+            return;
+        }
+
+        $url = $url !== null ? trim($url) : null;
+        if ($url === '') {
+            $url = null;
+        }
+
+        static::$videoCache[$this->id] = $url;
+
+        if ($url === null) {
+            Setting::query()
+                ->where('group', 'property_video_meta')
+                ->whereIn('key', ['video_' . $this->id, 'property_' . $this->id])
+                ->delete();
+
+            return;
+        }
+
+        Setting::updateOrCreate(
+            ['group' => 'property_video_meta', 'key' => 'video_' . $this->id],
+            [
+                'value' => $url,
+                'type' => 'text',
+                'is_public' => true,
+                'label_ar' => 'فيديو العقار #' . $this->id,
+            ]
+        );
+
+        Setting::query()
+            ->where('group', 'property_video_meta')
+            ->where('key', 'property_' . $this->id)
+            ->delete();
+    }
+
+    /**
+     * مصدر الفيديو الجاهز للعرض: ملف مرفوع أو رابط خارجي (YouTube/Vimeo/MP4).
+     *
+     * @return array{kind:string,url:string,original?:string}|null
+     */
+    public function videoSource(): ?array
+    {
+        $media = $this->relationLoaded('media')
+            ? $this->media->firstWhere('type', 'video')
+            : $this->media()->where('type', 'video')->first();
+
+        if ($media) {
+            $path = ltrim((string) $media->path, '/');
+            $url = str_starts_with($path, 'http')
+                ? $path
+                : (($media->disk ?? 'public') === 'legacy' ? asset('legacy/' . $path) : asset('storage/' . $path));
+
+            return ['kind' => 'file', 'url' => $url];
+        }
+
+        $url = $this->getVideoUrl();
+        if (! $url) {
+            return null;
+        }
+
+        $embed = self::embedUrlFor($url);
+        $isDirectFile = (bool) preg_match('~\.(mp4|webm|ogg|ogv|mov|m4v)(\?.*)?$~i', $url);
+
+        return [
+            'kind' => $embed ? 'embed' : ($isDirectFile ? 'file' : 'embed'),
+            'url' => $embed ?: $url,
+            'original' => $url,
+        ];
+    }
+
+    /** تحويل روابط يوتيوب/فيميو/فيسبوك إلى رابط تشغيل قابل للتضمين. */
+    public static function embedUrlFor(string $url): ?string
+    {
+        if (preg_match('~(?:youtube\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/|live/)|youtu\.be/)([\w-]{6,})~i', $url, $matches)) {
+            return 'https://www.youtube.com/embed/' . $matches[1];
+        }
+
+        if (preg_match('~vimeo\.com/(?:video/)?(\d+)~i', $url, $matches)) {
+            return 'https://player.vimeo.com/video/' . $matches[1];
+        }
+
+        if (preg_match('~^https?://(?:www\.)?(?:facebook\.com|fb\.watch)/~i', $url)) {
+            return 'https://www.facebook.com/plugins/video.php?href=' . rawurlencode($url);
+        }
+
+        return null;
+    }
+
+    public static function clearVideoCache(): void
+    {
+        static::$videoCache = [];
     }
 }
 

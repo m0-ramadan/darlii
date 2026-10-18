@@ -10,12 +10,16 @@
   <link rel="shortcut icon" href="/themes/homzen/images/logo/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="/themes/homzen/images/darli-hero-cairo-photo-clean.webp" type="image/webp"
+    media="(min-width: 992px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/themes/homzen/images/darli-hero-cairo-photo-clean-900.webp" type="image/webp"
+    media="(max-width: 991px)" fetchpriority="high">
   <link
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.6">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.min.css?v=2.0.1">
+  <link rel="stylesheet" href="/themes/homzen/css/darli-home.min.css?v=2.0.10">
+  <script defer src="/themes/homzen/plugins/lucide/lucide.min.js?v=1.59.0"></script>
 </head>
 
 <body class="body" id="page-home" dir="rtl">
@@ -111,52 +115,27 @@
         <a href="/ar/properties" class="hero-hotspot spot-map-btn" title="عرض الخريطة"></a>
 
         <div class="hero-search-overlay">
-          <form action="/ar/properties" method="GET" id="darli-hero-search-form" aria-label="البحث عن عقار">
+          <form action="/properties" method="GET" id="darli-hero-search-form" aria-label="البحث عن عقار">
             <div class="darli-search-card-grid">
-              <label class="darli-search-lbl lbl-keyword" for="darli-search-keyword"><i data-lucide="search"></i> الكلمة
-                المفتاحية</label>
               <label class="darli-search-lbl lbl-location" for="darli-search-location"><i data-lucide="map-pin"></i>
                 الموقع</label>
-              <label class="darli-search-lbl lbl-category" for="darli-search-category"><i data-lucide="layers"></i>
-                التصنيف</label>
+              <label class="darli-search-lbl lbl-purpose" for="darli-search-purpose"><i data-lucide="home"></i>
+                نوع الطلب</label>
               <div class="darli-grid-empty" aria-hidden="true"></div>
               <div class="darli-grid-empty" aria-hidden="true"></div>
-
-              <div class="darli-input-wrap wrap-keyword">
-                <input type="text" id="darli-search-keyword" name="k" class="grid-input"
-                  placeholder="ابحث بالكلمة المفتاحية..." aria-label="الكلمة المفتاحية">
-              </div>
 
               <div class="darli-input-wrap wrap-location">
-                <input type="text" id="darli-search-location" name="location" list="darli-locations-list"
-                  class="grid-input" placeholder="ابحث بالموقع (بني سويف ومراكزها)..." aria-label="الموقع"
-                  autocomplete="off">
-                <datalist id="darli-locations-list">
-                  <option value="مدينة بني سويف">
-                  <option value="مدينة بني سويف الجديدة">
-                  <option value="الواسطى">
-                  <option value="ناصر">
-                  <option value="إهناسيا">
-                  <option value="ببا">
-                  <option value="سمسطا">
-                  <option value="الفشن">
-                  <option value="حي الزهور">
-                  <option value="حي الجامعة">
-                  <option value="مقبل">
-                  <option value="الحمرايا">
-                  <option value="شرق النيل">
-                </datalist>
+                <select id="darli-search-location" name="location_id" class="grid-select" aria-label="الموقع">
+                  <option value="">كل المدن والمراكز</option>
+                  <!--DARLI_CITY_OPTIONS-->
+                </select>
               </div>
 
-              <div class="darli-input-wrap wrap-category">
-                <select id="darli-search-category" name="category_id" class="grid-select" aria-label="التصنيف">
-                  <option value="">جميع التصنيفات</option>
-                  <option value="1">شقة</option>
-                  <option value="2">فيلا</option>
-                  <option value="3">شقة كوندو</option>
-                  <option value="4">منزل</option>
-                  <option value="5">أرض</option>
-                  <option value="6">العقارات التجارية</option>
+              <div class="darli-input-wrap wrap-purpose">
+                <select id="darli-search-purpose" name="purpose" class="grid-select" aria-label="نوع الطلب">
+                  <option value="">كل الطلبات</option>
+                  <option value="sale">شراء</option>
+                  <option value="rent">إيجار</option>
                 </select>
               </div>
 
@@ -174,13 +153,12 @@
 
             <div class="darli-advanced-filter-panel" id="darli-advanced-panel">
               <div class="darli-adv-grid">
-                <!-- Type: Sale / Rent -->
+                <!-- Category -->
                 <div class="darli-adv-field">
-                  <label class="darli-adv-label">نوع العملية</label>
-                  <select name="type" class="darli-adv-select">
-                    <option value="">الكل (للبيع وللإيجار)</option>
-                    <option value="sale">للبيع</option>
-                    <option value="rent">للإيجار</option>
+                  <label class="darli-adv-label">تصنيف العقار</label>
+                  <select name="category_id" class="darli-adv-select">
+                    <option value="">جميع التصنيفات</option>
+                    <!--DARLI_CATEGORY_OPTIONS-->
                   </select>
                 </div>
 
@@ -200,7 +178,7 @@
                 <!-- Bedrooms -->
                 <div class="darli-adv-field">
                   <label class="darli-adv-label">غرف النوم</label>
-                  <select name="bedroom" class="darli-adv-select">
+                  <select name="bedrooms" class="darli-adv-select">
                     <option value="">أي عدد</option>
                     <option value="1">1 غرفة</option>
                     <option value="2">2 غرف</option>
@@ -213,7 +191,7 @@
                 <!-- Bathrooms -->
                 <div class="darli-adv-field">
                   <label class="darli-adv-label">الحمامات</label>
-                  <select name="bathroom" class="darli-adv-select">
+                  <select name="bathrooms" class="darli-adv-select">
                     <option value="">أي عدد</option>
                     <option value="1">1 حمام</option>
                     <option value="2">2 حمام</option>
@@ -268,33 +246,23 @@
 
           <form action="/properties" method="GET" class="darli-mobile-search" aria-label="البحث عن عقار">
             <label class="darli-mobile-field">
-              <span><i data-lucide="search"></i> الكلمة المفتاحية</span>
-              <span class="darli-mobile-control">
-                <input type="text" name="k" placeholder="ابحث بالكلمة المفتاحية">
-                <i data-lucide="search"></i>
-              </span>
-            </label>
-
-            <label class="darli-mobile-field">
               <span><i data-lucide="map-pin"></i> الموقع</span>
               <span class="darli-mobile-control">
-                <input type="text" name="location" list="darli-locations-list"
-                  placeholder="ابحث بالموقع (بني سويف ومراكزها)" autocomplete="off">
-                <i data-lucide="crosshair"></i>
+                <select name="location_id">
+                  <option value="">كل المدن والمراكز</option>
+                  <!--DARLI_CITY_OPTIONS-->
+                </select>
+                <i data-lucide="chevron-down"></i>
               </span>
             </label>
 
             <label class="darli-mobile-field">
-              <span><i data-lucide="layers"></i> التصنيف</span>
+              <span><i data-lucide="home"></i> نوع الطلب</span>
               <span class="darli-mobile-control">
-                <select name="category_id">
-                  <option value="">الكل</option>
-                  <option value="1">شقة</option>
-                  <option value="2">فيلا</option>
-                  <option value="3">شقة كوندو</option>
-                  <option value="4">منزل</option>
-                  <option value="5">أرض</option>
-                  <option value="6">العقارات التجارية</option>
+                <select name="purpose">
+                  <option value="">كل الطلبات</option>
+                  <option value="sale">شراء</option>
+                  <option value="rent">إيجار</option>
                 </select>
                 <i data-lucide="chevron-down"></i>
               </span>
@@ -313,8 +281,8 @@
 
             <div class="darli-mobile-advanced-panel" id="darli-mobile-advanced-panel">
               <label class="darli-mobile-field">
-                <span>نوع العملية</span>
-                <span class="darli-mobile-control"><select name="type"><option value="">الكل (للبيع وللإيجار)</option><option value="sale">للبيع</option><option value="rent">للإيجار</option></select><i data-lucide="chevron-down"></i></span>
+                <span>تصنيف العقار</span>
+                <span class="darli-mobile-control"><select name="category_id"><option value="">جميع التصنيفات</option><!--DARLI_CATEGORY_OPTIONS--></select><i data-lucide="chevron-down"></i></span>
               </label>
               <div class="darli-mobile-advanced-grid">
                 <label class="darli-mobile-field"><span>السعر من</span><span class="darli-mobile-control"><input type="number" name="min_price" placeholder="0" min="0"></span></label>
@@ -1456,7 +1424,7 @@
 
   <!-- SCRIPTS -->
   <script src="/themes/homzen/js/jquery.min.js"></script>
-  <script src="/themes/homzen/js/darli-home.js?v=2.0.2"></script>
+  <script src="/themes/homzen/js/darli-home.min.js?v=2.0.2"></script>
 </body>
 
 </html>

@@ -316,6 +316,32 @@
                     </div>
                 </div>
 
+                {{-- فيديو العقار (اختياري) --}}
+                <div class="col-12 mt-4 pt-3" style="border-top: 1px dashed var(--dash-border);">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span style="font-size: 20px;">🎬</span>
+                        <h6 class="fw-bold mb-0" style="color: var(--dash-text); font-size: 16px;">فيديو العقار</h6>
+                        <span class="badge" style="background: var(--dash-hover); color: var(--dash-muted); font-size: 11px;">اختياري</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--dash-muted); margin-bottom: 14px;">
+                        أضف رابط فيديو من يوتيوب أو فيميو، أو ارفع ملف فيديو قصير للعقار. سيظهر الفيديو في صفحة تفاصيل العقار بالموقع.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <label class="fw-semibold mb-1" style="font-size: 13px; color: var(--dash-text);">رابط الفيديو (YouTube / Vimeo / MP4)</label>
+                            <input type="url" name="video_url" class="form-control" dir="ltr" value="{{ old('video_url') }}"
+                                placeholder="https://www.youtube.com/watch?v=...">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="fw-semibold mb-1" style="font-size: 13px; color: var(--dash-text);">أو ارفع ملف فيديو</label>
+                            <input type="file" name="video_file" class="form-control"
+                                accept="video/mp4,video/webm,video/ogg,video/quicktime,video/x-m4v">
+                            <div style="font-size: 11.5px; color: var(--dash-muted); margin-top: 4px;">MP4 / WebM — أقصى حجم 50 ميجابايت</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-12">
                     @include('admin.partials.map-picker', [
                         'latId' => 'prop-latitude-user',

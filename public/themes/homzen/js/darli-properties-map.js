@@ -525,12 +525,40 @@
         const mobFullscreenBtn = document.getElementById('darli-mob-fullscreen-btn');
         const mapFrameCard = document.getElementById('darli-map-frame-card');
         const mapFullscreenClose = document.getElementById('darli-map-fullscreen-close');
+        const mapFilterBtn = document.getElementById('darli-map-filter-btn');
+        const mapFilterPanel = document.getElementById('darli-map-filter-panel');
+        const mapFilterClose = document.getElementById('darli-map-filter-close');
+
+        function setMapFilterOpen(isOpen) {
+            if (!mapFilterPanel || !mapFilterBtn) return;
+
+            mapFilterPanel.classList.toggle('open', isOpen);
+            mapFilterBtn.classList.toggle('active', isOpen);
+            mapFilterBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
 
         function setMapFullscreen(isFull) {
             if (!mapFrameCard) return;
 
             mapFrameCard.classList.toggle('is-fullscreen', isFull);
+            document.body.classList.toggle('darli-map-fullscreen', isFull);
             document.body.style.overflow = isFull ? 'hidden' : '';
+
+            if (!isFull) {
+                setMapFilterOpen(false);
+
+                // Drop "map=1" when leaving full screen so pagination and
+                // later navigation do not re-open the map unexpectedly.
+                try {
+                    const currentUrl = new URL(window.location.href);
+                    if (currentUrl.searchParams.get('map') === '1') {
+                        currentUrl.searchParams.delete('map');
+                        window.history.replaceState({}, '', currentUrl.pathname + currentUrl.search + currentUrl.hash);
+                    }
+                } catch (err) {
+                    // Older browsers without URL support can keep the query string.
+                }
+            }
 
             if (mobFullscreenBtn) {
                 const iconExpand = mobFullscreenBtn.querySelector('.icon-expand');
@@ -560,18 +588,239 @@
             });
         }
 
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && mapFrameCard && mapFrameCard.classList.contains('is-fullscreen')) {
-                setMapFullscreen(false);
+        if (mapFilterBtn) {
+            mapFilterBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                setMapFilterOpen(!mapFilterPanel.classList.contains('open'));
+            });
+        }
+
+        if (mapFilterClose) {
+            mapFilterClose.addEventListener('click', function () {
+                setMapFilterOpen(false);
+            });
+        }
+
+        // AJAX filtering: rebuild the markers in place without a page reload.
+        const mapFilterForm = document.getElementById('darli-map-filter-form');
+        const mapFilterLoading = document.getElementById('darli-map-filter-loading');
+        const mapFilterToast = document.getElementById('darli-map-filter-toast');
+        const mapFilterSubmit = mapFilterForm ? mapFilterForm.querySelector('button[type="submit"]') : null;
+        const isArabic = document.documentElement.lang === 'ar';
+        let mapFilterToastTimer = null;
+
+        function collectMapFilterParams() {
+            const params = new URLSearchParams();
+            if (!mapFilterForm) return params;
+
+            new FormData(mapFilterForm).forEach(function (value, key) {
+                if (key === 'map' || value === null || value === '') return;
+                params.append(key, value);
+            });
+
+            return params;
+        }
+
+        function setMapFilterBusy(isBusy) {
+            if (mapFilterLoading) {
+                mapFilterLoading.classList.toggle('is-visible', isBusy);
             }
+            if (mapFilterSubmit) {
+                mapFilterSubmit.disabled = isBusy;
+            }
+            if (mapFilterBtn) {
+                mapFilterBtn.disabled = isBusy;
+            }
+        }
+
+        function showMapFilterToast(message, isError) {
+            if (!mapFilterToast) return;
+
+            mapFilterToast.textContent = message;
+            mapFilterToast.classList.toggle('is-error', !!isError);
+            mapFilterToast.classList.add('is-visible');
+
+            window.clearTimeout(mapFilterToastTimer);
+            mapFilterToastTimer = window.setTimeout(function () {
+                mapFilterToast.classList.remove('is-visible');
+            }, 3200);
+        }
+
+        function renderFilteredMarkers(items) {
+            markersGroup.clearLayers();
+            Object.keys(markerMap).forEach(function (key) {
+                delete markerMap[key];
+            });
+
+            const valid = (items || []).filter(function (prop) {
+                return prop && prop.lat && prop.lng;
+            });
+
+            valid.forEach(function (prop, index) {
+                createMarker(prop, index);
+            });
+
+            if (valid.length > 0) {
+                const bounds = L.latLngBounds(valid.map(function (prop) {
+                    return [parseFloat(prop.lat), parseFloat(prop.lng)];
+                }));
+                map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+            }
+
+            window.__DARLI_MAP_PROPERTIES__ = valid;
+
+            return valid.length;
+        }
+
+        function syncMapPurposeUi(purpose) {
+            const hidden = document.getElementById('darli-mob-input-purpose');
+            if (hidden) hidden.value = purpose || '';
+
+            document.querySelectorAll('.darli-mob-purpose-pill').forEach(function (pill) {
+                pill.classList.toggle('active', purpose !== '' && pill.getAttribute('data-purpose') === purpose);
+            });
+        }
+
+        function updateMapFilterUrl(params) {
+            try {
+                const url = new URL(window.location.href);
+                url.search = params.toString();
+                if (document.body.classList.contains('darli-map-fullscreen')) {
+                    url.searchParams.set('map', '1');
+                }
+                window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+            } catch (err) {
+                // URL API is optional; keep the current URL if unavailable.
+            }
+        }
+
+        if (mapFilterForm) {
+            const endpoint = mapFilterForm.getAttribute('data-endpoint');
+
+            mapFilterForm.addEventListener('submit', function (e) {
+                if (!endpoint || typeof window.fetch !== 'function') {
+                    return; // Fall back to the normal GET submit.
+                }
+
+                e.preventDefault();
+
+                const params = collectMapFilterParams();
+                const query = params.toString();
+                setMapFilterBusy(true);
+
+                fetch(endpoint + (query ? '?' + query : ''), {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                })
+                    .then(function (response) {
+                        if (!response.ok) throw new Error('HTTP ' + response.status);
+                        return response.json();
+                    })
+                    .then(function (payload) {
+                        const data = Array.isArray(payload.data) ? payload.data : [];
+                        const count = renderFilteredMarkers(data);
+                        const purposeField = mapFilterForm.querySelector('[name="purpose"]');
+
+                        if (purposeField) syncMapPurposeUi(purposeField.value);
+                        updateMapFilterUrl(params);
+                        setMapFilterOpen(false);
+
+                        if (count > 0) {
+                            showMapFilterToast(isArabic
+                                ? 'تم عرض ' + count + ' عقار على الخريطة'
+                                : count + ' properties shown on the map', false);
+                        } else {
+                            showMapFilterToast(isArabic
+                                ? 'لا توجد عقارات مطابقة لهذه الفلاتر'
+                                : 'No properties match these filters', true);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Map filter failed:', error);
+                        showMapFilterToast(isArabic
+                            ? 'تعذر تحديث الخريطة، حاول مرة أخرى'
+                            : 'Could not update the map. Please try again.', true);
+                    })
+                    .finally(function () {
+                        setMapFilterBusy(false);
+                    });
+            });
+        }
+
+        const mapFilterReset = document.getElementById('darli-map-filter-reset');
+        if (mapFilterReset && mapFilterForm) {
+            mapFilterReset.addEventListener('click', function (e) {
+                if (typeof window.fetch !== 'function') return;
+
+                e.preventDefault();
+
+                // The selects are rendered with the current filters marked as
+                // "selected", so form.reset() would restore them. Clear every
+                // field explicitly instead.
+                mapFilterForm.querySelectorAll('select').forEach(function (select) {
+                    select.selectedIndex = 0;
+                });
+                mapFilterForm.querySelectorAll('input').forEach(function (input) {
+                    if (input.name === 'map') return;
+                    if (input.name === 'features[]') {
+                        input.remove();
+                        return;
+                    }
+                    input.value = '';
+                });
+
+                if (typeof mapFilterForm.requestSubmit === 'function') {
+                    mapFilterForm.requestSubmit();
+                } else {
+                    mapFilterForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                }
+            });
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Escape' || !mapFrameCard || !mapFrameCard.classList.contains('is-fullscreen')) {
+                return;
+            }
+
+            if (mapFilterPanel && mapFilterPanel.classList.contains('open')) {
+                setMapFilterOpen(false);
+                return;
+            }
+
+            setMapFullscreen(false);
         });
+
+        // Re-open the full-screen map automatically after applying the in-map
+        // filter (the form submits with map=1 so the filtered pins stay visible).
+        if (mapFrameCard && window.innerWidth <= 991 &&
+            new URLSearchParams(window.location.search).get('map') === '1') {
+            setMapFullscreen(true);
+        }
 
         // 15. Mobile "عرض الخريطة" Button
         const mobShowMapBtn = document.getElementById('darli-mob-show-map-btn');
         if (mobShowMapBtn && mapFrameCard) {
             mobShowMapBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                setMapFullscreen(true);
+                const isVisible = mapFrameCard.classList.toggle('is-mobile-visible');
+                this.classList.toggle('active', isVisible);
+                this.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+                const label = this.querySelector('.darli-map-toggle-label');
+                if (label) {
+                    label.textContent = isVisible
+                        ? (document.documentElement.lang === 'ar' ? 'إخفاء الخريطة' : 'Hide map')
+                        : (document.documentElement.lang === 'ar' ? 'عرض الخريطة' : 'Show map');
+                }
+                if (isVisible) {
+                    setTimeout(function () {
+                        map.invalidateSize();
+                        mapFrameCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 80);
+                }
             });
         }
 
@@ -664,6 +913,38 @@
                 mobCatDisplay.textContent = text || 'أي نوع';
             });
         }
+
+        document.querySelectorAll('.darli-mob-auto-submit').forEach(function (select) {
+            select.addEventListener('change', function () {
+                if (mobSearchForm) mobSearchForm.submit();
+            });
+        });
+
+        const mobPriceTrigger = document.getElementById('darli-mob-price-trigger');
+        const priceSheet = document.getElementById('darli-price-sheet');
+        const priceSheetBackdrop = document.getElementById('darli-price-sheet-backdrop');
+        const priceSheetClose = document.getElementById('darli-price-sheet-close');
+        const priceClearBtn = document.getElementById('darli-price-clear-btn');
+
+        function closePriceSheet() {
+            if (priceSheet) priceSheet.classList.remove('open');
+            if (priceSheetBackdrop) priceSheetBackdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        if (mobPriceTrigger) mobPriceTrigger.addEventListener('click', function () {
+            if (priceSheet) priceSheet.classList.add('open');
+            if (priceSheetBackdrop) priceSheetBackdrop.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        if (priceSheetClose) priceSheetClose.addEventListener('click', closePriceSheet);
+        if (priceSheetBackdrop) priceSheetBackdrop.addEventListener('click', closePriceSheet);
+        if (priceClearBtn) priceClearBtn.addEventListener('click', function () {
+            if (!priceSheet) return;
+            priceSheet.querySelectorAll('input[name="min_price"], input[name="max_price"]').forEach(function (input) {
+                input.value = '';
+            });
+        });
     }
 
     if (document.readyState === 'loading') {

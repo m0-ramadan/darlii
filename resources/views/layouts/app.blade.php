@@ -15,21 +15,21 @@
         href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons (self-hosted + deferred) -->
+    <script defer src="{{ asset('themes/homzen/plugins/lucide/lucide.min.js') }}?v=1.59.0"></script>
 
     {{-- Dark mode is temporarily disabled. Keep the site explicitly in light mode. --}}
     <script>document.documentElement.dataset.theme = 'light';</script>
 
     <link rel="stylesheet"
         href="{{ asset(in_array(app()->getLocale(), config('locales.rtl')) ? 'themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css' : 'themes/homzen/plugins/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-design-system.css') }}?v=2.0.3">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-design-system.min.css') }}?v=2.0.3">
     <link rel="stylesheet" href="{{ asset('themes/homzen/css/style.css') }}?v=2.0.3">
     {{-- <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3"> --}}
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/rtl-custom.css') }}?v=2.0.3">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/locale-switcher.css') }}?v=1.0.0">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/rtl-custom.min.css') }}?v=2.0.3">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/locale-switcher.min.css') }}?v=1.0.0">
     {{-- Brand unification layer: same header/footer colours as the legacy pages. --}}
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-unified.css') }}?v=2.1.8">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-unified.min.css') }}?v=2.1.11">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
@@ -206,11 +206,12 @@
 
     @include('components.floating-whatsapp')
     @include('components.floating-notifications')
+    @include('components.floating-chat')
 
     <script src="{{ asset('themes/homzen/js/jquery.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/js/popper.min.js') }}"></script>
     <script src="{{ asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script defer src="{{ asset('themes/homzen/js/darli-mobile-menu.js') }}?v=1.1.2"></script>
+    <script defer src="{{ asset('themes/homzen/js/darli-mobile-menu.min.js') }}?v=1.2.2"></script>
     {{-- <script defer src="{{ asset('themes/homzen/js/theme-mode.js') }}?v=2.0.2"></script> --}}
 
     @if(setting('firebase.enabled', '1') == '1')
@@ -228,12 +229,12 @@
                 userId: {{ auth()->id() ?? 'null' }}
             };
         </script>
-        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
-        <script defer src="{{ asset('themes/homzen/js/darli-notifications.js') }}?v=1.0.1"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+        <script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
+        <script defer src="{{ asset('themes/homzen/js/darli-notifications.min.js') }}?v=1.0.2"></script>
     @endif
-    <script defer src="{{ asset('themes/homzen/js/darli-testimonials-drag.js') }}?v=1.0.0"></script>
-    <script defer src="{{ asset('themes/homzen/js/darli-visitor-tracker.js') }}?v=1.0.0"></script>
+    <script defer src="{{ asset('themes/homzen/js/darli-testimonials-drag.min.js') }}?v=1.0.0"></script>
+    <script defer src="{{ asset('themes/homzen/js/darli-visitor-tracker.min.js') }}?v=1.0.0"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

@@ -218,7 +218,7 @@
                 <div class="ap-card">
                     <div class="ap-card__head">
                         <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'photo', 'size' => 18]) صور العقار</h2>
-                        <span class="ap-badge">{{ $property->exists ? $property->media->count() : 0 }} صورة</span>
+                        <span class="ap-badge">{{ $property->exists ? $property->media->where('type', 'image')->count() : 0 }} صورة</span>
                     </div>
                     <div class="ap-card__body">
                         <div class="ap-field">
@@ -227,9 +227,9 @@
                             <div class="ap-help">الصيغ: jpg, png, webp — أقصى حجم {{ setting('storage.max_upload_mb', 8) }} ميجابايت للصورة.</div>
                         </div>
 
-                        @if ($isEdit && $property->media->isNotEmpty())
+                        @if ($isEdit && $property->media->where('type', 'image')->isNotEmpty())
                             <div class="ap-thumb-grid">
-                                @foreach ($property->media as $media)
+                                @foreach ($property->media->where('type', 'image') as $media)
                                     <div class="ap-thumb">
                                         <img src="{{ str_starts_with((string) $media->path, 'http') ? $media->path : asset('storage/' . ltrim($media->path, '/')) }}"
                                             alt="" loading="lazy"
@@ -251,6 +251,48 @@
                         @elseif (!$isEdit)
                             <div class="ap-alert ap-alert--info" style="margin: 0;">سيتم رفع الصور بعد حفظ العقار أول مرة.</div>
                         @endif
+                    </div>
+                </div>
+
+                {{-- ------------------------------------------------------- فيديو العقار --}}
+                @php $currentVideo = $property->exists ? $property->videoSource() : null; @endphp
+                <div class="ap-card">
+                    <div class="ap-card__head">
+                        <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'photo', 'size' => 18]) فيديو العقار</h2>
+                        <span class="ap-badge">{{ $currentVideo ? 'مضاف' : 'اختياري' }}</span>
+                    </div>
+                    <div class="ap-card__body">
+                        @if ($currentVideo)
+                            <div class="ap-field">
+                                <label class="ap-label">الفيديو الحالي</label>
+                                @if ($currentVideo['kind'] === 'embed')
+                                    <a href="{{ $currentVideo['url'] }}" target="_blank" rel="noopener"
+                                        class="ap-btn ap-btn--ghost ap-btn--sm" style="width: fit-content;">مشاهدة الفيديو الحالي</a>
+                                @else
+                                    <video src="{{ $currentVideo['url'] }}" controls preload="metadata"
+                                        style="width: 100%; max-width: 420px; border-radius: 10px; background: #0f172a;"></video>
+                                @endif
+                                <label class="ap-check" style="margin-top: 8px;">
+                                    <input type="checkbox" name="remove_video" value="1">
+                                    حذف الفيديو الحالي عند الحفظ
+                                </label>
+                            </div>
+                        @endif
+
+                        <div class="ap-field">
+                            <label class="ap-label">رابط الفيديو (YouTube / Vimeo / MP4)</label>
+                            <input type="url" name="video_url" class="ap-input" dir="ltr"
+                                value="{{ old('video_url', $property->exists ? $property->getVideoUrl() : '') }}"
+                                placeholder="https://www.youtube.com/watch?v=...">
+                            <div class="ap-help">الصق رابط الفيديو من يوتيوب أو فيميو أو رابط ملف MP4 مباشر.</div>
+                        </div>
+
+                        <div class="ap-field">
+                            <label class="ap-label">أو ارفع ملف فيديو من جهازك</label>
+                            <input type="file" name="video_file" class="ap-input"
+                                accept="video/mp4,video/webm,video/ogg,video/quicktime,video/x-m4v">
+                            <div class="ap-help">الصيغ: MP4, WebM, OGG, MOV — أقصى حجم 50 ميجابايت. يُعرض الفيديو تلقائياً في صفحة تفاصيل العقار.</div>
+                        </div>
                     </div>
                 </div>
 

@@ -53,6 +53,8 @@ class StorePropertyRequest extends FormRequest
             'floor_plan_description' => ['nullable', 'string', 'max:1000'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
+            'video_url' => ['nullable', 'string', 'max:2048', 'url'],
+            'video_file' => ['nullable', 'file', 'mimetypes:video/mp4,video/webm,video/ogg,video/quicktime,video/x-m4v', 'max:51200'],
         ];
     }
 }

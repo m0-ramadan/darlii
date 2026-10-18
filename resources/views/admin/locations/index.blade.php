@@ -40,6 +40,17 @@
                     </select>
                 </div>
                 <div class="ap-field">
+                    <label class="ap-label">المدينة</label>
+                    <select name="city_id" class="ap-select ap-select--sm">
+                        <option value="">كل المدن</option>
+                        @foreach ($cities as $city)
+                            <option value="{{ $city->id }}" @selected((string) ($filters['city_id'] ?? '') === (string) $city->id)>
+                                {{ $city->translation('ar')?->name ?? '#' . $city->id }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="ap-field">
                     <label class="ap-label">الحالة</label>
                     <select name="status" class="ap-select ap-select--sm">
                         <option value="">الكل</option>
@@ -94,6 +105,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <small class="text-muted">عند إضافة منطقة أو معلم مميز يجب اختيار المدينة التابعة له.</small>
                     </div>
                     <div class="ap-field">
                         <label class="ap-label">كود الدولة</label>

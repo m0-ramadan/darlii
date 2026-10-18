@@ -9,6 +9,7 @@ use App\Modules\Search\Application\Queries\PropertySearchQuery;
 use App\Services\Admin\PageViewTracker;
 use App\Services\LegacyFrontend\LegacyFrontendRenderer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PropertyController extends Controller
 {
@@ -20,14 +21,22 @@ class PropertyController extends Controller
         $search = app(PropertySearchQuery::class);
 
         // Normalize filters (support 'k' alias for 'q', and resolve 'location' name to 'location_id' if needed)
-        $filterData = $request->only(['q', 'k', 'purpose', 'category_id', 'location_id', 'location', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'sort']);
+        $filterData = $request->only(['q', 'k', 'purpose', 'category_id', 'category_group', 'student', 'location_id', 'location', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'furnished', 'nearby', 'nearby_location_id', 'features', 'sort']);
         if (empty($filterData['q']) && !empty($filterData['k'])) {
             $filterData['q'] = $filterData['k'];
         }
 
+        // The homepage form posts "features[]"; allow "type" as a legacy alias for purpose.
+        if (empty($filterData['purpose']) && $request->filled('type')) {
+            $filterData['purpose'] = $request->input('type');
+        }
+        if (empty($filterData['features']) && $request->filled('features')) {
+            $filterData['features'] = (array) $request->input('features');
+        }
+
         if (empty($filterData['location_id']) && !empty($filterData['location'])) {
             $locName = trim((string) $filterData['location']);
-            $matched = Location::whereHas('translations', fn ($q) => $q->where('name', 'like', "%{$locName}%"))->first();
+            $matched = Location::whereHas('translations', fn($q) => $q->where('name', 'like', "%{$locName}%"))->first();
             if ($matched) {
                 $filterData['location_id'] = $matched->id;
             }
@@ -88,6 +97,30 @@ class PropertyController extends Controller
             ->orderBy('id')
             ->get();
 
+        $cities = Location::query()
+            ->with('translations')
+            ->where('type', 'city')
+            ->where('status', true)
+            ->orderBy('id')
+            ->get();
+
+        $nearbyLocations = Location::query()
+            ->with('translations')
+            ->whereIn('type', ['district', 'landmark'])
+            ->whereIn('parent_id', $cities->pluck('id'))
+            ->where('status', true)
+            ->orderBy('type')
+            ->orderBy('id')
+            ->get();
+
+        $nearbyOptions = DB::table('property_nearby_places')
+            ->whereNotNull('type')
+            ->where('type', '<>', '')
+            ->distinct()
+            ->orderBy('type')
+            ->limit(30)
+            ->pluck('type');
+
         $currentCity = $locale === 'ar' ? 'بني سويف' : 'Beni Suef';
         if (!empty($filterData['location_id'])) {
             $selectedLoc = $locations->firstWhere('id', (int) $filterData['location_id']);
@@ -101,6 +134,9 @@ class PropertyController extends Controller
             'mapProperties' => $mapProperties,
             'categories' => $categories,
             'locations' => $locations,
+            'cities' => $cities,
+            'nearbyLocations' => $nearbyLocations,
+            'nearbyOptions' => $nearbyOptions,
             'currentCity' => $currentCity,
             'shell' => $this->shell('properties'),
         ]);
@@ -112,10 +148,16 @@ class PropertyController extends Controller
         $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
 
         $property = Property::with([
-            'translations', 'currency', 'media', 'amenities.translations',
-            'project.translations', 'location.translations', 'category.translations', 'owner',
+            'translations',
+            'currency',
+            'media',
+            'amenities.translations',
+            'project.translations',
+            'location.translations',
+            'category.translations',
+            'owner',
         ])
-            ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
+            ->whereHas('translations', fn($q) => $q->where('slug', $slug))
             ->first();
 
         if (! $property) {
@@ -136,7 +178,7 @@ class PropertyController extends Controller
             ->with(['translations', 'media', 'currency', 'category.translations', 'location.translations'])
             ->where('id', '!=', $property->id)
             ->whereIn('status', ['published', 'sold'])
-            ->when($property->category_id, fn ($q) => $q->where('category_id', $property->category_id))
+            ->when($property->category_id, fn($q) => $q->where('category_id', $property->category_id))
             ->latest()
             ->limit(3)
             ->get();

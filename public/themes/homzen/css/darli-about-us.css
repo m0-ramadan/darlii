@@ -103,7 +103,7 @@
 .darli-about-hero {
   position: relative;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.86) 100%),
-              url('/themes/homzen/images/darli-hero-cairo-photo-clean.png') center 35% / cover no-repeat !important;
+              url('/themes/homzen/images/darli-hero-cairo-photo-clean.webp') center 35% / cover no-repeat !important;
   padding: 90px 20px 85px;
   text-align: center;
   border-bottom: 1px solid var(--darli-about-border);

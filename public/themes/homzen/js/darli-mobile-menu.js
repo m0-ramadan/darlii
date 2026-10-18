@@ -143,5 +143,15 @@
                 toggle.focus();
             }
         });
+
+        // Reveal the drawer only after the final Darli navigation/tools have
+        // replaced the legacy markup, so the old wishlist/currency/contact
+        // version never appears during page load.
+        var revealMenu = function () {
+            renderNavigation();
+            document.body.classList.add('darli-mobile-menu-ready');
+        };
+        window.setTimeout(revealMenu, 300);
+        window.addEventListener('load', revealMenu);
     });
 })();

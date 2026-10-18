@@ -8,8 +8,11 @@
 
 @section('title', $pageTitle)
 
+@push('head')
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-about-us.min.css') }}?v=2.2.1">
+@endpush
+
 @section('content')
-<link rel="stylesheet" href="/themes/homzen/css/darli-about-us.css?v={{ time() }}">
 <main class="darli-about-page" dir="rtl">
 
     <!-- ======================================================================

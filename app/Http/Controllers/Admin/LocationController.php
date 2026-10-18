@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * إدارة المواقع والمناطق (محافظات، مدن، أحياء…) مع نموذج إضافة/تعديل داخل
@@ -29,6 +30,7 @@ class LocationController extends Controller
         'area' => 'منطقة',
         'district' => 'حي',
         'compound' => 'كمبوند',
+        'landmark' => 'معلم مميز',
     ];
 
     // ------------------------------------------------------------- القائمة
@@ -36,7 +38,7 @@ class LocationController extends Controller
     {
         $this->authorizePermission('content.taxonomies');
 
-        $filters = $request->only(['q', 'type', 'status']);
+        $filters = $request->only(['q', 'type', 'status', 'city_id']);
 
         $locations = Location::query()
             ->with(['translations', 'parent.translations'])
@@ -50,6 +52,10 @@ class LocationController extends Controller
             })
             ->when(filled($filters['type'] ?? null), fn ($query) => $query->where('type', $filters['type']))
             ->when(filled($filters['status'] ?? null), fn ($query) => $query->where('status', (bool) $filters['status']))
+            ->when(filled($filters['city_id'] ?? null), function ($query) use ($filters): void {
+                $cityId = (int) $filters['city_id'];
+                $query->where(fn ($locations) => $locations->whereKey($cityId)->orWhere('parent_id', $cityId));
+            })
             ->orderBy('type')
             ->orderBy('id')
             ->paginate((int) setting('general.items_per_page', 15))
@@ -83,6 +89,7 @@ class LocationController extends Controller
             'propertyCounts' => $propertyCounts,
             'projectCounts' => $projectCounts,
             'editing' => $editing,
+            'cities' => Location::query()->with('translations')->where('type', 'city')->orderBy('id')->get(),
             'parents' => Location::query()
                 ->with('translations')
                 ->when($editing, fn ($query) => $query->whereKeyNot($editing->id))
@@ -90,7 +97,7 @@ class LocationController extends Controller
                 ->orderBy('id')
                 ->get(),
             'title' => $editing ? 'تعديل موقع: ' . ($editing->translation('ar')?->name ?? '#' . $editing->id) : 'المواقع والمناطق',
-            'subtitle' => 'المحافظات والمدن والمناطق التي تُربط بها العقارات والمشروعات',
+            'subtitle' => 'إدارة المدن والمناطق والمعالم المميزة التي تُستخدم في فلترة العقارات',
         ]);
     }
 
@@ -100,6 +107,7 @@ class LocationController extends Controller
         $this->authorizePermission('content.taxonomies');
 
         $data = $this->validated($request);
+        $this->ensureCityParent($data);
 
         $location = DB::transaction(function () use ($data): Location {
             $location = Location::query()->create($this->columnPayload($data));
@@ -111,6 +119,8 @@ class LocationController extends Controller
 
         AuditLogger::log('location.created', $location, [], ['type' => $location->type]);
 
+        $this->syncLandmarkPropertyLinks($location);
+
         return redirect()->route('admin.locations.index')->with('success', 'تمت إضافة الموقع بنجاح.');
     }
 
@@ -120,6 +130,9 @@ class LocationController extends Controller
         $this->authorizePermission('content.taxonomies');
 
         $data = $this->validated($request, $location);
+        $this->ensureCityParent($data);
+        $oldLandmarkNames = $location->type === 'landmark' ? $location->translations->pluck('name')->filter()->all() : [];
+        $oldParentId = $location->parent_id;
 
         if (! empty($data['parent_id']) && $this->createsCycle($location, (int) $data['parent_id'])) {
             return back()->withInput()->with('error', 'لا يمكن جعل الموقع تابعاً لنفسه أو لأحد المواقع التابعة له.');
@@ -133,6 +146,9 @@ class LocationController extends Controller
         });
 
         AuditLogger::log('location.updated', $location, $old, $location->fresh()->only(array_keys($old)));
+
+        $this->removeLandmarkPropertyLinks($oldParentId, $oldLandmarkNames);
+        $this->syncLandmarkPropertyLinks($location->fresh('translations'));
 
         return back()->with('success', 'تم تحديث الموقع بنجاح.');
     }
@@ -161,6 +177,10 @@ class LocationController extends Controller
         }
 
         AuditLogger::log('location.deleted', $location, ['type' => $location->type], []);
+
+        if ($location->type === 'landmark') {
+            $this->removeLandmarkPropertyLinks($location->parent_id, $location->translations()->pluck('name')->all());
+        }
 
         $location->translations()->delete();
         $location->delete();
@@ -240,6 +260,47 @@ class LocationController extends Controller
         }
 
         return false;
+    }
+
+    /** @param array<string, mixed> $data */
+    private function ensureCityParent(array $data): void
+    {
+        if (! in_array($data['type'], ['district', 'landmark'], true)) return;
+
+        $parent = ! empty($data['parent_id']) ? Location::query()->find($data['parent_id']) : null;
+        if (! $parent || $parent->type !== 'city') {
+            throw ValidationException::withMessages(['parent_id' => 'يجب اختيار مدينة أب للمنطقة أو المعلم.']);
+        }
+    }
+
+    private function syncLandmarkPropertyLinks(Location $location): void
+    {
+        if ($location->type !== 'landmark' || ! $location->parent_id) return;
+        $name = $location->translation('ar')?->name;
+        if (! $name) return;
+
+        foreach ($this->cityPropertyIds((int) $location->parent_id) as $propertyId) {
+            DB::table('property_nearby_places')->updateOrInsert(
+                ['property_id' => $propertyId, 'type' => $name],
+                ['distance' => 1, 'distance_unit' => 'km', 'created_at' => now(), 'updated_at' => now()]
+            );
+        }
+    }
+
+    /** @param array<int, string> $names */
+    private function removeLandmarkPropertyLinks(?int $cityId, array $names): void
+    {
+        if (! $cityId || empty($names)) return;
+        DB::table('property_nearby_places')
+            ->whereIn('property_id', $this->cityPropertyIds($cityId))
+            ->whereIn('type', $names)
+            ->delete();
+    }
+
+    private function cityPropertyIds(int $cityId)
+    {
+        $locationIds = Location::query()->where('parent_id', $cityId)->where('type', 'district')->pluck('id')->prepend($cityId);
+        return Property::query()->whereIn('location_id', $locationIds)->pluck('id');
     }
 
     /** العنوان العربي بلا مقابل لاتيني يعطي slug عشوائياً لأن العمود غير قابل للفراغ. */

@@ -61,6 +61,7 @@ Route::get('/account/properties', function () {
     return redirect('/dashboard/properties');
 });
 Route::get('/ajax/properties/map', [PropertyMapController::class, 'index'])->middleware('throttle:60,1');
+Route::get('/ajax/properties/map-filter', [PropertyMapController::class, 'filter'])->middleware('throttle:60,1');
 Route::get('/ajax/cities', [PropertyMapController::class, 'cities'])->middleware('throttle:60,1');
 Route::get('/ajax/projects/search', [LegacyCompatibilityController::class, 'projectSearch'])->middleware('throttle:60,1');
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('global.logout');
@@ -117,6 +118,7 @@ Route::middleware(['set.locale', 'set.currency'])
         Route::match(['get', 'post'], '/ajax/render-ui-blocks', [LegacyCompatibilityController::class, 'renderUiBlocks'])->middleware('throttle:60,1');
         Route::get('/currency/switch/{code}', [LegacyCompatibilityController::class, 'currency']);
         Route::get('/ajax/properties/map', [PropertyMapController::class, 'index'])->middleware('throttle:60,1');
+        Route::get('/ajax/properties/map-filter', [PropertyMapController::class, 'filter'])->middleware('throttle:60,1');
         Route::get('/ajax/cities', [PropertyMapController::class, 'cities'])->middleware('throttle:60,1');
         Route::get('/ajax/projects/search', [LegacyCompatibilityController::class, 'projectSearch'])->middleware('throttle:60,1');
         Route::get('/map/governorates', [PropertyMapController::class, 'governorates'])->middleware('throttle:60,1');

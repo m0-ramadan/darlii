@@ -18,7 +18,7 @@
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.min.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.min.css?v=2.0.10">
+  <link rel="stylesheet" href="/themes/homzen/css/darli-home.min.css?v=2.0.11">
   <script defer src="/themes/homzen/plugins/lucide/lucide.min.js?v=1.59.0"></script>
 </head>
 

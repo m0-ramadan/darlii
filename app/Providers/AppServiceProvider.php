@@ -41,6 +41,22 @@ class AppServiceProvider extends ServiceProvider
                     return response()->json(['message' => $message], 429, $headers);
                 });
         });
+        RateLimiter::for('admin-login', function (Request $request) {
+            $email = strtolower(trim((string) $request->input('email', 'guest')));
+
+            return Limit::perMinute(15)
+                ->by($email . '|' . $request->ip())
+                ->response(function (Request $request, array $headers) {
+                    $retryAfter = (int) ($headers['Retry-After'] ?? 60);
+
+                    return back()
+                        ->withInput($request->only('email'))
+                        ->withErrors([
+                            'email' => 'تم إجراء محاولات دخول كثيرة. يرجى الانتظار ' . $retryAfter . ' ثانية ثم المحاولة مرة أخرى.',
+                        ])
+                        ->withHeaders($headers);
+                });
+        });
         $settings = $this->app->make(SettingsRepository::class);
         $supported = [];
         if ($settings->get('general.language_ar_enabled', true)) $supported[] = 'ar';

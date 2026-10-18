@@ -458,62 +458,6 @@
                 </div>
 
             </div>
-
-            {{-- Bottom Fixed Navigation Bar --}}
-            <nav class="darli-wizard-bottom-nav">
-                {{-- الرئيسية (Home) with gold active indicator --}}
-                <a href="{{ url($locale) }}" class="darli-nav-item is-active"
-                    title="{{ $isAr ? 'الرئيسية' : 'Home' }}">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 10.5L12 3l9 7.5" />
-                        <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
-                        <path d="M9 21v-7a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v7" />
-                    </svg>
-                    <span class="nav-indicator-line"></span>
-                </a>
-
-                {{-- المفضلة (Wishlist / Bookmarks) --}}
-                <a href="{{ url($locale . '/account/wishlist') }}" class="darli-nav-item"
-                    title="{{ $isAr ? 'المفضلة' : 'Wishlist' }}">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                    </svg>
-                </a>
-
-                {{-- بحث (Search) --}}
-                <a href="{{ route('properties.index', ['locale' => $locale]) }}" class="darli-nav-item"
-                    title="{{ $isAr ? 'بحث' : 'Search' }}">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                </a>
-
-                {{-- العقارات (Listings Sheet) --}}
-                <a href="{{ route('properties.index', ['locale' => $locale, 'browse' => 'all']) }}"
-                    class="darli-nav-item" id="wizardNavListingsBtn"
-                    title="{{ $isAr ? 'كل العقارات' : 'All Properties' }}">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="4" y="3" width="16" height="18" rx="2" ry="2" />
-                        <line x1="8" y1="8" x2="16" y2="8" />
-                        <line x1="8" y1="12" x2="16" y2="12" />
-                        <line x1="8" y1="16" x2="12" y2="16" />
-                    </svg>
-                </a>
-
-                {{-- المزيد (More: 3 dots) --}}
-                <button type="button" class="darli-nav-item wizardNavMoreBtn" title="{{ $isAr ? 'المزيد' : 'More' }}">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="5" r="2" />
-                        <circle cx="12" cy="12" r="2" />
-                        <circle cx="12" cy="19" r="2" />
-                    </svg>
-                </button>
-            </nav>
         </div>
 
         <div class="darli-properties-split-container">

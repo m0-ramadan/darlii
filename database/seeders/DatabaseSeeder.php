@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CornicheYasmineApartmentSeeder::class,
             StudentHousingPropertySeeder::class,
             CityLandmarksSeeder::class,
+            UpdateElevatorAmenityNameSeeder::class,
         ]);
     }
 }

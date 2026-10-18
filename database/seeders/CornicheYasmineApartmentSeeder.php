@@ -38,11 +38,11 @@ class CornicheYasmineApartmentSeeder extends Seeder
         );
         $elevator->translations()->updateOrCreate(
             ['locale' => 'ar'],
-            ['name' => 'مصعد كهربائي (2 أسانسير)']
+            ['name' => 'مصعد كهربائي']
         );
         $elevator->translations()->updateOrCreate(
             ['locale' => 'en'],
-            ['name' => 'Elevator (2 modern lifts)']
+            ['name' => 'Electric elevator']
         );
 
         $gas = Amenity::firstOrCreate(

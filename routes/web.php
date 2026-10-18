@@ -172,7 +172,7 @@ Route::middleware(['set.locale', 'set.currency'])
 // ---------------------------------------------------------------------------
 Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('login.store');
+    Route::post('/login', [AdminAuthController::class, 'login'])->middleware('throttle:admin-login')->name('login.store');
 });
 
 Route::post('/admin/logout', [AdminAuthController::class, 'logout'])

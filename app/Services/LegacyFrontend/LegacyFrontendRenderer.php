@@ -383,6 +383,17 @@ HTML;
             }
         }
 
+        // ---------------------------------------------- زر الخريطة العائم (الموبايل)
+        if (! str_contains($html, 'darli-mobile-map-launcher')) {
+            $mobileMapLauncherHtml = view('components.mobile-map-launcher')->render();
+
+            if (stripos($html, '</body>') !== false) {
+                $html = str_ireplace('</body>', $mobileMapLauncherHtml . "\n</body>", $html);
+            } else {
+                $html .= $mobileMapLauncherHtml;
+            }
+        }
+
         // ---------------------------------------------- شات الزوار العائم (الموبايل)
         if (! str_contains($html, 'darli-chat-widget')) {
             $floatingChatHtml = view('components.floating-chat')->render();

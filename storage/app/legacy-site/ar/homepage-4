@@ -92,9 +92,10 @@
        ========================================================================= -->
     <section class="darli-hero-section" aria-labelledby="darli-hero-heading">
       <div class="darli-hero-stage">
-        <!-- The supplied artwork already contains all visible hero typography and controls. -->
-        <h1 id="darli-hero-heading" class="sr-only">اكتشف أفضل العقارات في جميع أنحاء دارلي</h1>
-        <p class="sr-only">منزل أحلامك .. أقرب مما تتخيل</p>
+        <div class="darli-desktop-hero-copy">
+          <h1 id="darli-hero-heading">اكتشف أفضل العقارات<br>في جميع أنحاء بني سويف</h1>
+          <p>منزل أحلامك .. أقرب مما تتخيل</p>
+        </div>
 
         <!-- Real location buttons cover the old labels baked into the artwork. -->
         <a href="/ar/properties?location=مدينة+بني+سويف" class="hero-hotspot spot-bns"
@@ -235,7 +236,7 @@
 
         <div class="darli-mobile-hero">
           <div class="darli-mobile-hero-copy">
-            <h2>اكتشف أفضل العقارات<br>في جميع أنحاء دارلي</h2>
+            <h2>اكتشف أفضل العقارات<br>في جميع أنحاء بني سويف</h2>
             <p>منزل أحلامك .. أقرب مما تتخيل</p>
             <a href="/ar/properties" class="darli-mobile-map-button">
               <i data-lucide="map"></i>

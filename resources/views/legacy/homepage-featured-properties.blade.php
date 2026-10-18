@@ -91,5 +91,14 @@
         </div>
       @endforelse
     </div>
+
+    @if ($properties->isNotEmpty())
+      <div style="display: flex; justify-content: center; margin-top: 36px;">
+        <a href="{{ route('properties.index') }}" class="darli-btn-cta">
+          <span>{{ $locale === 'ar' ? 'عرض جميع العقارات' : 'View All Properties' }}</span>
+          <i data-lucide="{{ $locale === 'ar' ? 'arrow-left' : 'arrow-right' }}" style="width: 18px; height: 18px;"></i>
+        </a>
+      </div>
+    @endif
   </div>
 </section>

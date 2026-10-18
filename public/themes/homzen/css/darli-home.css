@@ -268,7 +268,41 @@ html {
   display: none;
 }
 
+.darli-desktop-hero-copy {
+  position: absolute;
+  top: 17.5%;
+  left: 50%;
+  z-index: 20;
+  width: min(48%, 720px);
+  transform: translateX(-50%);
+  color: var(--darli-navy);
+  text-align: center;
+  pointer-events: none;
+}
+
+.darli-desktop-hero-copy h1 {
+  margin: 0;
+  color: inherit;
+  font-family: var(--darli-font);
+  font-size: clamp(24px, 2.35vw, 44px);
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.55);
+}
+
+.darli-desktop-hero-copy p {
+  margin: 5px 0 0;
+  color: #243b5a;
+  font-size: clamp(12px, 1vw, 18px);
+  font-weight: 700;
+}
+
 @media (max-width: 991px) {
+  .darli-desktop-hero-copy {
+    display: none;
+  }
+
   .darli-hero-section {
     align-items: stretch;
     background: #eef3f7 !important;

@@ -206,6 +206,7 @@
 
     @include('components.floating-whatsapp')
     @include('components.floating-notifications')
+    @include('components.mobile-map-launcher')
     @include('components.floating-chat')
 
     <script src="{{ asset('themes/homzen/js/jquery.min.js') }}"></script>

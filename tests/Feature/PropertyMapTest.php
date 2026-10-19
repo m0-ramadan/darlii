@@ -14,6 +14,12 @@ class PropertyMapTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
+    }
+
     public function test_map_api_only_returns_published_properties_inside_bounds(): void
     {
         $this->seed(CoreSeeder::class);
@@ -25,12 +31,12 @@ class PropertyMapTest extends TestCase
             ->assertOk()
             ->assertJsonPath('meta.total', 1)
             ->assertJsonPath('data.0.id', $inside->id)
-            ->assertJsonPath('data.0.url', config('app.url') . '/ar/properties/inside-ar');
+            ->assertJsonPath('data.0.url', config('app.url') . '/properties/inside-ar');
     }
 
     public function test_governorates_endpoint_contains_all_egypt_governorates(): void
     {
-        $this->getJson('/ar/map/governorates')
+        $this->getJson('/map/governorates')
             ->assertOk()
             ->assertJsonCount(27, 'governorates')
             ->assertJsonPath('default', 'beni-suef');
@@ -47,7 +53,7 @@ class PropertyMapTest extends TestCase
             ]],
         ])]);
 
-        $this->getJson('/ar/map/route?origin_lat=29.1&origin_lng=31.1&destination_lat=29.2&destination_lng=31.2')
+        $this->getJson('/map/route?origin_lat=29.1&origin_lng=31.1&destination_lat=29.2&destination_lng=31.2')
             ->assertOk()
             ->assertJsonPath('distance_meters', 12500)
             ->assertJsonPath('duration', '1020s')

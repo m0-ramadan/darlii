@@ -51,7 +51,10 @@ class LocaleController extends Controller
         if ($cleanPath === '') {
             $path = $fallback;
         } else {
-            $path = '/' . ltrim($cleanPath, '/');
+            // ترجمة الـslug للكيان (عقار/مشروع/مقال…) إلى اللغة المطلوبة
+            // مع الحفاظ على المسار النظيف بدون بادئة لغة.
+            $translated = $resolver->cleanUrlForLocale($cleanPath, $locale);
+            $path = $translated !== '' ? '/' . ltrim($translated, '/') : $fallback;
         }
 
         $query = isset($parts['query']) && $parts['query'] !== '' ? '?' . $parts['query'] : '';

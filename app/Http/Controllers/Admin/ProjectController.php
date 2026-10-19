@@ -76,7 +76,7 @@ class ProjectController extends Controller
         $project = DB::transaction(function () use ($data): Project {
             $project = Project::query()->create([
                 'uuid' => (string) Str::uuid(),
-                'reference_code' => $data['reference_code'] ?: $this->nextReference(),
+                'reference_code' => ($data['reference_code'] ?? null) ?: $this->nextReference(),
                 'owner_id' => $this->admin()->id,
                 'location_id' => $data['location_id'] ?? null,
                 'investor_name' => $data['investor_name'] ?? null,
@@ -125,7 +125,7 @@ class ProjectController extends Controller
 
         DB::transaction(function () use ($project, $data): void {
             $project->update([
-                'reference_code' => $data['reference_code'] ?: $project->reference_code,
+                'reference_code' => ($data['reference_code'] ?? null) ?: $project->reference_code,
                 'location_id' => $data['location_id'] ?? null,
                 'investor_name' => $data['investor_name'] ?? null,
                 'blocks_count' => $data['blocks_count'] ?? null,

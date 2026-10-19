@@ -143,11 +143,11 @@ class DashboardEnhancementsAndModerationTest extends TestCase
             'status' => 'pending_review',
         ]);
 
-        // 2. User dashboard properties index shows "تحت المراجعة" badge
+        // 2. User dashboard properties index shows the pending-review badge
         $responseUserList = $this->get('/ar/dashboard/properties');
         $responseUserList->assertOk();
         $responseUserList->assertSee('CLIENT-PROP-101', false);
-        $responseUserList->assertSee('تحت المراجعة', false);
+        $responseUserList->assertSee('قيد المراجعة', false);
 
         // 3. Must NOT appear on public properties list
         $responsePublic = $this->get('/ar/properties');

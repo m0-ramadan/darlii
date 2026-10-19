@@ -183,6 +183,6 @@ class VisitorTrackingAndMarkazTest extends TestCase
     {
         $response = $this->get('/ar');
         $response->assertStatus(200);
-        $response->assertSee('darli-visitor-tracker.js');
+        $response->assertSee('darli-visitor-tracker.min.js');
     }
 }

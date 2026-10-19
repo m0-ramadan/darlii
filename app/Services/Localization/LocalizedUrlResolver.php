@@ -38,6 +38,35 @@ class LocalizedUrlResolver
         return $this->translateEntityPath(implode('/', $segments));
     }
 
+    /**
+     * ترجمة مسار نظيف بدون بادئة لغة إلى نفس الصفحة باللغة المطلوبة.
+     * مثال: properties/english-slug  →  properties/slug-عربي
+     */
+    public function cleanUrlForLocale(string $path, string $locale): string
+    {
+        $segments = array_values(array_filter(
+            explode('/', trim($path, '/')),
+            static fn (string $segment): bool => $segment !== ''
+        ));
+
+        // إزالة أي بادئة لغة قديمة إن وُجدت.
+        if ($segments !== [] && in_array(strtolower($segments[0]), ['ar', 'en', 'fr', 'id', 'vi'], true)) {
+            array_shift($segments);
+        }
+
+        $clean = implode('/', $segments);
+        if ($clean === '') {
+            return '';
+        }
+
+        $translated = $this->translateEntityPath($locale . '/' . $clean);
+        $prefix = $locale . '/';
+
+        return str_starts_with($translated, $prefix)
+            ? substr($translated, strlen($prefix))
+            : $clean;
+    }
+
     public function translateEntityPath(string $path): string
     {
         if (! preg_match('~^(en|ar|fr|id|vi)/(properties|projects|blog|news|careers)/([^/?#]+)$~i', $path, $matches)) {

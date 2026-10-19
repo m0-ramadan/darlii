@@ -95,17 +95,10 @@ class FcmNotificationService
                     );
                     $fcmStatus = $sentCount > 0 ? 'sent' : 'failed';
                 } elseif ($credentials['type'] === 'legacy_server_key') {
-                    // FCM Legacy HTTP API
-                    $sentCount = $this->dispatchToFcm(
-                        $tokens,
-                        $title,
-                        $body,
-                        $fullImageUrl,
-                        $actionUrl,
-                        $credentials['key'],
-                        $notification?->id
-                    );
-                    $fcmStatus = $sentCount > 0 ? 'sent' : 'failed';
+                    // واجهة FCM القديمة (fcm/send) أُوقفت نهائيًا من Google وأصبحت
+                    // ترجع 404 دائمًا. لا نحاول إرسالها حتى لا نلوّث السجل.
+                    Log::warning('FCM: legacy server key configured but the legacy /fcm/send endpoint is retired; configure a Firebase service account JSON to use HTTP v1.');
+                    $fcmStatus = 'legacy_api_retired';
                 } else {
                     $fcmStatus = 'ready_needs_server_key';
                 }

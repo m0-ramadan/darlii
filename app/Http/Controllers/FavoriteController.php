@@ -24,11 +24,10 @@ class FavoriteController extends Controller
         return $this->stateResponse($request, $locale, $ids);
     }
 
-    public function store(Request $request, mixed $p1, mixed $p2 = null): JsonResponse
+    public function store(Request $request, Property $property): JsonResponse
     {
-        $property = $p1 instanceof Property ? $p1 : ($p2 instanceof Property ? $p2 : null);
-        $locale = is_string($p1) ? $p1 : (is_string($p2) ? $p2 : app()->getLocale());
-        abort_unless($property && $property->status->value === 'published', 404);
+        $locale = app()->getLocale();
+        abort_unless($property->status->value === 'published', 404);
 
         Favorite::firstOrCreate([
             'user_id' => $request->user()->id,
@@ -39,11 +38,9 @@ class FavoriteController extends Controller
         return $this->stateResponse($request, $locale, $this->userFavoriteIds($request));
     }
 
-    public function destroy(Request $request, mixed $p1, mixed $p2 = null): JsonResponse
+    public function destroy(Request $request, Property $property): JsonResponse
     {
-        $property = $p1 instanceof Property ? $p1 : ($p2 instanceof Property ? $p2 : null);
-        $locale = is_string($p1) ? $p1 : (is_string($p2) ? $p2 : app()->getLocale());
-        abort_unless($property, 404);
+        $locale = app()->getLocale();
 
         Favorite::query()
             ->where('user_id', $request->user()->id)

@@ -161,8 +161,9 @@ class PropertyController extends Controller
             ->first();
 
         if (! $property) {
-            $html = $this->renderer->render(request(), 'ar/properties/' . $slug)
-                ?? $this->renderer->render(request(), $locale . '/properties/' . $slug);
+            // نجرّب لغة الزائر أولًا ثم العربية كخطة بديلة، وليس العكس.
+            $html = $this->renderer->render(request(), $locale . '/properties/' . $slug)
+                ?? $this->renderer->render(request(), 'ar/properties/' . $slug);
             abort_if($html === null, 404);
             return response($html)->header('Content-Type', 'text/html; charset=UTF-8');
         }

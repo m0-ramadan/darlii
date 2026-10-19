@@ -26,7 +26,7 @@ class HomepageBlocksTest extends TestCase
         ];
 
         foreach ($blocks as $index => [$name, $attributes, $expected]) {
-            $response = $this->postJson('/en/ajax/render-ui-blocks', [
+            $response = $this->postJson('/ajax/render-ui-blocks', [
                 'name' => $name,
                 'shortcodeId' => 'test-' . $index,
                 'attributes' => $attributes,
@@ -42,12 +42,12 @@ class HomepageBlocksTest extends TestCase
     {
         $this->seed();
 
-        $html = $this->postJson('/ar/ajax/render-ui-blocks', [
+        $html = $this->postJson('/ajax/render-ui-blocks', [
             'name' => 'properties',
             'attributes' => ['style' => '5', 'is_featured' => '1', 'limit' => '2'],
         ])->assertOk()->json('data');
 
-        $this->assertMatchesRegularExpression('~href="/ar/properties/[^"]+~u', $html);
+        $this->assertMatchesRegularExpression('~href="/properties/[^"]+~u', $html);
         $this->assertMatchesRegularExpression('~[\x{0600}-\x{06FF}]~u', $html);
     }
 
@@ -55,7 +55,7 @@ class HomepageBlocksTest extends TestCase
     {
         $this->seed();
 
-        $this->getJson('/en/ajax/render-ui-blocks?name=properties')
+        $this->getJson('/ajax/render-ui-blocks?name=properties')
             ->assertOk()
             ->assertJsonPath('error', false)
             ->assertJsonPath('data', fn (string $html): bool => str_contains($html, 'property-item homeya-box'));

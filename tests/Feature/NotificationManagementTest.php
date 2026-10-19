@@ -235,7 +235,7 @@ class NotificationManagementTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('darli-notifications-wrapper');
         $response->assertSee('DarliFirebaseConfig');
-        $response->assertSee('darli-notifications.js');
+        $response->assertSee('darli-notifications.min.js');
         $response->assertSee('AIzaSyBNv6O81fJnehjTBw12cc9IZOT-32Bfy9Q');
     }
 
@@ -392,7 +392,8 @@ class NotificationManagementTest extends TestCase
         ]);
 
         $response->assertSessionHasNoErrors();
-        $notification = SiteNotification::where('title', 'like', '%تحديث عقار%')->first();
+        // عند تعديل السعر يصبح عنوان البث "تحديث أسعار وعقار" بدل "تحديث عقار".
+        $notification = SiteNotification::where('title', 'like', '%تحديث%')->first();
         $this->assertNotNull($notification);
         $this->assertEquals('all', $notification->target_type);
     }

@@ -769,7 +769,8 @@ class PropertyController extends Controller
 
             $priceStr = '';
             if ($property->price && $property->price > 0) {
-                $priceStr = 'السعر: ' . number_format((float) $property->price) . ' ' . ($property->currency ?: 'ج.م');
+                $currencySymbol = $property->currency?->symbol ?: 'ج.م';
+                $priceStr = 'السعر: ' . number_format((float) $property->price) . ' ' . $currencySymbol;
             }
 
             if ($action === 'created') {

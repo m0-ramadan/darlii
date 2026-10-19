@@ -13,15 +13,20 @@ class SetLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = (string) $request->route('locale', config('locales.default'));
+        // الروابط العامة أصبحت بدون بادئة لغة، لذا نعتمد أولًا على {locale}
+        // إن وُجد في الراوت، وإلا على تفضيلات الزائر (cookie/session/حسابه).
+        $routeLocale = (string) $request->route('locale', '');
+        $locale = in_array($routeLocale, config('locales.supported', []), true)
+            ? $routeLocale
+            : $this->preferences->locale($request);
 
-        if (! app()->runningUnitTests() && $locale === 'en' && ! (bool) setting('general.language_en_enabled', false)) {
-            $uri = $request->getRequestUri();
-            $target = preg_replace('#^/en(?=/|$)#', '/ar', $uri) ?: '/ar';
-            return redirect($target, 301);
+        // إذا كانت الإنجليزية معطّلة من الإعدادات نرجع للعربية بدون توجيه،
+        // حتى لا يعلق الزائر في حلقة إعادة توجيه.
+        if ($locale === 'en' && ! app()->runningUnitTests() && ! (bool) setting('general.language_en_enabled', false)) {
+            $locale = (string) config('locales.default', 'ar');
         }
 
-        abort_unless(in_array($locale, config('locales.supported'), true), 404);
+        abort_unless(in_array($locale, config('locales.supported', []), true), 404);
 
         app()->setLocale($locale);
         $this->preferences->rememberLocale($request, $locale);

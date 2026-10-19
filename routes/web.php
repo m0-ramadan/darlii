@@ -107,7 +107,13 @@ Route::middleware(['set.locale', 'set.currency'])
             Route::post('/forgot-password', [AuthController::class, 'forgot'])->name('password.email')->middleware('throttle:5,1');
             Route::get('/reset-password/{token}', [AuthController::class, 'resetForm'])->name('password.reset');
             Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
-            Route::get('/auth/{provider}', fn() => redirect('/#modalLogin'))->whereIn('provider', ['facebook', 'google'])->name('social.login');
+            // مزوّدان فقط (Google/Facebook)، وأي مزوّد آخر (linkedin/github/openid…)
+            // يرجع 404 صريح بدل تسريبه إلى صفحات الـ legacy mirror.
+            Route::get('/auth/{provider}', function (string $provider) {
+                return in_array($provider, ['facebook', 'google'], true)
+                    ? redirect('/#modalLogin')
+                    : abort(404);
+            })->where('provider', '.*')->name('social.login');
         });
 
         // Localized compatibility endpoints found in the original HTML/JS.

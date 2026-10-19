@@ -184,19 +184,16 @@ class PropertyController extends Controller
             ->with('success', $msg);
     }
 
-    public function submit(...$args)
+    public function submit(Property $property)
     {
-        $property = collect($args)->first(fn($a) => $a instanceof Property);
-        $action = collect($args)->first(fn($a) => $a instanceof SubmitPropertyAction) ?? app(SubmitPropertyAction::class);
         $this->authorizeOwnerOrAdmin($property);
-        $action->execute($property);
+        app(SubmitPropertyAction::class)->execute($property);
 
         return back()->with('success', 'تم إرسال العقار لمراجعة وتأكيد الإدارة.');
     }
 
-    public function markSold(Request $request, ...$args)
+    public function markSold(Property $property)
     {
-        $property = collect($args)->first(fn($a) => $a instanceof Property);
         $this->authorizeOwnerOrAdmin($property);
 
         $property->update([
@@ -207,9 +204,8 @@ class PropertyController extends Controller
         return back()->with('success', 'تم تحديث حالة العقار بنجاح إلى: تم البيع ✓');
     }
 
-    public function markAvailable(Request $request, ...$args)
+    public function markAvailable(Property $property)
     {
-        $property = collect($args)->first(fn($a) => $a instanceof Property);
         $this->authorizeOwnerOrAdmin($property);
 
         $property->update([
@@ -223,7 +219,7 @@ class PropertyController extends Controller
     private function authorizeOwnerOrAdmin(Property $property): void
     {
         $user = auth()->user();
-        if (! $user || ($property->owner_id !== $user->id && ! $user->isAdmin())) {
+        if (! $user || ((int) $property->owner_id !== (int) $user->id && ! $user->isAdmin())) {
             abort(403, 'غير مصرح لك بتعديل هذا العقار.');
         }
     }

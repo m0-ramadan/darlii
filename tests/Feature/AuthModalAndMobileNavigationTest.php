@@ -22,7 +22,7 @@ class AuthModalAndMobileNavigationTest extends TestCase
         $response->assertOk()
             ->assertSee('id="modalLogin"', false)
             ->assertSee('id="modalRegister"', false)
-            ->assertSee('darli-auth-modal.js', false)
+            ->assertSee('darli-auth-modal.min.js', false)
             ->assertSee('mobile-nav-toggler', false)
             ->assertSee('mobile-menu', false)
             ->assertDontSee('linkedin-openid', false);
@@ -31,7 +31,7 @@ class AuthModalAndMobileNavigationTest extends TestCase
         $propertiesResponse->assertOk()
             ->assertSee('id="modalLogin"', false)
             ->assertSee('id="modalRegister"', false)
-            ->assertSee('darli-auth-modal.js', false);
+            ->assertSee('darli-auth-modal.min.js', false);
     }
 
     public function test_social_login_restricted_to_google_and_facebook(): void

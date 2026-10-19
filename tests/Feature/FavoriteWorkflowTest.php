@@ -19,13 +19,13 @@ class FavoriteWorkflowTest extends TestCase
     {
         [$published, $draft] = $this->properties();
 
-        $this->getJson("/ar/favorites/state?ids={$published->id},{$draft->id},99999")
+        $this->getJson("/favorites/state?ids={$published->id},{$draft->id},99999")
             ->assertOk()
             ->assertJsonPath('authenticated', false)
             ->assertJsonPath('count', 1)
             ->assertJsonPath('active_ids.0', $published->id)
             ->assertJsonPath('properties.0.name', 'عقار مميز')
-            ->assertJsonPath('properties.0.url', config('app.url') . "/ar/properties/عقار-مميز-first");
+            ->assertJsonPath('properties.0.url', config('app.url') . "/properties/عقار-مميز-first");
     }
 
     public function test_authenticated_favorites_are_idempotent_mergeable_and_removable(): void
@@ -33,16 +33,16 @@ class FavoriteWorkflowTest extends TestCase
         [$first, , $second] = $this->properties();
         $user = User::factory()->create();
 
-        $this->actingAs($user)->postJson("/en/favorites/properties/{$first->id}")->assertOk()->assertJsonPath('count', 1);
-        $this->actingAs($user)->postJson("/en/favorites/properties/{$first->id}")->assertOk()->assertJsonPath('count', 1);
+        $this->actingAs($user)->postJson("/favorites/properties/{$first->id}")->assertOk()->assertJsonPath('count', 1);
+        $this->actingAs($user)->postJson("/favorites/properties/{$first->id}")->assertOk()->assertJsonPath('count', 1);
         $this->assertSame(1, Favorite::where('user_id', $user->id)->count());
 
-        $this->actingAs($user)->postJson('/en/favorites/merge', ['property_ids' => [$first->id, $second->id]])
+        $this->actingAs($user)->postJson('/favorites/merge', ['property_ids' => [$first->id, $second->id]])
             ->assertOk()
             ->assertJsonPath('count', 2);
         $this->assertSame(2, Favorite::where('user_id', $user->id)->count());
 
-        $this->actingAs($user)->deleteJson("/en/favorites/properties/{$first->id}")
+        $this->actingAs($user)->deleteJson("/favorites/properties/{$first->id}")
             ->assertOk()
             ->assertJsonPath('count', 1)
             ->assertJsonMissing(['id' => $first->id]);

@@ -106,7 +106,17 @@ class StatsController extends Controller
             fwrite($out, "\xEF\xBB\xBF"); // UTF-8 BOM so Excel reads Arabic correctly.
             fputcsv($out, ['المؤشر', 'القيمة']);
             foreach ($overview as $key => $value) {
-                fputcsv($out, [$key, is_float($value) ? round($value, 2) : $value]);
+                // بعض المؤشرات مصفوفات (مثل التوزيع حسب الحالة) ويجب تحويلها
+                // حتى لا يرمي fputcsv تحذير "Array to string conversion".
+                if (is_array($value)) {
+                    $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                } elseif (is_bool($value)) {
+                    $value = $value ? '1' : '0';
+                } elseif (is_float($value)) {
+                    $value = round($value, 2);
+                }
+
+                fputcsv($out, [$key, $value]);
             }
             fputcsv($out, []);
             fputcsv($out, ['كود العقار', 'الاسم', 'الحالة', 'السعر', 'المشاهدات']);

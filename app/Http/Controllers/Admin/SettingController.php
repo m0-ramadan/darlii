@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Concerns\UploadsImages;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Services\Admin\AuditLogger;
+use App\Services\Seo\SitemapGenerator;
 use App\Services\Settings\SettingsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -131,6 +132,21 @@ class SettingController extends Controller
     }
 
     // --------------------------------------------------------------- الحفظ
+    /** إعادة توليد sitemap.xml يدويًا من لوحة التحكم. */
+    public function regenerateSitemap(SitemapGenerator $generator): \Illuminate\Http\RedirectResponse
+    {
+        $this->authorizePermission('settings.manage');
+
+        $count = $generator->write();
+
+        return back()->with(
+            $count > 0 ? 'success' : 'error',
+            $count > 0
+                ? "تم تحديث خريطة الموقع بنجاح ({$count} رابطًا)."
+                : 'تعذّر تحديث خريطة الموقع. تأكد من تفعيل خيار «خريطة الموقع» ومن صلاحيات الكتابة.'
+        );
+    }
+
     public function update(Request $request, string $group)
     {
         $this->authorizePermission(in_array($group, ['mail', 'storage', 'integrations', 'analytics', 'maps', 'sms', 'payments'], true)
@@ -341,7 +357,7 @@ class SettingController extends Controller
             ['key' => 'footer.quick_link5_text_ar', 'value' => 'تواصل معنا', 'type' => 'text', 'label' => 'الرابط السريع 5 — النص', 'help' => null, 'sort' => 28],
             ['key' => 'footer.quick_link5_url_ar', 'value' => '/contact-us', 'type' => 'text', 'label' => 'الرابط السريع 5 — الرابط', 'help' => null, 'sort' => 29],
             ['key' => 'footer.contact_title_ar', 'value' => 'تواصل معنا', 'type' => 'text', 'label' => 'عنوان عمود التواصل في الفوتر', 'help' => null, 'sort' => 30],
-            ['key' => 'footer.address_ar', 'value' => 'بني سويف، مصر', 'type' => 'text', 'label' => 'عنوان الفوتر المختصر', 'help' => 'يظهر في عمود «تواصل معنا» داخل الفوتر. اتركه فارغًا لاستخدام عنوان صفحة التواصل.', 'sort' => 31],
+            ['key' => 'footer.address_ar', 'value' => '', 'type' => 'text', 'label' => 'عنوان الفوتر المختصر', 'help' => 'اتركه فارغًا لإخفاء العنوان من الفوتر بالكامل.', 'sort' => 31],
         ];
 
         foreach ($definitions as $def) {
@@ -472,8 +488,7 @@ class SettingController extends Controller
             ['key' => 'contact.hero_badge', 'value' => 'فريق خدمة العملاء والاستشارات', 'type' => 'text', 'label' => 'شارة أعلى صفحة اتصل بنا', 'help' => 'الشارة العلوية باللون الأحمر أعلى عنوان الصفحة', 'sort' => 1],
             ['key' => 'contact.hero_title', 'value' => 'تواصل معنا - منصة دارلي العقارية', 'type' => 'text', 'label' => 'عنوان صفحة اتصل بنا', 'help' => 'العنوان الرئيسي الذي يظهر في أعلى الصفحة', 'sort' => 2],
             ['key' => 'contact.hero_desc', 'value' => 'نحن هنا دائماً لاستقبال استفساراتكم ومساعدتكم في اختيار عقاركم المثالي في محافظة بني سويف بكل سهولة واحترافية', 'type' => 'textarea', 'label' => 'وصف صفحة اتصل بنا', 'help' => 'النص التوضيحي أسفل العنوان الرئيسي', 'sort' => 3],
-            ['key' => 'contact.working_hours', 'value' => 'يومياً من 9:00 ص حتى 9:00 م (الجمعة من 4 م إلى 9 م)', 'type' => 'text', 'label' => 'مواعيد العمل الرسمية', 'help' => 'تظهر في بطاقة المقر الرئيسي على صفحة اتصل بنا', 'sort' => 4],
-            ['key' => 'contact.map_embed_url', 'value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111244.75704179374!2d31.0261352!3d29.0660727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145a27845bc8bbcb%3A0xb36ef554a938c35b!2z2KjZhtmKINiz2YjZitmB2Iwg2YXYsdmD2LIg2KjZhtmKINiz2YjZitmB2Iwg2KjZhtmKINiz2YjZitmB2IwgNjc3NDAwMQ!5e0!3m2!1sar!2seg!4v1710000000000!5m2!1sar!2seg', 'type' => 'textarea', 'label' => 'رابط خريطة Google المضمنة (Embed URL)', 'help' => 'رابط تضمين الخريطة src في أسفل صفحة اتصل بنا', 'sort' => 5],
+            ['key' => 'contact.working_hours', 'value' => 'يومياً من 9:00 ص حتى 9:00 م (الجمعة من 4 م إلى 9 م)', 'type' => 'text', 'label' => 'مواعيد العمل الرسمية', 'help' => 'تظهر في بطاقة التواصل على صفحة اتصل بنا', 'sort' => 4],
         ];
 
         foreach ($definitions as $def) {

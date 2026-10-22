@@ -1,0 +1,360 @@
+/* ============================================================
+   صفحة العقارات المحفوظة — دارلي
+   ============================================================ */
+
+.darli-fav-page {
+    background: #f7f5f0;
+    padding: 48px 0 80px;
+}
+
+.darli-fav-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.darli-fav-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    color: #b8892f;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.darli-fav-title {
+    margin: 0 0 8px;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 800;
+    color: #0b1f3a;
+    line-height: 1.25;
+}
+
+.darli-fav-subtitle {
+    margin: 0;
+    max-width: 620px;
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.darli-fav-count {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #ece7dc;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+    color: #64748b;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.darli-fav-count strong {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0b1f3a;
+}
+
+/* ------------------------------ الكارت ------------------------------ */
+.darli-fav-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid #ece7dc;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, .07);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.darli-fav-card:hover {
+    transform: translateY(-4px);
+    border-color: #e3d5b5;
+    box-shadow: 0 22px 50px rgba(15, 23, 42, .12);
+}
+
+.darli-fav-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #eef1f5;
+}
+
+.darli-fav-card__media > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.darli-fav-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+
+.darli-fav-card:hover .darli-fav-card__media img {
+    transform: scale(1.05);
+}
+
+.darli-fav-card__purpose {
+    position: absolute;
+    top: 14px;
+    inset-inline-start: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(11, 31, 58, .88);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+}
+
+.darli-fav-card__heart {
+    position: absolute;
+    top: 12px;
+    inset-inline-end: 12px;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .95);
+    color: #c0392b;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, .18);
+    transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.darli-fav-card__heart:hover {
+    transform: scale(1.08);
+    background: #fff;
+}
+
+.darli-fav-card__heart:not(.is-active) {
+    color: #94a3b8;
+}
+
+.darli-fav-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 18px 20px;
+    flex: 1;
+}
+
+.darli-fav-card__title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.5;
+    color: #0b1f3a;
+}
+
+.darli-fav-card__title a {
+    color: inherit;
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.darli-fav-card__title a:hover {
+    color: #b8892f;
+}
+
+.darli-fav-card__loc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+    min-height: 20px;
+}
+
+.darli-fav-card__loc svg {
+    flex: 0 0 auto;
+    color: #b8892f;
+}
+
+.darli-fav-card__loc span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.darli-fav-card__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 2px 0 0;
+    padding: 12px 0 0;
+    list-style: none;
+    border-top: 1px dashed #ece7dc;
+}
+
+.darli-fav-card__meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #475569;
+    font-size: 13px;
+}
+
+.darli-fav-card__meta svg {
+    color: #b8892f;
+}
+
+.darli-fav-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 14px;
+}
+
+.darli-fav-card__price {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0b1f3a;
+}
+
+.darli-fav-card__details {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #b8892f;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.darli-fav-card__details:hover {
+    color: #946d22;
+}
+
+/* ---------------------------- الحالة الفارغة ---------------------------- */
+.darli-fav-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 64px 24px;
+    background: #fff;
+    border: 1px dashed #e2d9c6;
+    border-radius: 22px;
+}
+
+.darli-fav-empty[hidden] {
+    display: none;
+}
+
+.darli-fav-empty__icon {
+    width: 76px;
+    height: 76px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fdf8ee;
+    color: #b8892f;
+    margin-bottom: 18px;
+}
+
+.darli-fav-empty__title {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0b1f3a;
+}
+
+.darli-fav-empty__text {
+    margin: 0 0 22px;
+    max-width: 420px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.darli-fav-empty__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-radius: 12px;
+    background: #0b1f3a;
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.darli-fav-empty__btn:hover {
+    background: #b8892f;
+    transform: translateY(-2px);
+}
+
+/* ------------------------------ الوضع الداكن ------------------------------ */
+html[data-theme="dark"] .darli-fav-page {
+    background: #0b1220;
+}
+
+html[data-theme="dark"] .darli-fav-title,
+html[data-theme="dark"] .darli-fav-count strong,
+html[data-theme="dark"] .darli-fav-card__title,
+html[data-theme="dark"] .darli-fav-card__price,
+html[data-theme="dark"] .darli-fav-empty__title {
+    color: #f1f5f9;
+}
+
+html[data-theme="dark"] .darli-fav-count,
+html[data-theme="dark"] .darli-fav-card,
+html[data-theme="dark"] .darli-fav-empty {
+    background: #111a2b;
+    border-color: #1e2a3f;
+}
+
+html[data-theme="dark"] .darli-fav-subtitle,
+html[data-theme="dark"] .darli-fav-card__loc,
+html[data-theme="dark"] .darli-fav-empty__text {
+    color: #94a3b8;
+}
+
+/* ------------------------------ موبايل ------------------------------ */
+@media (max-width: 767px) {
+    .darli-fav-page {
+        padding: 32px 0 56px;
+    }
+
+    .darli-fav-head {
+        align-items: flex-start;
+    }
+
+    .darli-fav-count {
+        padding: 10px 16px;
+    }
+
+    .darli-fav-card__title {
+        font-size: 16px;
+    }
+}

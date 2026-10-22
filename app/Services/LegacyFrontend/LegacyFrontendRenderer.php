@@ -105,9 +105,22 @@ class LegacyFrontendRenderer
             return null;
         }
 
+        $shellHead = substr($shell, 0, $shellFooterStart);
+        $shellFooter = substr($shell, $shellFooterStart);
+
+        // صفحات قاعدة البيانات تبني سكيما SEO خاصة بها، لذا نزيل سكيما
+        // الميرور (التي تحتوي بيانات جوهانسبرغ/جنوب أفريقيا) من الفوتر.
+        $stripForeignSchema = static function (string $html): string {
+            return preg_replace_callback('#<script\b[^>]*>.*?</script>#is', static function (array $m): string {
+                return preg_match('#\btype\s*=\s*(?:"application/ld\+json"|\'application/ld\+json\'|application/ld\+json)#i', $m[0])
+                    ? ''
+                    : $m[0];
+            }, $html) ?? $html;
+        };
+
         return [
-            'head' => substr($shell, 0, $shellFooterStart),
-            'footer' => substr($shell, $shellFooterStart),
+            'head' => $stripForeignSchema($shellHead),
+            'footer' => $stripForeignSchema($shellFooter),
         ];
     }
 
@@ -253,11 +266,10 @@ class LegacyFrontendRenderer
             $cleanWa = '2' . $cleanWa;
         }
 
-        $facebook = (string) $settings->get('contact.facebook', 'https://facebook.com');
-        $twitter = (string) $settings->get('contact.twitter', 'https://x.com');
-        $instagram = (string) $settings->get('contact.instagram', 'https://instagram.com');
-        $linkedin = (string) $settings->get('contact.linkedin', 'https://linkedin.com');
-        $youtube = (string) $settings->get('contact.youtube', 'https://youtube.com');
+        $facebook = trim((string) $settings->get('contact.facebook', ''));
+        if (in_array($facebook, ['https://facebook.com', 'http://facebook.com', 'facebook.com'], true)) { $facebook = ''; }
+        $instagram = trim((string) $settings->get('contact.instagram', ''));
+        if (in_array($instagram, ['https://instagram.com', 'http://instagram.com', 'instagram.com'], true)) { $instagram = ''; }
         $tiktok = (string) $settings->get('contact.tiktok', '');
 
         // Longest/most specific patterns come first so "+201234567890" is not
@@ -295,17 +307,8 @@ class LegacyFrontendRenderer
         if ($facebook !== '') {
             $socialLinks[] = '<a href="' . e($facebook) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>';
         }
-        if ($twitter !== '') {
-            $socialLinks[] = '<a href="' . e($twitter) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>';
-        }
         if ($instagram !== '') {
             $socialLinks[] = '<a href="' . e($instagram) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>';
-        }
-        if ($linkedin !== '') {
-            $socialLinks[] = '<a href="' . e($linkedin) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>';
-        }
-        if ($youtube !== '') {
-            $socialLinks[] = '<a href="' . e($youtube) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>';
         }
         if ($cleanWa !== '') {
             $socialLinks[] = '<a href="https://wa.me/' . e($cleanWa) . '" class="darli-footer-social-btn" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.587 1.761.88 2.795.88h.002c3.18 0 5.767-2.587 5.768-5.766.001-3.18-2.585-5.767-5.769-5.767zm7.509 5.766c-.001 4.144-3.373 7.514-7.512 7.515-1.256 0-2.485-.316-3.574-.915l-4.454 1.168 1.189-4.342c-.658-1.144-1.006-2.448-1.006-3.791.001-4.143 3.372-7.514 7.513-7.515 4.141 0 7.512 3.372 7.514 7.515zm-4.316 2.062c-.179-.089-1.058-.523-1.222-.582-.164-.059-.283-.089-.402.089-.119.179-.462.582-.566.702-.104.119-.208.134-.387.045s-.758-.279-1.444-.891c-.534-.476-.895-1.064-.999-1.243-.104-.179-.011-.276.078-.365.08-.08.179-.208.268-.312.09-.104.119-.179.179-.298.059-.119.03-.223-.015-.312-.045-.089-.402-.969-.551-1.327-.145-.348-.292-.3-.402-.305-.104-.005-.223-.006-.342-.006s-.313.045-.476.223c-.164.179-.625.611-.625 1.49 0 .879.64 1.728.729 1.847.09.119 1.259 1.922 3.05 2.695.426.184.759.294 1.018.377.428.136.818.117 1.126.071.344-.052 1.058-.432 1.207-.849.149-.417.149-.774.104-.849-.045-.075-.164-.119-.343-.208z"/></svg></a>';
@@ -317,6 +320,9 @@ class LegacyFrontendRenderer
         if (! empty($socialLinks)) {
             $socialHtml = '<div class="darli-footer-socials">' . "\n              " . implode("\n              ", $socialLinks) . "\n            </div>";
             $html = preg_replace('/<div\b[^>]*class=["\'][^"\']*darli-footer-socials[^"\']*["\'][^>]*>.*?<\/div>/si', $socialHtml, $html) ?? $html;
+        } else {
+            // لا روابط تواصل اجتماعي مُعدّة: أخفِ الأيقونات الثابتة من الفوتر.
+            $html = preg_replace('/<div\b[^>]*class=["\'][^"\']*darli-footer-socials[^"\']*["\'][^>]*>.*?<\/div>/si', '', $html, 1) ?? $html;
         }
 
         // Hide English language switcher from footer / header if English is disabled in dashboard
@@ -2013,9 +2019,15 @@ HTML;
         $locale = $this->localeFromRequest($request);
         $direction = in_array($locale, config('locales.rtl', []), true) ? 'rtl' : 'ltr';
         $base = rtrim($request->getSchemeAndHttpHost(), '/');
-        $canonical = $base;
+
+        // العنوان النظيف الحالي بدون بادئة لغة (الموقع لا يستخدم بادئات بعد الآن).
+        $path = preg_replace('#^(?:ar|en|fr|id|vi)(?:/|$)#i', '', trim($request->path(), '/')) ?? '';
+        $canonical = $base . ($path !== '' ? '/' . $path : '');
 
         $html = preg_replace('/<html\b[^>]*>/i', '<html lang="' . $locale . '" dir="' . $direction . '">', $html, 1) ?? $html;
+
+        // أي إشارة للموقع الأصلي في الوسوم أو السكيمَا تُستبدل بالنطاق الحالي.
+        $html = str_replace(['https://homzen.botble.com', 'http://homzen.botble.com'], $base, $html);
 
         if ($request->routeIs('home')) {
             $html = str_replace(
@@ -2023,16 +2035,24 @@ HTML;
                 str_replace('/', '\\/', $canonical),
                 $html
             );
-            if (preg_match('#<link\b[^>]*rel\s*=\s*(["\']?)canonical\1[^>]*>#i', $html)) {
-                $html = preg_replace('#<link\b[^>]*rel\s*=\s*(["\']?)canonical\1[^>]*>#i', '<link rel="canonical" href="' . $canonical . '">', $html, 1) ?? $html;
-            } else {
-                $html = preg_replace('/<\/head>/i', '<link rel="canonical" href="' . $canonical . '">' . "\n" . '</head>', $html, 1) ?? $html;
-            }
-            $html = preg_replace('#(<meta\b[^>]*property\s*=\s*(["\']?)og:url\2[^>]*content\s*=\s*)(["\'])[^"\']*\3([^>]*>)#i', '$1$3' . $canonical . '$3$4', $html, 1) ?? $html;
-
-            $hreflang = '<link rel="alternate" hreflang="ar" href="' . $base . '">' . "\n" . '<link rel="alternate" hreflang="x-default" href="' . $base . '">';
-            $html = preg_replace('/<\/head>/i', $hreflang . "\n" . '</head>', $html, 1) ?? $html;
         }
+
+        // إزالة الوسوم الثابتة ثم إضافة canonical/hreflang الحاليين.
+        $html = preg_replace('#<link\b[^>]*\brel\s*=\s*(["\'])(?:canonical|alternate)\1[^>]*>#i', '', $html) ?? $html;
+        $html = preg_replace(
+            '#<meta\b[^>]*\b(?:name|property)\s*=\s*(["\'])(?:og:url|og:site_name)\1[^>]*>#i',
+            '',
+            $html
+        ) ?? $html;
+
+        $siteName = e((string) setting('general.site_name', config('app.name', 'دارلي')));
+        $tags = '<link rel="canonical" href="' . e($canonical) . '">' . "\n"
+            . '<link rel="alternate" hreflang="ar" href="' . e($canonical) . '">' . "\n"
+            . '<link rel="alternate" hreflang="x-default" href="' . e($canonical) . '">' . "\n"
+            . '<meta property="og:url" content="' . e($canonical) . '">' . "\n"
+            . '<meta property="og:site_name" content="' . $siteName . '">';
+
+        $html = preg_replace('/<\/head>/i', $tags . "\n" . '</head>', $html, 1) ?? $html;
 
         return $html;
     }
@@ -2197,7 +2217,7 @@ HTML;
     });
 })();
 </script>
-<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.min.js?v=1.2.2"></script><script defer src="/themes/homzen/js/wishlist.min.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.min.js?v=2.3.4"></script></body>
+<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.min.js?v=1.2.2"></script><script defer src="/themes/homzen/js/darli-favorites.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.min.js?v=2.3.4"></script></body>
 HTML,
             $html,
             1
@@ -2363,7 +2383,7 @@ HTML,
         }
 
         $aboutText = e((string) $settings->get('footer.about_text_ar', 'متخصصون في تقديم أرقى الجولات والخدمات العقارية لكل من يحتاجها. تواصل معنا'));
-        $address = e((string) $settings->get('contact.address_ar', 'شارع صلاح سالم (تقاطع كورنيش النيل)، مدينة بني سويف، محافظة بني سويف'));
+        $address = e(trim((string) $settings->get('contact.address_ar', '')));
         $phone = e((string) $settings->get('contact.phone', '+20 10 34905812'));
         $cleanPhone = preg_replace('/[^\d+]/', '', $phone);
         $email = e((string) $settings->get('contact.email', 'contact@darlii.eg'));
@@ -2393,7 +2413,7 @@ HTML,
         $quickTitle = e((string) $settings->get('footer.quick_title_ar', 'روابط سريعة'));
         $contactTitle = e((string) $settings->get('footer.contact_title_ar', 'تواصل معنا'));
         $footerAddressSetting = trim((string) $settings->get('footer.address_ar', ''));
-        $footerAddress = e($footerAddressSetting !== '' ? $footerAddressSetting : $address);
+        $footerAddress = $footerAddressSetting !== '' ? e($footerAddressSetting) : '';
 
         $quickLinkDefaults = [
             1 => ['الرئيسية', '/'],
@@ -2437,9 +2457,13 @@ HTML,
 
         // 1. Dynamic replacement for classic inner-footer (4 columns)
         $innerFooterPattern = '/<div\b[^>]*class=["\'][^"\']*\binner-footer\b[^"\']*["\'][^>]*>.*?<\/div>\s*(?=<div\b[^>]*class=["\'](?:homzen-footer-languages|bottom-footer)\b)/si';
+        $addressItem = $address !== ''
+            ? '<li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-map-pin page_speed_1278168353"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" /></svg><p class="text-white">' . $address . '</p></li>'
+            : '';
+
         if (preg_match($innerFooterPattern, $html)) {
             $innerFooterHtml = <<<HTML
-<div class="inner-footer"><div class="container"><div class="row"><div class="col-lg-4 col-md-6"><div class="footer-cl-1"><p class="text-variant-2">{$aboutText}</p><ul class="mt-12"><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-map-pin page_speed_1278168353"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" /></svg><p class="text-white">{$address}</p></li><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-phone-call page_speed_1278168353"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" /><path d="M15 7a2 2 0 0 1 2 2" /><path d="M15 3a6 6 0 0 1 6 6" /></svg><p class="text-white" dir="ltr"><a href="tel:{$cleanPhone}" style="color:inherit;text-decoration:none;" dir="ltr">{$phone}</a></p></li><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-mail page_speed_1278168353"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg><p class="text-white"><a href="mailto:{$email}" style="color:inherit;text-decoration:none;">{$email}</a></p></li></ul></div></div><div class="col-lg-2 col-md-4 col-6"><div class="footer-cl-3"><div class="fw-7 text-white">{$col2Title}</div><ul class="mt-10 navigation-menu-footer"><li><a href="/pricing-plans" title="{$col2Link1}" class="caption-1 text-variant-2" > {$col2Link1} </a></li><li><a href="/our-services" title="{$col2Link2}" class="caption-1 text-variant-2" > {$col2Link2} </a></li><li><a href="/about-us" title="{$col2Link3}" class="caption-1 text-variant-2" > {$col2Link3} </a></li><li><a href="/contact-us" title="{$col2Link4}" class="caption-1 text-variant-2" > {$col2Link4} </a></li></ul></div></div><div class="col-lg-2 col-md-4 col-6"><div class="footer-cl-3"><div class="fw-7 text-white">{$col3Title}</div><ul class="mt-10 navigation-menu-footer"><li><a href="/properties?type=sale" title="{$col3Link1}" class="caption-1 text-variant-2" > {$col3Link1} </a></li><li><a href="/properties?type=rent" title="{$col3Link2}" class="caption-1 text-variant-2" > {$col3Link2} </a></li><li><a href="/privacy-policy" title="{$col3Link3}" class="caption-1 text-variant-2" > {$col3Link3} </a></li><li><a href="/agents" title="{$col3Link4}" class="caption-1 text-variant-2" > {$col3Link4} </a></li></ul></div></div><div class="col-lg-4 col-md-6"><div class="footer-cl-4"><div class="fw-7 text-white"> {$newsletterTitle} </div><p class="mt-12 text-variant-2">{$newsletterSubtitle}</p><form method="POST" action="/newsletter/subscribe" accept-charset="UTF-8" id="botble-newsletter-forms-fronts-newsletter-form" class="subscribe-form mt-12 dirty-check"><input name="_token" type="hidden" value="{$csrfToken}"><div class="mb-3 position-relative"><span class="icon-left icon-mail"></span><input class="" placeholder="{$newsletterPlaceholder}" id="newsletter-email" required="required" name="email" type="email"><button class="" type="submit" title="اشترك"><i class="icon icon-send"></i></button></div><div class="newsletter-message newsletter-success-message page_speed_545063869"></div><div class="newsletter-message newsletter-error-message page_speed_545063869"></div></form></div></div></div></div></div>
+<div class="inner-footer"><div class="container"><div class="row"><div class="col-lg-4 col-md-6"><div class="footer-cl-1"><p class="text-variant-2">{$aboutText}</p><ul class="mt-12">{$addressItem}<li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-phone-call page_speed_1278168353"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" /><path d="M15 7a2 2 0 0 1 2 2" /><path d="M15 3a6 6 0 0 1 6 6" /></svg><p class="text-white" dir="ltr"><a href="tel:{$cleanPhone}" style="color:inherit;text-decoration:none;" dir="ltr">{$phone}</a></p></li><li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-mail page_speed_1278168353"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg><p class="text-white"><a href="mailto:{$email}" style="color:inherit;text-decoration:none;">{$email}</a></p></li></ul></div></div><div class="col-lg-2 col-md-4 col-6"><div class="footer-cl-3"><div class="fw-7 text-white">{$col2Title}</div><ul class="mt-10 navigation-menu-footer"><li><a href="/pricing-plans" title="{$col2Link1}" class="caption-1 text-variant-2" > {$col2Link1} </a></li><li><a href="/our-services" title="{$col2Link2}" class="caption-1 text-variant-2" > {$col2Link2} </a></li><li><a href="/about-us" title="{$col2Link3}" class="caption-1 text-variant-2" > {$col2Link3} </a></li><li><a href="/contact-us" title="{$col2Link4}" class="caption-1 text-variant-2" > {$col2Link4} </a></li></ul></div></div><div class="col-lg-2 col-md-4 col-6"><div class="footer-cl-3"><div class="fw-7 text-white">{$col3Title}</div><ul class="mt-10 navigation-menu-footer"><li><a href="/properties?type=sale" title="{$col3Link1}" class="caption-1 text-variant-2" > {$col3Link1} </a></li><li><a href="/properties?type=rent" title="{$col3Link2}" class="caption-1 text-variant-2" > {$col3Link2} </a></li><li><a href="/privacy-policy" title="{$col3Link3}" class="caption-1 text-variant-2" > {$col3Link3} </a></li><li><a href="/agents" title="{$col3Link4}" class="caption-1 text-variant-2" > {$col3Link4} </a></li></ul></div></div><div class="col-lg-4 col-md-6"><div class="footer-cl-4"><div class="fw-7 text-white"> {$newsletterTitle} </div><p class="mt-12 text-variant-2">{$newsletterSubtitle}</p><form method="POST" action="/newsletter/subscribe" accept-charset="UTF-8" id="botble-newsletter-forms-fronts-newsletter-form" class="subscribe-form mt-12 dirty-check"><input name="_token" type="hidden" value="{$csrfToken}"><div class="mb-3 position-relative"><span class="icon-left icon-mail"></span><input class="" placeholder="{$newsletterPlaceholder}" id="newsletter-email" required="required" name="email" type="email"><button class="" type="submit" title="اشترك"><i class="icon icon-send"></i></button></div><div class="newsletter-message newsletter-success-message page_speed_545063869"></div><div class="newsletter-message newsletter-error-message page_speed_545063869"></div></form></div></div></div></div></div>
 HTML;
             $html = preg_replace($innerFooterPattern, $innerFooterHtml . "\n", $html, 1) ?? $html;
         }
@@ -2501,12 +2525,21 @@ HTML;
                 1
             ) ?? $html;
 
-            $html = preg_replace(
-                '/(<div\b[^>]*class=["\'][^"\']*darli-footer-contact-item[^"\']*["\'][^>]*>\s*<i\b[^>]*data-lucide=["\']map-pin["\'][^>]*><\/i>\s*<span\b[^>]*>).*?(<\/span>)/si',
-                '${1}' . $footerAddress . '${2}',
-                $html,
-                1
-            ) ?? $html;
+            if ($footerAddress !== '') {
+                $html = preg_replace(
+                    '/(<div\b[^>]*class=["\'][^"\']*darli-footer-contact-item[^"\']*["\'][^>]*>\s*<i\b[^>]*data-lucide=["\']map-pin["\'][^>]*><\/i>\s*<span\b[^>]*>).*?(<\/span>)/si',
+                    '${1}' . $footerAddress . '${2}',
+                    $html,
+                    1
+                ) ?? $html;
+            } else {
+                $html = preg_replace(
+                    '/<div\b[^>]*class=["\'][^"\']*darli-footer-contact-item[^"\']*["\'][^>]*>\s*<i\b[^>]*data-lucide=["\']map-pin["\'][^>]*><\/i>\s*<span\b[^>]*>.*?<\/span>\s*<\/div>/si',
+                    '',
+                    $html,
+                    1
+                ) ?? $html;
+            }
 
             $html = preg_replace(
                 '/(<div\b[^>]*class=["\'][^"\']*darli-footer-bottom[^"\']*["\'][^>]*>\s*<div>)(.*?)(<\/div>)/si',

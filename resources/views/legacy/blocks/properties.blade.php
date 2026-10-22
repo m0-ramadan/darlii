@@ -43,7 +43,7 @@
                                     <div class="pricing-property">
                                         <div class="d-flex align-items-center"><span class="h5">{{ $property['price'] }}</span></div>
                                         <div class="d-flex gap-12">
-                                            <button type="button" class="box-icon w-52{{ $property['favorite'] ? ' active' : '' }}" data-type="property" data-bb-toggle="add-to-wishlist" data-id="{{ $property['id'] }}" aria-label="{{ $property['favorite'] ? 'Remove from wishlist' : 'Add to wishlist' }}" aria-pressed="{{ $property['favorite'] ? 'true' : 'false' }}">
+                                            <button type="button" class="box-icon w-52{{ $property['favorite'] ? ' active' : '' }}" data-type="property" data-bb-toggle="add-to-wishlist" data-id="{{ $property['id'] }}" aria-label="{{ $property['favorite'] ? 'Remove from wishlist' : 'Add to wishlist' }}" aria-pressed="{{ $property['favorite'] ? 'true' : 'false' }}" data-add-message="{{ $locale === 'ar' ? 'تمت الإضافة إلى المفضلة' : 'Added to favorites' }}" data-remove-message="{{ $locale === 'ar' ? 'تمت الإزالة من المفضلة' : 'Removed from favorites' }}">
                                                 <i class="icon icon-heart"></i>
                                             </button>
                                         </div>
@@ -80,7 +80,7 @@
                                         <span class="flag-tag primary status-badge-{{ $property['purpose_class'] }}">{{ $property['purpose'] }}</span>
                                     </div>
                                     <div class="d-flex gap-4">
-                                        <button type="button" class="box-icon w-32{{ $property['favorite'] ? ' active' : '' }}" data-type="property" data-bb-toggle="add-to-wishlist" data-id="{{ $property['id'] }}" aria-label="{{ $property['favorite'] ? 'Remove from wishlist' : 'Add to wishlist' }}" aria-pressed="{{ $property['favorite'] ? 'true' : 'false' }}">
+                                        <button type="button" class="box-icon w-32{{ $property['favorite'] ? ' active' : '' }}" data-type="property" data-bb-toggle="add-to-wishlist" data-id="{{ $property['id'] }}" aria-label="{{ $property['favorite'] ? 'Remove from wishlist' : 'Add to wishlist' }}" aria-pressed="{{ $property['favorite'] ? 'true' : 'false' }}" data-add-message="{{ $locale === 'ar' ? 'تمت الإضافة إلى المفضلة' : 'Added to favorites' }}" data-remove-message="{{ $locale === 'ar' ? 'تمت الإزالة من المفضلة' : 'Removed from favorites' }}">
                                             <i class="icon icon-heart"></i>
                                         </button>
                                     </div>

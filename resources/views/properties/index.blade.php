@@ -739,7 +739,13 @@
                                     </div>
 
                                     {{-- Top-Right: Wishlist Heart --}}
-                                    <button type="button" class="darli-badge-wishlist" data-id="{{ $property->id }}"
+                                    <button type="button" class="darli-badge-wishlist"
+                                        data-bb-toggle="add-to-wishlist" data-type="property"
+                                        data-id="{{ $property->id }}"
+                                        data-add-message="{{ $isAr ? 'تمت الإضافة إلى المفضلة' : 'Added to favorites' }}"
+                                        data-remove-message="{{ $isAr ? 'تمت الإزالة من المفضلة' : 'Removed from favorites' }}"
+                                        aria-pressed="false"
+                                        aria-label="{{ $isAr ? 'إضافة إلى المفضلة' : 'Add to wishlist' }}"
                                         title="{{ $isAr ? 'إضافة إلى المفضلة' : 'Add to wishlist' }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"

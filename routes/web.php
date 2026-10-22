@@ -21,6 +21,16 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// robots.txt ديناميكي حتى يشير دائمًا إلى دومين البيئة الحالية.
+Route::get('/robots.txt', function () {
+    $base = rtrim((string) config('app.url'), '/') ?: url('/');
+    $sitemap = $base . '/sitemap.xml';
+
+    return response("User-agent: *\nAllow: /\n\nSitemap: {$sitemap}\n", 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
+    ]);
+})->name('robots');
+
 // Redirect any incoming /ar or /en URL directly to clean root-level URL
 Route::get('/ar/{path?}', function (?string $path = null) {
     $qs = request()->getQueryString();
@@ -91,7 +101,8 @@ Route::middleware(['set.locale', 'set.currency'])
         Route::get('/about-us', [ContentController::class, 'aboutUs'])->name('about-us.index');
         Route::get('/contact-us', [ContentController::class, 'contactUs'])->name('contact-us.index');
         Route::post('/contact-us', [ContentController::class, 'submitContact'])->name('contact-us.submit');
-        Route::get('/wishlist', fn(Request $request) => app(LegacyFrontendController::class)->page($request, 'wishlist'))->name('wishlist');
+        Route::get('/wishlist', [FavoriteController::class, 'index'])->name('wishlist');
+        Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
         Route::get('/feed/{type?}', [LegacyCompatibilityController::class, 'feed'])->whereIn('type', ['properties', 'projects', 'posts']);
         Route::get('/account/properties', fn() => redirect(auth()->check() ? '/admin' : '/#modalLogin'));
         Route::get('/favorites/state', [FavoriteController::class, 'state'])->name('favorites.state');

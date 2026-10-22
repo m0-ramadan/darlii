@@ -30,6 +30,11 @@ class LegacyFrontendController extends Controller
 
         abort_if($html === null, 404);
 
+        // الصفحة الرئيسية تُقدَّم من ملفات الميرور، لذا نطبّق عليها وسوم SEO
+        // الديناميكية (العنوان/الوصف/الصورة) القابلة للتحكم من لوحة التحكم.
+        $seo = app(\App\Services\Seo\SeoBuilder::class);
+        $html = $seo->applyToHead($html, $seo->forCurrentRequest());
+
         PageViewTracker::track('home');
 
         return response($html)->header('Content-Type', 'text/html; charset=UTF-8');

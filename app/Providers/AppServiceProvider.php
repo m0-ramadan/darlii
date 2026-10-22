@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Jobs\GenerateSitemapJob;
+use App\Models\Career;
+use App\Models\Page;
+use App\Models\Post;
+use App\Models\Project;
 use App\Models\Property;
 use App\Models\User;
 use App\Policies\PropertyPolicy;
@@ -97,5 +102,33 @@ class AppServiceProvider extends ServiceProvider
             if (!str_contains($ability, '.')) return null;
             return $user->hasPermission($ability) ? true : null;
         });
+
+        $this->registerSitemapRefresh();
+    }
+
+    /**
+     * تحديث sitemap.xml تلقائيًا بعد أي تعديل على المحتوى من لوحة التحكم.
+     * يتم التنفيذ بعد إرسال الرد (بدون تأخير المستخدم) مع قفل مؤقت يمنع التكرار.
+     */
+    private function registerSitemapRefresh(): void
+    {
+        // نتجاهل الاختبارات وأوامر CLI (seeders/migrations)، لكن نسمح بطلبات
+        // الويب حتى عند التشغيل المحلي عبر `php artisan serve`.
+        if (app()->runningUnitTests() || ! isset($_SERVER['REQUEST_METHOD'])) {
+            return;
+        }
+
+        $refresh = static function (): void {
+            if (! \Illuminate\Support\Facades\Cache::add('sitemap:refresh-lock', true, 120)) {
+                return;
+            }
+
+            GenerateSitemapJob::dispatchAfterResponse();
+        };
+
+        foreach ([Property::class, Project::class, Post::class, Career::class, Page::class] as $model) {
+            $model::saved($refresh);
+            $model::deleted($refresh);
+        }
     }
 }

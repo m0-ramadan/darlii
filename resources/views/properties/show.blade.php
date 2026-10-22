@@ -63,6 +63,10 @@
     $coords = $hasCoords ? $property->latitude . ',' . $property->longitude : '';
 @endphp
 
+@push('head')
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-property-details.css') }}?v=1.0.0">
+@endpush
+
 @section('title', ($tr?->seo_title ?: $tr?->name ?: $property->reference_code) . ($isAr ? ' | دارلي' : ' | Darlii'))
 
 @section('content')
@@ -138,17 +142,19 @@
     @if ($videoSource)
         <section class="flat-section pt-4 darli-property-video">
             <div class="container">
-                <div class="h7 title fw-7 mb-3">{{ $isAr ? 'فيديو العقار' : 'Property video' }}</div>
-                <div
-                    style="position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 14px; background: #0f172a; box-shadow: 0 14px 40px rgba(15, 23, 42, .16);">
+                <div class="darli-video-head">
+                    <div class="h7 title fw-7">{{ $isAr ? 'فيديو العقار' : 'Property video' }}</div>
+                    <span class="darli-video-head__hint">{{ $isAr ? 'جولة داخل العقار' : 'Property tour' }}</span>
+                </div>
+                <div class="darli-video-card">
                     @if ($videoSource['kind'] === 'embed')
                         <iframe src="{{ $videoSource['url'] }}" title="{{ $tr?->name }}"
-                            style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"
+                            class="darli-video-card__media"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                     @else
                         <video controls playsinline preload="metadata" poster="{{ $heroImage }}"
-                            style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;">
+                            class="darli-video-card__media">
                             <source src="{{ $videoSource['url'] }}">
                             {{ $isAr ? 'متصفحك لا يدعم تشغيل الفيديو.' : 'Your browser does not support the video tag.' }}
                         </video>
@@ -244,14 +250,20 @@
                     </div>
                     <ul class="icon-box">
                         <li>
-                            <button class="item" data-bb-toggle="add-to-wishlist" data-id="{{ $property->id }}"
-                                data-type="property" type="button" aria-label="Favorite">
+                            <button class="item darli-save-property" data-bb-toggle="add-to-wishlist"
+                                data-id="{{ $property->id }}" data-type="property" type="button"
+                                data-add-message="{{ $isAr ? 'تم حفظ العقار في المفضلة' : 'Property saved to favorites' }}"
+                                data-remove-message="{{ $isAr ? 'تمت إزالة العقار من المفضلة' : 'Property removed from favorites' }}"
+                                aria-pressed="false"
+                                aria-label="{{ $isAr ? 'حفظ العقار' : 'Save property' }}"
+                                title="{{ $isAr ? 'حفظ العقار في المفضلة' : 'Save property to favorites' }}">
                                 <svg class="icon svg-icon-ti-ti-heart" width="24" height="24" viewBox="0 0 24 24"
                                     stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                                     stroke-linejoin="round">
                                     <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572">
                                     </path>
                                 </svg>
+                                <span class="darli-save-property__label">{{ $isAr ? 'حفظ العقار' : 'Save' }}</span>
                             </button>
                         </li>
                     </ul>
@@ -598,27 +610,61 @@
                         </div>
                     @endif
 
-                    {{-- 5. الموقع على الخريطة (تظهر الخريطة فقط عند إدخال الإحداثيات) --}}
+                    {{-- 5. الموقع على الخريطة --}}
                     @if ($hasCoords || $address)
-                        <div class="single-property-map single-property-element">
-                            <div class="h7 title fw-7">{{ $isAr ? 'الموقع' : 'Location' }}</div>
+                        <div class="darli-map-card">
+                            <div class="darli-map-card__head">
+                                <div>
+                                    <div class="h7 title fw-7 mb-1">{{ $isAr ? 'موقع العقار' : 'Property location' }}</div>
+                                    <p class="darli-map-card__hint">
+                                        {{ $hasCoords
+                                            ? ($isAr ? 'الموقع التقريبي داخل الخريطة — اضغط على العلامة للتفاصيل.' : 'Approximate location on the map — tap the pin for details.')
+                                            : ($isAr ? 'لم تُحدَّد إحداثيات دقيقة لهذا العقار بعد.' : 'Exact coordinates have not been set for this property yet.') }}
+                                    </p>
+                                </div>
+                                @if ($hasCoords)
+                                    <a class="darli-map-card__directions"
+                                        href="https://www.google.com/maps/dir/?api=1&destination={{ $coords }}"
+                                        target="_blank" rel="noopener">
+                                        {{ $isAr ? 'الاتجاهات' : 'Directions' }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M7 17l9.2 -9.2" /><path d="M17 17v-9h-9" />
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
+
                             @if ($hasCoords)
-                                <div id="darli-property-map" style="min-height: 400px; border-radius: 8px; width: 100%;"></div>
+                                <div id="darli-property-map" class="darli-property-map"
+                                    data-lat="{{ $property->latitude }}"
+                                    data-lng="{{ $property->longitude }}"
+                                    data-name="{{ $tr?->name ?: $property->reference_code }}"
+                                    data-price="{{ $priceLabel }}"
+                                    data-address="{{ $address }}"></div>
+                            @else
+                                <div class="darli-map-empty">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                        <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                                    </svg>
+                                    <span>{{ $isAr ? 'سيتم إضافة الموقع الدقيق قريبًا' : 'The exact location will be added soon' }}</span>
+                                </div>
                             @endif
+
                             @if ($address)
-                                <ul class="info-map">
-                                    <li>
-                                        <div class="fw-7">{{ $isAr ? 'العنوان' : 'Address' }}</div>
-                                        @if ($hasCoords)
-                                            <a class="mt-4 text-variant-1" href="https://maps.google.com/?q={{ $coords }}"
-                                                target="_blank" rel="noopener">
-                                                {{ $address }}
-                                            </a>
-                                        @else
-                                            <span class="mt-4 text-variant-1 d-inline-block">{{ $address }}</span>
-                                        @endif
-                                    </li>
-                                </ul>
+                                <div class="darli-map-card__address">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                        <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                                    </svg>
+                                    <span>{{ $address }}</span>
+                                </div>
                             @endif
                         </div>
                     @endif
@@ -891,40 +937,79 @@
                 });
             }
 
-            var mapEl = document.getElementById('darli-property-map') || document.getElementById(
-                'homzen-property-map');
-            if (mapEl && typeof L !== 'undefined' && {{ $hasCoords ? 'true' : 'false' }}) {
-                var lat = {{ $hasCoords ? (float) $property->latitude : 0 }};
-                var lng = {{ $hasCoords ? (float) $property->longitude : 0 }};
-                var isDark = document.documentElement.dataset.theme === 'dark';
+            var mapEl = document.getElementById('darli-property-map');
+            var initPropertyMap = function () {
+                if (!mapEl || typeof L === 'undefined') {
+                    return false;
+                }
+                var esc = function (value) {
+                    var div = document.createElement('div');
+                    div.textContent = value == null ? '' : String(value);
+                    return div.innerHTML;
+                };
 
-                var tileUrl = isDark ?
-                    'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}' :
-                    'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+                var lat = parseFloat(mapEl.dataset.lat);
+                var lng = parseFloat(mapEl.dataset.lng);
 
-                var map = L.map(mapEl, {
-                    center: [lat, lng],
-                    zoom: 15,
-                    scrollWheelZoom: false,
-                    attributionControl: false
-                });
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    var isDark = document.documentElement.dataset.theme === 'dark';
 
-                L.tileLayer(tileUrl, {
-                    maxZoom: 18
-                }).addTo(map);
+                    var tileUrl = isDark ?
+                        'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}' :
+                        'https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
-                var iconHtml =
-                    '<div style="background:#c9933b;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 14px rgba(201,147,59,0.5);border:3px solid #fff;font-size:18px;">📍</div>';
-                var customIcon = L.divIcon({
-                    className: 'darli-map-pin',
-                    html: iconHtml,
-                    iconSize: [38, 38],
-                    iconAnchor: [19, 19]
-                });
+                    var map = L.map(mapEl, {
+                        center: [lat, lng],
+                        zoom: 16,
+                        scrollWheelZoom: false,
+                        zoomControl: true
+                    });
 
-                L.marker([lat, lng], {
-                    icon: customIcon
-                }).addTo(map);
+                    L.tileLayer(tileUrl, {
+                        maxZoom: 19,
+                        attribution: '&copy; Esri'
+                    }).addTo(map);
+
+                    var price = (mapEl.dataset.price || '').trim();
+                    var name = mapEl.dataset.name || '';
+                    var address = mapEl.dataset.address || '';
+
+                    var iconHtml =
+                        '<div class="darli-detail-pin">' +
+                            (price ? '<span class="darli-detail-pin__price">' + esc(price) + '</span>' : '') +
+                            '<span class="darli-detail-pin__dot"></span>' +
+                        '</div>';
+
+                    var customIcon = L.divIcon({
+                        className: 'darli-detail-marker',
+                        html: iconHtml,
+                        iconSize: [170, 46],
+                        iconAnchor: [85, 44],
+                        popupAnchor: [0, -38]
+                    });
+
+                    var marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+                    var popupHtml = '<div class="darli-detail-popup">' +
+                        '<strong>' + esc(name) + '</strong>' +
+                        (address ? '<span>' + esc(address) + '</span>' : '') +
+                        '</div>';
+
+                    marker.bindPopup(popupHtml, {
+                        closeButton: true,
+                        autoPan: true,
+                        offset: [0, -4]
+                    }).openPopup();
+
+                    // بعد اكتمال التخطيط (خصوصًا داخل عمود جانبي) نعيد حساب الأبعاد.
+                    setTimeout(function () { map.invalidateSize(); }, 300);
+                    window.addEventListener('load', function () { map.invalidateSize(); });
+                }
+
+                return true;
+            };
+
+            if (!initPropertyMap()) {
+                window.addEventListener('load', initPropertyMap);
             }
 
             // Floor plans accordion toggle

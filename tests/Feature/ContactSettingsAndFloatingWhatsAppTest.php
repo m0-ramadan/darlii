@@ -44,13 +44,26 @@ class ContactSettingsAndFloatingWhatsAppTest extends TestCase
         $responseProps->assertSee('https://wa.me/201034905812', false);
     }
 
-    public function test_public_footer_renders_dynamic_social_media_and_phone(): void
+    public function test_public_footer_hides_social_icons_until_configured(): void
     {
-        $response = $this->get('/ar');
-        $response->assertOk();
-        $response->assertSee('+20 10 34905812', false);
-        $response->assertSee('facebook.com', false);
-        $response->assertSee('instagram.com', false);
+        // افتراضيًا لا توجد روابط تواصل اجتماعي مُعدّة، فلا تظهر أيقونات فارغة.
+        $this->get('/ar')
+            ->assertOk()
+            ->assertSee('+20 10 34905812', false)
+            ->assertDontSee('facebook.com', false)
+            ->assertDontSee('instagram.com', false)
+            ->assertDontSee('aria-label="YouTube"', false)
+            ->assertDontSee('aria-label="LinkedIn"', false);
+
+        // بعد ضبط الروابط من الداشبورد تظهر الأيقونات.
+        \App\Models\Setting::query()->where('key', 'contact.facebook')->update(['value' => 'https://facebook.com/darlii']);
+        \App\Models\Setting::query()->where('key', 'contact.instagram')->update(['value' => 'https://instagram.com/darlii']);
+        app(\App\Services\Settings\SettingsRepository::class)->flush();
+
+        $this->get('/ar')
+            ->assertOk()
+            ->assertSee('facebook.com/darlii', false)
+            ->assertSee('instagram.com/darlii', false);
     }
 
     public function test_admin_can_update_contact_and_social_settings_and_changes_reflect_on_public_site(): void

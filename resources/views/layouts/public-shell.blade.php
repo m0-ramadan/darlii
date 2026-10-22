@@ -71,6 +71,15 @@
         ) ?? $head;
     }
 
+    // طبقة SEO الديناميكية: تستبدل أي وسوم/صور/بيانات ثابتة قادمة من الميرور
+    // بوسوم مبنية من بيانات الصفحة الفعلية (عقار/مشروع/مقال/وكيل…).
+    try {
+        $seoBuilder = app(\App\Services\Seo\SeoBuilder::class);
+        $head = $seoBuilder->applyToHead($head, $seoBuilder->forCurrentRequest());
+    } catch (\Throwable $e) {
+        // SEO لا يجب أن يمنع عرض الصفحة.
+    }
+
     $pushedScripts = (string) $__env->yieldPushContent('scripts');
     $footer = $shellFooter ?? '';
     if ($pushedScripts !== '') {

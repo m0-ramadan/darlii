@@ -302,7 +302,7 @@ class ContentPagesSeeder extends Seeder
 
         // Update settings with realistic Beni Suef office details
         app(\App\Services\Settings\SettingsRepository::class)->setMany([
-            'contact.address_ar' => 'شارع صلاح سالم (تقاطع كورنيش النيل)، مدينة بني سويف، محافظة بني سويف',
+            'contact.address_ar' => '',
             'contact.address_en' => 'Salah Salem St (Nile Corniche intersection), Beni Suef City, Egypt',
             'contact.phone' => '+20 10 34905812',
             'contact.whatsapp' => '+20 10 34905812',

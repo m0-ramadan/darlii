@@ -7,6 +7,29 @@
 @section('content')
     @include('admin.settings._tabs', ['tabs' => $tabs, 'active' => $active])
 
+    @if ($group === 'seo')
+        <div class="ap-card" style="margin-bottom: 20px; background: rgba(201, 154, 69, 0.05); border: 1px dashed var(--ap-gold);">
+            <div class="ap-card__body d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h3 class="fw-bold" style="font-size: 15px; margin-bottom: 4px; color: var(--ap-navy);">
+                        @include('admin.partials.icon', ['iconName' => 'search', 'size' => 18])
+                        خريطة الموقع (sitemap.xml)
+                    </h3>
+                    <p class="text-muted mb-0" style="font-size: 12.5px; line-height: 1.9;">
+                        آخر تحديث: {{ \Illuminate\Support\Facades\Cache::get('sitemap:last_generated', 'لم يتم التوليد بعد') }}
+                        · <a href="{{ url('/sitemap.xml') }}" target="_blank" rel="noopener">فتح الملف</a>
+                        <br>
+                        يتم التحديث تلقائيًا عند إضافة/تعديل العقارات والمشروعات والمقالات والوظائف، وكل 10 دقائق.
+                    </p>
+                </div>
+                <form method="post" action="{{ admin_route('admin.settings.sitemap.regenerate') }}">
+                    @csrf
+                    <button type="submit" class="ap-btn ap-btn--gold ap-btn--sm">تحديث خريطة الموقع الآن</button>
+                </form>
+            </div>
+        </div>
+    @endif
+
     @if ($group === 'partners')
         <div class="ap-card" style="margin-bottom: 20px; background: rgba(201, 154, 69, 0.05); border: 1px dashed var(--ap-gold);">
             <div class="ap-card__body d-flex align-items-center justify-content-between flex-wrap gap-3">

@@ -838,7 +838,7 @@
                         {{ $isAr ? 'دليل الشركات والوكلاء' : 'Agencies & Agents Directory' }}
                     </h2>
                     <p class="darli-agents-sec-sub">
-                        {{ $isAr ? 'اختر على الشركة أو الوكيل المناسب للتواصل المباشر' : 'Choose the right company or agent for direct communication' }}
+                        {{ $isAr ? 'اختر الشركة أو الوكيل المناسب، والتواصل يتم عبر فريق دارلي مباشرة' : 'Choose a company or agent and contact us through the Darlii team' }}
                     </p>
                 </div>
 
@@ -888,8 +888,9 @@
                             $name = $agent->display_name;
                             $jobTitle = $agent->job_title ?: ($isAr ? 'شركة وساطة وتسويق عقاري' : 'Real Estate Agency');
                             $profileUrl = route('agents.show', ['locale' => $locale, 'slug' => $agent->slug]);
-                            $phone = $agent->user?->phone ?: $agent->agency?->phone ?: '01034905812';
-                            $whatsapp = $agent->whatsapp ?: preg_replace('/[^0-9]/', '', $phone);
+                            // المراسلة تتم عبر أرقام منصة دارلي وليس أرقام الشركات.
+                            $phone = (string) setting('contact.phone', '+20 10 34905812');
+                            $whatsapp = preg_replace('/[^0-9]/', '', (string) setting('contact.whatsapp', $phone));
 
                             // Visual metadata from our map or sensible defaults with live database priority
                             $meta = $agentMeta[$agent->id] ?? [];

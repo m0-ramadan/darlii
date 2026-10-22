@@ -249,6 +249,7 @@ Route::prefix('settings')->name('settings.')->group(function (): void {
     Route::get('/storage', [SettingController::class, 'storage'])->name('storage');
     Route::get('/properties', [SettingController::class, 'properties'])->name('properties');
     Route::get('/panel', [SettingController::class, 'panel'])->name('panel');
+    Route::post('/sitemap/regenerate', [SettingController::class, 'regenerateSitemap'])->name('sitemap.regenerate');
     Route::put('/{group}', [SettingController::class, 'update'])->name('update');
     Route::post('/test-connection', [SettingController::class, 'testConnection'])->name('test');
 });

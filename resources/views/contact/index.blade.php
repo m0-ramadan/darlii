@@ -182,7 +182,7 @@
         /* Top 3 Quick Info Cards */
         .darli-cnt-top-cards {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             margin-bottom: 24px;
         }
@@ -825,37 +825,6 @@
                     </a>
                 </div>
 
-                {{-- Card 2 (Center in RTL): Headquarters --}}
-                <div class="darli-cnt-info-card">
-                    <div class="darli-cnt-icon-circle">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
-                    </div>
-                    <h3 class="darli-cnt-card-heading">{{ $isAr ? 'المقر الرئيسي للمنصة' : 'Headquarters' }}</h3>
-                    <p class="darli-cnt-card-text">
-                        {{ $contactInfo['address'] }}
-                    </p>
-                    <div class="darli-cnt-card-details">
-                        <div class="darli-cnt-detail-row" style="font-size: 12.5px; font-weight: 500; color: var(--darli-cnt-muted);">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c58d34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                            <span>{{ !empty($contactInfo['working_hours']) ? $contactInfo['working_hours'] : ($isAr ? 'يومياً من 9:00 ص حتى 9:00 م (الجمعة من 4 م إلى 9 م)' : 'Daily: 9:00 AM - 9:00 PM (Fri 4 PM - 9 PM)') }}</span>
-                        </div>
-                    </div>
-                    <a href="#darliMapSection" class="darli-cnt-soft-btn">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
-                            <line x1="8" y1="2" x2="8" y2="18"/>
-                            <line x1="16" y1="6" x2="16" y2="22"/>
-                        </svg>
-                        <span>{{ $isAr ? 'الاطلاع على الخريطة' : 'View on Map' }}</span>
-                    </a>
-                </div>
-
                 {{-- Card 3 (Left in RTL): Email Support --}}
                 <div class="darli-cnt-info-card">
                     <div class="darli-cnt-icon-circle">
@@ -1130,40 +1099,6 @@
                 </div>
             </div>
 
-            {{-- 3. Bottom Card: Google Maps Section --}}
-            <div class="darli-cnt-map-card" id="darliMapSection">
-                <div class="darli-cnt-map-header">
-                    <div class="darli-cnt-map-title-group">
-                        <div class="darli-cnt-map-icon-box">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-                                <circle cx="12" cy="10" r="3"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3>{{ $isAr ? 'موقعنا على خريطة بني سويف' : 'Our Location on Beni Suef Map' }}</h3>
-                            <p>{{ $contactInfo['address'] }}</p>
-                        </div>
-                    </div>
-
-                    <a href="https://maps.google.com/?q={{ urlencode($contactInfo['address']) }}" target="_blank" rel="noopener" class="darli-cnt-google-btn">
-                        <svg width="15" height="15" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
-                            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                        </svg>
-                        <span>{{ $isAr ? 'فتح في خرائط Google' : 'Open in Google Maps' }}</span>
-                    </a>
-                </div>
-
-                <div class="darli-cnt-map-frame-box">
-                    <iframe class="darli-cnt-map-frame"
-                        src="{{ $contactInfo['map_embed_url'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111244.75704179374!2d31.0261352!3d29.0660727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145a27845bc8bbcb%3A0xb36ef554a938c35b!2z2KjZhtmKINiz2YjZitmB2Iwg2YXYsdmD2LIg2KjZhtmKINiz2YjZitmB2Iwg2KjZhtmKINiz2YjZitmB2IwgNjc3NDAwMQ!5e0!3m2!1sar!2seg!4v1710000000000!5m2!1sar!2seg' }}"
-                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                </div>
-            </div>
         </div>
     </div>
 @endsection

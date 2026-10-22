@@ -10,3 +10,27 @@
 [2026-10-19 13:34:39] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
 [2026-10-19 13:34:39] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
 [2026-10-19 13:34:39] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:28:51] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:28:51] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:28:51] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:30:31] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:30:31] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:30:31] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:31:41] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:31:41] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:31:41] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:32:34] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:32:34] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:32:34] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:36:05] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:36:05] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:36:05] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:42:06] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:42:06] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:42:06] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:43:08] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:43:08] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:43:08] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  
+[2026-10-22 10:44:56] testing.WARNING: FCM v1 Single Send Failed: {"error":{"status":"NOT_FOUND","message":"Requested entity was not found.","details":[{"errorCode":"UNREGISTERED"}]}}  
+[2026-10-22 10:44:56] testing.INFO: FCM v1: Pruned expired token: expired-device-token  
+[2026-10-22 10:44:56] testing.INFO: FCM v1 Broadcast finished. Sent 1/2 successfully.  

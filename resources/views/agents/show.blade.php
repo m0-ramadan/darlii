@@ -181,24 +181,31 @@
                             @endif
                         </div>
 
+                        @php
+                            // التواصل عبر أرقام المنصة وليس أرقام الوكيل/الشركة.
+                            $platformPhone = (string) setting('contact.phone', '+20 10 34905812');
+                            $platformWhatsapp = preg_replace('/\D/', '', (string) setting('contact.whatsapp', $platformPhone));
+                            $platformEmail = (string) setting('contact.email', 'info@darlii.eg');
+                        @endphp
+
                         <div class="agent-detail-actions" style="display:flex;gap:12px;flex-wrap:wrap;">
-                            @if ($agent->whatsapp || $agent->user?->phone)
+                            @if ($platformWhatsapp)
                                 <a class="darli-whatsapp" dir="ltr" target="_blank" rel="noopener"
-                                    href="https://wa.me/{{ preg_replace('/\D/', '', $agent->whatsapp ?: $agent->user->phone) }}"
+                                    href="https://wa.me/{{ $platformWhatsapp }}"
                                     style="padding:10px 20px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
-                                    💬 {{ $isAr ? 'مراسلة واتساب' : 'WhatsApp' }}
+                                    💬 {{ $isAr ? 'مراسلة دارلي واتساب' : 'WhatsApp Darlii' }}
                                 </a>
                             @endif
-                            @if ($agent->user?->phone)
-                                <a class="tf-btn size-1" dir="ltr" href="tel:{{ $agent->user->phone }}"
+                            @if ($platformPhone)
+                                <a class="tf-btn size-1" dir="ltr" href="tel:{{ preg_replace('/[^\d+]/', '', $platformPhone) }}"
                                     style="padding:10px 20px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
-                                    📞 {{ $agent->user->phone }}
+                                    📞 {{ $platformPhone }}
                                 </a>
                             @endif
-                            @if ($agent->user?->email)
-                                <a class="tf-btn size-1" dir="ltr" href="mailto:{{ $agent->user->email }}"
+                            @if ($platformEmail)
+                                <a class="tf-btn size-1" dir="ltr" href="mailto:{{ $platformEmail }}"
                                     style="padding:10px 20px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
-                                    ✉️ {{ $agent->user->email }}
+                                    ✉️ {{ $platformEmail }}
                                 </a>
                             @endif
                         </div>

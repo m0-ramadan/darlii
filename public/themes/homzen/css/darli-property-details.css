@@ -1,0 +1,303 @@
+/* ============================================================
+   تفاصيل العقار — الفيديو، الخريطة، وزر الحفظ
+   ============================================================ */
+
+/* ------------------------------ زر حفظ العقار ------------------------------ */
+.darli-save-property {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto !important;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 16px !important;
+    border-radius: 999px !important;
+    border: 1px solid #e3d5b5 !important;
+    background: #fff !important;
+    color: #0b1f3a !important;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.darli-save-property:hover {
+    background: #fdf8ee !important;
+    transform: translateY(-1px);
+}
+
+.darli-save-property .icon {
+    flex: 0 0 auto;
+}
+
+.darli-save-property__label {
+    white-space: nowrap;
+}
+
+.darli-save-property.is-active,
+.darli-save-property.active {
+    background: #0b1f3a !important;
+    border-color: #0b1f3a !important;
+    color: #fff !important;
+}
+
+.darli-save-property.is-active .icon {
+    fill: currentColor;
+}
+
+@media (max-width: 767px) {
+    .darli-save-property {
+        width: 44px !important;
+        padding: 0 !important;
+    }
+
+    .darli-save-property__label {
+        display: none;
+    }
+}
+
+/* ------------------------------ الفيديو ------------------------------ */
+.darli-property-video {
+    padding-top: 28px !important;
+}
+
+.darli-property-video .container {
+    max-width: 1060px;
+}
+
+.darli-video-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.darli-video-head__hint {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    letter-spacing: .3px;
+}
+
+.darli-video-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    max-height: 440px;
+    overflow: hidden;
+    border-radius: 20px;
+    border: 1px solid #e6e1d6;
+    background: #0b1220;
+    box-shadow: 0 18px 46px rgba(15, 23, 42, .14);
+}
+
+.darli-video-card__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: contain;
+    display: block;
+}
+
+@media (max-width: 991px) {
+    .darli-video-card {
+        aspect-ratio: 16 / 9;
+        max-height: none;
+        border-radius: 16px;
+    }
+}
+
+/* ------------------------------ الخريطة ------------------------------ */
+.darli-map-card {
+    margin-top: 26px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid #e6e1d6;
+    border-radius: 20px;
+    box-shadow: 0 14px 38px rgba(15, 23, 42, .08);
+}
+
+.darli-map-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.darli-map-card__hint {
+    margin: 4px 0 0;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #94a3b8;
+}
+
+.darli-map-card__directions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: #fdf8ee;
+    border: 1px solid #eadfc8;
+    color: #946d22 !important;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.darli-map-card__directions:hover {
+    background: #f7edd9;
+    transform: translateY(-1px);
+}
+
+.darli-property-map {
+    width: 100%;
+    height: clamp(320px, 38vw, 440px);
+    border-radius: 14px;
+    overflow: hidden;
+    background: #eef1f5;
+    z-index: 1;
+}
+
+.darli-property-map .leaflet-container,
+.darli-property-map.leaflet-container {
+    border-radius: 14px;
+    font-family: inherit;
+}
+
+.darli-map-card__address {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed #ece7dc;
+    color: #475569;
+    font-size: 13.5px;
+    line-height: 1.7;
+}
+
+.darli-map-card__address svg {
+    flex: 0 0 auto;
+    color: #b8892f;
+}
+
+.darli-map-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 220px;
+    border-radius: 14px;
+    background: #f8f6f1;
+    border: 1px dashed #e2d9c6;
+    color: #94a3b8;
+    font-size: 13.5px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* علامة الخريطة */
+.darli-detail-marker {
+    background: transparent;
+    border: 0;
+}
+
+.darli-detail-pin {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 170px;
+}
+
+.darli-detail-pin__price {
+    display: inline-block;
+    max-width: 168px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #0b1f3a;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 8px 22px rgba(11, 31, 58, .35);
+    border: 2px solid #fff;
+}
+
+.darli-detail-pin__dot {
+    width: 16px;
+    height: 16px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: #c9933b;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 6px rgba(201, 147, 59, .18);
+}
+
+/* نافذة الخريطة */
+.darli-detail-marker + .leaflet-popup .leaflet-popup-content-wrapper,
+.leaflet-popup-content-wrapper {
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, .18);
+}
+
+.darli-detail-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 170px;
+    padding: 2px 4px;
+}
+
+.darli-detail-popup strong {
+    color: #0b1f3a;
+    font-size: 13.5px;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.darli-detail-popup span {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* ------------------------------ الوضع الداكن ------------------------------ */
+html[data-theme="dark"] .darli-map-card,
+html[data-theme="dark"] .darli-save-property {
+    background: #111a2b !important;
+    border-color: #1e2a3f !important;
+}
+
+html[data-theme="dark"] .darli-map-card__address {
+    border-color: #1e2a3f;
+    color: #94a3b8;
+}
+
+/* ------------------------------ موبايل ------------------------------ */
+@media (max-width: 767px) {
+    .darli-map-card {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .darli-map-card__head {
+        flex-direction: column;
+    }
+
+    .darli-property-map {
+        height: 300px;
+        border-radius: 12px;
+    }
+}

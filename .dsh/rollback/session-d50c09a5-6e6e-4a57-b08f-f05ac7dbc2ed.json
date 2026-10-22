@@ -2,7 +2,7 @@
   "version": 2,
   "sessionId": "session-d50c09a5-6e6e-4a57-b08f-f05ac7dbc2ed",
   "cwd": "/home/mohamed/Videos/dashboard/بسم الله/real_state",
-  "updatedAt": 1792417630146,
+  "updatedAt": 1792665917073,
   "checkpoints": [
     {
       "turn": 1,
@@ -71,6 +71,38 @@
         "tests/Feature/ReportedIssuesRegressionTest.php"
       ],
       "truncated": false
+    },
+    {
+      "turn": 7,
+      "commit": "5ae5c6ae98f96c8d5127c312dbd7a8224e40d7d4",
+      "parent": "c701b818e6e4e569fa3ea63ec71c946ed7ccfb66",
+      "time": 1792664438464,
+      "untracked": [],
+      "truncated": false,
+      "after": {
+        "commit": "9259b6bbfd508a2e0a0b778c117767d148f2bd7d",
+        "time": 1792665389828
+      }
+    },
+    {
+      "turn": 8,
+      "commit": "9259b6bbfd508a2e0a0b778c117767d148f2bd7d",
+      "parent": "9259b6bbfd508a2e0a0b778c117767d148f2bd7d",
+      "time": 1792665416436,
+      "untracked": [
+        "app/Services/Seo/SeoBuilder.php",
+        "public/themes/homzen/css/darli-favorites.css",
+        "public/themes/homzen/css/darli-property-details.css",
+        "public/themes/homzen/js/darli-favorites.js",
+        "resources/views/favorites/_card.blade.php",
+        "resources/views/favorites/index.blade.php",
+        "tests/Feature/SeoFavoritesAndPropertyPageTest.php"
+      ],
+      "truncated": false,
+      "after": {
+        "commit": "2750f5b07e4ad30424ae9cdc58660fd5cf7457a4",
+        "time": 1792665916241
+      }
     }
   ],
   "rolls": [],

@@ -78,7 +78,6 @@ class ContentPagesTest extends TestCase
         $response->assertOk();
         $response->assertSee('تواصل معنا', false);
         $response->assertSee('+20 10 34905812', false);
-        $response->assertSee('شارع صلاح سالم', false);
         $response->assertSee('contact@darlii.eg', false);
     }
 

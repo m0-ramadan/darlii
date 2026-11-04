@@ -249,10 +249,37 @@ class NotificationController extends Controller
                 ->with('error', 'تعذر إرسال الإشعار التجريبي: لم يتم إدخال مفتاح الخادم (Server Key) أو ملف الاعتماد (Service Account JSON) بعد. يرجى إدخال أحدهما أولاً.');
         }
 
+        $token = trim((string) $request->input('token'));
+
+        if ($token !== '') {
+            $test = $this->fcmService->sendTest(
+                $token,
+                '🔔 تجربة إشعار دارلي الفوري',
+                'تهانينا! الإشعار يعمل بنجاح ويظهر في ستارة جهازك مع التنبيه الصوتي والاهتزاز.',
+                url('/')
+            );
+
+            if (! empty($test['ok'])) {
+                return redirect()->route('admin.notifications.settings')
+                    ->with('success', 'تم إرسال الإشعار التجريبي إلى الجهاز المحدد بنجاح (FCM HTTP ' . ($test['status'] ?? 200) . '). تحقق من ستارة جهازك.');
+            }
+
+            if (($test['error'] ?? '') === 'oauth_failed') {
+                return redirect()->route('admin.notifications.settings')
+                    ->with('error', 'مفاتيح Firebase غير صالحة (Invalid JWT Signature). أعد توليد Service Account Key من Firebase Console واستبدل ملف storage/app/firebase-service-account.json ثم أعد المحاولة. شغّل: php artisan firebase:check');
+            }
+
+            $body = is_array($test['body'] ?? null) ? json_encode($test['body'], JSON_UNESCAPED_UNICODE) : (string) ($test['body'] ?? ($test['error'] ?? ''));
+            $errorCode = $test['body']['error']['details'][0]['errorCode'] ?? null;
+
+            return redirect()->route('admin.notifications.settings')
+                ->with('error', 'تعذر إرسال الإشعار للجهاز المحدد' . ($errorCode ? " ({$errorCode})" : '') . ': ' . \Illuminate\Support\Str::limit($body, 300));
+        }
+
         $result = $this->fcmService->send([
             'title' => '🔔 تجربة إشعار دارلي الفوري',
             'body' => 'تهانينا! الإشعار يعمل بنجاح ويظهر في ستارة جهازك مع التنبيه الصوتي والاهتزاز.',
-            'image_path' => '/themes/homzen/images/logo/logo-darli.png',
+            'image_path' => '/themes/homzen/images/logo/darli-logo-ar.png',
             'action_url' => url('/ar/properties'),
             'target_type' => 'all',
         ]);

@@ -44,7 +44,9 @@
             'nearby_location_id',
             'features',
         ]) || request('browse') === 'all';
-    $showWizard = !$hasActiveQuery;
+    // The discovery wizard is an entry step, not part of paginated browsing.
+    // Never reopen it when the visitor moves to page 2+.
+    $showWizard = !$hasActiveQuery && !request()->has('page');
 
     // Label for active filter badge on mobile listing
     $activeFilterLabel = null;
@@ -82,7 +84,7 @@
     @if (! str_contains($shell['head'] ?? '', 'plugins/leaflet/leaflet.css'))
         <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/leaflet/leaflet.css') }}">
     @endif
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.min.css') }}?v=1.0.14">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.min.css') }}?v=1.0.16">
 @endpush
 
 @section('content')
@@ -1221,15 +1223,6 @@
 
                                 <div class="darli-mob-custom-select-box">
                                     <span class="select-icon">⌄</span>
-                                    <span class="select-text"><span class="select-label">{{ $isAr ? 'غرف نوم' : 'Bedrooms' }}</span><span class="select-value">{{ request('bedrooms') ? request('bedrooms') . '+' : ($isAr ? 'أي عدد' : 'Any') }}</span></span>
-                                    <select name="bedrooms" class="darli-mob-overlay-select darli-mob-auto-submit">
-                                        <option value="">{{ $isAr ? 'أي عدد' : 'Any' }}</option>
-                                        @foreach ([1,2,3,4,5] as $bedroom)<option value="{{ $bedroom }}" @selected((string) request('bedrooms') === (string) $bedroom)>{{ $bedroom }}+</option>@endforeach
-                                    </select>
-                                </div>
-
-                                <div class="darli-mob-custom-select-box">
-                                    <span class="select-icon">⌄</span>
                                     <span class="select-text"><span class="select-label">{{ $isAr ? 'التجهيز' : 'Furnishing' }}</span><span class="select-value">{{ request('furnished') === '1' ? ($isAr ? 'مفروش' : 'Furnished') : (request('furnished') === '0' ? ($isAr ? 'غير مفروش' : 'Unfurnished') : ($isAr ? 'الكل' : 'Any')) }}</span></span>
                                     <select name="furnished" class="darli-mob-overlay-select darli-mob-auto-submit">
                                         <option value="">{{ $isAr ? 'الكل' : 'Any' }}</option>
@@ -1238,22 +1231,9 @@
                                     </select>
                                 </div>
 
-                                @php
-                                    $selectedNearbyLocation = $nearbyLocations->firstWhere('id', (int) request('nearby_location_id'));
-                                @endphp
-                                <div class="darli-mob-custom-select-box">
-                                    <span class="select-icon">⌄</span>
-                                    <span class="select-text"><span class="select-label">{{ $isAr ? 'قريب من' : 'Near' }}</span><span class="select-value">{{ $selectedNearbyLocation?->translation($locale)?->name ?? ($isAr ? 'أي مكان' : 'Anywhere') }}</span></span>
-                                    <select name="nearby_location_id" class="darli-mob-overlay-select darli-mob-auto-submit" @disabled(!request('location_id'))>
-                                        <option value="">{{ request('location_id') ? ($isAr ? 'أي منطقة أو معلم' : 'Any area or landmark') : ($isAr ? 'اختر المدينة أولاً' : 'Choose city first') }}</option>
-                                        @foreach ($nearbyLocations->where('parent_id', (int) request('location_id')) as $nearbyLocation)
-                                            <option value="{{ $nearbyLocation->id }}" @selected((string) request('nearby_location_id') === (string) $nearbyLocation->id)>
-                                                {{ $nearbyLocation->type === 'landmark' ? '★ ' : '' }}{{ $nearbyLocation->translation($locale)?->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
+                            <input type="hidden" name="bedrooms" value="{{ request('bedrooms') }}">
+                            <input type="hidden" name="nearby_location_id" value="{{ request('nearby_location_id') }}">
                             <input type="hidden" name="min_price" value="{{ request('min_price') }}">
                             <input type="hidden" name="max_price" value="{{ request('max_price') }}">
                         </form>
@@ -1322,7 +1302,6 @@
                 <input type="hidden" name="purpose" id="darli-adv-purpose"
                     value="{{ request('purpose', 'sale') }}">
                 <input type="hidden" name="furnished" value="{{ request('furnished') }}">
-                <input type="hidden" name="nearby_location_id" value="{{ request('nearby_location_id') }}">
 
                 {{-- Keyword --}}
                 <div class="sheet-field">
@@ -1340,6 +1319,21 @@
                         @foreach ($locations as $loc)
                             <option value="{{ $loc->id }}" @selected((string) request('location_id') === (string) $loc->id)>
                                 {{ $loc->translation($locale)?->name ?? $loc->id }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Nearby area / landmark --}}
+                <div class="sheet-field">
+                    <label class="sheet-label">{{ $isAr ? 'قريب من' : 'Near' }}</label>
+                    <select name="nearby_location_id" class="sheet-select" @disabled(!request('location_id'))>
+                        <option value="">
+                            {{ request('location_id') ? ($isAr ? 'أي منطقة أو معلم' : 'Any area or landmark') : ($isAr ? 'اختر المدينة أولاً' : 'Choose city first') }}
+                        </option>
+                        @foreach ($nearbyLocations->where('parent_id', (int) request('location_id')) as $nearbyLocation)
+                            <option value="{{ $nearbyLocation->id }}" @selected((string) request('nearby_location_id') === (string) $nearbyLocation->id)>
+                                {{ $nearbyLocation->type === 'landmark' ? '★ ' : '' }}{{ $nearbyLocation->translation($locale)?->name }}
                             </option>
                         @endforeach
                     </select>

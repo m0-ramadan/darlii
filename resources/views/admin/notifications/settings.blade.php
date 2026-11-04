@@ -238,10 +238,18 @@
                         <h4 class="fw-bold text-dark fs-6 mb-0">اختبار الإرسال لستارة الأجهزة</h4>
                     </div>
                     <p class="small text-muted mb-3">
-                        اضغط الزر أدناه لإرسال إشعار تجريبي فوري لجميع الأجهزة المسجلة والتأكد من ظهوره في ستارة هاتفك مع الصوت والاهتزاز:
+                        أرسل إشعارًا تجريبيًا لتتأكد من ظهوره في ستارة جهازك مع الصوت والاهتزاز. يمكنك تخصيص جهاز واحد بالتوكن أو تركه فارغًا لإرسال إشعار لجميع الأجهزة المسجلة:
                     </p>
                     <form method="POST" action="{{ admin_route('admin.notifications.test-push') }}">
                         @csrf
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold text-dark" for="test-push-token">توكن الجهاز (اختياري)</label>
+                            <input id="test-push-token" type="text" name="token" class="form-control form-control-sm" dir="ltr"
+                                placeholder="cDOJ...:APA91b..." autocomplete="off">
+                            <div class="form-text" style="font-size: 11.5px;">
+                                الصق توكن جهازك لإرسال إشعار تجريبي له فقط — أو اتركه فارغًا لإرساله لكل الأجهزة المسجلة.
+                            </div>
+                        </div>
                         <button type="submit" class="ap-btn ap-btn--primary w-100 py-2 d-flex align-items-center justify-content-center gap-2" {{ !$hasPushCredentials ? 'disabled' : '' }}>
                             @include('admin.partials.icon', ['iconName' => 'bell', 'size' => 16])
                             إرسال إشعار تجريبي الآن

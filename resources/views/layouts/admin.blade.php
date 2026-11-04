@@ -120,7 +120,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/admin-panel.css') }}?v=1.0.2">
+    <link rel="stylesheet" href="{{ asset('themes/homzen/css/admin-panel.css') }}?v=1.0.3">
     {{-- Dark mode is temporarily disabled. --}}
     {{-- <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3"> --}}
     <style>
@@ -292,6 +292,15 @@
     <script src="{{ asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script>
         (function() {
+            document.querySelectorAll('.ap-content table').forEach(function(table) {
+                if (!table.closest('.ap-table-wrap, .table-responsive, .ap-auto-table-wrap')) {
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'ap-auto-table-wrap';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+
             document.addEventListener('click', function(event) {
                 if (event.target.closest('[data-ap-sidebar-open]')) {
                     document.body.classList.add('ap-sidebar-open');

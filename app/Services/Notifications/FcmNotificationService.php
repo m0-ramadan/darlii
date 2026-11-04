@@ -125,6 +125,115 @@ class FcmNotificationService
     /**
      * التحقق من المفاتيح المتاحة (سواء Server Key قديم أو Service Account JSON حديث).
      */
+    /**
+     * فحص صلاحية مفاتيح Firebase (بدون إرسال إشعار).
+     *
+     * @return array{ok:bool,type:string,project_id:?string,client_email:?string,key_id:?string,error:?string}
+     */
+    public function validateCredentials(): array
+    {
+        $credentials = $this->resolveFirebaseCredentials();
+
+        if (($credentials['type'] ?? '') !== 'service_account') {
+            return [
+                'ok' => false,
+                'type' => (string) ($credentials['type'] ?? 'none'),
+                'project_id' => null,
+                'client_email' => null,
+                'key_id' => null,
+                'error' => 'service_account_missing',
+            ];
+        }
+
+        $serviceAccount = $credentials['data'];
+        $accessToken = $this->getGoogleAccessToken($serviceAccount);
+
+        return [
+            'ok' => $accessToken !== null,
+            'type' => 'service_account',
+            'project_id' => $credentials['project_id'] ?? ($serviceAccount['project_id'] ?? null),
+            'client_email' => $serviceAccount['client_email'] ?? null,
+            'key_id' => $serviceAccount['private_key_id'] ?? null,
+            'error' => $accessToken === null ? 'oauth_failed' : null,
+        ];
+    }
+
+    /**
+     * إرسال إشعار تجريبي لتوكن جهاز واحد (FCM HTTP v1).
+     *
+     * @return array{ok:bool,status?:int,body?:mixed,error?:string,key_id?:?string,project_id?:?string}
+     */
+    public function sendTest(string $token, string $title, string $body, ?string $actionUrl = null): array
+    {
+        $credentials = $this->resolveFirebaseCredentials();
+
+        if (($credentials['type'] ?? '') !== 'service_account') {
+            return ['ok' => false, 'error' => 'service_account_missing'];
+        }
+
+        $serviceAccount = $credentials['data'];
+        $projectId = $credentials['project_id'] ?? ($serviceAccount['project_id'] ?? '');
+        $keyId = $serviceAccount['private_key_id'] ?? null;
+
+        $accessToken = $this->getGoogleAccessToken($serviceAccount);
+        if (! $accessToken) {
+            return [
+                'ok' => false,
+                'error' => 'oauth_failed',
+                'key_id' => $keyId,
+                'project_id' => $projectId,
+            ];
+        }
+
+        $actionUrl = $actionUrl ?: url('/');
+        $endpoint = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
+
+        $message = [
+            'token' => $token,
+            'notification' => ['title' => $title, 'body' => $body],
+            'data' => [
+                'url' => $actionUrl,
+                'type' => 'test',
+                'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+            ],
+            'webpush' => [
+                'headers' => ['Urgency' => 'high'],
+                'notification' => [
+                    'title' => $title,
+                    'body' => $body,
+                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                    'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                    'requireInteraction' => true,
+                    'tag' => 'darlii-test-' . time(),
+                    'data' => ['url' => $actionUrl],
+                ],
+                'fcm_options' => ['link' => $actionUrl],
+            ],
+        ];
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ])->timeout(10)->post($endpoint, ['message' => $message]);
+
+            if (! $response->successful() && str_contains((string) $response->body(), 'UNREGISTERED')) {
+                FcmToken::query()->where('token', $token)->delete();
+            }
+
+            return [
+                'ok' => $response->successful(),
+                'status' => $response->status(),
+                'body' => $response->json() ?? $response->body(),
+                'key_id' => $keyId,
+                'project_id' => $projectId,
+            ];
+        } catch (\Throwable $e) {
+            return ['ok' => false, 'error' => $e->getMessage(), 'key_id' => $keyId, 'project_id' => $projectId];
+        }
+    }
+
     public function resolveFirebaseCredentials(): array
     {
         $serverKey = trim((string) setting('firebase.server_key', ''));
@@ -200,7 +309,7 @@ class FcmNotificationService
                 $notificationPayload = [
                     'title' => $title,
                     'body' => $body,
-                    'icon' => asset('/themes/homzen/images/logo/logo-darli.png'),
+                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
                     'sound' => 'default',
                     'click_action' => $actionUrl ?: url('/ar'),
                 ];
@@ -211,13 +320,15 @@ class FcmNotificationService
                 $dataPayload = [
                     'title' => $title,
                     'body' => $body,
-                    'icon' => asset('/themes/homzen/images/logo/logo-darli.png'),
-                    'badge' => asset('/themes/homzen/images/logo/favicon.png'),
+                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                    'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
                     'url' => $actionUrl ?: url('/ar'),
                     'sound' => 'default',
                     'vibrate' => '300,100,300,100,300',
                     'tag' => $notifTag,
                     'id' => (string) ($notificationId ?: time()),
+                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                    'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
                 ];
                 if ($imageUrl) {
                     $dataPayload['image'] = $imageUrl;
@@ -264,7 +375,7 @@ class FcmNotificationService
     ): int {
         $accessToken = $this->getGoogleAccessToken($serviceAccount);
         if (!$accessToken) {
-            Log::error('FCM v1: Could not obtain OAuth2 access token.');
+            Log::error('FCM v1: Could not obtain OAuth2 access token (service account key id: ' . ($serviceAccount['private_key_id'] ?? 'n/a') . '). If the error is invalid_grant/Invalid JWT Signature, generate a new private key from Firebase Console → Project settings → Service accounts.');
             return 0;
         }
 
@@ -288,6 +399,8 @@ class FcmNotificationService
                         'vibrate' => '300,100,300,100,300',
                         'tag' => $notifTag,
                         'id' => (string) ($notificationId ?: time()),
+                        'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                        'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
                     ],
                     'webpush' => [
                         'headers' => [
@@ -296,8 +409,8 @@ class FcmNotificationService
                         'notification' => [
                             'title' => $title,
                             'body' => $body,
-                            'icon' => asset('/themes/homzen/images/logo/logo-darli.png'),
-                            'badge' => asset('/themes/homzen/images/logo/favicon.png'),
+                            'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                            'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
                             'vibrate' => [300, 100, 300, 100, 300],
                             'requireInteraction' => true,
                             'renotify' => true,
@@ -349,7 +462,7 @@ class FcmNotificationService
      */
     protected function getGoogleAccessToken(array $serviceAccount): ?string
     {
-        $cacheKey = 'fcm_v1_google_token_' . md5($serviceAccount['client_email'] ?? '');
+        $cacheKey = 'fcm_v1_google_token_' . md5(($serviceAccount['client_email'] ?? '') . '|' . ($serviceAccount['private_key_id'] ?? ''));
         if ($cached = Cache::get($cacheKey)) {
             return $cached;
         }

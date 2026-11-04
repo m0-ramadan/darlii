@@ -161,6 +161,7 @@ a { text-decoration: none; color: inherit; }
     border-radius: var(--ap-radius);
     box-shadow: var(--ap-shadow);
     margin-bottom: 18px;
+    min-width: 0;
 }
 .ap-card__head {
     display: flex;
@@ -172,10 +173,11 @@ a { text-decoration: none; color: inherit; }
 }
 .ap-card__title { font-size: 15px; margin: 0; display: flex; align-items: center; gap: 8px; }
 .ap-card__subtitle { margin: 2px 0 0; font-size: 12px; color: var(--ap-muted); }
-.ap-card__body { padding: 18px; }
+.ap-card__body { padding: 18px; min-width: 0; }
 .ap-card__body--tight { padding: 0; }
 
 .ap-grid { display: grid; gap: 16px; }
+.ap-grid > * { min-width: 0; }
 .ap-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ap-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .ap-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -222,6 +224,19 @@ a { text-decoration: none; color: inherit; }
     overscroll-behavior-inline: contain;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x pan-y;
+    scrollbar-width: thin;
+}
+.ap-content .table-responsive,
+.ap-content .ap-auto-table-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    scrollbar-width: thin;
 }
 .ap-table { width: 100%; border-collapse: collapse; font-size: 13.4px; }
 .ap-table thead th {
@@ -558,7 +573,9 @@ a { text-decoration: none; color: inherit; }
     .ap-input, .ap-select, .ap-textarea { min-width: 0; max-width: 100%; font-size: 16px; }
     .ap-btn { max-width: 100%; white-space: normal; text-align: center; }
     .ap-content img, .ap-content video, .ap-content canvas, .ap-content iframe { max-width: 100%; }
-    .ap-table-wrap > .ap-table { min-width: 560px; }
+    .ap-table-wrap > table,
+    .table-responsive > table,
+    .ap-auto-table-wrap > table { width: max-content; min-width: 680px; }
     .ap-content table th, .ap-content table td { white-space: nowrap; }
     .ap-content [style*="position: sticky"] { position: static !important; top: auto !important; }
     .ap-content .ap-card__body[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }

@@ -21,7 +21,8 @@
         } catch (\Throwable $e) {}
     }
 
-    $bodyClass = trim(($bodyClass ?? '') . ' darli-db-page');
+    $isDashboardPage = request()->routeIs('dashboard.*');
+    $bodyClass = trim(($bodyClass ?? '') . ' darli-db-page' . ($isDashboardPage ? ' darli-dashboard-page' : ''));
     $head = $shellHead ?? '';
 
     // طبقة الأدوات المساعدة الخاصة بصفحات قاعدة البيانات (تُحمَّل بعد ثيم هومزن).
@@ -29,6 +30,9 @@
         ? '<meta name="google-site-verification" content="Xi0TXw-Fy_uE9ZZbZ3h39mAOBlCrHR7CH1pGZL4miAk">' . "\n"
         : '';
     $darliCss = $verificationMeta . '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.min.css') . '?v=1.0.1">';
+    if ($isDashboardPage) {
+        $darliCss .= '<link rel="stylesheet" href="' . asset('themes/homzen/css/dashboard-responsive.css') . '?v=1.0.0">';
+    }
 
     $pushedHead = (string) $__env->yieldPushContent('head');
     $headInjection = $darliCss . ($pushedHead !== '' ? "\n" . $pushedHead : '');

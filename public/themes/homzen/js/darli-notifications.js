@@ -5,6 +5,12 @@
     'use strict';
 
     const config = window.DarliFirebaseConfig || {};
+
+    window.DarliPush = {
+        token: function () {
+            return window.DarliPushToken || window.localStorage.getItem('darli_fcm_token') || null;
+        }
+    };
     if (!config.enabled) {
         return;
     }
@@ -88,8 +94,8 @@
         if ('Notification' in window && Notification.permission === 'granted') {
             const options = {
                 body: body || '',
-                icon: '/themes/homzen/images/logo/logo-darli.png',
-                badge: '/themes/homzen/images/logo/favicon.png',
+                icon: '/themes/homzen/images/logo/notification-icon.png',
+                badge: '/themes/homzen/images/logo/notification-badge.png',
                 dir: 'rtl',
                 lang: 'ar',
                 vibrate: [300, 100, 300, 100, 300],
@@ -133,7 +139,7 @@
         }
 
         // Register Service Worker
-        const swUrl = `/firebase-messaging-sw.js?apiKey=${encodeURIComponent(config.apiKey || '')}&projectId=${encodeURIComponent(config.projectId || '')}&senderId=${encodeURIComponent(config.messagingSenderId || '')}&appId=${encodeURIComponent(config.appId || '')}`;
+        const swUrl = `/firebase-messaging-sw-v2.js?v=2.1.0&apiKey=${encodeURIComponent(config.apiKey || '')}&projectId=${encodeURIComponent(config.projectId || '')}&senderId=${encodeURIComponent(config.messagingSenderId || '')}&appId=${encodeURIComponent(config.appId || '')}`;
 
         navigator.serviceWorker.register(swUrl)
             .then(function (registration) {
@@ -224,8 +230,15 @@
      * Request FCM Token and save to backend
      */
     function requestAndSaveToken(messaging, registration, oldToken) {
+        // بعد تحديث الـService Worker قد يكون التسجيل لسه installing، وطلب
+        // التوكن يفشل. ننتظر ready لضمان أن الـSW نشط قبل getToken.
+        const readyRegistration = (registration && registration.active)
+            ? Promise.resolve(registration)
+            : navigator.serviceWorker.ready;
+
+        readyRegistration.then(function (activeRegistration) {
         const tokenOptions = {
-            serviceWorkerRegistration: registration
+            serviceWorkerRegistration: activeRegistration
         };
         if (config.vapidKey && config.vapidKey.trim() !== '') {
             tokenOptions.vapidKey = config.vapidKey.trim();
@@ -234,6 +247,10 @@
         messaging.getToken(tokenOptions)
             .then(function (currentToken) {
                 if (currentToken) {
+                    // للاختبار والدعم: التوكن متاح من console كـ DarliPush.token()
+                    window.DarliPushToken = currentToken;
+                    try { console.info('[DarliNotifications] FCM token:', currentToken); } catch (e) {}
+
                     const lastToken = localStorage.getItem('darli_fcm_token');
                     const lastVapid = localStorage.getItem('darli_fcm_vapid');
                     if (lastToken !== currentToken || lastVapid !== (config.vapidKey || '')) {
@@ -247,6 +264,9 @@
             .catch(function (err) {
                 console.log('[DarliNotifications] Unable to get token: ', err);
             });
+        }).catch(function (err) {
+            console.log('[DarliNotifications] Service worker not ready: ', err);
+        });
     }
 
     /**
@@ -355,7 +375,7 @@
         toast.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <img src="/themes/homzen/images/logo/logo-darli.png" style="width: 20px; height: 20px; object-fit: contain;">
+                    <img src="/themes/homzen/images/logo/notification-icon.png" style="width: 20px; height: 20px; object-fit: contain;">
                     <span style="font-size: 12px; font-weight: 700; color: #1e293b;">دارلي العقارية</span>
                 </div>
                 <button class="toast-close" style="background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; padding: 0 4px; line-height: 1;">&times;</button>

@@ -92,3 +92,7 @@ git status
 - Run deployment: `./deploy.sh` or `composer deploy`
   (Syncs application code safely, protects `.env` & user uploads, and clears production caches automatically)
 
+
+### Auto-deploy policy (Darlii)
+- بعد أي تعديل على هذا المشروع، شغّل `composer deploy` (أو `./deploy.sh`) لنشر الكود إلى البرودكشن.
+- سكربت النشر لا يلمس `.env` أو `storage/` أو رفع العملاء، ويعمل backup للكود قبل النشر.

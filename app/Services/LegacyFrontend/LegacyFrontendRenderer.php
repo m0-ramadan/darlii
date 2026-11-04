@@ -378,7 +378,7 @@ HTML;
 <script>window.DarliFirebaseConfig = {$firebaseConfigJson};</script>
 <script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
-<script defer src="/themes/homzen/js/darli-notifications.min.js?v=1.0.2"></script>
+<script defer src="/themes/homzen/js/darli-notifications.js?v=2.2.0"></script>
 <script defer src="/themes/homzen/js/darli-visitor-tracker.min.js?v=1.0.0"></script>
 HTML;
 

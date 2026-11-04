@@ -19,10 +19,16 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// Activate the new worker immediately so old cached workers stop handling pushes.
+self.addEventListener('install', function () { self.skipWaiting(); });
+self.addEventListener('activate', function (event) { event.waitUntil(self.clients.claim()); });
+
+
+
 function extractNotificationData(payload) {
     const title = payload.notification?.title || payload.data?.title || 'إشعار جديد من منصة دارلي';
     const body = payload.notification?.body || payload.data?.body || '';
-    const icon = payload.notification?.icon || payload.data?.icon || '/themes/homzen/images/logo/logo-darli.png';
+    const icon = payload.notification?.icon || payload.data?.icon || '/themes/homzen/images/logo/notification-icon.png';
     const image = payload.notification?.image || payload.data?.image || null;
     const url = payload.data?.url || payload.notification?.click_action || '/ar';
     const tag = payload.data?.tag || ('darli-notif-' + (payload.data?.id || Date.now()));
@@ -30,7 +36,7 @@ function extractNotificationData(payload) {
     const options = {
         body: body,
         icon: icon,
-        badge: '/themes/homzen/images/logo/favicon.png',
+        badge: payload.data?.badge || '/themes/homzen/images/logo/notification-badge.png',
         dir: 'rtl',
         lang: 'ar',
         vibrate: [300, 100, 300, 100, 300],
@@ -58,31 +64,8 @@ messaging.onBackgroundMessage(function (payload) {
     return self.registration.showNotification(title, options);
 });
 
-// Fallback native push listener for standard Web Push payloads
-self.addEventListener('push', function (event) {
-    if (!event.data) return;
-
-    try {
-        const payload = event.data.json();
-        // If message has notification or data
-        if (payload.notification || payload.data) {
-            const { title, options } = extractNotificationData(payload);
-            event.waitUntil(self.registration.showNotification(title, options));
-        }
-    } catch (e) {
-        // Plain text message
-        const text = event.data.text();
-        if (text) {
-            event.waitUntil(self.registration.showNotification('إشعار جديد من دارلي', {
-                body: text,
-                icon: '/themes/homzen/images/logo/logo-darli.png',
-                vibrate: [300, 100, 300, 100, 300],
-                tag: 'darli-raw-' + Date.now(),
-                data: { url: '/ar' }
-            }));
-        }
-    }
-});
+// ملاحظة: لا نضيف مستمع push خام هنا لأن Firebase Messaging يتولى
+// العرض عبر onBackgroundMessage، وإضافة مستمع ثانٍ تسبب إشعارين مكررين.
 
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();

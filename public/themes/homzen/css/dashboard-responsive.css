@@ -1,0 +1,59 @@
+/* Responsive safeguards scoped to the broker/owner dashboard only. */
+.darli-dashboard-page #wrapper,
+.darli-dashboard-page #wrapper > *,
+.darli-dashboard-page .container,
+.darli-dashboard-page .container-fluid,
+.darli-dashboard-page .row,
+.darli-dashboard-page [class*="col-"],
+.darli-dashboard-page .darli-panel,
+.darli-dashboard-page .darli-card,
+.darli-dashboard-page .card,
+.darli-dashboard-page .card-body {
+    min-width: 0;
+}
+
+.darli-dashboard-page .table-responsive,
+.darli-dashboard-page .darli-table-responsive {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    scrollbar-width: thin;
+}
+
+@media (max-width: 767.98px) {
+    .darli-dashboard-page {
+        overflow-x: clip;
+    }
+
+    .darli-dashboard-page .table-responsive > table,
+    .darli-dashboard-page .darli-table-responsive > table {
+        width: max-content !important;
+        min-width: 680px;
+    }
+
+    .darli-dashboard-page table th,
+    .darli-dashboard-page table td {
+        white-space: nowrap;
+    }
+
+    .darli-dashboard-page .darli-dash-nav-bar,
+    .darli-dashboard-page .darli-dash-nav {
+        max-width: 100%;
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pan-y;
+    }
+
+    .darli-dashboard-page input,
+    .darli-dashboard-page select,
+    .darli-dashboard-page textarea {
+        max-width: 100%;
+    }
+}

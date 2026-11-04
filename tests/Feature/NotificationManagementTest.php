@@ -235,7 +235,7 @@ class NotificationManagementTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('darli-notifications-wrapper');
         $response->assertSee('DarliFirebaseConfig');
-        $response->assertSee('darli-notifications.min.js');
+        $response->assertSee('darli-notifications.js');
         $response->assertSee('AIzaSyBNv6O81fJnehjTBw12cc9IZOT-32Bfy9Q');
     }
 

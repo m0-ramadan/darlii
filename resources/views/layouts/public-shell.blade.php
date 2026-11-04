@@ -25,7 +25,10 @@
     $head = $shellHead ?? '';
 
     // طبقة الأدوات المساعدة الخاصة بصفحات قاعدة البيانات (تُحمَّل بعد ثيم هومزن).
-    $darliCss = '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.min.css') . '?v=1.0.1">';
+    $verificationMeta = stripos($head, 'google-site-verification') === false
+        ? '<meta name="google-site-verification" content="Xi0TXw-Fy_uE9ZZbZ3h39mAOBlCrHR7CH1pGZL4miAk">' . "\n"
+        : '';
+    $darliCss = $verificationMeta . '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.min.css') . '?v=1.0.1">';
 
     $pushedHead = (string) $__env->yieldPushContent('head');
     $headInjection = $darliCss . ($pushedHead !== '' ? "\n" . $pushedHead : '');

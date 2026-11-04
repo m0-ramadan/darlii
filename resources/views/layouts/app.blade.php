@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="Xi0TXw-Fy_uE9ZZbZ3h39mAOBlCrHR7CH1pGZL4miAk">
     <link rel="icon" type="image/png" href="{{ asset('themes/homzen/images/logo/favicon.png') }}">
     <title>@yield('title', 'Darlii | دارلي - ' . (app()->getLocale() === 'ar' ? 'مكانك يبدأ هنا' : 'Your Place Starts Here'))</title>
     <meta name="description" content="@yield('meta_description', app()->getLocale() === 'ar' ? 'منصة دارلي - السوق العقاري الأبرز في مصر لشراء وبيع وتأجير العقارات والمشروعات' : 'Darlii - Egypt\'s premier real estate platform for buying, selling, and renting properties and developments.')">

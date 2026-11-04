@@ -479,7 +479,8 @@ HTML;
 HTML;
         }
 
-        if (($verification = (string) $settings->get('analytics.search_console', ''))) {
+        $verification = (string) $settings->get('analytics.search_console', 'Xi0TXw-Fy_uE9ZZbZ3h39mAOBlCrHR7CH1pGZL4miAk');
+        if (!empty($verification)) {
             $snippets[] = '<meta name="google-site-verification" content="' . e($verification) . '">';
         }
 

@@ -82,3 +82,13 @@ cat .env
 php -v
 composer --version
 git status
+```
+
+## Production Deployment
+
+- Remote host: `darlii-prod` (Hostinger 82.25.83.24:65002) configured in `~/.ssh/config`
+- Remote path: `domains/darlii.com/public_html`
+- Remote PHP: `/opt/alt/php83/usr/bin/php`
+- Run deployment: `./deploy.sh` or `composer deploy`
+  (Syncs application code safely, protects `.env` & user uploads, and clears production caches automatically)
+

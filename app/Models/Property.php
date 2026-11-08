@@ -456,7 +456,7 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
             $relative = str_starts_with($path, 'storage/') ? substr($path, 8) : $path;
             $root = $disk === 'local' ? storage_path('app/' . $relative) : storage_path('app/public/' . $relative);
 
-            if (is_file($root)) {
+            if ($disk !== 'local' && is_file($root)) {
                 $encoded = implode('/', array_map('rawurlencode', explode('/', $relative)));
 
                 return ['kind' => 'file', 'url' => asset('storage/' . $encoded)];

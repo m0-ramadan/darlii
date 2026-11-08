@@ -96,3 +96,7 @@ git status
 ### Auto-deploy policy (Darlii)
 - بعد أي تعديل على هذا المشروع، شغّل `composer deploy` (أو `./deploy.sh`) لنشر الكود إلى البرودكشن.
 - سكربت النشر لا يلمس `.env` أو `storage/` أو رفع العملاء، ويعمل backup للكود قبل النشر.
+- كل تنفيذ لـ`composer deploy` يقوم بعد نجاح النشر بعمل commit ودفع (push) إلى GitHub تلقائيًا.
+- لتخطي الدفع إلى GitHub مؤقتًا: `GIT_PUSH=0 composer deploy`.
+- الملفات الحساسة مثل `.env` و`storage/app/firebase-service-account.json` ونسخ قاعدة البيانات و`sitemap.xml` مستثناة من Git.
+

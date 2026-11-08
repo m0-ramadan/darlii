@@ -47,10 +47,13 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->avatar_path;
    }
    $trimmed = ltrim($this->avatar_path, '/');
-   return str_starts_with($trimmed, 'storage/') ? asset($trimmed) : asset('storage/' . $trimmed);
+   $relative = str_starts_with($trimmed, 'storage/') ? substr($trimmed, 8) : $trimmed;
+   if (is_file(storage_path('app/public/' . $relative))) {
+    return asset('storage/' . $relative);
+   }
   }
 
-  return 'https://ui-avatars.com/api/?background=0F3D2E&color=fff&name=' . urlencode($this->name ?: 'User');
+  return asset('themes/darlii/images/avatar-placeholder.svg');
  }
 
  public function getPrimaryRoleAttribute():?Role

@@ -435,11 +435,33 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
 
         if ($media) {
             $path = ltrim((string) $media->path, '/');
-            $url = str_starts_with($path, 'http')
-                ? $path
-                : (($media->disk ?? 'public') === 'legacy' ? asset('legacy/' . $path) : asset('storage/' . $path));
+            $disk = (string) ($media->disk ?: 'public');
 
-            return ['kind' => 'file', 'url' => $url];
+            if (str_starts_with($path, 'http')) {
+                return ['kind' => 'file', 'url' => $path];
+            }
+
+            if ($disk === 'legacy') {
+                return ['kind' => 'file', 'url' => asset('legacy/' . $path)];
+            }
+
+            if ($disk === 's3') {
+                try {
+                    return ['kind' => 'file', 'url' => \Illuminate\Support\Facades\Storage::disk('s3')->url($path)];
+                } catch (\Throwable $e) {
+                    return null;
+                }
+            }
+
+            $relative = str_starts_with($path, 'storage/') ? substr($path, 8) : $path;
+            $root = $disk === 'local' ? storage_path('app/' . $relative) : storage_path('app/public/' . $relative);
+
+            if (is_file($root)) {
+                $encoded = implode('/', array_map('rawurlencode', explode('/', $relative)));
+
+                return ['kind' => 'file', 'url' => asset('storage/' . $encoded)];
+            }
+            // الملف مرفوع في الداتابيز لكن غير موجود على القرص؛ نجرّب رابط الفيديو الخارجي إن وجد.
         }
 
         $url = $this->getVideoUrl();

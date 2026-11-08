@@ -895,6 +895,8 @@
                             // Visual metadata from our map or sensible defaults with live database priority
                             $meta = $agentMeta[$agent->id] ?? [];
                             $initials = $meta['initials'] ?? strtoupper(substr($agent->slug ?? 'DL', 0, 2));
+                            $avatarUrl = $agent->avatar_url;
+                            $hasAvatar = $avatarUrl && ! str_contains($avatarUrl, 'avatar-placeholder');
                             $color = $meta['color'] ?? ($agent->id % 2 === 0 ? 'gold' : 'blue');
                             $role = $agent->agent_type === 'individual' ? 'شخص' : ($agent->agent_type === 'broker' ? 'سمسار' : ($agent->agency_id ? 'شركة' : ($meta['role'] ?? 'شركة')));
                             $city = $agent->city ?: ($meta['city'] ?? 'بني سويف');
@@ -920,12 +922,17 @@
                                     @endif
 
                                     <div class="darli-agency-avatar-box theme-{{ $color }}">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                            <polyline points="9 22 9 12 15 12 15 22" />
-                                        </svg>
-                                        <span class="darli-agency-avatar-initials">{{ $initials }}</span>
+                                        @if($hasAvatar)
+                                            <img src="{{ $avatarUrl }}" alt="{{ $name }}" loading="lazy"
+                                                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+                                        @else
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                <polyline points="9 22 9 12 15 12 15 22" />
+                                            </svg>
+                                            <span class="darli-agency-avatar-initials">{{ $initials }}</span>
+                                        @endif
                                     </div>
                                 </div>
 

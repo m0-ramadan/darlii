@@ -5,10 +5,7 @@
     $isAr = $locale === 'ar';
     $tr = $agent->translation($locale);
     $name = $tr?->display_name ?: $agent->user?->name;
-    $avatarUrl = $agent->user?->avatar_url;
-    if (!$avatarUrl || str_contains($avatarUrl, 'placeholder')) {
-        $avatarUrl = asset($agent->avatar_path ?: 'storage/avatars/1.jpg');
-    }
+    $avatarUrl = $agent->avatar_url;
 @endphp
 
 @section('title', $name)

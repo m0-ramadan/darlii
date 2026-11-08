@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="صورة الحساب">
+  <rect width="256" height="256" rx="128" fill="#eef2f7"/>
+  <circle cx="128" cy="96" r="44" fill="#94a3b8"/>
+  <path d="M42 232c6-48 40-78 86-78s80 30 86 78" fill="#94a3b8"/>
+</svg>

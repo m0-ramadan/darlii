@@ -33,3 +33,9 @@ yarn-error.log
 /storage/logs/*.log
 
 /storage/framework/testing/
+
+/storage/app/public/properties/*/*/
+
+/storage/app/public/avatars/*/*/
+
+/storage/app/public/posts/*/*/

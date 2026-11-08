@@ -4,7 +4,7 @@ Preferred approach: set the domain document root directly to the Laravel `public
 
 If the panel lets you select document root:
 1. Upload/extract the project outside the public web root when possible.
-2. Point domain document root to `/path/to/HomzenLaravel/public`.
+2. Point domain document root to `/path/to/DarliiLaravel/public`.
 3. Use SSH: `composer install --no-dev --optimize-autoloader`.
 4. Configure `.env` with production DB and APP_URL.
 5. Run `php artisan key:generate` only for a new installation.

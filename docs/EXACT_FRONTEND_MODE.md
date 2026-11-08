@@ -1,7 +1,7 @@
 # Exact Frontend Mode
 
 ## الهدف
-هذا المشروع يتعامل مع ملفات Homzen المرفوعة على أنها **Frontend ثابت ونهائي**. Laravel مسؤول عن الـBackend فقط.
+هذا المشروع يتعامل مع ملفات Darlii المرفوعة على أنها **Frontend ثابت ونهائي**. Laravel مسؤول عن الـBackend فقط.
 
 ## قاعدة أساسية
 لا يتم إعادة تصميم أو إعادة كتابة الواجهة الأصلية.
@@ -13,7 +13,7 @@
 
 `LegacyFrontendRenderer` يقرأ HTML الأصلي ويجري فقط تعديلات Runtime غير بصرية:
 
-1. توجيه روابط Backend القديمة من `homzen.botble.com` إلى Laravel المحلي.
+1. توجيه روابط Backend القديمة من `darlii.botble.com` إلى Laravel المحلي.
 2. استبدال CSRF token القديم بـLaravel CSRF token الحالي.
 3. لا يغير classes أو CSS أو ترتيب DOM أو النصوص أو تصميم العناصر.
 

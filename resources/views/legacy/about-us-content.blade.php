@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="about-video-card">
-                <img src="/themes/homzen/images/darli-placeholder-ar.png" alt="دارلي" class="about-video-card-img">
+                <img src="/themes/darlii/images/darli-placeholder-ar.png" alt="دارلي" class="about-video-card-img">
                 <a href="https://youtu.be/tRxGSHL8bI0" data-fancybox="gallery2" class="btn-play-badge"
                     aria-label="تشغيل الفيديو">
                     <i class="icon icon-play"></i>
@@ -86,7 +86,7 @@
                 <!-- Left column in RTL: Arched illustration -->
                 <div class="col-lg-5 order-lg-2">
                     <div class="about-arch-box">
-                        <img src="/themes/homzen/images/darli-placeholder-ar.png" alt="دارلي"
+                        <img src="/themes/darlii/images/darli-placeholder-ar.png" alt="دارلي"
                             class="about-arch-box-img">
                     </div>
                 </div>
@@ -293,7 +293,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="about-agent-card">
                             <div class="about-agent-img-box">
-                                <img src="{{ !empty($agent['image']) && $agent['image'] !== '/themes/homzen/images/darli-placeholder.png' ? $agent['image'] : '/themes/homzen/images/darli-placeholder-ar.png' }}"
+                                <img src="{{ !empty($agent['image']) && $agent['image'] !== '/themes/darlii/images/darli-placeholder.png' ? $agent['image'] : '/themes/darlii/images/darli-placeholder-ar.png' }}"
                                     alt="{{ $agent['name'] }}">
                             </div>
                             <div class="about-agent-body">

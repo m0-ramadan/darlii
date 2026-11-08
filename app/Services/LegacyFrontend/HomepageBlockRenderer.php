@@ -324,8 +324,8 @@ class HomepageBlockRenderer
     {
         if (! is_string($path) || trim($path) === '') {
             return app()->getLocale() === 'ar'
-                ? '/themes/homzen/images/darli-placeholder.png'
-                : '/themes/homzen/images/darli-placeholder-en.png';
+                ? '/themes/darlii/images/darli-placeholder.png'
+                : '/themes/darlii/images/darli-placeholder-en.png';
         }
 
         return '/' . ltrim($path, '/');

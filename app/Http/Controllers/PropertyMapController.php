@@ -99,7 +99,7 @@ class PropertyMapController extends Controller
         ]);
     }
 
-    /** Marker payload consumed by themes/homzen/js/darli-properties-map.js. */
+    /** Marker payload consumed by themes/darlii/js/darli-properties-map.js. */
     private function jsMarker(Property $property, string $locale): array
     {
         $translation = $property->translation($locale);
@@ -242,7 +242,7 @@ class PropertyMapController extends Controller
     private function locale(Request $request, ?string $locale): string
     {
         $supported = config('locales.supported', ['ar', 'en']);
-        foreach ([$locale, $request->query('locale'), $request->cookie('homzen_locale')] as $candidate) {
+        foreach ([$locale, $request->query('locale'), $request->cookie('darlii_locale')] as $candidate) {
             if (is_string($candidate) && in_array($candidate, $supported, true)) {
                 return $candidate;
             }

@@ -32,7 +32,7 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
  }
  public static function defaultPlaceholderPath(?string $locale = null): string {
         $loc = $locale ?: app()->getLocale();
-        return ($loc === 'ar') ? 'themes/homzen/images/darli-placeholder.png' : 'themes/homzen/images/darli-placeholder-en.png';
+        return ($loc === 'ar') ? 'themes/darlii/images/darli-placeholder.png' : 'themes/darlii/images/darli-placeholder-en.png';
     }
     public function placeholderUrl(?string $locale = null): string {
         return asset(self::defaultPlaceholderPath($locale));

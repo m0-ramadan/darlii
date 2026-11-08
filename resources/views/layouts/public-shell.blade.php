@@ -29,9 +29,12 @@
     $verificationMeta = stripos($head, 'google-site-verification') === false
         ? '<meta name="google-site-verification" content="Xi0TXw-Fy_uE9ZZbZ3h39mAOBlCrHR7CH1pGZL4miAk">' . "\n"
         : '';
-    $darliCss = $verificationMeta . '<link rel="stylesheet" href="' . asset('themes/homzen/css/darli-public.min.css') . '?v=1.0.1">';
+    $darliCss = $verificationMeta
+        . '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-public.min.css') . '?v=1.0.1">'
+        . '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-seo-a11y.css') . '?v=1.0.5">'
+        . '<script type="speculationrules">{"prefetch":[{"source":"list","eagerness":"moderate","urls":["/properties","/projects","/blog","/agents"]}]}</script>';
     if ($isDashboardPage) {
-        $darliCss .= '<link rel="stylesheet" href="' . asset('themes/homzen/css/dashboard-responsive.css') . '?v=1.0.0">';
+        $darliCss .= '<link rel="stylesheet" href="' . asset('themes/darlii/css/dashboard-responsive.css') . '?v=1.0.0">';
     }
 
     $pushedHead = (string) $__env->yieldPushContent('head');
@@ -99,6 +102,8 @@
 @endphp
 {!! $head !!}
 <div id="wrapper">
-    @yield('content')
+    <main id="main-content" class="darli-main">
+        @yield('content')
+    </main>
 </div>
 {!! $footer !!}

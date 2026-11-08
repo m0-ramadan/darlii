@@ -197,7 +197,7 @@
                         <div class="bg-white rounded-3 shadow-sm border p-3 mb-4" style="direction: rtl;">
                             <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="{{ asset('themes/homzen/images/logo/darli-logo-ar.png') }}" alt="Darlii"
+                                    <img src="{{ asset('themes/darlii/images/logo/darli-logo-ar.png') }}" alt="Darlii"
                                         class="rounded" style="width: 22px; height: 22px; object-fit: contain;">
                                     <span class="fw-bold small text-dark">منصة دارلي العقارية</span>
                                 </div>
@@ -211,7 +211,7 @@
                                         style="font-size: 12px; line-height: 1.4;">نص وتفاصيل الإشعار تظهر هنا بشكل أنيق
                                         وواضح ومحفز للزيارة...</div>
                                 </div>
-                                <img src="{{ asset('themes/homzen/images/logo/darli-logo-ar.png') }}" id="previewThumb"
+                                <img src="{{ asset('themes/darlii/images/logo/darli-logo-ar.png') }}" id="previewThumb"
                                     alt="preview" class="rounded border"
                                     style="width: 50px; height: 50px; object-fit: cover; display: none;">
                             </div>

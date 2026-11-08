@@ -279,7 +279,7 @@ class NotificationController extends Controller
         $result = $this->fcmService->send([
             'title' => '🔔 تجربة إشعار دارلي الفوري',
             'body' => 'تهانينا! الإشعار يعمل بنجاح ويظهر في ستارة جهازك مع التنبيه الصوتي والاهتزاز.',
-            'image_path' => '/themes/homzen/images/logo/darli-logo-ar.png',
+            'image_path' => '/themes/darlii/images/logo/darli-logo-ar.png',
             'action_url' => url('/ar/properties'),
             'target_type' => 'all',
         ]);

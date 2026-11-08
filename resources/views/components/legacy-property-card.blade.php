@@ -66,14 +66,14 @@
     <div class="archive-bottom d-flex justify-content-between align-items-center">
         <div class="d-flex gap-8 align-items-center">
             <div class="avatar avt-40 round">
-                <img src="{{ $property->owner?->avatar_url ?? asset('themes/homzen/images/logo/darli-logo-ar.png') }}"
+                <img src="{{ $property->owner?->avatar_url ?? asset('themes/darlii/images/logo/darli-logo-ar.png') }}"
                     alt="{{ $property->owner?->name }}"
-                    onerror="this.onerror=null;this.src='{{ asset('themes/homzen/images/logo/darli-logo-ar.png') }}';">
+                    onerror="this.onerror=null;this.src='{{ asset('themes/darlii/images/logo/darli-logo-ar.png') }}';">
             </div>
             <span>{{ $property->owner?->name ?? ($locale === 'ar' ? 'فريق دارلي' : 'Darlii team') }}</span>
         </div>
         <div class="d-flex align-items-center gap-2 flex-wrap">
-            <h6>{{ $price }}{{ ($isRent && ! $isContactPrice) ? ($locale === 'ar' ? ' / شهرياً' : ' / month') : '' }}</h6>
+            <div class="h6">{{ $price }}{{ ($isRent && ! $isContactPrice) ? ($locale === 'ar' ? ' / شهرياً' : ' / month') : '' }}</div>
             @if ($isNegotiablePrice)
                 <span class="flag-tag success" style="font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600;">
                     {{ $locale === 'ar' ? 'قابل للتفاوض' : 'Negotiable' }}

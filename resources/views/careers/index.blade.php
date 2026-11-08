@@ -74,7 +74,7 @@
             left: 0;
             height: 100%;
             width: 320px;
-            background: url('/themes/homzen/images/careers-hero-left.png') no-repeat left center;
+            background: url('/themes/darlii/images/careers-hero-left.png') no-repeat left center;
             background-size: cover;
             opacity: 0.95;
             pointer-events: none;
@@ -89,7 +89,7 @@
             right: 0;
             height: 100%;
             width: 280px;
-            background: url('/themes/homzen/images/careers-hero-right.png') no-repeat right center;
+            background: url('/themes/darlii/images/careers-hero-right.png') no-repeat right center;
             background-size: cover;
             opacity: 0.9;
             pointer-events: none;

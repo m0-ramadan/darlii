@@ -1,6 +1,6 @@
 // Firebase Messaging Service Worker for Darlii
-importScripts('https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js');
+importScripts('/vendor/firebase/10.13.0/firebase-app-compat.js');
+importScripts('/vendor/firebase/10.13.0/firebase-messaging-compat.js');
 
 const urlParams = new URL(location).searchParams;
 const apiKey = urlParams.get('apiKey') || 'AIzaSyBNv6O81fJnehjTBw12cc9IZOT-32Bfy9Q';
@@ -28,7 +28,7 @@ self.addEventListener('activate', function (event) { event.waitUntil(self.client
 function extractNotificationData(payload) {
     const title = payload.notification?.title || payload.data?.title || 'إشعار جديد من منصة دارلي';
     const body = payload.notification?.body || payload.data?.body || '';
-    const icon = payload.notification?.icon || payload.data?.icon || '/themes/homzen/images/logo/notification-icon.png';
+    const icon = payload.notification?.icon || payload.data?.icon || '/themes/darlii/images/logo/notification-icon.png';
     const image = payload.notification?.image || payload.data?.image || null;
     const url = payload.data?.url || payload.notification?.click_action || '/ar';
     const tag = payload.data?.tag || ('darli-notif-' + (payload.data?.id || Date.now()));
@@ -36,7 +36,7 @@ function extractNotificationData(payload) {
     const options = {
         body: body,
         icon: icon,
-        badge: payload.data?.badge || '/themes/homzen/images/logo/notification-badge.png',
+        badge: payload.data?.badge || '/themes/darlii/images/logo/notification-badge.png',
         dir: 'rtl',
         lang: 'ar',
         vibrate: [300, 100, 300, 100, 300],

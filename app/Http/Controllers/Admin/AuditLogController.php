@@ -35,6 +35,11 @@ class AuditLogController extends Controller
             ->orderByDesc('created_at')
             ->orderByDesc('id');
 
+        if (! $this->admin()->isSuperAdmin()) {
+            $superIds = User::query()->whereHas('roles', fn ($q) => $q->where('slug', 'super-admin'))->pluck('id');
+            $query->whereNotIn('user_id', $superIds);
+        }
+
         if ($filters['q'] !== null) {
             $query->where('event', 'like', '%' . $filters['q'] . '%');
         }
@@ -61,7 +66,9 @@ class AuditLogController extends Controller
             ->pluck('name', 'id')
             ->all();
 
-        $users = User::query()->orderBy('name')->get(['id', 'name']);
+        $users = User::query()
+            ->when(! $this->admin()->isSuperAdmin(), fn ($q) => $q->whereDoesntHave('roles', fn ($r) => $r->where('slug', 'super-admin')))
+            ->orderBy('name')->get(['id', 'name']);
 
         return view('admin.audit.index', compact('logs', 'filters', 'users', 'userNames') + [
             'title' => 'سجل النشاط',

@@ -13,7 +13,7 @@
 @endphp
 
 @pushOnce('head')
-    <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/leaflet/leaflet.css') }}">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/plugins/leaflet/leaflet.css') }}">
     <style>
         .darli-map-picker-card {
             background: #f8fafc;
@@ -310,7 +310,7 @@
 
 @push('scripts')
 @once
-    <script src="{{ asset('themes/homzen/plugins/leaflet/leaflet.js') }}"></script>
+    <script src="{{ asset('themes/darlii/plugins/leaflet/leaflet.js') }}"></script>
 @endonce
 <script>
     (function () {

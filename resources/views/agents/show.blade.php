@@ -138,7 +138,7 @@
                 <div style="display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap;">
                     <div style="width:120px;height:120px;border-radius:18px;overflow:hidden;flex-shrink:0;border:2px solid #e2e8f0;background:#f8fafc;display:flex;align-items:center;justify-content:center;">
                         <img src="{{ $avatarUrl }}" alt="{{ $name }}"
-                            onerror="this.onerror=null;this.src='{{ asset('themes/homzen/images/darli-placeholder.png') }}';"
+                            onerror="this.onerror=null;this.src='{{ asset('themes/darlii/images/darli-placeholder.png') }}';"
                             style="width:100%;height:100%;object-fit:cover;">
                     </div>
 

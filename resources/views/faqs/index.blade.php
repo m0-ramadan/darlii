@@ -726,9 +726,9 @@
         {{-- ==================== Hero Section ==================== --}}
         <section class="faq-hero">
             {{-- Side decorations from user reference --}}
-            <img src="{{ asset('themes/homzen/images/faq-hero-left.png') }}" class="faq-hero__decor faq-hero__decor--left"
+            <img src="{{ asset('themes/darlii/images/faq-hero-left.png') }}" class="faq-hero__decor faq-hero__decor--left"
                 alt="Luxury Villas Decor">
-            <img src="{{ asset('themes/homzen/images/faq-hero-right.png') }}" class="faq-hero__decor faq-hero__decor--right"
+            <img src="{{ asset('themes/darlii/images/faq-hero-right.png') }}" class="faq-hero__decor faq-hero__decor--right"
                 alt="City Skyline Decor">
 
             <div class="container">
@@ -957,7 +957,7 @@
                                 @endif
                                 <span>{{ $cat }}</span>
                             </div>
-                            <h3 class="faq-card__question">{{ $q }}</h3>
+                            <h2 class="faq-card__question h3">{{ $q }}</h2>
                         </div>
 
                         {{-- Left side (in RTL): Circular Chevron Toggle --}}
@@ -1008,7 +1008,7 @@
             <div class="faq-cta-card__inner">
                 {{-- Right side: Customer service agent illustration --}}
                 <div class="faq-cta__side-img">
-                    <img src="{{ asset('themes/homzen/images/faq-cta-agent.png') }}" class="faq-cta__agent"
+                    <img src="{{ asset('themes/darlii/images/faq-cta-agent.png') }}" class="faq-cta__agent"
                         alt="Customer Support Agent">
                 </div>
 
@@ -1046,7 +1046,7 @@
 
                 {{-- Left side: 3D chat bubbles illustration --}}
                 <div class="faq-cta__side-img">
-                    <img src="{{ asset('themes/homzen/images/faq-cta-bubbles.png') }}" class="faq-cta__bubbles"
+                    <img src="{{ asset('themes/darlii/images/faq-cta-bubbles.png') }}" class="faq-cta__bubbles"
                         alt="Chat Bubbles">
                 </div>
             </div>
@@ -1106,4 +1106,24 @@
             });
         });
     </script>
+
+    @php
+        $faqSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => collect($faqs)->map(function ($item) use ($isAr) {
+                $q = $isAr ? ($item['question'] ?? '') : ($item['question_en'] ?? ($item['question'] ?? ''));
+                $a = $isAr ? ($item['answer'] ?? '') : ($item['answer_en'] ?? ($item['answer'] ?? ''));
+                $q = trim(html_entity_decode(strip_tags((string) $q), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                $a = trim(html_entity_decode(strip_tags((string) $a), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+                return $q !== '' && $a !== '' ? [
+                    '@type' => 'Question',
+                    'name' => $q,
+                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $a],
+                ] : null;
+            })->filter()->values()->all(),
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 @endsection

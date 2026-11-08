@@ -1,10 +1,10 @@
-# Homzen Static Mirror → Professional Laravel Rebuild Blueprint
+# Darlii Static Mirror → Professional Laravel Rebuild Blueprint
 
 ## 1. What was actually uploaded
 
 The four ZIPs were fully unpacked and inventoried.
 
-- `homzen.botble.com.zip`: 316 files, ~77 MB. Main/default-locale HTML snapshots plus theme/vendor/storage assets.
+- `darlii.botble.com.zip`: 316 files, ~77 MB. Main/default-locale HTML snapshots plus theme/vendor/storage assets.
 - `lang.zip`: 556 files, ~185 MB. Localized HTML snapshots under `en/`, `ar/`, `fr/`.
 - `id.zip`: 193 files, ~64 MB. Indonesian localized HTML snapshots.
 - `vi.zip`: 193 files, ~65 MB. Vietnamese localized HTML snapshots.
@@ -16,7 +16,7 @@ Conclusion: this is a downloaded/static mirror of a running site, not the Larave
 
 ## 2. Detected product/version
 
-The HTML and assets identify the site as Botble **Homzen**. Theme/core asset query strings repeatedly contain `v=1.3.3`; the snapshot therefore matches Homzen 1.3.3-era output.
+The HTML and assets identify the site as Botble **Darlii**. Theme/core asset query strings repeatedly contain `v=1.3.3`; the snapshot therefore matches Darlii 1.3.3-era output.
 
 Observed plugin/frontend namespaces:
 
@@ -28,7 +28,7 @@ Observed plugin/frontend namespaces:
 - Announcement
 - Mortgage Calculator (`fob-mortgage-calculator`)
 - Botble core ACL/admin frontend assets
-- Homzen theme assets
+- Darlii theme assets
 - Leaflet + marker clustering
 - Swiper
 - Fancybox
@@ -452,7 +452,7 @@ Feature tests should cover:
 
 For a true migration rather than a behavioral rebuild, obtain at least one of:
 
-- the original Homzen/Botble source package for the deployed version, ideally a licensed current package; and
+- the original Darlii/Botble source package for the deployed version, ideally a licensed current package; and
 - the production database dump; and
 - the complete `storage`/media directory (or cloud bucket export); and
 - relevant `.env` settings with secrets removed but service choices documented.

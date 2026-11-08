@@ -9,6 +9,7 @@
         : ($isAr ? 'عرض جميع العقارات' : 'View all properties');
 @endphp
 
+<div role="complementary" aria-label="{{ $isAr ? 'الخريطة' : 'Map' }}">
 <a href="{{ $buttonUrl }}" class="darli-mobile-map-launcher"
     aria-label="{{ $isPropertiesPage ? ($isAr ? 'عرض الخريطة بحجم الشاشة' : 'Open full-screen map') : $buttonLabel }}">
     <span>{{ $buttonLabel }}</span>

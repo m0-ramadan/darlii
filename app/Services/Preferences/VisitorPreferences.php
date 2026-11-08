@@ -16,7 +16,7 @@ class VisitorPreferences
         $supported = config('locales.supported', ['ar']);
         $candidates = [
             $request->user()?->preferred_locale,
-            $request->cookie('homzen_locale'),
+            $request->cookie('darlii_locale'),
             $request->session()->get('locale'),
         ];
 
@@ -41,7 +41,7 @@ class VisitorPreferences
     public function localeCookie(Request $request, string $locale): Cookie
     {
         return cookie(
-            'homzen_locale',
+            'darlii_locale',
             $locale,
             self::COOKIE_MINUTES,
             '/',
@@ -57,7 +57,7 @@ class VisitorPreferences
     {
         $candidates = [
             $request->user()?->preferred_currency,
-            $request->cookie('homzen_currency'),
+            $request->cookie('darlii_currency'),
             $request->session()->get('currency'),
             env('DEFAULT_CURRENCY', 'EGP'),
         ];

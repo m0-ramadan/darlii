@@ -10,7 +10,7 @@ class DarkModeCoverageTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_dark_theme_assets_load_after_the_original_homzen_styles(): void
+    public function test_dark_theme_assets_load_after_the_original_darlii_styles(): void
     {
         $html = $this->withSession(['locale' => 'en'])->get('/properties')->assertOk()->getContent();
 
@@ -18,8 +18,8 @@ class DarkModeCoverageTest extends TestCase
         $this->assertStringContainsString('map-location.min.js?v=2.3.4', $html);
         $this->assertStringContainsString('map-location.min.js', $html);
         $this->assertGreaterThan(
-            strpos($html, 'themes/homzen/css/style.css?v=1.3.3'),
-            strpos($html, 'themes/homzen/css/dark-mode.css?v=2.0.1')
+            strpos($html, 'themes/darlii/css/style.css?v=1.3.3'),
+            strpos($html, 'themes/darlii/css/dark-mode.css?v=2.0.1')
         );
     }
 

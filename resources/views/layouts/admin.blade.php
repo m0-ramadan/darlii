@@ -3,7 +3,7 @@
     $panelPrimary = $settings->get('panel.primary_color', '#0F3D2E');
     $panelAccent = $settings->get('panel.accent_color', '#C8A45C');
     $siteName = $settings->get('general.site_name', 'دارلي');
-    $logo = $settings->get('branding.logo_ar', 'themes/homzen/images/logo/darli-logo-ar.png');
+    $logo = $settings->get('branding.logo_ar', 'themes/darlii/images/logo/darli-logo-ar.png');
     $logoUrl = str_starts_with((string) $logo, 'http') ? $logo : asset($logo);
     $user = auth()->user();
     $current = request()->route()?->getName() ?? '';
@@ -90,6 +90,25 @@
             ],
         ],
         [
+            'title' => 'خدمة العملاء',
+            'items' => [
+                ['طلبات العملاء', 'admin.customer-requests.index', 'message', 'admin.customer-requests.*', null],
+            ],
+        ],
+        [
+            'title' => 'الماليات',
+            'items' => [
+                ['نظرة عامة', 'admin.finance.index', 'money', 'admin.finance.index', '__super'],
+                ['الإحصائيات المالية', 'admin.finance.stats', 'chart-bar', 'admin.finance.stats*', '__super'],
+                ['أنواع النقاط', 'admin.finance.point-types.index', 'star', 'admin.finance.point-types.*', '__super'],
+                ['النقاط الدورية', 'admin.finance.point-rules.index', 'activity', 'admin.finance.point-rules.*', '__super'],
+                ['حركات النقاط', 'admin.finance.point-transactions.index', 'clipboard', 'admin.finance.point-transactions.*', '__super'],
+                ['الودائع', 'admin.finance.deposits.index', 'money', 'admin.finance.deposits.*', '__super'],
+                ['المصروفات', 'admin.finance.expenses.index', 'chart-pie', 'admin.finance.expenses.*', '__super'],
+                ['أرصدة المستخدمين', 'admin.finance.balances.index', 'users', 'admin.finance.balances.*', '__super'],
+            ],
+        ],
+        [
             'title' => 'الإعدادات',
             'items' => [
                 ['الإعدادات العامة', 'admin.settings.general', 'settings', 'admin.settings.*', 'settings.manage'],
@@ -114,15 +133,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'لوحة التحكم') | {{ $siteName }}</title>
     <link rel="icon" type="image/png"
-        href="{{ str_starts_with((string) $settings->get('branding.favicon', ''), 'http') ? $settings->get('branding.favicon') : asset($settings->get('branding.favicon', 'themes/homzen/images/logo/favicon.png')) }}">
+        href="{{ str_starts_with((string) $settings->get('branding.favicon', ''), 'http') ? $settings->get('branding.favicon') : asset($settings->get('branding.favicon', 'themes/darlii/images/logo/favicon.png')) }}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/bootstrap/css/bootstrap.rtl.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/admin-panel.css') }}?v=1.0.3">
+    <link href="/vendor/fonts/fonts.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/plugins/bootstrap/css/bootstrap.rtl.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/css/admin-panel.css') }}?v=1.0.3">
     {{-- Dark mode is temporarily disabled. --}}
-    {{-- <link rel="stylesheet" href="{{ asset('themes/homzen/css/dark-mode.css') }}?v=2.0.3"> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('themes/darlii/css/dark-mode.css') }}?v=2.0.3"> --}}
     <style>
         :root {
             --ap-primary: {{ $panelPrimary }};
@@ -156,9 +173,12 @@
             <nav class="ap-nav">
                 @foreach ($groups as $group)
                     @php
-                        $visibleItems = collect($group['items'])->filter(
-                            fn($item) => $item[4] === null || ($user && $user->hasPermission($item[4])),
-                        );
+                        $visibleItems = collect($group['items'])->filter(function ($item) use ($user) {
+                            if (! config('finance.points_enabled', false) && str_contains($item[1], 'point-')) return false;
+                            if ($item[4] === null) return true;
+                            if ($item[4] === '__super') return $user && $user->isPrimarySuperAdmin();
+                            return $user && $user->hasPermission($item[4]);
+                        });
                     @endphp
                     @if ($visibleItems->isNotEmpty())
                         <div class="ap-nav__group">
@@ -288,8 +308,8 @@
 
     <div class="ap-backdrop" data-ap-sidebar-close></div>
 
-    <script src="{{ asset('themes/homzen/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('themes/homzen/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('themes/darlii/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('themes/darlii/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script>
         (function() {
             document.querySelectorAll('.ap-content table').forEach(function(table) {

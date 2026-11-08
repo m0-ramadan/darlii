@@ -7,15 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>Darlii | Egypt's Premier Real Estate Platform</title>
   <meta name="description" content="Your dream home .. closer than you imagine - Darlii Real Estate Platform">
-  <link rel="shortcut icon" href="/themes/homzen/images/logo/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="shortcut icon" href="/themes/darlii/images/logo/favicon.png">
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cairo:wght@400;600;700&display=swap"
+    href="/vendor/fonts/fonts.css"
     rel="stylesheet">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.css?v=2.0.3">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/themes/darlii/css/darli-design-system.css?v=2.0.1">
+  <link rel="stylesheet" href="/themes/darlii/css/darli-home.css?v=2.0.3">
+  <script src="/vendor/lucide/lucide.min.js"></script>
 </head>
 
 <body class="body" id="page-home" dir="ltr">
@@ -58,8 +56,8 @@
       <div class="darli-container darli-navbar-inner">
         <!-- LOGO -->
         <a href="/en" class="darli-logo-wrapper">
-          <img src="/themes/homzen/images/logo/darli-logo-en.png" alt="Darlii - Your Place Starts Here"
-            class="darli-logo-img" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+          <img src="/themes/darlii/images/logo/darli-logo-en.png" alt="Darlii - Your Place Starts Here"
+            class="darli-logo-img" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
         </a>
 
         <!-- NAV MENU -->
@@ -297,7 +295,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/1.jpg" alt="Distinctive Apartment in Rehab" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge">For Sale</span>
               <button class="darli-card-heart" aria-label="Add to Wishlist"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -330,7 +328,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/2.jpg" alt="Standalone Villa in Arki Compound" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge badge-gold">For Sale</span>
               <button class="darli-card-heart" aria-label="Add to Wishlist"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -363,7 +361,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/3.jpg" alt="Luxury Apartment in Sheikh Zayed" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge">For Sale</span>
               <button class="darli-card-heart" aria-label="Add to Wishlist"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -396,7 +394,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/4.jpg" alt="Apartment in Residential Compound" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge badge-gold">For Sale</span>
               <button class="darli-card-heart" aria-label="Add to Wishlist"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -429,7 +427,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/5.jpg" alt="Apartment with Capital Skyline View" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge badge-gold">For Sale</span>
               <button class="darli-card-heart" aria-label="Add to Wishlist"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -462,7 +460,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/6.jpg" alt="Ultra-Finished Luxury Apartment" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge">For Sale</span>
               <button class="darli-card-heart" aria-label="Add to Wishlist"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -581,7 +579,7 @@
 
         <div class="darli-locations-grid">
           <a href="/en/properties?location=beni-suef" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/beni-suef.jpg" alt="Beni Suef District"
+            <img src="/themes/darlii/images/locations/beni-suef/beni-suef.jpg" alt="Beni Suef District"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">Beni Suef</h4>
@@ -591,7 +589,7 @@
           </a>
 
           <a href="/en/properties?location=al-wasta" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/al-wasta.jpg" alt="Al Wasta District"
+            <img src="/themes/darlii/images/locations/beni-suef/al-wasta.jpg" alt="Al Wasta District"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">Al Wasta</h4>
@@ -601,7 +599,7 @@
           </a>
 
           <a href="/en/properties?location=nasser" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/nasser.jpg" alt="Nasser District"
+            <img src="/themes/darlii/images/locations/beni-suef/nasser.jpg" alt="Nasser District"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">Nasser</h4>
@@ -611,7 +609,7 @@
           </a>
 
           <a href="/en/properties?location=ihnasia" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/ihnasia.jpg" alt="Ihnasia District"
+            <img src="/themes/darlii/images/locations/beni-suef/ihnasia.jpg" alt="Ihnasia District"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">Ihnasia</h4>
@@ -938,7 +936,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="/storage/avatars/7.jpg" alt="Ali Abdulrahman" class="darli-testi-avatar"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">Ali Abdulrahman</h5>
               <span class="darli-testi-role">Property Investor</span>
@@ -957,7 +955,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="/storage/avatars/2.jpg" alt="Ahmed Mahmoud" class="darli-testi-avatar"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">Ahmed Mahmoud</h5>
               <span class="darli-testi-role">Homeowner</span>
@@ -976,7 +974,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="/storage/avatars/10.jpg" alt="Robert Evans" class="darli-testi-avatar"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">Robert Evans</h5>
               <span class="darli-testi-role">Property Investor</span>
@@ -995,7 +993,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="/storage/avatars/9.jpg" alt="Jessica White" class="darli-testi-avatar"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">Jessica White</h5>
               <span class="darli-testi-role">Delighted Home Seller</span>
@@ -1014,7 +1012,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="/storage/avatars/1.jpg" alt="Jennifer Lee" class="darli-testi-avatar"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">Jennifer Lee</h5>
               <span class="darli-testi-role">Happy Home Seeker</span>
@@ -1033,7 +1031,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="/storage/avatars/11.jpg" alt="Daniel Miller" class="darli-testi-avatar"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">Daniel Miller</h5>
               <span class="darli-testi-role">New Homeowner</span>
@@ -1189,8 +1187,8 @@
         <!-- Col 1: About & Social -->
         <div class="darli-footer-about">
           <div style="margin-bottom: 16px;">
-            <img src="/themes/homzen/images/logo/darli-logo-en-dark.png" alt="Darlii" style="height: 48px; width: auto;"
-              onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            <img src="/themes/darlii/images/logo/darli-logo-en-dark.png" alt="Darlii" style="height: 48px; width: auto;"
+              onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
           </div>
           <p>Your trusted real estate platform to buy, sell, and rent premier properties across Egypt.</p>
           <div class="darli-footer-socials">
@@ -1282,8 +1280,8 @@
   </div>
 
   <!-- SCRIPTS -->
-  <script src="/themes/homzen/js/jquery.min.js"></script>
-  <script src="/themes/homzen/js/darli-home.js?v=2.0.1"></script>
+  <script src="/themes/darlii/js/jquery.min.js"></script>
+  <script src="/themes/darlii/js/darli-home.js?v=2.0.1"></script>
 </body>
 
 </html>

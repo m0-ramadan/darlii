@@ -96,6 +96,44 @@ class SeoBuilder
         $alternates['x-default'] = $meta['canonical'];
         $meta['alternates'] = $alternates;
 
+        $orgId = url('/') . '#organization';
+        $siteId = url('/') . '#website';
+        $meta['json_ld'] = [
+            array_filter([
+                '@context' => 'https://schema.org',
+                '@type' => 'Organization',
+                '@id' => $orgId,
+                'name' => $meta['site_name'],
+                'url' => url('/'),
+                'logo' => asset('themes/darlii/images/logo/notification-icon.png'),
+                'telephone' => setting('contact.phone', '') ?: null,
+                'contactPoint' => setting('contact.phone', '') ? [
+                    '@type' => 'ContactPoint',
+                    'telephone' => setting('contact.phone'),
+                    'contactType' => 'customer service',
+                    'areaServed' => 'EG',
+                    'availableLanguage' => ['ar', 'en'],
+                ] : null,
+            ]),
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebSite',
+                '@id' => $siteId,
+                'url' => url('/'),
+                'name' => $meta['site_name'],
+                'inLanguage' => $locale,
+                'publisher' => ['@id' => $orgId],
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => [
+                        '@type' => 'EntryPoint',
+                        'urlTemplate' => url('/properties') . '?keyword={search_term_string}',
+                    ],
+                    'query-input' => 'required name=search_term_string',
+                ],
+            ],
+        ];
+
         return $meta;
     }
 
@@ -115,6 +153,7 @@ class SeoBuilder
         );
         $meta['canonical'] = $this->listingCanonical(url('/properties'));
         $meta['alternates'] = ['x-default' => $meta['canonical']];
+        $meta['json_ld'] = $this->collectionSchema($meta, $total);
 
         return $meta;
     }
@@ -138,15 +177,18 @@ class SeoBuilder
             : $this->t($locale, 'للبيع', 'for sale');
         $category = $property->category?->translation($locale)?->name;
 
+        $refCode = trim((string) $property->reference_code);
+        $refLabel = $refCode !== '' ? '#' . $refCode : null;
         $titleParts = array_filter([
             $name,
+            $refLabel,
             $purpose,
             $location ? $this->t($locale, 'في ' . $location, 'in ' . $location) : null,
         ]);
         $meta['title'] = $this->pickTitle([
             implode(' | ', $titleParts),
-            trim($name . ' | ' . $purpose),
-            $name,
+            trim($name . ($refLabel ? ' | ' . $refLabel : '') . ' | ' . $purpose),
+            $name . ($refLabel ? ' | ' . $refLabel : ''),
         ], $meta['site_name']);
 
         $description = $tr?->seo_description
@@ -166,6 +208,9 @@ class SeoBuilder
             $description = implode(' — ', $bits);
         }
 
+        if ($refCode !== '') {
+            $description = $this->t($locale, 'كود العقار ', 'Ref ') . $refCode . ' — ' . $description;
+        }
         $meta['description'] = $this->description($description);
         $meta['type'] = 'article';
         $meta['canonical'] = url('/properties/' . ($tr?->slug ?: $slug));
@@ -237,6 +282,7 @@ class SeoBuilder
         );
         $meta['canonical'] = $this->listingCanonical(url('/projects'));
         $meta['alternates'] = ['x-default' => $meta['canonical']];
+        $meta['json_ld'] = $this->collectionSchema($meta, $total);
 
         return $meta;
     }
@@ -301,6 +347,7 @@ class SeoBuilder
         );
         $meta['canonical'] = $this->listingCanonical(url('/agents'));
         $meta['alternates'] = ['x-default' => $meta['canonical']];
+        $meta['json_ld'] = $this->collectionSchema($meta);
 
         return $meta;
     }
@@ -352,6 +399,15 @@ class SeoBuilder
         );
         $meta['canonical'] = $this->listingCanonical(url('/blog'));
         $meta['alternates'] = ['x-default' => $meta['canonical']];
+        $meta['json_ld'] = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Blog',
+            'name' => $meta['title'],
+            'description' => $meta['description'],
+            'url' => $meta['canonical'],
+            'inLanguage' => $locale,
+            'publisher' => ['@type' => 'Organization', 'name' => $meta['site_name'], 'url' => url('/')],
+        ];
 
         return $meta;
     }
@@ -445,7 +501,48 @@ class SeoBuilder
         $meta['canonical'] = $url;
         $meta['alternates'] = ['x-default' => $url];
 
+        $type = match (true) {
+            str_contains($key, 'about') => 'AboutPage',
+            str_contains($key, 'contact') => 'ContactPage',
+            default => 'WebPage',
+        };
+        $meta['json_ld'] = array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => $type,
+            'name' => $meta['title'],
+            'description' => $meta['description'],
+            'url' => $url,
+            'inLanguage' => $locale,
+            'isPartOf' => ['@type' => 'WebSite', 'name' => $meta['site_name'], 'url' => url('/')],
+            'mainEntity' => $type === 'ContactPage' ? array_filter([
+                '@type' => 'Organization',
+                'name' => $meta['site_name'],
+                'url' => url('/'),
+                'telephone' => setting('contact.phone', '') ?: null,
+                'email' => setting('contact.email', '') ?: null,
+            ]) : null,
+        ]);
+
         return $meta;
+    }
+
+    /** Schema موحّد لصفحات القوائم (عقارات/مشروعات/وكلاء). */
+    private function collectionSchema(array $meta, ?int $total = null): array
+    {
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'CollectionPage',
+            'name' => $meta['title'],
+            'description' => $meta['description'],
+            'url' => $meta['canonical'],
+            'inLanguage' => $meta['locale'] ?? null,
+            'isPartOf' => ['@type' => 'WebSite', 'name' => $meta['site_name'], 'url' => url('/')],
+            'mainEntity' => $total !== null ? [
+                '@type' => 'ItemList',
+                'numberOfItems' => $total,
+                'itemListOrder' => 'https://schema.org/ItemListOrderDescending',
+            ] : null,
+        ]);
     }
 
     /** يبني وسوم الـhead النهائية ويستبدل أي وسوم قديمة. */
@@ -619,14 +716,14 @@ HTML;
             return $this->absolute($configured);
         }
 
-        $hero = 'themes/homzen/images/darli-hero-cairo-photo-clean.webp';
+        $hero = 'themes/darlii/images/darli-hero-cairo-photo-clean.webp';
         if (is_file(public_path($hero))) {
             return asset($hero);
         }
 
         $file = $locale === 'ar'
-            ? 'themes/homzen/images/logo/darli-logo-ar.png'
-            : 'themes/homzen/images/logo/darli-logo-en.png';
+            ? 'themes/darlii/images/logo/darli-logo-ar.png'
+            : 'themes/darlii/images/logo/darli-logo-en.png';
 
         return asset($file);
     }
@@ -651,7 +748,7 @@ HTML;
     {
         $url = trim((string) $url);
         if ($url === '') {
-            return asset('themes/homzen/images/logo/darli-logo-ar.png');
+            return asset('themes/darlii/images/logo/darli-logo-ar.png');
         }
         if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
             return $url;

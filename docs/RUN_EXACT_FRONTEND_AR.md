@@ -74,7 +74,7 @@ docker compose exec app php artisan test --filter=ExactFrontendTest
 الـHTML الأصلي يحتفظ بنفس الـforms والـJS. وقت إخراج الصفحة Laravel يغير فقط:
 
 - الـCSRF token القديم.
-- روابط الـbackend القديمة `homzen.botble.com` إلى التطبيق المحلي.
+- روابط الـbackend القديمة `darlii.botble.com` إلى التطبيق المحلي.
 
 لا يتم تعديل CSS classes أو Layout أو ملفات Theme.
 

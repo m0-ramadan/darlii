@@ -82,7 +82,7 @@ class SeoFavoritesAndPropertyPageTest extends TestCase
         // البيانات الأجنبية من قالب هومزن يجب ألا تظهر.
         $this->assertStringNotContainsString('جوهانسبرغ', $html);
         $this->assertStringNotContainsString('south-africa', strtolower($html));
-        $this->assertStringNotContainsString('homzen.botble.com', $html);
+        $this->assertStringNotContainsString('darlii.botble.com', $html);
         $this->assertStringNotContainsString('هومزين', $html);
     }
 

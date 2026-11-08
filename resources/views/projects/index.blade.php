@@ -547,7 +547,7 @@
 {{-- ===================== السيكشن الرئيسي (Hero Banner) ===================== --}}
 <section class="darli-projects-hero">
     {{-- صورة الفيلا مع الشجر على اليسار مطابقة للصورة المرجعية --}}
-    <img src="{{ asset('themes/homzen/images/darli-projects-villa.png') }}" alt="Darli Projects" class="darli-projects-hero__villa">
+    <img src="{{ asset('themes/darlii/images/darli-projects-villa.png') }}" alt="Darli Projects" class="darli-projects-hero__villa">
 
     <div class="container">
         <div class="darli-projects-hero__content">
@@ -658,7 +658,7 @@
                         $tr = $project->translation($locale);
                         $url = $tr?->slug ? route('projects.show', ['locale' => $locale, 'slug' => $tr->slug]) : '#';
                         $image = $project->properties->first()?->primaryImageUrl($locale)
-                            ?? asset('themes/homzen/images/darli-placeholder-ar.png');
+                            ?? asset('themes/darlii/images/darli-placeholder-ar.png');
                         $locName = $project->location?->translation($locale)?->name ?? ($isAr ? 'بني سويف' : 'Beni Suef');
                     @endphp
                     <div class="darli-card-item">
@@ -666,7 +666,7 @@
                         <div class="darli-card-img-wrap">
                             <a href="{{ $url }}">
                                 <img src="{{ $image }}" alt="{{ $tr?->name }}" loading="lazy"
-                                    onerror="this.onerror=null;this.src='{{ asset('themes/homzen/images/darli-placeholder-ar.png') }}';">
+                                    onerror="this.onerror=null;this.src='{{ asset('themes/darlii/images/darli-placeholder-ar.png') }}';">
                             </a>
                             <span class="darli-badge-new">{{ $isAr ? 'مشروع جديد' : 'New project' }}</span>
                             <button type="button" class="darli-fav-btn" aria-label="Favorite">

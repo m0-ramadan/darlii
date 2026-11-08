@@ -10,7 +10,7 @@
     $tooltipText = $isAr ? 'تواصل معنا عبر واتساب' : 'Chat with us on WhatsApp';
 @endphp
 @if (!empty($cleanWa))
-<div id="darli-floating-wa" class="darli-floating-wa" dir="{{ $locale }}">
+<div id="darli-floating-wa" class="darli-floating-wa" dir="{{ $locale }}" role="complementary" aria-label="تواصل عبر واتساب">
     <a href="{{ $waUrl }}" target="_blank" rel="noopener noreferrer" class="darli-floating-wa__btn" aria-label="WhatsApp" title="{{ $tooltipText }}">
         <span class="darli-floating-wa__pulse"></span>
         <span class="darli-floating-wa__tooltip">{{ $tooltipText }}</span>

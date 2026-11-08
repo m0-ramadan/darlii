@@ -14,13 +14,13 @@ class PreferencePersistenceTest extends TestCase
     {
         $this->seed(CoreSeeder::class);
 
-        $this->withCookie('homzen_currency', 'EUR')
+        $this->withCookie('darlii_currency', 'EUR')
             ->get('/')
             ->assertOk()
             ->assertSessionHas('locale', 'ar')
             ->assertSessionHas('currency', 'EUR')
-            ->assertCookie('homzen_locale', 'ar')
-            ->assertCookie('homzen_currency', 'EUR');
+            ->assertCookie('darlii_locale', 'ar')
+            ->assertCookie('darlii_currency', 'EUR');
     }
 
     public function test_language_switch_preserves_entity_and_query_string(): void
@@ -51,7 +51,7 @@ class PreferencePersistenceTest extends TestCase
     {
         $html = $this->get('/about-us')->assertOk()->getContent();
 
-        $this->assertStringContainsString('class="homzen-footer-languages darli-footer-languages"', $html);
+        $this->assertStringContainsString('class="darlii-footer-languages darli-footer-languages"', $html);
         $this->assertStringContainsString('darli-footer-languages__link is-active', $html);
         $this->assertStringContainsString('aria-current="page"', $html);
 
@@ -74,7 +74,7 @@ class PreferencePersistenceTest extends TestCase
         $this->get('/language/switch/ar?redirect=' . $redirect)
             ->assertRedirect('/properties/' . $arabicSlug . '?type=sale&page=2')
             ->assertSessionHas('locale', 'ar')
-            ->assertCookie('homzen_locale', 'ar');
+            ->assertCookie('darlii_locale', 'ar');
     }
 
     public function test_clean_page_urls_render_using_the_saved_locale(): void

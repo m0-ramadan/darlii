@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             StudentHousingPropertySeeder::class,
             CityLandmarksSeeder::class,
             UpdateElevatorAmenityNameSeeder::class,
+            FinancePointTypeSeeder::class,
         ]);
     }
 }

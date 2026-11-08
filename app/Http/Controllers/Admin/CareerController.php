@@ -284,7 +284,7 @@ class CareerController extends Controller
             app(\App\Services\Notifications\FcmNotificationService::class)->send([
                 'title' => $title,
                 'body' => $body,
-                'image_path' => asset('themes/homzen/images/logo/darli-logo-ar.png'),
+                'image_path' => asset('themes/darlii/images/logo/darli-logo-ar.png'),
                 'action_url' => url('/ar/careers/' . $slug),
                 'target_type' => 'all',
             ]);

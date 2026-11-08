@@ -37,8 +37,8 @@
     };
 
     $placeholder = $isAr
-        ? asset('themes/homzen/images/darli-placeholder-ar.png')
-        : asset('themes/homzen/images/darli-placeholder-en.png');
+        ? asset('themes/darlii/images/darli-placeholder-ar.png')
+        : asset('themes/darlii/images/darli-placeholder-en.png');
 
     // المشروعات لا تملك جدول صور مستقل، فنستخدم أول صورة عقار داخل المشروع.
     $heroImage = $project->properties->first()?->primaryImageUrl($locale) ?? $placeholder;

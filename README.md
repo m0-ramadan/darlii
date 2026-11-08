@@ -1,12 +1,12 @@
-# Homzen Laravel — Exact Frontend / Laravel Backend
+# Darlii Laravel — Exact Frontend / Laravel Backend
 
-> **Important:** The uploaded Homzen HTML/CSS/JS is the visual source of truth. Public pages are served from the original mirror files; Laravel supplies the backend. Do not redesign or replace the public frontend with the scaffold Blade views.
+> **Important:** The uploaded Darlii HTML/CSS/JS is the visual source of truth. Public pages are served from the original mirror files; Laravel supplies the backend. Do not redesign or replace the public frontend with the scaffold Blade views.
 
 See `docs/EXACT_FRONTEND_MODE.md` for details.
 
-# Homzen Laravel Rebuild
+# Darlii Laravel Rebuild
 
-A Laravel 13 modular-monolith foundation reconstructed from the provided Homzen static mirror. It includes a normalized multilingual database, recovered catalog seeder, property/project/agent/content flows, lead capture, moderation, RBAC foundation, API endpoints, RTL support, and legacy theme assets.
+A Laravel 13 modular-monolith foundation reconstructed from the provided Darlii static mirror. It includes a normalized multilingual database, recovered catalog seeder, property/project/agent/content flows, lead capture, moderation, RBAC foundation, API endpoints, RTL support, and legacy theme assets.
 
 ## Important
 

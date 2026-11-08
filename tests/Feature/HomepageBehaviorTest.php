@@ -34,7 +34,7 @@ class HomepageBehaviorTest extends TestCase
         $this->assertStringContainsString('<link rel="canonical" href="' . rtrim(config('app.url'), '/') . '">', $html);
         $this->assertSame(1, substr_count($html, '<link rel="alternate" hreflang="ar"'));
         $this->assertSame(1, substr_count($html, '<link rel="alternate" hreflang="x-default"'));
-        $this->assertStringNotContainsString('homzen.botble.com', $html);
+        $this->assertStringNotContainsString('darlii.botble.com', $html);
     }
 
     public function test_arabic_is_the_default_and_a_saved_locale_is_preserved(): void

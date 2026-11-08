@@ -82,9 +82,9 @@
     {{-- Load the split-map styles in the <head> so the sidebar/list layout is
          correct on the first paint instead of jumping after the content loads. --}}
     @if (! str_contains($shell['head'] ?? '', 'plugins/leaflet/leaflet.css'))
-        <link rel="stylesheet" href="{{ asset('themes/homzen/plugins/leaflet/leaflet.css') }}">
+        <link rel="stylesheet" href="{{ asset('themes/darlii/plugins/leaflet/leaflet.css') }}">
     @endif
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-properties-map.min.css') }}?v=1.0.16">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/css/darli-properties-map.min.css') }}?v=1.0.16">
 @endpush
 
 @section('content')
@@ -202,7 +202,7 @@
                     </button>
                 </div>
                 <a href="{{ url($locale) }}" class="darli-wizard-brand">
-                    <img src="{{ asset('themes/homzen/images/logo/darli-logo-ar.png') }}" alt="Darlii دارلي"
+                    <img src="{{ asset('themes/darlii/images/logo/darli-logo-ar.png') }}" alt="Darlii دارلي"
                         class="darli-wizard-logo">
                 </a>
             </header>
@@ -545,7 +545,7 @@
                         {{-- Purpose Select --}}
                         <div class="darli-filter-field">
                             <label class="darli-filter-label">{{ $isAr ? 'الغرض' : 'Purpose' }}</label>
-                            <select name="purpose" class="darli-filter-select">
+                            <select name="purpose" class="darli-filter-select" aria-label="الغرض">
                                 <option value="">{{ $isAr ? 'الكل' : 'All' }}</option>
                                 <option value="sale" @selected(($filters['purpose'] ?? '') === 'sale')>{{ $isAr ? 'للبيع' : 'For sale' }}
                                 </option>
@@ -557,7 +557,7 @@
                         {{-- Category Select --}}
                         <div class="darli-filter-field">
                             <label class="darli-filter-label">{{ $isAr ? 'النوع' : 'Type' }}</label>
-                            <select name="category_id" class="darli-filter-select">
+                            <select name="category_id" class="darli-filter-select" aria-label="التصنيف">
                                 <option value="">{{ $isAr ? 'الكل' : 'All' }}</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" @selected((string) ($filters['category_id'] ?? '') === (string) $category->id)>
@@ -570,7 +570,7 @@
                         {{-- Location Select --}}
                         <div class="darli-filter-field">
                             <label class="darli-filter-label">{{ $isAr ? 'المنطقة' : 'Area' }}</label>
-                            <select name="location_id" class="darli-filter-select">
+                            <select name="location_id" class="darli-filter-select" aria-label="الموقع">
                                 <option value="">{{ $isAr ? 'كل المناطق' : 'All areas' }}</option>
                                 @foreach ($locations as $location)
                                     <option value="{{ $location->id }}" @selected((string) ($filters['location_id'] ?? '') === (string) $location->id)>
@@ -632,7 +632,7 @@
                             </button>
                         </div>
 
-                        <select id="darli-sort-select" class="darli-sort-select">
+                        <select id="darli-sort-select" class="darli-sort-select" aria-label="ترتيب النتائج">
                             <option value="newest" @selected(request('sort', 'newest') === 'newest')>
                                 {{ $isAr ? 'أحدث أولاً' : 'Newest first' }}</option>
                             <option value="price_asc" @selected(request('sort') === 'price_asc')>
@@ -943,7 +943,7 @@
                             <div class="darli-map-filter-grid">
                                 <div class="darli-map-filter-field">
                                     <label for="darli-map-filter-purpose">{{ $isAr ? 'نوع الطلب' : 'Request type' }}</label>
-                                    <select name="purpose" id="darli-map-filter-purpose">
+                                    <select name="purpose" id="darli-map-filter-purpose" aria-label="الغرض">
                                         <option value="">{{ $isAr ? 'كل الطلبات' : 'All requests' }}</option>
                                         <option value="sale" @selected(request('purpose') === 'sale')>{{ $isAr ? 'شراء' : 'Buy' }}</option>
                                         <option value="rent" @selected(request('purpose') === 'rent')>{{ $isAr ? 'إيجار' : 'Rent' }}</option>
@@ -952,7 +952,7 @@
 
                                 <div class="darli-map-filter-field">
                                     <label for="darli-map-filter-location">{{ $isAr ? 'المدينة / المنطقة' : 'City / area' }}</label>
-                                    <select name="location_id" id="darli-map-filter-location">
+                                    <select name="location_id" id="darli-map-filter-location" aria-label="الموقع">
                                         <option value="">{{ $isAr ? 'كل المدن والمناطق' : 'All cities & areas' }}</option>
                                         @foreach ($locations as $loc)
                                             <option value="{{ $loc->id }}" @selected((string) request('location_id') === (string) $loc->id)>
@@ -964,7 +964,7 @@
 
                                 <div class="darli-map-filter-field">
                                     <label for="darli-map-filter-category">{{ $isAr ? 'التصنيف' : 'Category' }}</label>
-                                    <select name="category_id" id="darli-map-filter-category">
+                                    <select name="category_id" id="darli-map-filter-category" aria-label="التصنيف">
                                         <option value="">{{ $isAr ? 'جميع التصنيفات' : 'All categories' }}</option>
                                         @foreach ($categories as $cat)
                                             <option value="{{ $cat->id }}" @selected((string) request('category_id') === (string) $cat->id)>
@@ -1224,7 +1224,7 @@
                                 <div class="darli-mob-custom-select-box">
                                     <span class="select-icon">⌄</span>
                                     <span class="select-text"><span class="select-label">{{ $isAr ? 'التجهيز' : 'Furnishing' }}</span><span class="select-value">{{ request('furnished') === '1' ? ($isAr ? 'مفروش' : 'Furnished') : (request('furnished') === '0' ? ($isAr ? 'غير مفروش' : 'Unfurnished') : ($isAr ? 'الكل' : 'Any')) }}</span></span>
-                                    <select name="furnished" class="darli-mob-overlay-select darli-mob-auto-submit">
+                                    <select name="furnished" class="darli-mob-overlay-select darli-mob-auto-submit" aria-label="مفروش">
                                         <option value="">{{ $isAr ? 'الكل' : 'Any' }}</option>
                                         <option value="1" @selected(request('furnished') === '1')>{{ $isAr ? 'مفروش' : 'Furnished' }}</option>
                                         <option value="0" @selected(request('furnished') === '0')>{{ $isAr ? 'غير مفروش' : 'Unfurnished' }}</option>
@@ -1314,7 +1314,7 @@
                 {{-- Location --}}
                 <div class="sheet-field">
                     <label class="sheet-label">{{ $isAr ? 'المنطقة / الحي' : 'Location / District' }}</label>
-                    <select name="location_id" class="sheet-select">
+                    <select name="location_id" class="sheet-select" aria-label="الموقع">
                         <option value="">{{ $isAr ? 'كل المناطق' : 'All areas' }}</option>
                         @foreach ($locations as $loc)
                             <option value="{{ $loc->id }}" @selected((string) request('location_id') === (string) $loc->id)>
@@ -1327,7 +1327,7 @@
                 {{-- Nearby area / landmark --}}
                 <div class="sheet-field">
                     <label class="sheet-label">{{ $isAr ? 'قريب من' : 'Near' }}</label>
-                    <select name="nearby_location_id" class="sheet-select" @disabled(!request('location_id'))>
+                    <select name="nearby_location_id" class="sheet-select" @disabled(!request('location_id')) aria-label="اختر">
                         <option value="">
                             {{ request('location_id') ? ($isAr ? 'أي منطقة أو معلم' : 'Any area or landmark') : ($isAr ? 'اختر المدينة أولاً' : 'Choose city first') }}
                         </option>
@@ -1342,7 +1342,7 @@
                 {{-- Category --}}
                 <div class="sheet-field">
                     <label class="sheet-label">{{ $isAr ? 'نوع العقار' : 'Property type' }}</label>
-                    <select name="category_id" class="sheet-select">
+                    <select name="category_id" class="sheet-select" aria-label="التصنيف">
                         <option value="">{{ $isAr ? 'الكل' : 'All' }}</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat->id }}" @selected((string) request('category_id') === (string) $cat->id)>
@@ -1398,7 +1398,7 @@
                 {{-- Sort --}}
                 <div class="sheet-field">
                     <label class="sheet-label">{{ $isAr ? 'الترتيب حسب' : 'Sort by' }}</label>
-                    <select name="sort" class="sheet-select">
+                    <select name="sort" class="sheet-select" aria-label="ترتيب النتائج">
                         <option value="newest" @selected(request('sort', 'newest') === 'newest')>
                             {{ $isAr ? 'الأحدث أولاً' : 'Newest first' }}</option>
                         <option value="price_asc" @selected(request('sort') === 'price_asc')>
@@ -1425,8 +1425,8 @@
         window.__DARLI_MAP_PROPERTIES__ = @json($mapProperties);
         window.__DARLI_CURRENT_CITY__ = @json($currentCity ?? ($isAr ? 'بني سويف' : 'Beni Suef'));
     </script>
-    <script src="{{ asset('themes/homzen/plugins/leaflet/leaflet.js') }}"></script>
-    <script src="{{ asset('themes/homzen/js/darli-properties-map.min.js') }}?v=1.0.16"></script>
+    <script src="{{ asset('themes/darlii/plugins/leaflet/leaflet.js') }}"></script>
+    <script src="{{ asset('themes/darlii/js/darli-properties-map.min.js') }}?v=1.0.16"></script>
 
     {{-- Mobile Wizard Interactive Script --}}
     <script>

@@ -7,7 +7,7 @@
 @section('title', $isAr ? 'العقارات المحفوظة | منصة دارلي' : 'Saved properties | Darlii')
 
 @push('head')
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-favorites.css') }}?v=1.0.0">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/css/darli-favorites.css') }}?v=1.0.0">
 @endpush
 
 @section('content')

@@ -28,7 +28,12 @@ class UserController extends Controller
     private function assignableRoles(): array
     {
         if ($this->admin()->isAdmin()) {
-            return array_merge(\App\Support\PermissionCatalog::panelRoles(), ['customer']);
+            $roles = \App\Support\PermissionCatalog::panelRoles();
+            if (! $this->admin()->isSuperAdmin()) {
+                $roles = array_values(array_diff($roles, ['super-admin']));
+            }
+
+            return array_merge($roles, ['customer']);
         }
 
         return ['agent'];
@@ -56,7 +61,9 @@ class UserController extends Controller
 
         return view('admin.users.index', [
             'users' => $users,
-            'roles' => Role::query()->orderByDesc('level')->get(),
+            'roles' => Role::query()
+                ->when(! $this->admin()->isSuperAdmin(), fn ($q) => $q->where('slug', '!=', 'super-admin'))
+                ->orderByDesc('level')->get(),
             'managers' => $this->assignableManagers(),
             'filters' => $request->only(['q', 'role', 'status', 'manager_id']),
             'title' => 'المستخدمون',
@@ -70,6 +77,7 @@ class UserController extends Controller
 
         $admins = User::query()
             ->whereHas('roles', fn ($q) => $q->whereIn('slug', ['super-admin', 'admin']))
+            ->when(! $this->admin()->isSuperAdmin(), fn ($q) => $q->whereDoesntHave('roles', fn ($r) => $r->where('slug', 'super-admin')))
             ->with(['roles', 'subordinates.roles', 'subordinates.subordinates.roles'])
             ->withCount('properties')
             ->get();
@@ -77,6 +85,7 @@ class UserController extends Controller
         $unassigned = User::query()
             ->whereNull('manager_id')
             ->whereDoesntHave('roles', fn ($q) => $q->whereIn('slug', ['super-admin', 'admin']))
+            ->when(! $this->admin()->isSuperAdmin(), fn ($q) => $q->whereDoesntHave('roles', fn ($r) => $r->where('slug', 'super-admin')))
             ->with('roles')
             ->get();
 
@@ -294,7 +303,9 @@ class UserController extends Controller
         $admin = $this->admin();
 
         if ($admin->isAdmin()) {
-            return $query;
+            return $admin->isSuperAdmin()
+                ? $query
+                : $query->whereDoesntHave('roles', fn ($q) => $q->where('slug', 'super-admin'));
         }
 
         // المسؤول يرى نفسه وسماسرته فقط.
@@ -303,6 +314,8 @@ class UserController extends Controller
 
     private function guardScope(User $user): void
     {
+        abort_if($user->isSuperAdmin() && ! $this->admin()->isSuperAdmin(), 403, 'هذا الحساب غير متاح للعرض.');
+
         if ($this->admin()->isAdmin()) {
             return;
         }

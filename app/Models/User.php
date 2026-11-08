@@ -34,6 +34,10 @@ class User extends Authenticatable implements MustVerifyEmail {
  public function managedProperties(){return $this->hasMany(Property::class,'managed_by');}
  public function assignedLeads(){return $this->hasMany(Lead::class,'assigned_to');}
  public function auditLogs(){return $this->hasMany(AuditLog::class);}
+ public function financeWallet(){return $this->hasOne(\App\Models\Finance\FinanceWallet::class);}
+ public function pointBalances(){return $this->hasMany(\App\Models\Finance\FinancePointBalance::class);}
+ public function pointTransactions(){return $this->hasMany(\App\Models\Finance\FinancePointTransaction::class);}
+ public function deposits(){return $this->hasMany(\App\Models\Finance\FinanceDeposit::class);}
 
  // ---------------------------------------------------------------- accessors
  public function getAvatarUrlAttribute():string
@@ -77,6 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail {
  }
 
  public function isSuperAdmin():bool{return $this->hasRole('super-admin');}
+ public function isPrimarySuperAdmin():bool{return $this->isSuperAdmin() && strtolower((string) $this->email) === 'super@darlii.eg';}
  public function isAdmin():bool{return $this->hasAnyRole(['super-admin','admin']);}
  public function isManager():bool{return $this->hasAnyRole(['manager','property-manager','agency-manager']);}
  public function isAgent():bool{return $this->hasRole('agent');}

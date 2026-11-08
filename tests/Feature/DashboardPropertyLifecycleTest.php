@@ -184,7 +184,7 @@ class DashboardPropertyLifecycleTest extends TestCase
     private function fakeImage(string $name): UploadedFile
     {
         return new UploadedFile(
-            public_path('themes/homzen/images/darli-placeholder.png'),
+            public_path('themes/darlii/images/darli-placeholder.png'),
             $name,
             'image/png',
             null,

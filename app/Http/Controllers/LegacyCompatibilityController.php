@@ -63,7 +63,7 @@ class LegacyCompatibilityController extends Controller
         }
 
         $lead = Lead::create($leadData);
-        $lead->activities()->create(['type' => 'created', 'description' => 'Lead created from original Homzen consultation form']);
+        $lead->activities()->create(['type' => 'created', 'description' => 'Lead created from original Darlii consultation form']);
 
         if ($date = data_get($data, 'consult_custom_fields.1')) {
             Appointment::create([
@@ -110,7 +110,7 @@ class LegacyCompatibilityController extends Controller
             'status' => 'new',
             'ip_hash' => hash('sha256', (string) $request->ip() . config('app.key')),
         ]);
-        $lead->activities()->create(['type' => 'created', 'description' => 'Lead created from original Homzen contact form']);
+        $lead->activities()->create(['type' => 'created', 'description' => 'Lead created from original Darlii contact form']);
 
         return $this->success($request, 'Message sent successfully.');
     }
@@ -154,7 +154,7 @@ class LegacyCompatibilityController extends Controller
         $response = redirect()->back();
 
         return $currency
-            ? $response->withCookie(cookie('homzen_currency', $currency->code, VisitorPreferences::COOKIE_MINUTES, '/', null, $request->isSecure(), false, false, 'lax'))
+            ? $response->withCookie(cookie('darlii_currency', $currency->code, VisitorPreferences::COOKIE_MINUTES, '/', null, $request->isSecure(), false, false, 'lax'))
             : $response;
     }
 
@@ -230,7 +230,7 @@ class LegacyCompatibilityController extends Controller
             return $first;
         }
 
-        foreach ([$request->query('locale'), $request->cookie('homzen_locale')] as $candidate) {
+        foreach ([$request->query('locale'), $request->cookie('darlii_locale')] as $candidate) {
             if (is_string($candidate) && in_array($candidate, $supported, true)) {
                 return $candidate;
             }

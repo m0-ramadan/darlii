@@ -20,11 +20,11 @@ RUN groupadd -g ${GID} laravel 2>/dev/null || true \
 
 WORKDIR /var/www/html
 
-COPY docker/php.ini /usr/local/etc/php/conf.d/99-homzen.ini
-COPY docker/entrypoint.sh /usr/local/bin/homzen-entrypoint
-RUN chmod +x /usr/local/bin/homzen-entrypoint
+COPY docker/php.ini /usr/local/etc/php/conf.d/99-darlii.ini
+COPY docker/darlii-entrypoint.sh /usr/local/bin/darlii-entrypoint
+RUN chmod +x /usr/local/bin/darlii-entrypoint
 
 EXPOSE 8000
 
-ENTRYPOINT ["homzen-entrypoint"]
+ENTRYPOINT ["darlii-entrypoint"]
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

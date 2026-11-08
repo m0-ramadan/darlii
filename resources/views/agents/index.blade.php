@@ -777,7 +777,7 @@
                                         <circle cx="12" cy="10" r="3" />
                                     </svg>
                                 </span>
-                                <select name="location" class="darli-agents-custom-select">
+                                <select name="location" class="darli-agents-custom-select" aria-label="الموقع">
                                     <option value="">{{ $isAr ? 'جميع مناطق بني سويف' : 'All Beni Suef Areas' }}
                                     </option>
                                     <option value="بني سويف" @selected(request('location') === 'بني سويف')>مدينة بني سويف</option>
@@ -802,7 +802,7 @@
                                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
                                     </svg>
                                 </span>
-                                <select name="specialty" class="darli-agents-custom-select">
+                                <select name="specialty" class="darli-agents-custom-select" aria-label="التخصص">
                                     <option value="">{{ $isAr ? 'جميع التخصصات' : 'All Specialties' }}</option>
                                     <option value="وساطة" @selected(request('specialty') === 'وساطة')>وساطة وتسويق</option>
                                     <option value="استثمار" @selected(request('specialty') === 'استثمار')>استثمار عقاري</option>
@@ -856,7 +856,7 @@
                         @endif
 
                         <select name="sort" class="darli-agents-sort-select"
-                            onchange="document.getElementById('sortForm').submit();">
+                            onchange="document.getElementById('sortForm').submit();" aria-label="ترتيب النتائج">
                             <option value="latest" @selected(request('sort') === 'latest')>ترتيب حسب: الأحدث</option>
                             <option value="oldest" @selected(request('sort') === 'oldest')>ترتيب حسب: الأقدم</option>
                             <option value="name" @selected(request('sort') === 'name')>ترتيب حسب: الاسم</option>

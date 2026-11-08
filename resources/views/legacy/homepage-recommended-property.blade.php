@@ -11,7 +11,7 @@
   $locationText = $tr?->address_text ?: ($property->location?->translation($locale)?->name ?? ($locale === 'ar' ? 'بني سويف' : 'Beni Suef'));
   $images = $property->media->pluck('path')->map(fn($p) => '/' . ltrim($p, '/'))->filter()->values()->all();
   if (empty($images)) {
-      $images = ['/themes/homzen/images/darli-placeholder.png'];
+      $images = ['/themes/darlii/images/darli-placeholder.png'];
   }
 @endphp
 <section class="darli-recommended-section">
@@ -82,7 +82,7 @@
       <div class="darli-rec-media">
         <a href="{{ $url }}" style="display: block; width: 100%; height: 100%;">
           <img id="rec-slider-img" src="{{ $images[0] }}" alt="{{ $tr?->name }}"
-            class="darli-rec-img" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+            class="darli-rec-img" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
         </a>
         @if (count($images) > 1)
           <button id="rec-prev-btn" class="darli-media-nav-arrow darli-media-prev" aria-label="السابق">

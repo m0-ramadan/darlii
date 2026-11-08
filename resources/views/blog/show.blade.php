@@ -7,8 +7,8 @@
     $tr = $post->translation($locale);
 
     $placeholder = $isAr
-        ? asset('themes/homzen/images/darli-placeholder-ar.png')
-        : asset('themes/homzen/images/darli-placeholder-en.png');
+        ? asset('themes/darlii/images/darli-placeholder-ar.png')
+        : asset('themes/darlii/images/darli-placeholder-en.png');
 
     /** صورة المقال: روابط كاملة كما هي، وإلا من مجلد الميرور /legacy. */
     $articleImage = function (?string $path) use ($placeholder): string {

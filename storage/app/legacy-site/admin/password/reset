@@ -24,7 +24,7 @@
     >
     <meta
         property="og:image"
-        content="https://homzen.botble.com/vendor/core/core/base/images/favicon.png"
+        content="/vendor/core/core/base/images/favicon.png"
     >
 
     <meta
@@ -386,7 +386,7 @@
 
     
     <script>
-        window.siteUrl = "https://homzen.botble.com";
+        window.siteUrl = "https://darlii.com";
 
             </script>
 
@@ -398,9 +398,9 @@
     
 
     
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=1.1.0">
+<link href="/vendor/fonts/fonts.css" rel="stylesheet">
+<script src="/vendor/lucide/lucide.min.js"></script>
+<link rel="stylesheet" href="/themes/darlii/css/darli-design-system.css?v=1.1.0">
 </head>
 
 <body
@@ -420,11 +420,11 @@
             <div class="container container-tight my-5 px-lg-5">
                 <div class="text-center mb-4">
                     <a href="/en">
-        <img src="/themes/homzen/images/logo/darli-logo-en.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';" >
+        <img src="/themes/darlii/images/logo/darli-logo-en.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';" >
     </a>
                 </div>
 
-                            <form method="POST" action="https://homzen.botble.com/admin/password/email" accept-charset="UTF-8" id="botble-a-c-l-forms-auth-forgot-password-form" class="js-base-form dirty-check"><input name="_token" type="hidden" value="Q3i8NHWFcnphnYIuYTWjEu8NbAR7bFRlhGljzEU4">
+                            <form method="POST" action="https://darlii.com/admin/password/email" accept-charset="UTF-8" id="botble-a-c-l-forms-auth-forgot-password-form" class="js-base-form dirty-check"><input name="_token" type="hidden" value="Q3i8NHWFcnphnYIuYTWjEu8NbAR7bFRlhGljzEU4">
     
     
             <div class="form-body">

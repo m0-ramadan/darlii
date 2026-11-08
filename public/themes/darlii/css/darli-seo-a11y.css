@@ -1,0 +1,54 @@
+/* Darlii SEO + accessibility fixes (contrast, CLS, landmarks) */
+:root{--darli-gold-text:#7a5718;--darli-muted-on-dark:#94a3b8}
+
+/* Gold text on light surfaces: WCAG AA */
+.darli-section-tag,
+.darli-section-tag span,
+.darli-view-all-link,
+.darli-view-all-link span,
+.text-subtitle.text-primary,
+.single-property-floor .col.item .content .label,
+.single-property-floor .label{color:var(--darli-gold-text)!important}
+
+/* Blog date badge: white on dark gold */
+.darli-blog-card__date-badge{background:#7a5718!important;background-image:none!important}
+.darli-blog-card__date-badge span{color:#fff!important}
+
+/* Footer copyright on dark background */
+.darli-footer-bottom,.darli-footer-bottom .copyright,.copyright.text-variant-2{color:var(--darli-muted-on-dark)!important}
+
+/* Property gallery: reserve space before images load (CLS) */
+.flat-slider-detail-v1 .box-imgage-detail{display:block;aspect-ratio:16/10;overflow:hidden;border-radius:16px;background:#eef2f7}
+.flat-slider-detail-v1 .box-imgage-detail img{display:block;width:100%;height:100%;object-fit:cover}
+@media (max-width:767px){.flat-slider-detail-v1 .box-imgage-detail{aspect-ratio:4/3}}
+
+/* Screen-reader-only utility */
+.darli-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* Footer copyright + property labels (specificity-safe) */
+footer .copyright, .darli-footer .copyright, .bottom-footer .copyright, .copyright{color:#94a3b8!important}
+.col.item .content .label, .single-property-overview .label, .property-item .label{color:#4b5563!important}
+
+html body .copyright, html body footer .copyright, html body .bottom-footer .copyright, html body .copyright.text-variant-2{color:#94a3b8!important}
+html body .col.item .content .label, html body .single-property-overview .label, html body .property-item .label{color:#4b5563!important}
+/* أعلى أولوية: ثيم هومزن يفرض لونًا رماديًا على .text-variant-2 داخل الفوتر */
+html body footer .bottom-footer .copyright.text-variant-2,
+html body footer .bottom-footer .copyright,
+html body footer .bottom-footer .text-variant-2,
+html body .bottom-footer .copyright.text-variant-2{color:#94a3b8!important}
+
+/* Agents / about / contact / listing badges */
+.darli-agency-avatar-initials{color:#3f2a06!important}
+.darli-agency-tag-role{color:#7a5718!important}
+.darli-agency-card__sub{color:#5b6573!important}
+.agent-detail-section .badge,.agent-detail-card .badge{background:#7a5718!important;color:#fff!important}
+.agent-detail-section h2,.agent-detail-card h2{color:#7a5718!important}
+.darli-about-eyebrow{color:#7a5718!important}
+.darli-cnt-hero__pill>span{color:#7a5718!important}
+.flag-tag.primary{background:#7a5718!important;color:#fff!important}
+
+html body .darli-about-intro-content .darli-about-eyebrow,
+html body .darli-vision-content .darli-about-eyebrow,
+html body .darli-about-eyebrow{color:#7a5718!important}
+.darli-agents-join-btn{background:#7a5718!important;background-image:none!important}
+.darli-agents-join-btn>span{color:#fff!important}

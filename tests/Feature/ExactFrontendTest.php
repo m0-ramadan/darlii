@@ -13,7 +13,7 @@ class ExactFrontendTest extends TestCase
         $this->withSession(['locale' => 'en'])->get('/')
             ->assertOk()
             ->assertSee('dir="ltr"', false)
-            ->assertSee('themes/homzen/css/darli-home', false)
+            ->assertSee('themes/darlii/css/darli-home', false)
             ->assertSee('Discover the Best Properties', false)
             ->assertSee('ae-anno-announcement-wrapper', false)
             ->assertSee('vendor/core/plugins/announcement/js/announcement.js', false);
@@ -24,9 +24,9 @@ class ExactFrontendTest extends TestCase
         $this->withSession(['locale' => 'ar'])->get('/')
             ->assertOk()
             ->assertSee('dir="rtl"', false)
-            ->assertSee('/themes/homzen/images/logo/darli-logo-ar.png', false)
-            ->assertDontSee('/themes/homzen/themes/homzen/', false)
-            ->assertSee('themes/homzen/css/darli-home', false)
+            ->assertSee('/themes/darlii/images/logo/darli-logo-ar.png', false)
+            ->assertDontSee('/themes/darlii/themes/darlii/', false)
+            ->assertSee('themes/darlii/css/darli-home', false)
             ->assertSee('اكتشف أفضل العقارات', false)
             ->assertSee('ae-anno-announcement-wrapper', false)
             ->assertSee('vendor/core/plugins/announcement/js/announcement.js', false);
@@ -51,8 +51,8 @@ class ExactFrontendTest extends TestCase
     {
         // الصور قد تُضغط لاحقًا، لذا نتحقق من صلاحيتها وأبعادها بدل حجم الملف.
         foreach ([
-            public_path('themes/homzen/images/darli-placeholder.png'),
-            public_path('themes/homzen/images/darli-placeholder-en.png'),
+            public_path('themes/darlii/images/darli-placeholder.png'),
+            public_path('themes/darlii/images/darli-placeholder-en.png'),
             public_path('storage/general/placeholder.png'),
             public_path('storage/general/placeholder-en.png'),
         ] as $path) {
@@ -73,6 +73,6 @@ class ExactFrontendTest extends TestCase
             ->get('/properties/private-estate-magnificent-views')
             ->assertOk()
             ->assertSee('Private Estate Magnificent Views', false)
-            ->assertSee('themes/homzen/css/style.css?v=1.3.3', false);
+            ->assertSee('themes/darlii/css/style.css?v=1.3.3', false);
     }
 }

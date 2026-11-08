@@ -1,4 +1,4 @@
-# تشغيل HomzenLaravel باستخدام Docker
+# تشغيل DarliiLaravel باستخدام Docker
 
 ## لماذا Docker؟
 المشروع يحتاج PHP 8.3+، ويمكن تشغيله داخل Docker حتى لو كان PHP على Kali هو 8.2.
@@ -11,7 +11,7 @@ docker compose version
 
 ## 2. الدخول إلى المشروع
 ```bash
-cd "~/Videos/dashboard/بسم الله/HomzenLaravel"
+cd "~/Videos/dashboard/بسم الله/DarliiLaravel"
 ```
 
 ## 3. اختياري: تمرير UID/GID لتجنب مشاكل الصلاحيات

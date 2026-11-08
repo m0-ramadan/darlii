@@ -7,18 +7,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex,nofollow">
     <title>تسجيل دخول الإدارة | دارلي</title>
-    <link rel="icon" type="image/png" href="{{ asset('themes/homzen/images/logo/favicon.png') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/admin-login.css') }}?v=1.0.0">
+    <link rel="icon" type="image/png" href="{{ asset('themes/darlii/images/logo/favicon.png') }}">
+    <link href="/vendor/fonts/fonts.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/css/admin-login.css') }}?v=1.0.0">
 </head>
 
 <body class="admin-login">
     <main class="admin-login__shell">
         <section class="admin-login__card" aria-labelledby="admin-login-title">
             <div class="admin-login__brand">
-                <img src="{{ asset('themes/homzen/images/logo/darli-logo-ar-dark.png') }}" alt="دارلي">
+                <img src="{{ asset('themes/darlii/images/logo/darli-logo-ar-dark.png') }}" alt="دارلي">
             </div>
 
             <div class="admin-login__heading">

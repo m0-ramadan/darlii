@@ -9,7 +9,7 @@ class HomepageBlocksTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_all_homepage_four_blocks_render_dynamic_homzen_markup(): void
+    public function test_all_homepage_four_blocks_render_dynamic_darlii_markup(): void
     {
         $this->seed();
 
@@ -34,7 +34,7 @@ class HomepageBlocksTest extends TestCase
 
             $html = $response->json('data');
             $this->assertStringContainsString($expected, $html);
-            $this->assertStringNotContainsString('homzen.botble.com', $html);
+            $this->assertStringNotContainsString('darlii.botble.com', $html);
         }
     }
 

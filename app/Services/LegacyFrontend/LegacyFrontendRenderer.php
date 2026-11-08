@@ -29,7 +29,7 @@ class LegacyFrontendRenderer
      *   ['head' => ..., 'footer' => ...]
      *
      * This lets database-driven pages (the CMS listings) reuse the exact
-     * Homzen header/footer chrome while their own body content is rendered
+     * Darlii header/footer chrome while their own body content is rendered
      * from the database. Returns null when the mirror file is unavailable.
      *
      * @return array{head:string, footer:string}|null
@@ -100,6 +100,7 @@ class LegacyFrontendRenderer
         }
 
         $shell = $this->applyCmsSettings($head . substr($html, $footerStart), $request);
+        $shell = $this->normalizeSeoHead($shell);
         $shellFooterStart = strpos($shell, '<footer');
         if ($shellFooterStart === false) {
             return null;
@@ -131,6 +132,84 @@ class LegacyFrontendRenderer
     public static function listingsMarker(): string
     {
         return '<section class="flat-section-v5 flat-recommended';
+    }
+
+    /**
+     * يصلح أخطاء SEO/الوصول التي رصدها تدقيق Lighthouse:
+     * viewport يمنع الزوم، وغياب landmark <main>، وH1 المخفي على الموبايل.
+     */
+    private function applySeoA11y(string $html): string
+    {
+        $html = $this->normalizeSeoHead($html);
+
+        // الموبايل يستخدم h2 داخل .darli-mobile-hero-copy بينما H1 المكتبي مخفي.
+        $html = preg_replace(
+            '/(<div class="darli-mobile-hero-copy">\s*)<h2>(.*?)<\/h2>/is',
+            '$1<h1>$2</h1>',
+            $html,
+            1
+        ) ?? $html;
+
+        // ترتيب العناوين: h4/h6 بعد h2 كان يسبب heading-order.
+        $html = preg_replace('/(<div class="darli-feature-text">\s*)<h4>(.*?)<\/h4>/is', '$1<h3>$2</h3>', $html) ?? $html;
+        $html = preg_replace('/<h4 class="darli-location-card-name">(.*?)<\/h4>/is', '<h3 class="darli-location-card-name">$1</h3>', $html) ?? $html;
+        $html = preg_replace('/<h4 class="darli-partner-name">(.*?)<\/h4>/is', '<h3 class="darli-partner-name">$1</h3>', $html) ?? $html;
+        $html = str_replace('<h5>منازل تلهمك</h5>', '<h4>منازل تلهمك</h4>', $html);
+        $html = preg_replace('/<h5 class="darli-testi-name">(.*?)<\/h5>/is', '<h3 class="darli-testi-name">$1</h3>', $html) ?? $html;
+        $html = preg_replace('/(<div class="darli-why-us-item">.*?)<h4>(.*?)<\/h4>/is', '$1<h3>$2</h3>', $html) ?? $html;
+
+        // cookie notice: landmark region حتى لا تُرصد خارج landmarks.
+        $html = preg_replace(
+            '/<div([^>]*class="[^"]*js-site-notice[^"]*"[^>]*)>/i',
+            '<div$1 role="region" aria-label="موافقة ملفات تعريف الارتباط">',
+            $html
+        ) ?? $html;
+
+        if (! preg_match('/<main\b/i', $html)) {
+            if (preg_match('/<\/header>/i', $html)) {
+                $html = preg_replace('/<\/header>/i', '</header><main id="main-content" class="darli-main">', $html, 1) ?? $html;
+                if (preg_match('/<footer\b/i', $html)) {
+                    $html = preg_replace('/<footer\b/i', '</main><footer', $html, 1) ?? $html;
+                } else {
+                    $html = str_ireplace('</body>', '</main></body>', $html);
+                }
+            }
+        }
+
+        return $html;
+    }
+
+    /** يضبط viewport ويضيف ملف تحسينات التباين لكل صفحات الميرور. */
+    private function normalizeSeoHead(string $html): string
+    {
+        $html = preg_replace_callback(
+            '/(<meta[^>]+name=["\']viewport["\'][^>]+content=["\'])([^"\']*)(["\'])/i',
+            static function (array $m): string {
+                $content = preg_replace('/(maximum-scale|minimum-scale|user-scalable)\s*=\s*[^,\s]+/i', '', $m[2]) ?? $m[2];
+                $content = trim(preg_replace('/,\s*,/', ',', $content) ?? $content, " ,");
+
+                return $m[1] . $content . $m[3];
+            },
+            $html,
+            1
+        ) ?? $html;
+
+        $html = preg_replace(
+            '/<div([^>]*class="[^"]*js-site-notice[^"]*"[^>]*)>/i',
+            '<div$1 role="region" aria-label="موافقة ملفات تعريف الارتباط">',
+            $html
+        ) ?? $html;
+
+        if (! str_contains($html, 'darli-seo-a11y.css')) {
+            $link = '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-seo-a11y.css') . '?v=1.0.5">';
+            $html = preg_replace('/<\/head>/i', $link . '</head>', $html, 1) ?? ($html . $link);
+        }
+        if (! str_contains($html, 'speculationrules')) {
+            $rules = '<script type="speculationrules">{"prefetch":[{"source":"list","eagerness":"moderate","urls":["/properties","/projects","/blog","/agents"]}]}</script>';
+            $html = preg_replace('/<\/head>/i', $rules . '</head>', $html, 1) ?? ($html . $rules);
+        }
+
+        return $html;
     }
 
     public function render(Request $request, ?string $forcedPath = null): ?string
@@ -165,6 +244,7 @@ class LegacyFrontendRenderer
         $html = $this->useSiteHeader($html, $root, $request);
         $html = $this->prepareHtml($html, $request);
         $html = $this->injectSearchOptions($html, app()->getLocale());
+        $html = $this->applySeoA11y($html);
 
         return $this->applyCmsSettings($html, $request);
     }
@@ -240,8 +320,8 @@ class LegacyFrontendRenderer
 
         foreach (
             array_filter([
-                '/themes/homzen/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '.png' => (string) $logo,
-                '/themes/homzen/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '-dark.png' => (string) $darkLogo,
+                '/themes/darlii/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '.png' => (string) $logo,
+                '/themes/darlii/images/logo/darli-logo-' . ($isRtl ? 'ar' : 'en') . '-dark.png' => (string) $darkLogo,
             ]) as $mirrorPath => $cmsPath
         ) {
             if (! str_contains($cmsPath, 'images/logo/')) {
@@ -254,7 +334,7 @@ class LegacyFrontendRenderer
         }
 
         // ------------------------------------------------------ contact data
-        // Both the original Homzen placeholders and whatever the CMS holds are
+        // Both the original Darlii placeholders and whatever the CMS holds are
         // covered, so switching the phone/email in الإعدادات updates the public
         // pages even though they are served from a static mirror.
         $email = (string) $settings->get('contact.email', 'info@darlii.eg');
@@ -340,7 +420,7 @@ class LegacyFrontendRenderer
 
             $floatingWaHtml = <<<HTML
 <!-- Floating WhatsApp Button (Fixed on the Left) -->
-<div id="darli-floating-wa" class="darli-floating-wa" dir="{$locale}">
+<div id="darli-floating-wa" class="darli-floating-wa" dir="{$locale}" role="complementary" aria-label="تواصل عبر واتساب">
     <a href="{$waHref}" target="_blank" rel="noopener noreferrer" class="darli-floating-wa__btn" aria-label="WhatsApp" title="{$waTooltip}">
         <span class="darli-floating-wa__pulse"></span>
         <span class="darli-floating-wa__tooltip">{$waTooltip}</span>
@@ -376,10 +456,10 @@ HTML;
 
             $floatingNotifHtml = view('components.floating-notifications')->render() . "\n" . <<<HTML
 <script>window.DarliFirebaseConfig = {$firebaseConfigJson};</script>
-<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
-<script defer src="/themes/homzen/js/darli-notifications.js?v=2.2.0"></script>
-<script defer src="/themes/homzen/js/darli-visitor-tracker.min.js?v=1.0.0"></script>
+<script defer src="/vendor/firebase/10.13.0/firebase-app-compat.js"></script>
+<script defer src="/vendor/firebase/10.13.0/firebase-messaging-compat.js"></script>
+<script defer src="/themes/darlii/js/darli-notifications.js?v=2.2.0"></script>
+<script defer src="/themes/darlii/js/darli-visitor-tracker.min.js?v=1.0.0"></script>
 HTML;
 
             if (stripos($html, '</body>') !== false) {
@@ -412,7 +492,7 @@ HTML;
         }
 
         if (! str_contains($html, 'darli-testimonials-drag.min.js')) {
-            $testimonialDragScript = '<script defer src="/themes/homzen/js/darli-testimonials-drag.min.js?v=1.0.0"></script>';
+            $testimonialDragScript = '<script defer src="/themes/darlii/js/darli-testimonials-drag.min.js?v=1.0.0"></script>';
             $html = stripos($html, '</body>') !== false
                 ? str_ireplace('</body>', $testimonialDragScript . "\n</body>", $html)
                 : $html . $testimonialDragScript;
@@ -452,32 +532,8 @@ HTML;
         }
 
         // ---------------------------------------------------------- tracking
+        // تم إلغاء سكربتات GA/GTM/Pixels الخارجية نهائيًا (كل الأصول داخل المشروع).
         $snippets = [];
-
-        if ($settings->get('analytics.ga_enabled') && ($gaId = (string) $settings->get('analytics.ga_measurement_id', ''))) {
-            $snippets[] = <<<HTML
-<script async src="https://www.googletagmanager.com/gtag/js?id={$gaId}"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{$gaId}');</script>
-HTML;
-        }
-
-        if (($gtmId = (string) $settings->get('analytics.gtm_id', ''))) {
-            $snippets[] = <<<HTML
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','{$gtmId}');</script>
-HTML;
-        }
-
-        if ($settings->get('analytics.pixel_enabled') && ($pixelId = (string) $settings->get('analytics.facebook_pixel_id', ''))) {
-            $snippets[] = <<<HTML
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','{$pixelId}');fbq('track','PageView');</script>
-HTML;
-        }
-
-        if (($tiktokId = (string) $settings->get('analytics.tiktok_pixel_id', ''))) {
-            $snippets[] = <<<HTML
-<script>!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=r;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript";o.async=!0;o.src=r+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load('{$tiktokId}');ttq.page();}(window,document,'ttq');</script>
-HTML;
-        }
 
         $verification = (string) $settings->get('analytics.search_console', 'Xi0TXw-Fy_uE9ZZbZ3h39mAOBlCrHR7CH1pGZL4miAk');
         if (!empty($verification)) {
@@ -546,7 +602,7 @@ HTML;
             }
         }
 
-        $authScript = '<script defer src="/themes/homzen/js/darli-auth-modal.min.js?v=2.0.4"></script>';
+        $authScript = '<script defer src="/themes/darlii/js/darli-auth-modal.min.js?v=2.0.4"></script>';
 
         if (str_contains($html, '</body>')) {
             $html = preg_replace('/<\/body>/i', $authModalsHtml . "\n" . $authScript . "\n</body>", $html, 1) ?? $html;
@@ -557,7 +613,7 @@ HTML;
         return $html;
     }
 
-    /** Use the original Homzen navigation shown on the public listing pages. */
+    /** Use the original Darlii navigation shown on the public listing pages. */
     private function useSiteHeader(string $html, string $root, Request $request): string
     {
         $locale = $this->localeFromRequest($request);
@@ -747,10 +803,10 @@ HTML;
     {
         $requiredAssets = [
             '/vendor/core/plugins/language/css/language-public.css',
-            '/themes/homzen/plugins/bootstrap/css/bootstrap',
-            '/themes/homzen/css/animate.min.css',
-            '/themes/homzen/plugins/swiper/swiper-bundle.min.css',
-            '/themes/homzen/css/style.css',
+            '/themes/darlii/plugins/bootstrap/css/bootstrap',
+            '/themes/darlii/css/animate.min.css',
+            '/themes/darlii/plugins/swiper/swiper-bundle.min.css',
+            '/themes/darlii/css/style.css',
             '/vendor/core/plugins/real-estate/css/front-auth.css',
             '/vendor/core/plugins/announcement/css/announcement.css',
         ];
@@ -775,14 +831,14 @@ HTML;
 
         // On the homepage, its own stylesheet must remain last so the body
         // keeps the established homepage design while the header gains its CSS.
-        if (str_contains($html, '/themes/homzen/css/darli-home.min.css') || str_contains($html, '/themes/homzen/css/darli-home.css')) {
+        if (str_contains($html, '/themes/darlii/css/darli-home.min.css') || str_contains($html, '/themes/darlii/css/darli-home.css')) {
             // The canonical header is extracted from /ar/properties, so its
             // stylesheet URLs are relative ("../themes/..."). Normalise them
             // before injecting so they also work on the root homepage.
             $links = str_replace(['href="../themes/', 'href="../vendor/'], ['href="/themes/', 'href="/vendor/'], $links);
 
             return preg_replace(
-                '~<link\b[^>]*href=["\'][^"\']*/themes/homzen/css/darli-home(?:\.min)?\.css[^"\']*["\'][^>]*>~i',
+                '~<link\b[^>]*href=["\'][^"\']*/themes/darlii/css/darli-home(?:\.min)?\.css[^"\']*["\'][^>]*>~i',
                 $links . '$0',
                 $html,
                 1
@@ -813,7 +869,7 @@ HTML;
             if ($params !== []) {
                 $candidates[] = $path . '?' . http_build_query($params);
 
-                // The downloaded Homzen mirror contains these query orders.
+                // The downloaded Darlii mirror contains these query orders.
                 $knownOrders = [
                     ['page', 'type'],
                     ['type', 'page'],
@@ -882,14 +938,14 @@ HTML;
         $escapedBase = str_replace('/', '\\/', $base);
 
         /*
-         * Keep the original Homzen HTML/CSS/JS structure untouched.
+         * Keep the original Darlii HTML/CSS/JS structure untouched.
          *
          * Only backend/page URLs are pointed to this Laravel application.
          * Asset URLs are changed to local URLs only when the mirrored asset
          * actually exists under public/. Otherwise the original URL is kept.
          */
         $html = preg_replace_callback(
-            '#https?://homzen\.botble\.com/([^"\'<>\s)]*)#i',
+            '#https?://darlii\.botble\.com/([^"\'<>\s)]*)#i',
             function (array $matches) use ($base): string {
                 $path = ltrim($matches[1], '/');
 
@@ -906,10 +962,10 @@ HTML;
 
         /*
          * Same replacement for URLs escaped inside inline JavaScript / JSON:
-         * https:\/\/homzen.botble.com\/...
+         * https:\/\/darlii.botble.com\/...
          */
         $html = preg_replace_callback(
-            '#https?:\\\\/\\\\/homzen\.botble\.com\\\\/([^"\'<>\s)]*)#i',
+            '#https?:\\\\/\\\\/darlii\.botble\.com\\\\/([^"\'<>\s)]*)#i',
             function (array $matches) use ($escapedBase): string {
                 $path = str_replace('\\/', '/', $matches[1]);
                 $path = ltrim($path, '/');
@@ -928,19 +984,19 @@ HTML;
         // Host-only values in structured data and globals are not matched by
         // the path-aware callbacks above.
         $html = str_replace(
-            ['"https:\\/\\/homzen.botble.com"', '"http:\\/\\/homzen.botble.com"', 'window.siteUrl = "https://homzen.botble.com"'],
+            ['"https:\\/\\/darlii.botble.com"', '"http:\\/\\/darlii.botble.com"', 'window.siteUrl = "https://darlii.com"'],
             ['"' . $escapedBase . '"', '"' . $escapedBase . '"', 'window.siteUrl = "' . $base . '"'],
             $html
         );
-        $html = str_replace('data-site-cookie-domain="homzen.botble.com"', 'data-site-cookie-domain="' . e($request->getHost()) . '"', $html);
+        $html = str_replace('data-site-cookie-domain="darlii.botble.com"', 'data-site-cookie-domain="' . e($request->getHost()) . '"', $html);
         $html = preg_replace(
-            '#href=(["\'])https?://homzen\.botble\.com/cdn-cgi/l/email-protection(?:\#[^"\']*)?\1#i',
+            '#href=(["\'])https?://darlii\.botble\.com/cdn-cgi/l/email-protection(?:\#[^"\']*)?\1#i',
             'href="mailto:contact@botble.com"',
             $html
         ) ?? $html;
 
         // Also replace URL-encoded occurrences (such as social sharing links: facebook, pinterest, linkedin, whatsapp)
-        $encodedOld = rawurlencode('https://homzen.botble.com');
+        $encodedOld = rawurlencode('https://darlii.com');
         $encodedBase = rawurlencode($base);
         $html = str_replace($encodedOld, $encodedBase, $html);
 
@@ -1180,7 +1236,7 @@ HTML;
                 $image = $post->featured_image;
 
                 if (! $image) {
-                    $image = '/themes/homzen/images/darli-placeholder.png';
+                    $image = '/themes/darlii/images/darli-placeholder.png';
                 } elseif (! str_starts_with($image, 'http')) {
                     $image = str_starts_with($image, 'storage/')
                         ? '/' . ltrim($image, '/')
@@ -1302,7 +1358,7 @@ HTML;
             ->map(function (AgentProfile $agent) use ($locale): array {
                 $translation = $agent->translation($locale);
                 $name = $translation?->display_name ?? $agent->user?->name ?? $agent->slug;
-                $avatar = $agent->avatar_path ? asset($agent->avatar_path) : '/themes/homzen/images/darli-placeholder.png';
+                $avatar = $agent->avatar_path ? asset($agent->avatar_path) : '/themes/darlii/images/darli-placeholder.png';
 
                 return [
                     'name' => $name,
@@ -1417,7 +1473,7 @@ HTML;
                 'content' => $locale === 'en'
                     ? 'Darli platform made searching for a home in Beni Suef a seamless and enjoyable experience. Highly recommended for trusted properties.'
                     : 'منصة دارلي جعلت عملية البحث عن منزل في بني سويف تجربة سهلة وممتعة. أنصح بها لجميع الباحثين عن عقارات موثوقة.',
-                'image' => asset('themes/homzen/images/avatar/avatar-amr.png'),
+                'image' => asset('themes/darlii/images/avatar/avatar-amr.png'),
                 'rating' => 5,
             ],
             [
@@ -1426,7 +1482,7 @@ HTML;
                 'content' => $locale === 'en'
                     ? 'The Darli team helped me sell my home swiftly and at the right price. Exceptional professionalism and ongoing support throughout.'
                     : 'ساعدني فريق دارلي في بيع منزلي بسرعة وبسعر مناسب. احترافية عالية ومتابعة مستمرة من البداية للنهاية.',
-                'image' => asset('themes/homzen/images/avatar/avatar-sara.png'),
+                'image' => asset('themes/darlii/images/avatar/avatar-sara.png'),
                 'rating' => 5,
             ],
             [
@@ -1435,7 +1491,7 @@ HTML;
                 'content' => $locale === 'en'
                     ? 'My experience with Darli was excellent. I found the right home for my family easily. The site is user-friendly and support was great.'
                     : 'تجربتي مع دارلي كانت ممتازة. وجدت المنزل المناسب لعائلتي بسهولة. الموقع سهل الاستخدام وفريق الدعم متعاون جدًا.',
-                'image' => asset('themes/homzen/images/avatar/avatar-ahmed.png'),
+                'image' => asset('themes/darlii/images/avatar/avatar-ahmed.png'),
                 'rating' => 5,
             ],
         ];
@@ -1537,12 +1593,12 @@ HTML;
     {
         $locale = $this->localeFromRequest($request);
         $logoLanguage = $locale === 'ar' ? 'ar' : 'en';
-        $lightLogo = '/themes/homzen/images/logo/darli-logo-' . $logoLanguage . '.png';
-        $darkLogo = '/themes/homzen/images/logo/darli-logo-' . $logoLanguage . '-dark.png';
-        $favicon = '/themes/homzen/images/logo/favicon.png';
+        $lightLogo = '/themes/darlii/images/logo/darli-logo-' . $logoLanguage . '.png';
+        $darkLogo = '/themes/darlii/images/logo/darli-logo-' . $logoLanguage . '-dark.png';
+        $favicon = '/themes/darlii/images/logo/favicon.png';
         $placeholder = $locale === 'ar'
-            ? '/themes/homzen/images/darli-placeholder.png'
-            : '/themes/homzen/images/darli-placeholder-en.png';
+            ? '/themes/darlii/images/darli-placeholder.png'
+            : '/themes/darlii/images/darli-placeholder-en.png';
 
         $brandContainers = [
             'logo-box',
@@ -1559,7 +1615,7 @@ HTML;
         $offset = 0;
 
         $html = preg_replace_callback(
-            '/(<img\b[^>]*\bsrc\s*=\s*)(["\'])([^"\']*(?:themes\/homzen\/images\/logo\/darli-logo-(?:ar|en)(?:-dark)?\.png|storage\/general\/(?:logo|white-logo)[^"\']*))\2([^>]*>)/i',
+            '/(<img\b[^>]*\bsrc\s*=\s*)(["\'])([^"\']*(?:themes\/darlii\/images\/logo\/darli-logo-(?:ar|en)(?:-dark)?\.png|storage\/general\/(?:logo|white-logo)[^"\']*))\2([^>]*>)/i',
             function (array $matches) use ($html, &$offset, $lightLogo, $darkLogo, $placeholder, $brandContainers): string {
                 $fullTag = $matches[0];
                 $pos = strpos($html, $fullTag, $offset);
@@ -1876,7 +1932,7 @@ HTML;
 
     private function injectFooterLanguageSwitcher(string $html, Request $request): string
     {
-        if (str_contains($html, 'homzen-footer-languages')) {
+        if (str_contains($html, 'darlii-footer-languages')) {
             return $html;
         }
 
@@ -1890,10 +1946,10 @@ HTML;
             $current = $code === $locale ? ' is-active' : '';
             $ariaCurrent = $code === $locale ? ' aria-current="page"' : '';
 
-            $links .= '<a class="homzen-footer-languages__link darli-footer-languages__link' . $current . '" href="' . e($href) . '" lang="' . e($code) . '" hreflang="' . e($code) . '"' . $ariaCurrent . '>' . e($name) . '</a>';
+            $links .= '<a class="darlii-footer-languages__link darli-footer-languages__link' . $current . '" href="' . e($href) . '" lang="' . e($code) . '" hreflang="' . e($code) . '"' . $ariaCurrent . '>' . e($name) . '</a>';
         }
 
-        $switcher = '<div class="homzen-footer-languages darli-footer-languages" aria-label="' . e($label) . '"><div class="container homzen-footer-languages__inner darli-footer-languages__inner"><span class="homzen-footer-languages__label darli-footer-languages__label">' . e($label) . '</span><nav class="homzen-footer-languages__links darli-footer-languages__links" aria-label="' . e($label) . '">' . $links . '</nav></div></div>';
+        $switcher = '<div class="darlii-footer-languages darli-footer-languages" aria-label="' . e($label) . '"><div class="container darlii-footer-languages__inner darli-footer-languages__inner"><span class="darlii-footer-languages__label darli-footer-languages__label">' . e($label) . '</span><nav class="darlii-footer-languages__links darli-footer-languages__links" aria-label="' . e($label) . '">' . $links . '</nav></div></div>';
 
         return preg_replace('/(?=<div\b[^>]*class\s*=\s*(["\'])[^"\']*\bbottom-footer\b[^"\']*\1)/i', $switcher, $html, 1) ?? $html;
     }
@@ -2028,7 +2084,7 @@ HTML;
         $html = preg_replace('/<html\b[^>]*>/i', '<html lang="' . $locale . '" dir="' . $direction . '">', $html, 1) ?? $html;
 
         // أي إشارة للموقع الأصلي في الوسوم أو السكيمَا تُستبدل بالنطاق الحالي.
-        $html = str_replace(['https://homzen.botble.com', 'http://homzen.botble.com'], $base, $html);
+        $html = str_replace(['https://darlii.com', 'https://darlii.com'], $base, $html);
 
         if ($request->routeIs('home')) {
             $html = str_replace(
@@ -2146,10 +2202,10 @@ HTML;
          * per-page generated `.page_speed_*` inline rules.
          */
         $customStyles = <<<'HTML'
-<link rel="stylesheet" href="/themes/homzen/css/rtl-custom.min.css?v=2.0.1">
-<link rel="stylesheet" href="/themes/homzen/css/locale-switcher.min.css?v=1.0.0">
-<!-- <link rel="stylesheet" href="/themes/homzen/css/dark-mode.css?v=2.0.1"> -->
-<link rel="stylesheet" href="/themes/homzen/css/darli-unified.min.css?v=2.1.11">
+<link rel="stylesheet" href="/themes/darlii/css/rtl-custom.min.css?v=2.0.1">
+<link rel="stylesheet" href="/themes/darlii/css/locale-switcher.min.css?v=1.0.0">
+<!-- <link rel="stylesheet" href="/themes/darlii/css/dark-mode.css?v=2.0.1"> -->
+<link rel="stylesheet" href="/themes/darlii/css/darli-unified.min.css?v=2.1.11">
 HTML;
 
         // Page-specific CSS is loaded only on the page that needs it instead of
@@ -2157,7 +2213,7 @@ HTML;
         $currentPath = trim(request()->path(), '/');
 
         if (str_starts_with($currentPath, 'our-services')) {
-            $customStyles .= '<link rel="stylesheet" href="/themes/homzen/css/darli-services.min.css?v=1.0.0">';
+            $customStyles .= '<link rel="stylesheet" href="/themes/darlii/css/darli-services.min.css?v=1.0.0">';
         }
 
         $html = preg_replace('/<head([^>]*)>/i', '<head$1>' . $themeBoot, $html, 1) ?? $html;
@@ -2218,7 +2274,7 @@ HTML;
     });
 })();
 </script>
-<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/homzen/js/darli-mobile-menu.min.js?v=1.2.2"></script><script defer src="/themes/homzen/js/darli-favorites.js?v=2.0.1"></script><script defer src="/themes/homzen/js/map-location.min.js?v=2.3.4"></script></body>
+<script defer src="/vendor/core/plugins/announcement/js/announcement.js?v=2.0.1"></script><script defer src="/themes/darlii/js/darli-mobile-menu.min.js?v=1.2.2"></script><script defer src="/themes/darlii/js/darli-favorites.js?v=2.0.1"></script><script defer src="/themes/darlii/js/map-location.min.js?v=2.3.4"></script></body>
 HTML,
             $html,
             1
@@ -2355,7 +2411,7 @@ HTML,
 
     private function attachImagePlaceholders(string $html): string
     {
-        $placeholder = '/themes/homzen/images/darli-placeholder.png';
+        $placeholder = '/themes/darlii/images/darli-placeholder.png';
 
         return preg_replace_callback(
             '/<img\b([^>]*?)>/i',
@@ -2457,7 +2513,7 @@ HTML,
         }
 
         // 1. Dynamic replacement for classic inner-footer (4 columns)
-        $innerFooterPattern = '/<div\b[^>]*class=["\'][^"\']*\binner-footer\b[^"\']*["\'][^>]*>.*?<\/div>\s*(?=<div\b[^>]*class=["\'](?:homzen-footer-languages|bottom-footer)\b)/si';
+        $innerFooterPattern = '/<div\b[^>]*class=["\'][^"\']*\binner-footer\b[^"\']*["\'][^>]*>.*?<\/div>\s*(?=<div\b[^>]*class=["\'](?:darlii-footer-languages|bottom-footer)\b)/si';
         $addressItem = $address !== ''
             ? '<li class="mt-12 d-flex align-items-center gap-8"><svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon text-variant-2 svg-icon-ti-ti-map-pin page_speed_1278168353"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" /></svg><p class="text-white">' . $address . '</p></li>'
             : '';

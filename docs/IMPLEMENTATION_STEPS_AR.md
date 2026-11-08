@@ -1,4 +1,4 @@
-# خطوات تشغيل مشروع Homzen Laravel
+# خطوات تشغيل مشروع Darlii Laravel
 
 ## المتطلبات
 - PHP 8.3 أو أحدث
@@ -9,10 +9,10 @@
 
 ## تشغيل محلي
 1. فك ضغط المشروع.
-2. ادخل للمجلد: `cd HomzenLaravel`.
+2. ادخل للمجلد: `cd DarliiLaravel`.
 3. نفذ: `composer install`.
 4. انسخ البيئة: `cp .env.example .env`.
-5. أنشئ قاعدة MySQL باسم `homzen_laravel` أو أي اسم آخر.
+5. أنشئ قاعدة MySQL باسم `darlii_laravel` أو أي اسم آخر.
 6. عدّل `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` داخل `.env`.
 7. نفذ: `php artisan key:generate`.
 8. نفذ: `php artisan migrate --seed`.

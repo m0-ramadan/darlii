@@ -643,6 +643,7 @@
                             ⏳ حسابك بانتظار الاعتماد للإضافة
                         </button>
                     @else
+                        <a href="{{ route('dashboard.customer-requests.index') }}" class="darli-btn-gold" style="margin-inline-end:8px;">طلبات العملاء</a>
                         <a href="{{ route('dashboard.properties.create') }}" class="darli-btn-add">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             إضافة عقار جديد
@@ -807,14 +808,14 @@
                                 $st = $p->status?->value ?? (string) $p->status;
                                 $translation = $p->translation();
                                 $slug = $translation?->slug ?? $p->id;
-                                $thumb = $p->primaryImageUrl('ar') ?: '/themes/homzen/images/darli-placeholder.png';
+                                $thumb = $p->primaryImageUrl('ar') ?: '/themes/darlii/images/darli-placeholder.png';
                             @endphp
                             <tr>
                                 {{-- Property Info --}}
                                 <td>
                                     <div class="darli-prop-cell">
                                         <div class="darli-prop-thumb">
-                                            <img src="{{ $thumb }}" alt="{{ $translation?->name }}" onerror="this.src='/themes/homzen/images/darli-placeholder.png'">
+                                            <img src="{{ $thumb }}" alt="{{ $translation?->name }}" onerror="this.src='/themes/darlii/images/darli-placeholder.png'">
                                         </div>
                                         <div class="darli-prop-info">
                                             @if ($st === 'published')

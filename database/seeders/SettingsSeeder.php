@@ -49,11 +49,11 @@ class SettingsSeeder extends Seeder
             ['key' => 'maintenance.message', 'group' => 'maintenance', 'type' => 'textarea', 'value' => 'نعمل حاليًا على تحسين تجربتك. سنعود قريبًا، شكرًا لتفهمك.', 'label' => 'رسالة الصيانة'],
 
             // --------------------------------------------------------- branding
-            ['key' => 'branding.logo_ar', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/homzen/images/logo/darli-logo-ar.png', 'label' => 'اللوجو (عربي)', 'public' => true],
-            ['key' => 'branding.logo_en', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/homzen/images/logo/darli-logo-en.png', 'label' => 'اللوجو (إنجليزي)', 'public' => true],
-            ['key' => 'branding.logo_dark_ar', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/homzen/images/logo/darli-logo-ar-dark.png', 'label' => 'اللوجو الداكن (عربي)', 'public' => true],
-            ['key' => 'branding.logo_dark_en', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/homzen/images/logo/darli-logo-en-dark.png', 'label' => 'اللوجو الداكن (إنجليزي)', 'public' => true],
-            ['key' => 'branding.favicon', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/homzen/images/logo/favicon.png', 'label' => 'أيقونة الموقع (Favicon)', 'public' => true],
+            ['key' => 'branding.logo_ar', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/darlii/images/logo/darli-logo-ar.png', 'label' => 'اللوجو (عربي)', 'public' => true],
+            ['key' => 'branding.logo_en', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/darlii/images/logo/darli-logo-en.png', 'label' => 'اللوجو (إنجليزي)', 'public' => true],
+            ['key' => 'branding.logo_dark_ar', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/darlii/images/logo/darli-logo-ar-dark.png', 'label' => 'اللوجو الداكن (عربي)', 'public' => true],
+            ['key' => 'branding.logo_dark_en', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/darlii/images/logo/darli-logo-en-dark.png', 'label' => 'اللوجو الداكن (إنجليزي)', 'public' => true],
+            ['key' => 'branding.favicon', 'group' => 'branding', 'type' => 'image', 'value' => 'themes/darlii/images/logo/favicon.png', 'label' => 'أيقونة الموقع (Favicon)', 'public' => true],
             ['key' => 'branding.primary_color', 'group' => 'branding', 'type' => 'color', 'value' => '#0F3D2E', 'label' => 'اللون الأساسي', 'public' => true],
             ['key' => 'branding.gold_color', 'group' => 'branding', 'type' => 'color', 'value' => '#C8A45C', 'label' => 'اللون الذهبي', 'public' => true],
 

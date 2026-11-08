@@ -11,7 +11,7 @@
                 <article class="darli-blog-card">
                     <a href="{{ $post['url'] }}" class="darli-blog-img-wrapper" style="display: block;" aria-label="{{ $post['title'] }}">
                         <img src="{{ $post['image'] }}" alt="{{ $post['title'] }}" class="darli-blog-img"
-                            loading="lazy" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                            loading="lazy" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
                         @if ($post['date'])
                             <span class="darli-blog-date-badge">{{ $post['date'] }}</span>
                         @endif

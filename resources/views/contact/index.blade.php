@@ -88,7 +88,7 @@
             right: 0;
             height: 100%;
             width: 400px;
-            background: url('/themes/homzen/images/contact-hero-villa.png') no-repeat right top;
+            background: url('/themes/darlii/images/contact-hero-villa.png') no-repeat right top;
             background-size: cover;
             opacity: 0.9;
             pointer-events: none;
@@ -799,7 +799,7 @@
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                     </div>
-                    <h3 class="darli-cnt-card-heading">{{ $isAr ? 'الهاتف والخط الساخن' : 'Phone & Hotline' }}</h3>
+                    <h2 class="darli-cnt-card-heading h3">{{ $isAr ? 'الهاتف والخط الساخن' : 'Phone & Hotline' }}</h2>
                     <p class="darli-cnt-card-text">
                         {{ $isAr ? 'فريقنا متاح للرد على استفساراتكم وحجز المعاينات طوال أيام الأسبوع.' : 'Our team is available all week for inquiries and on-site viewings.' }}
                     </p>
@@ -833,7 +833,7 @@
                             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                         </svg>
                     </div>
-                    <h3 class="darli-cnt-card-heading">{{ $isAr ? 'البريد الإلكتروني' : 'Email Support' }}</h3>
+                    <h2 class="darli-cnt-card-heading h3">{{ $isAr ? 'البريد الإلكتروني' : 'Email Support' }}</h2>
                     <p class="darli-cnt-card-text">
                         {{ $isAr ? 'لإرسال استفساراتكم وعروض الشراكات الاستثمارية أو أي استفسارات أخرى' : 'For inquiries, partnerships, investments, or general assistance' }}
                     </p>
@@ -998,7 +998,7 @@
                     {{-- Side Card 1: WhatsApp Fast Channel --}}
                     <div class="darli-cnt-side-card">
                         <div class="darli-cnt-side-wa-head">
-                            <h3 class="darli-cnt-side-wa-title">{{ $isAr ? 'تواصل سريع عبر واتساب' : 'Instant WhatsApp' }}</h3>
+                            <h3 class="darli-cnt-side-wa-title">{{ $isAr ? 'تواصل سريع عبر واتساب' : 'Instant WhatsApp' }}</h2>
                             <div class="darli-cnt-wa-badge">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -1028,7 +1028,7 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c58d34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon>
                             </svg>
-                            <h3>{{ $isAr ? 'مميزات منصة دارلي' : 'Darli Platform Features' }}</h3>
+                            <h3>{{ $isAr ? 'مميزات منصة دارلي' : 'Darli Platform Features' }}</h2>
                         </div>
 
                         {{-- Item 1 --}}
@@ -1083,7 +1083,7 @@
                                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
                             </svg>
-                            <h3>{{ $isAr ? 'هل لديك أسئلة متكررة؟' : 'Frequently Asked Questions?' }}</h3>
+                            <h3>{{ $isAr ? 'هل لديك أسئلة متكررة؟' : 'Frequently Asked Questions?' }}</h2>
                         </div>
                         <p class="darli-cnt-side-desc">
                             {{ $isAr ? 'يمكنك زيارة صفحة الأسئلة الشائعة للحصول على إجابات سريعة لأكثر استفساراتكم.' : 'Visit our FAQ section for instant answers regarding contracts, viewings, and real estate laws.' }}

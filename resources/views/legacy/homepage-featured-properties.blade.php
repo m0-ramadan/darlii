@@ -34,7 +34,7 @@
           <div class="darli-card-image-box">
             <a href="{{ $url }}" style="display: block; width: 100%; height: 100%;">
               <img src="{{ $image }}" alt="{{ $tr?->name }}" class="darli-card-image"
-                loading="lazy" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                loading="lazy" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             </a>
             <div class="d-flex gap-2" style="position: absolute; top: 12px; right: 12px; z-index: 2;">
               @if ($isSold)
@@ -84,7 +84,7 @@
       @empty
         <div style="grid-column: 1 / -1; width: 100%; max-width: 1024px; margin: 0 auto;">
           <img
-            src="{{ asset($locale === 'ar' ? 'themes/homzen/images/darli-placeholder-ar.png' : 'themes/homzen/images/darli-placeholder-en.png') }}"
+            src="{{ asset($locale === 'ar' ? 'themes/darlii/images/darli-placeholder-ar.png' : 'themes/darlii/images/darli-placeholder-en.png') }}"
             alt="{{ $locale === 'ar' ? 'لا توجد بيانات متاحة حاليًا' : 'No data is currently available' }}"
             style="display: block; width: 100%; height: auto; border-radius: 28px;"
           >

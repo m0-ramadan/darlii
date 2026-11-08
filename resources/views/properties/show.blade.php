@@ -64,7 +64,7 @@
 @endphp
 
 @push('head')
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-property-details.css') }}?v=1.0.0">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/css/darli-property-details.css') }}?v=1.0.0">
 @endpush
 
 @section('title', ($tr?->seo_title ?: $tr?->name ?: $property->reference_code) . ($isAr ? ' | دارلي' : ' | Darlii'))
@@ -95,15 +95,17 @@
                         @endphp
                         <div class="swiper-slide">
                             <a href="{{ $imgUrl }}" class="box-imgage-detail d-block" data-property-gallery>
-                                <img src="{{ $imgUrl }}" alt="{{ $tr?->name }}" width="100%" loading="lazy"
-                                    onerror="this.onerror=null;this.src='{{ $placeholder }}';">
+                                <img src="{{ $imgUrl }}" alt="{{ $tr?->name }}" width="800" height="500"
+                                    loading="{{ $loop->first ? 'eager' : 'lazy' }}" @if ($loop->first) fetchpriority="high" @endif
+                                    decoding="async" onerror="this.onerror=null;this.src='{{ $placeholder }}';">
                             </a>
                         </div>
                     @endforeach
                 @else
                     <div class="swiper-slide">
                         <a href="{{ $heroImage }}" class="box-imgage-detail d-block" data-property-gallery>
-                            <img src="{{ $heroImage }}" alt="{{ $tr?->name }}" width="100%" loading="lazy"
+                            <img src="{{ $heroImage }}" alt="{{ $tr?->name }}" width="800" height="500" loading="eager"
+                                fetchpriority="high" decoding="async"
                                 onerror="this.onerror=null;this.src='{{ $placeholder }}';">
                         </a>
                     </div>
@@ -189,7 +191,7 @@
                         <h1 class="h4 title">{{ $tr?->name ?: '#' . $property->reference_code }}</h1>
                     </div>
                     <div class="box-price d-flex align-items-center gap-2 flex-wrap">
-                        <h4>{{ $priceLabel }}</h4>
+                        <div class="h4">{{ $priceLabel }}</div>
                         @if ($isNegotiablePrice)
                             <span class="flag-tag success"
                                 style="font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center;">
@@ -521,7 +523,7 @@
                                                 : asset('storage/properties/floor.png'));
                                     @endphp
                                     <li class="floor-item">
-                                        <div class="floor-header {{ $isFirst ? '' : 'collapsed' }}"
+                                        <div class="floor-header {{ $isFirst ? '' : 'collapsed' }}" role="button" tabindex="0"
                                             data-bs-target="#{{ $planId }}" data-bs-toggle="collapse"
                                             aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
                                             aria-controls="{{ $planId }}" style="cursor: pointer;">
@@ -681,7 +683,7 @@
                         $displayName = $owner->name;
                         $displayAvatar = $owner->avatar_url
                             ? asset('storage/' . $owner->avatar_url)
-                            : asset('themes/homzen/images/logo/darli-logo-ar.png');
+                            : asset('themes/darlii/images/logo/darli-logo-ar.png');
                         $displayRole = $isAr ? 'وسيط عقاري' : 'Real Estate Agent';
                     } elseif ($contactMode === 'platform_with_agent_name' && $owner) {
                         $contactPhone = $phone;
@@ -689,13 +691,13 @@
                         $displayName = $owner->name;
                         $displayAvatar = $owner->avatar_url
                             ? asset('storage/' . $owner->avatar_url)
-                            : asset('themes/homzen/images/logo/darli-logo-ar.png');
+                            : asset('themes/darlii/images/logo/darli-logo-ar.png');
                         $displayRole = $isAr ? 'وسيط معتمد لدى منصة دارلي' : 'Verified Darli Partner';
                     } else {
                         $contactPhone = $phone;
                         $contactWhatsapp = $whatsapp;
                         $displayName = $isAr ? 'إدارة منصة دارلي العقارية' : 'Darli Real Estate Management';
-                        $displayAvatar = asset('themes/homzen/images/logo/darli-logo-ar.png');
+                        $displayAvatar = asset('themes/darlii/images/logo/darli-logo-ar.png');
                         $displayRole = $isAr ? 'خدمة العملاء والوساطة المباشرة' : 'Official Support Team';
                     }
                     $contactWhatsappDigits = preg_replace('/\D+/', '', (string) $contactWhatsapp) ?? '';
@@ -710,7 +712,7 @@
                                     <span class="d-block">
                                         <img src="{{ $displayAvatar }}" alt="{{ $displayName }}"
                                             class="darli-logo-img"
-                                            onerror="this.onerror=null;this.src='{{ asset('themes/homzen/images/logo/darli-logo-ar.png') }}';">
+                                            onerror="this.onerror=null;this.src='{{ asset('themes/darlii/images/logo/darli-logo-ar.png') }}';">
                                     </span>
                                 </div>
                                 <div class="info line-clamp-1">
@@ -840,9 +842,9 @@
                                 </div>
                                 <div class="content">
                                     <div class="archive-bottom">
-                                        <h6 class="title">
+                                        <h3 class="title h6">
                                             <a href="{{ $sUrl }}">{{ $sTr?->name ?? $item->reference_code }}</a>
-                                        </h6>
+                                        </h3>
                                         <div class="desc">
                                             <svg class="icon svg-icon-ti-ti-map-pin" width="16" height="16"
                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -1014,6 +1016,12 @@
 
             // Floor plans accordion toggle
             document.querySelectorAll('.single-property-floor .floor-header').forEach(function(header) {
+                header.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        this.click();
+                    }
+                });
                 header.addEventListener('click', function() {
                     var targetId = this.getAttribute('data-bs-target');
                     var target = targetId ? document.querySelector(targetId) : null;

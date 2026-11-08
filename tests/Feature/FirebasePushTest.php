@@ -54,7 +54,7 @@ class FirebasePushTest extends TestCase
     public function test_notification_icon_and_badge_assets_are_valid_squares(): void
     {
         foreach (['notification-icon.png' => 512, 'notification-badge.png' => 96] as $file => $size) {
-            $path = public_path('themes/homzen/images/logo/' . $file);
+            $path = public_path('themes/darlii/images/logo/' . $file);
             $this->assertFileExists($path);
             $info = getimagesize($path);
             $this->assertNotFalse($info);

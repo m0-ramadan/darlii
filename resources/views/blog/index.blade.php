@@ -5,8 +5,8 @@
     $isAr = $locale === 'ar';
 
     $placeholder = $isAr
-        ? asset('themes/homzen/images/darli-placeholder-ar.png')
-        : asset('themes/homzen/images/darli-placeholder-en.png');
+        ? asset('themes/darlii/images/darli-placeholder-ar.png')
+        : asset('themes/darlii/images/darli-placeholder-en.png');
 
     /** صورة المقال: روابط كاملة كما هي، وإلا من مجلد الميرور /legacy. */
     $articleImage = function (?string $path) use ($placeholder): string {
@@ -55,10 +55,10 @@
     <!-- ==================== HERO BANNER ==================== -->
     <section class="darli-blog-hero">
         <div class="darli-blog-hero__villas" aria-hidden="true">
-            <img src="{{ asset('themes/homzen/images/darli-blog-villas.png') }}" alt="" class="darli-blog-hero__villas-img">
+            <img src="{{ asset('themes/darlii/images/darli-blog-villas.png') }}" alt="" class="darli-blog-hero__villas-img">
         </div>
         <div class="darli-blog-hero__skyscrapers" aria-hidden="true">
-            <img src="{{ asset('themes/homzen/images/darli-blog-skyscrapers.png') }}" alt="" class="darli-blog-hero__skyscrapers-img">
+            <img src="{{ asset('themes/darlii/images/darli-blog-skyscrapers.png') }}" alt="" class="darli-blog-hero__skyscrapers-img">
         </div>
         <div class="container position-relative darli-blog-hero__container">
             <div class="darli-blog-hero__content">
@@ -91,7 +91,7 @@
             </div>
 
             <!-- Category pills: On left in RTL -->
-            <div class="darli-blog-categories" role="tablist">
+            <div class="darli-blog-categories" role="group" aria-label="تصفية المقالات">
                 <button type="button" class="darli-blog-cat-btn active" data-category="all">
                     {{ $isAr ? 'الكل' : 'All' }}
                 </button>
@@ -168,9 +168,9 @@
 
                             <!-- Content Body -->
                             <div class="darli-blog-card__body">
-                                <h3 class="darli-blog-card__title">
+                                <h2 class="darli-blog-card__title">
                                     <a href="{{ $url }}">{{ $tr?->title }}</a>
-                                </h3>
+                                </h2>
 
                                 @if ($excerpt !== '')
                                     <p class="darli-blog-card__excerpt">{{ $excerpt }}</p>

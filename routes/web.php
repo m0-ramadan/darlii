@@ -4,6 +4,7 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContentController;
+use App\Http\Controllers\Dashboard\CustomerRequestController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ProjectController as DashboardProjectController;
 use App\Http\Controllers\Dashboard\PropertyController as DashboardPropertyController;
@@ -26,10 +27,59 @@ Route::get('/robots.txt', function () {
     $base = rtrim((string) config('app.url'), '/') ?: url('/');
     $sitemap = $base . '/sitemap.xml';
 
-    return response("User-agent: *\nAllow: /\n\nSitemap: {$sitemap}\n", 200, [
+    $groups = [
+        'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot',
+        'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended',
+    ];
+    $body = "User-agent: *\nAllow: /\nContent-Signal: search=yes, ai-input=yes, ai-train=no\n\n";
+    foreach ($groups as $bot) {
+        $body .= "User-agent: {$bot}\nAllow: /\nContent-Signal: search=yes, ai-input=yes, ai-train=no\n\n";
+    }
+    $body .= "Sitemap: {$sitemap}\n";
+
+    return response($body, 200, [
         'Content-Type' => 'text/plain; charset=UTF-8',
     ]);
 })->name('robots');
+
+// بلد الزائر من Cloudflare (بدون أي اتصال خارجي).
+Route::get('/api/geo', function () {
+    $country = strtoupper((string) request()->header('CF-IPCountry', 'EG'));
+    if (strlen($country) !== 2 || $country === 'XX') {
+        $country = 'EG';
+    }
+
+    return response()->json(['country' => $country])->header('Cache-Control', 'public, max-age=3600');
+})->name('geo');
+
+// llms.txt: ملخص الموقع وروابطه الرئيسية لمحركات البحث الذكية.
+Route::get('/llms.txt', function () {
+    $base = rtrim((string) config('app.url'), '/') ?: url('/');
+    $lines = [
+        '# دارلي للتسويق العقاري ببني سويف',
+        '',
+        '> أكبر منصة للتسويق العقاري في محافظة بني سويف، نساعدك على بيع وشراء وتأجير العقارات والمشروعات بأفضل الأسعار وبكل ثقة.',
+        '',
+        '## الصفحات الرئيسية',
+        "- [الرئيسية]({$base}/): عقارات للبيع والإيجار في بني سويف.",
+        "- [العقارات]({$base}/properties): قائمة العقارات المتاحة مع الأسعار والتفاصيل.",
+        "- [المشروعات]({$base}/projects): المشروعات العقارية الجديدة في بني سويف.",
+        "- [المدونة]({$base}/blog): مقالات ونصائح عن السوق العقاري.",
+        "- [الوكلاء]({$base}/agents): وكلاء وشركات عقارية معتمدة.",
+        "- [من نحن]({$base}/about-us): عن منصة دارلي.",
+        "- [اتصل بنا]({$base}/contact-us): بيانات التواصل.",
+        "- [الأسئلة الشائعة]({$base}/faqs): إجابات عن الأسئلة المتكررة.",
+        "- [الوظائف]({$base}/careers): فرص العمل المتاحة.",
+        '',
+        '## خرائط الموقع',
+        "- [Sitemap]({$base}/sitemap.xml)",
+        '',
+    ];
+
+    return response(implode("\n", $lines), 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
+    ]);
+})->name('llms');
 
 // Redirect any incoming /ar or /en URL directly to clean root-level URL
 Route::get('/ar/{path?}', function (?string $path = null) {
@@ -53,7 +103,7 @@ Route::get('/language/switch/{locale}', LocaleController::class)
     ->name('locale.switch');
 
 
-// Compatibility endpoints used by the untouched original Homzen frontend.
+// Compatibility endpoints used by the untouched original Darlii frontend.
 Route::post('/newsletter/subscribe', [LegacyCompatibilityController::class, 'newsletter'])->middleware('throttle:20,1');
 Route::post('/send-consult', [LegacyCompatibilityController::class, 'consult'])->middleware('throttle:10,1');
 Route::post('/contact/send', [LegacyCompatibilityController::class, 'contact'])->middleware('throttle:10,1');
@@ -169,6 +219,17 @@ Route::middleware(['set.locale', 'set.currency'])
                 Route::post('/properties/{property}/submit', [DashboardPropertyController::class, 'submit'])->name('properties.submit');
                 Route::post('/properties/{property}/sold', [DashboardPropertyController::class, 'markSold'])->name('properties.sold');
                 Route::post('/properties/{property}/available', [DashboardPropertyController::class, 'markAvailable'])->name('properties.available');
+
+                Route::prefix('customer-requests')->name('customer-requests.')->group(function (): void {
+                    Route::get('/', [CustomerRequestController::class, 'index'])->name('index');
+                    Route::get('/create', [CustomerRequestController::class, 'create'])->name('create');
+                    Route::post('/', [CustomerRequestController::class, 'store'])->name('store');
+                    Route::get('/stats', [CustomerRequestController::class, 'stats'])->name('stats');
+                    Route::get('/{customerRequest}/edit', [CustomerRequestController::class, 'edit'])->name('edit');
+                    Route::put('/{customerRequest}', [CustomerRequestController::class, 'update'])->name('update');
+                    Route::patch('/{customerRequest}/status', [CustomerRequestController::class, 'updateStatus'])->name('status');
+                    Route::delete('/{customerRequest}', [CustomerRequestController::class, 'destroy'])->name('destroy');
+                });
 
                 Route::get('/projects', [DashboardProjectController::class, 'index'])->name('projects.index');
                 Route::get('/projects/create', [DashboardProjectController::class, 'create'])->name('projects.create');

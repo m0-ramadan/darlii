@@ -25,3 +25,9 @@ yarn-error.log
 # Firebase private key — never commit
 /storage/app/firebase-service-account.json
 /.dsh
+
+/database/backups
+
+/public/sitemap.xml
+
+/storage/logs/*.log

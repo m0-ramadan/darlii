@@ -22,7 +22,7 @@
           <div class="darli-testi-watermark">”</div>
           <div class="darli-testi-user">
             <img src="{{ $avatar }}" alt="{{ $name }}" class="darli-testi-avatar"
-              loading="lazy" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+              loading="lazy" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             <div>
               <h5 class="darli-testi-name">{{ $name }}</h5>
               <span class="darli-testi-role">{{ $role }}</span>

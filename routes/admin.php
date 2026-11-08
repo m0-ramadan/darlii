@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\CareerController;
+use App\Http\Controllers\Admin\CustomerRequestController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LeadController;
@@ -33,10 +34,86 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisitorLogController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Finance\FinanceBalanceController;
+use App\Http\Controllers\Admin\Finance\FinanceController;
+use App\Http\Controllers\Admin\Finance\FinanceDepositController;
+use App\Http\Controllers\Admin\Finance\FinanceExpenseController;
+use App\Http\Controllers\Admin\Finance\FinancePointRuleController;
+use App\Http\Controllers\Admin\Finance\FinancePointTransactionController;
+use App\Http\Controllers\Admin\Finance\FinancePointTypeController;
 use Illuminate\Support\Facades\Route;
 
 // ------------------------------------------------------------------ الرئيسية
 Route::get('/', DashboardController::class)->name('dashboard');
+
+// ------------------------------------------------------- طلبات العملاء (كل الأدوار)
+Route::prefix('customer-requests')->name('customer-requests.')->group(function (): void {
+    Route::get('/', [CustomerRequestController::class, 'index'])->name('index');
+    Route::get('/create', [CustomerRequestController::class, 'create'])->name('create');
+    Route::post('/', [CustomerRequestController::class, 'store'])->name('store');
+    Route::get('/stats', [CustomerRequestController::class, 'stats'])->name('stats');
+    Route::get('/{customerRequest}/edit', [CustomerRequestController::class, 'edit'])->name('edit');
+    Route::put('/{customerRequest}', [CustomerRequestController::class, 'update'])->name('update');
+    Route::patch('/{customerRequest}/status', [CustomerRequestController::class, 'updateStatus'])->name('status');
+    Route::delete('/{customerRequest}', [CustomerRequestController::class, 'destroy'])->name('destroy');
+});
+
+// ------------------------------------------------------------- الماليات (سوبر أدمن فقط)
+Route::prefix('finance')->name('finance.')->middleware('super.admin')->group(function (): void {
+    Route::get('/', [FinanceController::class, 'index'])->name('index');
+    Route::get('/stats', [FinanceController::class, 'stats'])->name('stats');
+    Route::get('/stats/export', [FinanceController::class, 'exportStats'])->name('stats.export');
+
+    Route::prefix('point-types')->name('point-types.')->middleware('finance.points')->group(function (): void {
+        Route::get('/', [FinancePointTypeController::class, 'index'])->name('index');
+        Route::get('/create', [FinancePointTypeController::class, 'create'])->name('create');
+        Route::post('/', [FinancePointTypeController::class, 'store'])->name('store');
+        Route::get('/{pointType}/edit', [FinancePointTypeController::class, 'edit'])->name('edit');
+        Route::put('/{pointType}', [FinancePointTypeController::class, 'update'])->name('update');
+        Route::delete('/{pointType}', [FinancePointTypeController::class, 'destroy'])->name('destroy');
+        Route::post('/{pointType}/toggle', [FinancePointTypeController::class, 'toggle'])->name('toggle');
+    });
+
+    Route::prefix('point-rules')->name('point-rules.')->middleware('finance.points')->group(function (): void {
+        Route::get('/', [FinancePointRuleController::class, 'index'])->name('index');
+        Route::post('/run-due', [FinancePointRuleController::class, 'runDue'])->name('run-due');
+        Route::get('/create', [FinancePointRuleController::class, 'create'])->name('create');
+        Route::post('/', [FinancePointRuleController::class, 'store'])->name('store');
+        Route::get('/{pointRule}/edit', [FinancePointRuleController::class, 'edit'])->name('edit');
+        Route::put('/{pointRule}', [FinancePointRuleController::class, 'update'])->name('update');
+        Route::delete('/{pointRule}', [FinancePointRuleController::class, 'destroy'])->name('destroy');
+        Route::post('/{pointRule}/run', [FinancePointRuleController::class, 'runNow'])->name('run');
+        Route::post('/{pointRule}/toggle', [FinancePointRuleController::class, 'toggle'])->name('toggle');
+    });
+
+    Route::prefix('point-transactions')->name('point-transactions.')->middleware('finance.points')->group(function (): void {
+        Route::get('/', [FinancePointTransactionController::class, 'index'])->name('index');
+        Route::get('/create', [FinancePointTransactionController::class, 'create'])->name('create');
+        Route::post('/', [FinancePointTransactionController::class, 'store'])->name('store');
+    });
+
+    Route::prefix('deposits')->name('deposits.')->group(function (): void {
+        Route::get('/', [FinanceDepositController::class, 'index'])->name('index');
+        Route::get('/create', [FinanceDepositController::class, 'create'])->name('create');
+        Route::post('/', [FinanceDepositController::class, 'store'])->name('store');
+        Route::get('/{deposit}', [FinanceDepositController::class, 'show'])->name('show');
+        Route::post('/{deposit}/approve', [FinanceDepositController::class, 'approve'])->name('approve');
+        Route::post('/{deposit}/reject', [FinanceDepositController::class, 'reject'])->name('reject');
+        Route::delete('/{deposit}', [FinanceDepositController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('expenses')->name('expenses.')->group(function (): void {
+        Route::get('/', [FinanceExpenseController::class, 'index'])->name('index');
+        Route::get('/create', [FinanceExpenseController::class, 'create'])->name('create');
+        Route::post('/', [FinanceExpenseController::class, 'store'])->name('store');
+        Route::get('/{expense}/edit', [FinanceExpenseController::class, 'edit'])->name('edit');
+        Route::put('/{expense}', [FinanceExpenseController::class, 'update'])->name('update');
+        Route::delete('/{expense}', [FinanceExpenseController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::get('/balances', [FinanceBalanceController::class, 'index'])->name('balances.index');
+    Route::get('/balances/{user}', [FinanceBalanceController::class, 'show'])->name('balances.show');
+});
 
 // ------------------------------------------------------------- الإحصائيات
 Route::get('/stats', [StatsController::class, 'index'])->name('stats.index');

@@ -57,7 +57,8 @@ trait InteractsWithAdminPanel
     {
         $user = $this->admin();
 
-        $query = User::query()->with('roles')->where('status', 'active');
+        $query = User::query()->with('roles')->where('status', 'active')
+            ->whereDoesntHave('roles', fn ($q) => $q->where('slug', 'super-admin'));
 
         if (! $user->isAdmin()) {
             $query->where(function ($q) use ($user): void {
@@ -75,7 +76,8 @@ trait InteractsWithAdminPanel
     protected function assignableManagers()
     {
         $query = User::query()->with('roles')->where('status', 'active')
-            ->whereHas('roles', fn ($q) => $q->whereIn('slug', ['super-admin', 'admin', 'manager', 'property-manager', 'agency-manager']));
+            ->whereHas('roles', fn ($q) => $q->whereIn('slug', ['super-admin', 'admin', 'manager', 'property-manager', 'agency-manager']))
+            ->whereDoesntHave('roles', fn ($q) => $q->where('slug', 'super-admin'));
 
         if (! $this->admin()->isAdmin()) {
             $query->where('id', $this->admin()->id);

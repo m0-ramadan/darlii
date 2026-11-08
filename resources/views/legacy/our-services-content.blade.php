@@ -1,8 +1,8 @@
 <!-- Services Hero Section -->
 <section class="services-hero-section">
-    <img src="/themes/homzen/images/faq-hero-right.png" class="services-hero-decor services-hero-decor--left"
+    <img src="/themes/darlii/images/faq-hero-right.png" class="services-hero-decor services-hero-decor--left"
         alt="" aria-hidden="true">
-    <img src="/themes/homzen/images/faq-hero-left.png" class="services-hero-decor services-hero-decor--right"
+    <img src="/themes/darlii/images/faq-hero-left.png" class="services-hero-decor services-hero-decor--right"
         alt="" aria-hidden="true">
     <div class="container position-relative" style="z-index: 2;">
         <ul class="breadcrumb services-breadcrumb justify-content-center">
@@ -136,7 +136,7 @@
                 <!-- Left Showcase Column: In RTL, appears on the LEFT (second in DOM) -->
                 <div class="col-lg-6 col-12 order-lg-2 order-2">
                     <div class="services-showcase-container">
-                        <img src="/themes/homzen/images/services-villa-showcase.png" alt="{{ $whyTitle }}"
+                        <img src="/themes/darlii/images/services-villa-showcase.png" alt="{{ $whyTitle }}"
                             class="services-showcase-img" draggable="false">
                     </div>
                 </div>
@@ -275,7 +275,7 @@
 
                 <!-- Image Side: In RTL, appears on the LEFT (second in DOM) -->
                 <div class="darli-cta-image-side">
-                    <img src="/themes/homzen/images/services-cta-house-clean.png" alt="{{ $ctaTitle }}"
+                    <img src="/themes/darlii/images/services-cta-house-clean.png" alt="{{ $ctaTitle }}"
                         class="darli-cta-house-img" draggable="false">
                 </div>
             </div>

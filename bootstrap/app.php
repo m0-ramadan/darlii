@@ -5,6 +5,9 @@ use App\Http\Middleware\EnsureAdminPanel;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\SetCurrency;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\EnsureFinancePointsEnabled;
+use App\Http\Middleware\EnsureSuperAdmin;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\ShowMaintenancePage;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class]);
+        $middleware->web(append: [ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class, SecurityHeaders::class]);
 
         $middleware->redirectTo(
             guests: fn (\Illuminate\Http\Request $request) => $request->is('admin/*') || $request->is('admin')
@@ -34,6 +37,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'set.currency' => SetCurrency::class,
             'role' => EnsureRole::class,
             'admin.panel' => EnsureAdminPanel::class,
+            'super.admin' => EnsureSuperAdmin::class,
+            'finance.points' => EnsureFinancePointsEnabled::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -14,7 +14,7 @@
                 --main-header-background-color: #ffffff;
                 --main-header-text-color: #161e2d;
                 --main-header-border-color: #e4e4e4;
-                --map-marker-icon-image: url(themes/homzen/images/map-icon.png);
+                --map-marker-icon-image: url(themes/darlii/images/map-icon.png);
             }
         </style>
 
@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="Darli">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Register">
-<meta property="og:image" content="https://homzen.botble.com/themes/homzen/images/logo/darli-logo-ar.png">
+<meta property="og:image" content="/themes/darlii/images/logo/darli-logo-ar.png">
 <meta name="twitter:title" content="Register">
 <link
     rel="sitemap"
@@ -268,13 +268,13 @@
 <link media="all" type="text/css" rel="stylesheet" href="vendor/core/plugins/language/css/language-public.css?v=2.2.0">
 <link media="all" type="text/css" rel="stylesheet" href="vendor/core/plugins/real-estate/css/front-auth.css">
 <link media="all" type="text/css" rel="stylesheet" href="vendor/core/plugins/social-login/css/social-login.css?v=1.2.1">
-<link media="all" type="text/css" rel="stylesheet" href="themes/homzen/plugins/bootstrap/css/bootstrap.min.css">
-<link media="all" type="text/css" rel="stylesheet" href="themes/homzen/css/animate.min.css">
-<link media="all" type="text/css" rel="stylesheet" href="themes/homzen/plugins/swiper/swiper-bundle.min.css">
-<link media="all" type="text/css" rel="stylesheet" href="themes/homzen/css/style.css?v=1.3.3">
+<link media="all" type="text/css" rel="stylesheet" href="themes/darlii/plugins/bootstrap/css/bootstrap.min.css">
+<link media="all" type="text/css" rel="stylesheet" href="themes/darlii/css/animate.min.css">
+<link media="all" type="text/css" rel="stylesheet" href="themes/darlii/plugins/swiper/swiper-bundle.min.css">
+<link media="all" type="text/css" rel="stylesheet" href="themes/darlii/css/style.css?v=1.3.3">
 
 
-<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/homzen.botble.com"}]}</script><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"WebSite","name":"Darli","url":"https:\/\/homzen.botble.com"}</script>
+<script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/darlii.com"}]}</script><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"WebSite","name":"Darli","url":"https:\/\/darlii.com"}</script>
 
 <div class="preload preload-container">
             <div class="boxes">
@@ -305,45 +305,33 @@
         </div>
     </div>
 <link media="all" type="text/css" rel="stylesheet" href="vendor/core/plugins/announcement/css/announcement.css?v=1.3.3"><link type="application/atom+xml" rel="alternate" title="Posts feed" href="feed/posts">
-<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://homzen.botble.com/vi/feed/posts">
-<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://homzen.botble.com/ar/feed/posts">
-<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://homzen.botble.com/fr/feed/posts">
-<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://homzen.botble.com/id/feed/posts">
+<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://darlii.com/vi/feed/posts">
+<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://darlii.com/ar/feed/posts">
+<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://darlii.com/fr/feed/posts">
+<link type="application/atom+xml" rel="alternate" title="Posts feed" href="https://darlii.com/id/feed/posts">
 <link type="application/atom+xml" rel="alternate" title="Properties feed" href="feed/properties">
-<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://homzen.botble.com/vi/feed/properties">
-<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://homzen.botble.com/ar/feed/properties">
-<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://homzen.botble.com/fr/feed/properties">
-<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://homzen.botble.com/id/feed/properties">
+<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://darlii.com/vi/feed/properties">
+<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://darlii.com/ar/feed/properties">
+<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://darlii.com/fr/feed/properties">
+<link type="application/atom+xml" rel="alternate" title="Properties feed" href="https://darlii.com/id/feed/properties">
 <link type="application/atom+xml" rel="alternate" title="Projects feed" href="feed/projects">
-<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://homzen.botble.com/vi/feed/projects">
-<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://homzen.botble.com/ar/feed/projects">
-<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://homzen.botble.com/fr/feed/projects">
-<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://homzen.botble.com/id/feed/projects">
+<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://darlii.com/vi/feed/projects">
+<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://darlii.com/ar/feed/projects">
+<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://darlii.com/fr/feed/projects">
+<link type="application/atom+xml" rel="alternate" title="Projects feed" href="https://darlii.com/id/feed/projects">
 
 
 <!-- Google Analytics -->
-<script async defer src='https://www.googletagmanager.com/gtag/js?id=G-76NX8HY29D'
-    >
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){
-      if (window.gtmDebugMode) {
-          console.log('GTM Event:', arguments);
-      }
-      dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
-  gtag('config', 'G-76NX8HY29D');
-</script>
+
+
 
 <script>
-    window.siteUrl = "https://homzen.botble.com";
+    window.siteUrl = "https://darlii.com";
 </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="/themes/homzen/css/darli-design-system.css?v=1.1.0">
+    <link href="/vendor/fonts/fonts.css" rel="stylesheet">
+<script src="/vendor/lucide/lucide.min.js"></script>
+<link rel="stylesheet" href="/themes/darlii/css/darli-design-system.css?v=1.1.0">
 </head>
 
     <body  class="body counter-scroll" id="page-auth-register">
@@ -567,7 +555,7 @@
                     <div class="logo-box">
                         <div class="logo">
                             <a href="/en">
-                                <img src="/themes/homzen/images/logo/darli-logo-en.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';" >
+                                <img src="/themes/darlii/images/logo/darli-logo-en.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';" >
                             </a>
                         </div>
                     </div>
@@ -657,7 +645,7 @@
         <nav class="menu-box">
             <div class="nav-logo">
                 <a href="/en">
-                    <img src="/themes/homzen/images/logo/darli-logo-en.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';" >
+                    <img src="/themes/darlii/images/logo/darli-logo-en.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';" >
                 </a>
             </div>
             <div class="bottom-canvas">
@@ -782,7 +770,7 @@
 >
   <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
   <path d="M3 7l9 6l9 -6" />
-</svg>                            <div><a href="https://homzen.botble.com/cdn-cgi/l/email-protection#bcdfd3d2c8dddfc8fcded3c8ded0d992dfd3d1" title="Email"><span class="__cf_email__" data-cfemail="690a06071d080a1d290b061d0b050c470a0604">[email&#160;protected]</span></a></div>
+</svg>                            <div><a href="https://darlii.com/cdn-cgi/l/email-protection#bcdfd3d2c8dddfc8fcded3c8ded0d992dfd3d1" title="Email"><span class="__cf_email__" data-cfemail="690a06071d080a1d290b061d0b050c470a0604">[email&#160;protected]</span></a></div>
                         </div>
                                     </div>
             </div>
@@ -2583,7 +2571,7 @@
                     <div class="content-footer-top">
                         <div class="footer-logo">
     <a href="/en">
-        <img src="/themes/homzen/images/logo/darli-logo-en-dark.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';" >
+        <img src="/themes/darlii/images/logo/darli-logo-en-dark.png" alt="Darli" class="darli-logo-img" style="height: 48px; width: auto; object-fit: contain;" onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';" >
     </a>
 </div>
 <div class="wd-social">
@@ -2724,7 +2712,7 @@
 >
   <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
   <path d="M3 7l9 6l9 -6" />
-</svg>                        <p class="text-white"><a href="https://homzen.botble.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="096a66677d686a7d496b667d6b656c276a6664">[email&#160;protected]</a></p>
+</svg>                        <p class="text-white"><a href="https://darlii.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="096a66677d686a7d496b667d6b656c276a6664">[email&#160;protected]</a></p>
                     </li>
                             </ul>
             </div>
@@ -2831,7 +2819,7 @@
         
                     <p class="mt-12 text-variant-2">Your Weekly/Monthly Dose of Knowledge and Inspiration</p>
         
-        <form method="POST" action="https://homzen.botble.com/newsletter/subscribe" accept-charset="UTF-8" id="botble-newsletter-forms-fronts-newsletter-form" class="subscribe-form mt-12 dirty-check"><input name="_token" type="hidden" value="Q3i8NHWFcnphnYIuYTWjEu8NbAR7bFRlhGljzEU4">
+        <form method="POST" action="https://darlii.com/newsletter/subscribe" accept-charset="UTF-8" id="botble-newsletter-forms-fronts-newsletter-form" class="subscribe-form mt-12 dirty-check"><input name="_token" type="hidden" value="Q3i8NHWFcnphnYIuYTWjEu8NbAR7bFRlhGljzEU4">
 
     
 
@@ -2945,12 +2933,12 @@
             </div>
         </div>
 
-        <script data-cfasync="false" src="cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="themes/homzen/js/popper.min.js"></script>
-<script src="themes/homzen/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script data-pagespeed-no-defer="1" src="themes/homzen/js/jquery.min.js"></script>
-<script src="themes/homzen/js/wow.min.js"></script>
-<script src="themes/homzen/plugins/swiper/swiper-bundle.min.js"></script>
-<script src="themes/homzen/js/script.js?v=1.3.3"></script>
+        <script data-cfasync="false" src="cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="themes/darlii/js/popper.min.js"></script>
+<script src="themes/darlii/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script data-pagespeed-no-defer="1" src="themes/darlii/js/jquery.min.js"></script>
+<script src="themes/darlii/js/wow.min.js"></script>
+<script src="themes/darlii/plugins/swiper/swiper-bundle.min.js"></script>
+<script src="themes/darlii/js/script.js?v=1.3.3"></script>
 <script src="vendor/core/core/js-validation/js/js-validation.js?v=1.0.1"></script>
 <script>
     jQuery(document).ready(function() {
@@ -3505,263 +3493,10 @@
 
 <div data-site-cookie-name="cookie_for_consent"></div>
 <div data-site-cookie-lifetime="7300"></div>
-<div data-site-cookie-domain="homzen.botble.com"></div>
+<div data-site-cookie-domain="darlii.com"></div>
 <div data-site-session-secure=""></div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function checkCookie(name) {
-            return document.cookie.split(';').some((item) => item.trim().startsWith(name + '='));
-        }
 
-        setTimeout(function() {
-            const cookieName = document.querySelector('div[data-site-cookie-name]').getAttribute(
-                'data-site-cookie-name') || 'cookie_for_consent';
-            if (!checkCookie(cookieName)) {
-                const siteNotice = document.querySelector('.js-site-notice');
-                if (siteNotice) {
-                    siteNotice.classList.add('site-notice--visible');
-                }
-            }
-        }, 1000);
-    });
-
-    window.addEventListener('load', function() {
-        if (typeof gtag !== 'undefined') {
-            gtag('consent', 'default', {
-                'ad_storage': 'denied',
-                'analytics_storage': 'denied'
-            });
-
-            document.addEventListener('click', function(event) {
-                if (event.target.classList.contains('js-site-notice-agree')) {
-                    const categories = document.querySelectorAll('.js-cookie-category:checked');
-                    const consents = {
-                        'ad_storage': 'denied',
-                        'analytics_storage': 'denied'
-                    };
-
-                    categories.forEach(function(category) {
-                        if (category.value === 'marketing') {
-                            consents.ad_storage = 'granted';
-                        }
-                        if (category.value === 'analytics') {
-                            consents.analytics_storage = 'granted';
-                        }
-                    });
-
-                    gtag('consent', 'update', consents);
-                }
-            });
-        }
-
-        window.botbleCookieConsent = (function() {
-            const COOKIE_NAME = document.querySelector('div[data-site-cookie-name]').getAttribute(
-                'data-site-cookie-name') || 'cookie_for_consent';
-            const COOKIE_DOMAIN = document.querySelector('div[data-site-cookie-domain]').getAttribute(
-                'data-site-cookie-domain') || window.location.hostname;
-            const COOKIE_LIFETIME = parseInt(document.querySelector('div[data-site-cookie-lifetime]')
-                .getAttribute('data-site-cookie-lifetime') || '36000', 10);
-            const SESSION_SECURE = document.querySelector('div[data-site-session-secure]').getAttribute(
-                'data-site-session-secure') || '';
-
-            const cookieDialog = document.querySelector('.js-site-notice');
-            const cookieCategories = document.querySelector('.site-notice__categories');
-            const customizeButton = document.querySelector('.js-site-notice-customize');
-
-            if (cookieDialog) {
-                if (cookieCategories) {
-                    cookieCategories.style.display = 'none';
-                }
-
-                if (!cookieExists(COOKIE_NAME)) {
-                    setTimeout(function() {
-                        cookieDialog.classList.add('site-notice--visible');
-                    }, 800);
-                }
-            }
-
-            function consentWithCookies() {
-                const categories = {};
-                document.querySelectorAll('.js-cookie-category:checked').forEach(function(checkbox) {
-                    categories[checkbox.value] = true;
-                });
-                setCookie(COOKIE_NAME, JSON.stringify(categories), COOKIE_LIFETIME);
-                hideCookieDialog();
-            }
-
-            function savePreferences() {
-                consentWithCookies();
-
-                if (cookieCategories) {
-                    const slideUpAnimation = cookieCategories.animate(
-                        [{
-                                opacity: 1,
-                                height: cookieCategories.offsetHeight + 'px'
-                            },
-                            {
-                                opacity: 0,
-                                height: 0
-                            }
-                        ], {
-                            duration: 300,
-                            easing: 'ease-out'
-                        }
-                    );
-
-                    slideUpAnimation.onfinish = function() {
-                        cookieCategories.style.display = 'none';
-                    };
-                }
-
-                if (customizeButton) {
-                    customizeButton.classList.remove('active');
-                }
-            }
-
-            function rejectAllCookies() {
-                if (cookieExists(COOKIE_NAME)) {
-                    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-                    document.cookie = COOKIE_NAME +
-                        '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=' +
-                        COOKIE_DOMAIN +
-                        '; path=/; SameSite=Lax' +
-                        secure +
-                        SESSION_SECURE;
-                }
-
-                if (typeof gtag !== 'undefined') {
-                    gtag('consent', 'update', {
-                        'ad_storage': 'denied',
-                        'analytics_storage': 'denied'
-                    });
-                }
-
-                hideCookieDialog();
-            }
-
-            function cookieExists(name) {
-                const cookie = getCookie(name);
-                return cookie !== null && cookie !== undefined;
-            }
-
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) {
-                    return parts.pop().split(';').shift();
-                }
-                return null;
-            }
-
-            function hideCookieDialog() {
-                if (cookieDialog) {
-                    cookieDialog.classList.remove('site-notice--visible');
-                    cookieDialog.style.display = 'none';
-                }
-            }
-
-            function setCookie(name, value, expirationInDays) {
-                const date = new Date();
-                date.setTime(date.getTime() + expirationInDays * 24 * 60 * 60 * 1000);
-                const secure = window.location.protocol === 'https:' ? ';Secure' : '';
-                document.cookie =
-                    name +
-                    '=' +
-                    value +
-                    ';expires=' +
-                    date.toUTCString() +
-                    ';domain=' +
-                    COOKIE_DOMAIN +
-                    ';path=/' +
-                    ';SameSite=Lax' +
-                    secure +
-                    SESSION_SECURE;
-            }
-
-            function toggleCustomizeView() {
-                if (!cookieCategories) return;
-
-                if (cookieCategories.style.display === 'none') {
-                    cookieCategories.style.height = '0';
-                    cookieCategories.style.opacity = '0';
-                    cookieCategories.style.display = 'block';
-
-                    const height = cookieCategories.scrollHeight;
-                    const slideDownAnimation = cookieCategories.animate(
-                        [{
-                                opacity: 0,
-                                height: 0
-                            },
-                            {
-                                opacity: 1,
-                                height: height + 'px'
-                            }
-                        ], {
-                            duration: 300,
-                            easing: 'ease-in'
-                        }
-                    );
-
-                    slideDownAnimation.onfinish = function() {
-                        cookieCategories.style.height = 'auto';
-                        cookieCategories.style.opacity = '1';
-                    };
-
-                    if (customizeButton) {
-                        customizeButton.classList.add('active');
-                    }
-                } else {
-                    const slideUpAnimation = cookieCategories.animate(
-                        [{
-                                opacity: 1,
-                                height: cookieCategories.offsetHeight + 'px'
-                            },
-                            {
-                                opacity: 0,
-                                height: 0
-                            }
-                        ], {
-                            duration: 300,
-                            easing: 'ease-out'
-                        }
-                    );
-
-                    slideUpAnimation.onfinish = function() {
-                        cookieCategories.style.display = 'none';
-                    };
-
-                    if (customizeButton) {
-                        customizeButton.classList.remove('active');
-                    }
-                }
-            }
-
-            if (cookieExists(COOKIE_NAME)) {
-                hideCookieDialog();
-            }
-
-            document.addEventListener('click', function(event) {
-                if (event.target.classList.contains('js-site-notice-agree')) {
-                    consentWithCookies();
-                } else if (event.target.classList.contains('js-site-notice-reject')) {
-                    rejectAllCookies();
-                } else if (event.target.classList.contains('js-site-notice-customize')) {
-                    toggleCustomizeView();
-                } else if (event.target.classList.contains('js-site-notice-save')) {
-                    savePreferences();
-                }
-            });
-
-            return {
-                consentWithCookies: consentWithCookies,
-                rejectAllCookies: rejectAllCookies,
-                hideCookieDialog: hideCookieDialog,
-                savePreferences: savePreferences,
-            };
-        })();
-    });
-</script>
 
 
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ba756f979b778d0',t:'MTc2NzgyOTY0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>

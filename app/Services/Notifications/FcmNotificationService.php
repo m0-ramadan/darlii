@@ -194,16 +194,16 @@ class FcmNotificationService
             'data' => [
                 'url' => $actionUrl,
                 'type' => 'test',
-                'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
-                'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
+                'badge' => asset('/themes/darlii/images/logo/notification-badge.png'),
             ],
             'webpush' => [
                 'headers' => ['Urgency' => 'high'],
                 'notification' => [
                     'title' => $title,
                     'body' => $body,
-                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
-                    'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                    'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
+                    'badge' => asset('/themes/darlii/images/logo/notification-badge.png'),
                     'requireInteraction' => true,
                     'tag' => 'darlii-test-' . time(),
                     'data' => ['url' => $actionUrl],
@@ -309,7 +309,7 @@ class FcmNotificationService
                 $notificationPayload = [
                     'title' => $title,
                     'body' => $body,
-                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
+                    'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
                     'sound' => 'default',
                     'click_action' => $actionUrl ?: url('/ar'),
                 ];
@@ -320,15 +320,15 @@ class FcmNotificationService
                 $dataPayload = [
                     'title' => $title,
                     'body' => $body,
-                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
-                    'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                    'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
+                    'badge' => asset('/themes/darlii/images/logo/notification-badge.png'),
                     'url' => $actionUrl ?: url('/ar'),
                     'sound' => 'default',
                     'vibrate' => '300,100,300,100,300',
                     'tag' => $notifTag,
                     'id' => (string) ($notificationId ?: time()),
-                    'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
-                    'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                    'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
+                    'badge' => asset('/themes/darlii/images/logo/notification-badge.png'),
                 ];
                 if ($imageUrl) {
                     $dataPayload['image'] = $imageUrl;
@@ -399,8 +399,8 @@ class FcmNotificationService
                         'vibrate' => '300,100,300,100,300',
                         'tag' => $notifTag,
                         'id' => (string) ($notificationId ?: time()),
-                        'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
-                        'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                        'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
+                        'badge' => asset('/themes/darlii/images/logo/notification-badge.png'),
                     ],
                     'webpush' => [
                         'headers' => [
@@ -409,8 +409,8 @@ class FcmNotificationService
                         'notification' => [
                             'title' => $title,
                             'body' => $body,
-                            'icon' => asset('/themes/homzen/images/logo/notification-icon.png'),
-                            'badge' => asset('/themes/homzen/images/logo/notification-badge.png'),
+                            'icon' => asset('/themes/darlii/images/logo/notification-icon.png'),
+                            'badge' => asset('/themes/darlii/images/logo/notification-badge.png'),
                             'vibrate' => [300, 100, 300, 100, 300],
                             'requireInteraction' => true,
                             'renotify' => true,

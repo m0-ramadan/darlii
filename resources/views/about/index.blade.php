@@ -9,11 +9,11 @@
 @section('title', $pageTitle)
 
 @push('head')
-    <link rel="stylesheet" href="{{ asset('themes/homzen/css/darli-about-us.min.css') }}?v=2.2.1">
+    <link rel="stylesheet" href="{{ asset('themes/darlii/css/darli-about-us.min.css') }}?v=2.2.1">
 @endpush
 
 @section('content')
-<main class="darli-about-page" dir="rtl">
+<div class="darli-about-page" dir="rtl">
 
     <!-- ======================================================================
          1. Hero Header
@@ -53,7 +53,7 @@
 
                 <!-- Image Column (Left in RTL) -->
                 <div class="darli-about-image-wrap">
-                    <img src="/themes/homzen/images/about/darli-about-villa.png" alt="شركة دارلي للاستثمار العقاري">
+                    <img src="/themes/darlii/images/about/darli-about-villa.png" alt="شركة دارلي للاستثمار العقاري">
                     <div class="darli-about-badge">
                         <div class="darli-about-badge-icon">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -249,7 +249,7 @@
 
                 <!-- Image Column (Left in RTL) -->
                 <div class="darli-vision-image-wrap">
-                    <img src="/themes/homzen/images/about/darli-about-balcony.png" alt="رؤيتنا ورسالتنا - دارلي">
+                    <img src="/themes/darlii/images/about/darli-about-balcony.png" alt="رؤيتنا ورسالتنا - دارلي">
                 </div>
             </div>
         </div>
@@ -371,7 +371,7 @@
                 <!-- Step 1 -->
                 <div class="darli-step-card">
                     <div class="darli-step-card-image-wrap">
-                        <img src="/themes/homzen/images/about/step-1.png" alt="استشارة مخصصة">
+                        <img src="/themes/darlii/images/about/step-1.png" alt="استشارة مخصصة">
                         <span class="darli-step-number-badge">01</span>
                     </div>
                     <div class="darli-step-card-body">
@@ -383,7 +383,7 @@
                 <!-- Step 2 -->
                 <div class="darli-step-card">
                     <div class="darli-step-card-image-wrap">
-                        <img src="/themes/homzen/images/about/step-2.png" alt="إجراءات سهلة">
+                        <img src="/themes/darlii/images/about/step-2.png" alt="إجراءات سهلة">
                         <span class="darli-step-number-badge">02</span>
                     </div>
                     <div class="darli-step-card-body">
@@ -395,7 +395,7 @@
                 <!-- Step 3 -->
                 <div class="darli-step-card">
                     <div class="darli-step-card-image-wrap">
-                        <img src="/themes/homzen/images/about/step-3.png" alt="متابعة ما بعد البيع">
+                        <img src="/themes/darlii/images/about/step-3.png" alt="متابعة ما بعد البيع">
                         <span class="darli-step-number-badge">03</span>
                     </div>
                     <div class="darli-step-card-body">
@@ -428,7 +428,7 @@
         </div>
     </section>
 
-</main>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

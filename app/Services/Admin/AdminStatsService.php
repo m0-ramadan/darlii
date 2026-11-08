@@ -67,7 +67,9 @@ class AdminStatsService
         $query = User::query();
 
         if ($this->user->isAdmin()) {
-            return $query;
+            return $this->user->isSuperAdmin()
+                ? $query
+                : $query->whereDoesntHave('roles', fn ($q) => $q->where('slug', 'super-admin'));
         }
 
         return $query->whereIn('id', $this->user->visibleUserIds());
@@ -112,7 +114,7 @@ class AdminStatsService
             'reviews_pending' => (int) Review::query()->where('status', 'pending')->count(),
             'posts_total' => (int) Post::query()->count(),
             'users_total' => (int) $this->userScope()->count(),
-            'users_admins' => (int) $this->userScope()->whereHas('roles', fn ($q) => $q->whereIn('slug', ['admin', 'super-admin']))->count(),
+            'users_admins' => (int) $this->userScope()->whereHas('roles', fn ($q) => $q->whereIn('slug', ['admin']))->count(),
             'users_managers' => (int) $this->userScope()->whereHas('roles', fn ($q) => $q->whereIn('slug', ['manager', 'property-manager']))->count(),
             'users_agents' => (int) $this->userScope()->whereHas('roles', fn ($q) => $q->where('slug', 'agent'))->count(),
             'users_active' => (int) $this->userScope()->where('status', 'active')->count(),

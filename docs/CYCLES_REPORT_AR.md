@@ -1,6 +1,6 @@
-# تقرير السايكلز (الدورات التشغيلية) — منصة دارلي / Homzen Laravel Rebuild
+# تقرير السايكلز (الدورات التشغيلية) — منصة دارلي / Darlii Laravel Rebuild
 
-> **المشروع:** `real_state` (دارلي / Darlii) — Laravel 13 + قالب Homzen الأصلي
+> **المشروع:** `real_state` (دارلي / Darlii) — Laravel 13 + قالب Darlii الأصلي
 > **تاريخ التقرير:** 2026-10-12
 > **نطاق التقرير:** حصر كل السايكلز (Business Cycles) الموجودة فعلياً في الموقع + حالة التنفيذ الحقيقية لكل واحدة.
 
@@ -20,8 +20,8 @@
 كل حكم في التقرير ده مبني على فحص الكود الفعلي (routes / controllers / models / migrations / enums / services / tests)، مش على نقل من التوثيق.
 
 ### بيئة التشغيل (متحقَّق منها)
-- الحاويات شغّالة: `homzen_app` (PHP 8.3.35)، `homzen_db` (MySQL 8.4)، `homzen_redis`، `homzen_node`.
-- **مهم:** PHP على المضيف 8.2.27 بينما المشروع يتطلب `>= 8.3` — لذلك تشغيل `php artisan` لازم يكون **جوه حاوية `homzen_app`**، وإلا هيطلع `platform_check` fatal error.
+- الحاويات شغّالة: `darlii_app` (PHP 8.3.35)، `darlii_db` (MySQL 8.4)، `darlii_redis`، `darlii_node`.
+- **مهم:** PHP على المضيف 8.2.27 بينما المشروع يتطلب `>= 8.3` — لذلك تشغيل `php artisan` لازم يكون **جوه حاوية `darlii_app`**، وإلا هيطلع `platform_check` fatal error.
 
 ---
 
@@ -32,7 +32,7 @@
 - **الكتلة الأساسية للتجارة (نشر العقار → المراجعة → النشر) منفّذة كويس** وهي أنضج جزء في المشروع.
 - **سايكل الدفع/الرصيد (Credits & Payment) = صفر تنفيذ.** الجداول والـ migration موجودة، لكن مفيش ولا سطر كود بيستخدم `Order` أو `CreditLedger`. ودي أخطر فجوة لأن نشر العقار المفروض بيستهلك رصيد.
 - **مفيش طبقة إشعارات ولا Jobs ولا Mailers خالص** في المشروع — وده بيعطّل خطوات أساسية في سايكل الاستفسارات (Lead) والمواعيد (Appointment) والتقييمات.
-- **نتيجة تشغيل الاختبارات الحقيقية** (جوه `homzen_app`):
+- **نتيجة تشغيل الاختبارات الحقيقية** (جوه `darlii_app`):
 
 ```
 Tests:  1 failed, 25 passed (203 assertions) — 7.61s
@@ -284,13 +284,13 @@ Tests:  1 failed, 25 passed (203 assertions) — 7.61s
 
 **المنفّذ:**
 - `Currency` model: `code, name, symbol, exchange_rate, decimal_places, symbol_position, is_default, is_active`.
-- `/currency/switch/{code}` — بيحفظ في `session('currency')` + `users.preferred_currency` (بـ `saveQuietly`) + كوكي `homzen_currency`.
+- `/currency/switch/{code}` — بيحفظ في `session('currency')` + `users.preferred_currency` (بـ `saveQuietly`) + كوكي `darlii_currency`.
 - middleware `set.currency` على كل مسارات الـ locale.
 - `exchange_rate` مستخدم فعلياً في العرض: `FavoriteController`, `PropertyMapController`, `Services/LegacyFrontend/HomepageBlockRenderer`.
 - ✅ المبدأ الصحيح مطبّق: السعر الأصلي مخزّن في `properties.price` + `currency_id`، والتحويل بيحصل في العرض فقط — **مفيش overwrite للقيمة الأصلية**.
 
 **الناقص:**
-- 🔴 **اختبار فاشل**: `test_locale_and_currency_are_saved_independently` — متوقع `EUR` جه `EGP`. يعني فيه تعارض بين كوكي `homzen_currency` والعملة الافتراضية في `VisitorPreferences`/middleware.
+- 🔴 **اختبار فاشل**: `test_locale_and_currency_are_saved_independently` — متوقع `EUR` جه `EGP`. يعني فيه تعارض بين كوكي `darlii_currency` والعملة الافتراضية في `VisitorPreferences`/middleware.
 - 🟡 التحويل متكرر في أكتر من مكان بدل service موحّد (`CurrencyConverter`) — خطر divergence.
 - 🔴 مفيش تحديث لأسعار الصرف ولا caching ليها.
 
@@ -311,7 +311,7 @@ Tests:  1 failed, 25 passed (203 assertions) — 7.61s
 
 ## 4. تغطية الاختبارات التفصيلية
 
-**نتيجة التشغيل الفعلي جوه `homzen_app` (PHP 8.3.35):** `1 failed, 25 passed (203 assertions)` في 7.61 ثانية.
+**نتيجة التشغيل الفعلي جوه `darlii_app` (PHP 8.3.35):** `1 failed, 25 passed (203 assertions)` في 7.61 ثانية.
 
 | السايكل | عدد الاختبارات | الحالة |
 |---|---|---|
@@ -330,7 +330,7 @@ Failed asserting that two strings are equal.
 -'EUR'  +'EGP'
 at tests/Feature/PreferencePersistenceTest.php:21
 ```
-السبب: `tests/Feature/PreferencePersistenceTest.php:17` بيعمل `withCookie('homzen_currency','EUR')` ثم بيتوقع `assertSessionHas('currency','EUR')` لكن الجلسة بتحتوي `EGP` — يعني middleware/`VisitorPreferences` بتغلب الكوكي على العملة الافتراضية.
+السبب: `tests/Feature/PreferencePersistenceTest.php:17` بيعمل `withCookie('darlii_currency','EUR')` ثم بيتوقع `assertSessionHas('currency','EUR')` لكن الجلسة بتحتوي `EGP` — يعني middleware/`VisitorPreferences` بتغلب الكوكي على العملة الافتراضية.
 
 ---
 

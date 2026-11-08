@@ -144,7 +144,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <img src="{{ $avatarUrl }}" alt="{{ $name }}" class="ap-avatar ap-avatar--sm" style="object-fit: cover;" onerror="this.onerror=null;this.src='{{ asset('themes/homzen/images/darli-placeholder.png') }}';">
+                                        <img src="{{ $avatarUrl }}" alt="{{ $name }}" class="ap-avatar ap-avatar--sm" style="object-fit: cover;" onerror="this.onerror=null;this.src='{{ asset('themes/darlii/images/darli-placeholder.png') }}';">
                                         <div>
                                             <a href="{{ admin_route('admin.agents.edit', $agent) }}" class="fw-bold">{{ $name }}</a>
                                             <div class="text-muted" dir="ltr" style="font-size: 11px;">{{ $agent->slug }}</div>

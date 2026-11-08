@@ -28,7 +28,7 @@ class SetCurrency
         }
 
         return $next($request)->withCookie(cookie(
-            'homzen_currency',
+            'darlii_currency',
             $currency,
             VisitorPreferences::COOKIE_MINUTES,
             '/',

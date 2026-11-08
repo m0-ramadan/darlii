@@ -50,13 +50,18 @@ ssh "$REMOTE_HOST" "mkdir -p ~/deploy-backups && \
     ls -1t ~/deploy-backups/code-*.tgz 2>/dev/null | tail -n +11 | xargs -r rm -f"
 echo "   ✓ Backup stored in ~/deploy-backups (last 10 kept)."
 
+# 2.5 Remove legacy theme symlinks so rsync creates the real darlii directory
+echo "🔗 [2.5/5] Preparing theme directories on production..."
+ssh "$REMOTE_HOST" "cd '$REMOTE_DIR' && { [ -L public/themes/darlii ] && rm public/themes/darlii || true; }; { [ -L public/themes/darli ] && rm public/themes/darli || true; }; true"
+echo "   ✓ Theme symlinks cleared (if any)."
+
 # 3. Sync application files safely
 echo "📦 [3/5] Uploading updated application files..."
 rsync -az --human-readable --chmod=D755,F644 \
     --exclude='.git/' \
     --exclude='.env*' \
-    --exclude='node_modules/' \
-    --exclude='vendor/' \
+    --exclude='/node_modules/' \
+    --exclude='/vendor/' \
     --exclude='storage/' \
     --exclude='public/storage' \
     --exclude='public/hot' \
@@ -125,5 +130,22 @@ ssh "$REMOTE_HOST" "cd '$REMOTE_DIR' && $REMOTE_PHP artisan firebase:check --no-
     echo "   ⚠️ Firebase credentials invalid — replace storage/app/firebase-service-account.json."
 
 echo "================================================================================"
+# 6. Push the same revision to GitHub (skippable with GIT_PUSH=0)
+echo "🐙 [6/6] Pushing source to GitHub..."
+if [ "${GIT_PUSH:-1}" = "1" ] && git -C "$PROJECT_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    (
+        cd "$PROJECT_ROOT"
+        git add -A
+        if ! git diff --cached --quiet; then
+            git commit -m "chore(deploy): production release $(date +%Y-%m-%d\ %H:%M)" >/dev/null || true
+        fi
+        if ! GIT_TERMINAL_PROMPT=0 git push origin HEAD; then
+            echo "   ⚠️ Git push failed (check credentials/remote). Server deployment is still live."
+        fi
+    ) || echo "   ⚠️ Git publish step failed; server deployment is still live."
+else
+    echo "   ↷ Git push skipped (GIT_PUSH=0 or not a git work tree)."
+fi
+
 echo "🎉 Deployment finished successfully! https://darlii.com"
 echo "================================================================================"

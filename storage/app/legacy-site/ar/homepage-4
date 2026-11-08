@@ -7,19 +7,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>دارلي | منصتك العقارية الأولى</title>
   <meta name="description" content="منزل أحلامك .. أقرب مما تتخيل - منصة دارلي العقارية">
-  <link rel="shortcut icon" href="/themes/homzen/images/logo/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="image" href="/themes/homzen/images/darli-hero-cairo-photo-clean.webp" type="image/webp"
+  <link rel="shortcut icon" href="/themes/darlii/images/logo/favicon.png">
+  <link rel="preload" as="image" href="/themes/darlii/images/darli-hero-cairo-photo-clean.webp" type="image/webp"
     media="(min-width: 992px)" fetchpriority="high">
-  <link rel="preload" as="image" href="/themes/homzen/images/darli-hero-cairo-photo-clean-900.webp" type="image/webp"
+  <link rel="preload" as="image" href="/themes/darlii/images/darli-hero-cairo-photo-clean-900.webp" type="image/webp"
     media="(max-width: 991px)" fetchpriority="high">
   <link
-    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap"
+    href="/vendor/fonts/fonts.css"
     rel="stylesheet">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-design-system.min.css?v=2.0.1">
-  <link rel="stylesheet" href="/themes/homzen/css/darli-home.min.css?v=2.0.11">
-  <script defer src="/themes/homzen/plugins/lucide/lucide.min.js?v=1.59.0"></script>
+  <link rel="stylesheet" href="/themes/darlii/css/darli-design-system.min.css?v=2.0.1">
+  <link rel="stylesheet" href="/themes/darlii/css/darli-home.min.css?v=2.0.11">
+  <script defer src="/themes/darlii/plugins/lucide/lucide.min.js?v=1.59.0"></script>
 </head>
 
 <body class="body" id="page-home" dir="rtl">
@@ -62,8 +60,8 @@
       <div class="darli-container darli-navbar-inner">
         <!-- LOGO -->
         <a href="/ar" class="darli-logo-wrapper">
-          <img src="/themes/homzen/images/logo/darli-logo-ar.png" alt="دارلي - منزل يبدأ حكايتك" class="darli-logo-img"
-            onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+          <img src="/themes/darlii/images/logo/darli-logo-ar.png" alt="دارلي - منزل يبدأ حكايتك" class="darli-logo-img"
+            onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
         </a>
 
         <!-- NAV MENU -->
@@ -349,7 +347,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/1.jpg" alt="شقة مميزة بالرحاب" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge">للبيع</span>
               <button class="darli-card-heart" aria-label="أضف للمفضلة"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -382,7 +380,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/2.jpg" alt="فيلا مستقلة بكمبوند أركي" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge badge-gold">للبيع</span>
               <button class="darli-card-heart" aria-label="أضف للمفضلة"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -415,7 +413,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/3.jpg" alt="شقة فاخرة في الشيخ زايد" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge">للبيع</span>
               <button class="darli-card-heart" aria-label="أضف للمفضلة"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -448,7 +446,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/4.jpg" alt="شقة في كمبوند سكني" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge badge-gold">للبيع</span>
               <button class="darli-card-heart" aria-label="أضف للمفضلة"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -481,7 +479,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/5.jpg" alt="شقة بإطلال رئيسي العاصمة" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge badge-gold">للبيع</span>
               <button class="darli-card-heart" aria-label="أضف للمفضلة"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -514,7 +512,7 @@
           <div class="darli-property-card">
             <div class="darli-card-image-box">
               <img src="/storage/properties/6.jpg" alt="شقة فاخرة بتشطيب مميز" class="darli-card-image"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <span class="darli-card-badge">للبيع</span>
               <button class="darli-card-heart" aria-label="أضف للمفضلة"><i data-lucide="heart"
                   style="width: 18px; height: 18px;"></i></button>
@@ -630,7 +628,7 @@
 
         <div class="darli-locations-grid">
           <a href="/ar/properties?location=beni-suef" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/beni-suef.jpg" alt="مركز بني سويف"
+            <img src="/themes/darlii/images/locations/beni-suef/beni-suef.jpg" alt="مركز بني سويف"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">بني سويف</h4>
@@ -640,7 +638,7 @@
           </a>
 
           <a href="/ar/properties?location=al-wasta" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/al-wasta.jpg" alt="مركز الواسطى"
+            <img src="/themes/darlii/images/locations/beni-suef/al-wasta.jpg" alt="مركز الواسطى"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">الواسطى</h4>
@@ -650,7 +648,7 @@
           </a>
 
           <a href="/ar/properties?location=الفشن" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/fashn.jpg" alt="مركز الفشن"
+            <img src="/themes/darlii/images/locations/beni-suef/fashn.jpg" alt="مركز الفشن"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">الفشن</h4>
@@ -660,7 +658,7 @@
           </a>
 
           <a href="/ar/properties?location=ihnasia" class="darli-location-card">
-            <img src="/themes/homzen/images/locations/beni-suef/ihnasia.jpg" alt="مركز إهناسيا"
+            <img src="/themes/darlii/images/locations/beni-suef/ihnasia.jpg" alt="مركز إهناسيا"
               class="darli-location-card-img">
             <div class="darli-location-card-overlay">
               <h4 class="darli-location-card-name">إهناسيا</h4>
@@ -1088,7 +1086,7 @@
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
               <img src="/storage/avatars/7.jpg" alt="علي عبد الرحمن" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <div>
                 <h5 class="darli-testi-name">علي عبد الرحمن</h5>
                 <span class="darli-testi-role">عميل سابق</span>
@@ -1106,7 +1104,7 @@
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
               <img src="/storage/avatars/2.jpg" alt="أحمد محمود" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <div>
                 <h5 class="darli-testi-name">أحمد محمود</h5>
                 <span class="darli-testi-role">عميل سابق</span>
@@ -1124,7 +1122,7 @@
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
               <img src="/storage/avatars/10.jpg" alt="السيد روبرت إيفانز" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <div>
                 <h5 class="darli-testi-name">السيد روبرت إيفانز</h5>
                 <span class="darli-testi-role">مستثمر عقاري</span>
@@ -1142,7 +1140,7 @@
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
               <img src="/storage/avatars/9.jpg" alt="السيدة جيسيكا وايت" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <div>
                 <h5 class="darli-testi-name">السيدة جيسيكا وايت</h5>
                 <span class="darli-testi-role">بائع منزل سابق</span>
@@ -1160,7 +1158,7 @@
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
               <img src="/storage/avatars/1.jpg" alt="السيدة جينيفر لي" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <div>
                 <h5 class="darli-testi-name">السيدة جينيفر لي</h5>
                 <span class="darli-testi-role">عميل سعيد</span>
@@ -1178,7 +1176,7 @@
             <div class="darli-testi-watermark">”</div>
             <div class="darli-testi-user">
               <img src="/storage/avatars/11.jpg" alt="السيد دانيال ميلر" class="darli-testi-avatar"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
               <div>
                 <h5 class="darli-testi-name">السيد دانيال ميلر</h5>
                 <span class="darli-testi-role">مالك منزل جديد</span>
@@ -1332,9 +1330,9 @@
           <!-- Col 1: About & Social -->
           <div class="darli-footer-about">
             <div style="margin-bottom: 16px;">
-              <img src="/themes/homzen/images/logo/darli-logo-ar-dark.png" alt="دارلي"
+              <img src="/themes/darlii/images/logo/darli-logo-ar-dark.png" alt="دارلي"
                 style="height: 48px; width: auto;"
-                onerror="this.onerror=null;this.src='/themes/homzen/images/darli-placeholder.png';">
+                onerror="this.onerror=null;this.src='/themes/darlii/images/darli-placeholder.png';">
             </div>
             <p>منصتك العقارية الموثوقة لشراء وبيع واستئجار العقارات في جميع أنحاء المملكة</p>
             <div class="darli-footer-socials">
@@ -1424,8 +1422,8 @@
   </div>
 
   <!-- SCRIPTS -->
-  <script src="/themes/homzen/js/jquery.min.js"></script>
-  <script src="/themes/homzen/js/darli-home.min.js?v=2.0.2"></script>
+  <script src="/themes/darlii/js/jquery.min.js"></script>
+  <script src="/themes/darlii/js/darli-home.min.js?v=2.0.2"></script>
 </body>
 
 </html>

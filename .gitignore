@@ -31,3 +31,5 @@ yarn-error.log
 /public/sitemap.xml
 
 /storage/logs/*.log
+
+/storage/framework/testing/

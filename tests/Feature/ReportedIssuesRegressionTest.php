@@ -53,7 +53,6 @@ class ReportedIssuesRegressionTest extends TestCase
             '/admin/faqs',
             '/admin/careers',
             '/admin/agents',
-            '/admin/leads',
             '/admin/appointments',
             '/admin/visitors',
             '/admin/media',

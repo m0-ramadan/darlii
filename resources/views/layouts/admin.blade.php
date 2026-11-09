@@ -84,7 +84,7 @@
                     'admin.notifications.settings',
                     'settings.manage',
                 ],
-                ['العملاء المحتملون', 'admin.leads.index', 'message', 'admin.leads.*', null],
+                ['العملاء المحتملون', 'admin.leads.index', 'message', 'admin.leads.*', '__super'],
                 ['المواعيد', 'admin.appointments.index', 'clipboard', 'admin.appointments.*', 'appointment.manage'],
                 ['التقييمات', 'admin.reviews.index', 'star', 'admin.reviews.*', 'review.moderate'],
             ],

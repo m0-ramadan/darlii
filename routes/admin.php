@@ -274,7 +274,7 @@ Route::prefix('media')->name('media.')->group(function (): void {
 });
 
 // --------------------------------------------------- العملاء والمواعيد
-Route::prefix('leads')->name('leads.')->group(function (): void {
+Route::prefix('leads')->name('leads.')->middleware('super.admin')->group(function (): void {
     Route::get('/', [LeadController::class, 'index'])->name('index');
     Route::get('/{lead}', [LeadController::class, 'show'])->name('show');
     Route::put('/{lead}', [LeadController::class, 'update'])->name('update');

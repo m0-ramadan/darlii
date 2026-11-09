@@ -60,14 +60,16 @@
             </div>
         </div>
 
+        @if(auth()->user()?->isPrimarySuperAdmin())
         <div class="ap-stat">
-            <div class="ap-stat__icon ap-stat__icon--warn">@include('admin.partials.icon', ['iconName' => 'message', 'size' => 20])</div>
-            <div style="flex: 1;">
-                <div class="ap-stat__label">العملاء المحتملون</div>
-                <div class="ap-stat__value">{{ number_format($overview['leads_total']) }}</div>
-                <div class="ap-stat__hint">{{ $overview['leads_new'] }} جديد · {{ $overview['leads_month'] }} هذا الشهر</div>
+                <div class="ap-stat__icon ap-stat__icon--warn">@include('admin.partials.icon', ['iconName' => 'message', 'size' => 20])</div>
+                <div style="flex: 1;">
+                    <div class="ap-stat__label">العملاء المحتملون</div>
+                    <div class="ap-stat__value">{{ number_format($overview['leads_total']) }}</div>
+                    <div class="ap-stat__hint">{{ $overview['leads_new'] }} جديد · {{ $overview['leads_month'] }} هذا الشهر</div>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 
     <div class="ap-grid ap-grid--4" style="margin-bottom: 18px;">
@@ -248,35 +250,37 @@
             </div>
         </div>
 
-        {{-- ------------------------------------------------- أحدث العملاء --}}
-        <div class="ap-card">
-            <div class="ap-card__head">
-                <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'message', 'size' => 18]) أحدث العملاء المحتملين</h2>
-                @can('lead.view-all')
-                    <a href="{{ admin_route('admin.leads.index') }}" class="ap-btn ap-btn--ghost ap-btn--sm">الكل</a>
-                @endcan
-            </div>
-            <div class="ap-card__body ap-card__body--tight">
-                <div class="ap-table-wrap">
-                    <table class="ap-table">
-                        <thead><tr><th>العميل</th><th>العقار</th><th>الحالة</th></tr></thead>
-                        <tbody>
-                            @forelse ($recentLeads as $lead)
-                                <tr>
-                                    <td>
-                                        <span class="fw-bold">{{ $lead->name }}</span>
-                                        <div class="text-muted" dir="ltr" style="font-size: 11px;">{{ $lead->phone ?? $lead->email }}</div>
-                                    </td>
-                                    <td>{{ \Illuminate\Support\Str::limit($lead->property?->displayName('ar') ?? '—', 24) }}</td>
-                                    <td><span class="ap-badge ap-badge--{{ status_color($lead->status) }}">{{ status_label($lead->status) }}</span></td>
-                                </tr>
-                            @empty
-                                <tr><td colspan="3" class="text-center text-muted">لا يوجد عملاء محتملون.</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+        @if(auth()->user()?->isPrimarySuperAdmin())
+            {{-- ------------------------------------------------- أحدث العملاء --}}
+            <div class="ap-card">
+                <div class="ap-card__head">
+                    <h2 class="ap-card__title">@include('admin.partials.icon', ['iconName' => 'message', 'size' => 18]) أحدث العملاء المحتملين</h2>
+                    @can('lead.view-all')
+                        <a href="{{ admin_route('admin.leads.index') }}" class="ap-btn ap-btn--ghost ap-btn--sm">الكل</a>
+                    @endcan
+                </div>
+                <div class="ap-card__body ap-card__body--tight">
+                    <div class="ap-table-wrap">
+                        <table class="ap-table">
+                            <thead><tr><th>العميل</th><th>العقار</th><th>الحالة</th></tr></thead>
+                            <tbody>
+                                @forelse ($recentLeads as $lead)
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold">{{ $lead->name }}</span>
+                                            <div class="text-muted" dir="ltr" style="font-size: 11px;">{{ $lead->phone ?? $lead->email }}</div>
+                                        </td>
+                                        <td>{{ \Illuminate\Support\Str::limit($lead->property?->displayName('ar') ?? '—', 24) }}</td>
+                                        <td><span class="ap-badge ap-badge--{{ status_color($lead->status) }}">{{ status_label($lead->status) }}</span></td>
+                                    </tr>
+                                @empty
+                                    <tr><td colspan="3" class="text-center text-muted">لا يوجد عملاء محتملون.</td></tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 @endsection

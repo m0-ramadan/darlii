@@ -42,9 +42,12 @@ class CustomerRequestsTest extends TestCase
         ]);
 
         $this->actingAs($this->agent())->get('/dashboard/customer-requests')->assertOk()->assertSee('عميل تجريبي');
-        $this->actingAs($this->otherAgent())->get('/dashboard/customer-requests')->assertOk()->assertSee('عميل تجريبي');
+        $this->actingAs($this->otherAgent())->get('/dashboard/customer-requests')->assertOk()->assertDontSee('عميل تجريبي');
         $this->actingAs($this->agent())->get('/dashboard/customer-requests/' . $request->id . '/edit')->assertOk();
+        $this->actingAs($this->otherAgent())->get('/dashboard/customer-requests/' . $request->id . '/edit')->assertForbidden();
         $this->actingAs($this->agent())->get('/dashboard/customer-requests/stats')->assertOk();
+        $admin = User::where('email', 'admin@darlii.eg')->firstOrFail();
+        $this->actingAs($admin)->get('/admin/customer-requests')->assertOk()->assertSee('عميل تجريبي');
     }
 
     public function test_customer_request_can_be_created_and_status_updated(): void
@@ -65,6 +68,10 @@ class CustomerRequestsTest extends TestCase
         $this->assertSame('new', $request->status);
 
         $this->actingAs($this->otherAgent())->patch('/dashboard/customer-requests/' . $request->id . '/status', [
+            'status' => 'contacted',
+        ])->assertForbidden();
+
+        $this->actingAs($this->agent())->patch('/dashboard/customer-requests/' . $request->id . '/status', [
             'status' => 'contacted',
         ])->assertRedirect();
 
@@ -102,6 +109,38 @@ class CustomerRequestsTest extends TestCase
         ])->assertRedirect(route('admin.customer-requests.index'));
 
         $this->assertDatabaseHas('customer_requests', ['customer_name' => 'عميل من الأدمن', 'created_by' => $manager->id]);
+    }
+
+    public function test_each_manager_only_sees_own_requests_while_admin_sees_all(): void
+    {
+        $admin = User::where('email', 'admin@darlii.eg')->firstOrFail();
+        $managerRole = \App\Models\Role::where('slug', 'manager')->firstOrFail();
+
+        $managerB = User::create([
+            'name' => 'مسؤول ثاني',
+            'email' => 'manager2@example.com',
+            'password' => 'Password@123',
+            'status' => 'active',
+            'manager_id' => $admin->id,
+        ]);
+        $managerB->roles()->attach($managerRole->id);
+
+        $managerA = User::where('email', 'manager@darlii.eg')->firstOrFail();
+
+        $this->actingAs($managerA)->post('/admin/customer-requests', [
+            'customer_name' => 'طلب خاص بالمسؤول أ',
+            'phone' => '01011112222',
+            'need' => 'شقة',
+            'location_id' => $this->location()->id,
+        ])->assertRedirect(route('admin.customer-requests.index'));
+
+        $request = CustomerRequest::where('customer_name', 'طلب خاص بالمسؤول أ')->firstOrFail();
+
+        $this->actingAs($managerA)->get('/admin/customer-requests')->assertOk()->assertSee('طلب خاص بالمسؤول أ');
+        $this->actingAs($managerB)->get('/admin/customer-requests')->assertOk()->assertDontSee('طلب خاص بالمسؤول أ');
+        $this->actingAs($managerB)->get('/admin/customer-requests/' . $request->id . '/edit')->assertForbidden();
+        $this->actingAs($managerB)->patch('/admin/customer-requests/' . $request->id . '/status', ['status' => 'contacted'])->assertForbidden();
+        $this->actingAs($admin)->get('/admin/customer-requests')->assertOk()->assertSee('طلب خاص بالمسؤول أ');
     }
 
     public function test_only_creator_or_admin_can_delete_request(): void

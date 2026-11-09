@@ -14,15 +14,16 @@ class CustomerRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $this->filteredQuery($request)->with(['location.parent.translations', 'location.translations', 'creator']);
+        $base = CustomerRequest::query()->visibleTo($request->user());
+        $query = $this->filteredQuery($request, $base)->with(['location.parent.translations', 'location.translations', 'creator']);
         $requests = $query->latest()->paginate(20)->withQueryString();
 
         return view('dashboard.customer-requests.index', [
             'requests' => $requests,
             'locations' => $this->locationOptions(),
             'statuses' => CustomerRequest::STATUSES,
-            'counts' => $this->statusCounts(),
-            'locationCounts' => $this->locationCounts(),
+            'counts' => $this->statusCounts($request->user()),
+            'locationCounts' => $this->locationCounts($request->user()),
             'filters' => $request->only(['q', 'status', 'location_id', 'from', 'to']),
         ]);
     }
@@ -50,6 +51,8 @@ class CustomerRequestController extends Controller
 
     public function edit(CustomerRequest $customerRequest)
     {
+        $this->guardVisible($customerRequest);
+
         return view('dashboard.customer-requests.edit', [
             'customerRequest' => $customerRequest,
             'locations' => $this->locationOptions(),
@@ -59,6 +62,7 @@ class CustomerRequestController extends Controller
 
     public function update(Request $request, CustomerRequest $customerRequest)
     {
+        $this->guardVisible($customerRequest);
         $data = $this->validated($request);
         $data['updated_by'] = $request->user()->id;
         $old = $customerRequest->only(['customer_name', 'phone', 'location_id', 'status']);
@@ -71,6 +75,7 @@ class CustomerRequestController extends Controller
 
     public function updateStatus(Request $request, CustomerRequest $customerRequest)
     {
+        $this->guardVisible($customerRequest);
         $data = $request->validate([
             'status' => ['required', Rule::in(array_keys(CustomerRequest::STATUSES))],
         ]);
@@ -84,11 +89,7 @@ class CustomerRequestController extends Controller
 
     public function destroy(Request $request, CustomerRequest $customerRequest)
     {
-        abort_unless(
-            $request->user()->id === $customerRequest->created_by || $request->user()->isAdmin(),
-            403,
-            'يمكن لصاحب الطلب أو الإدارة فقط حذف الطلب.'
-        );
+        $this->guardVisible($customerRequest);
 
         AuditLogger::log('customer_request.deleted', $customerRequest, $customerRequest->only(['customer_name', 'phone']));
         $customerRequest->delete();
@@ -101,7 +102,7 @@ class CustomerRequestController extends Controller
         $from = $request->filled('from') ? Carbon::parse($request->input('from'))->startOfDay() : now()->subMonths(5)->startOfMonth();
         $to = $request->filled('to') ? Carbon::parse($request->input('to'))->endOfDay() : now()->endOfDay();
 
-        $base = CustomerRequest::query()->whereBetween('created_at', [$from, $to]);
+        $base = CustomerRequest::query()->visibleTo($request->user())->whereBetween('created_at', [$from, $to]);
 
         $byStatus = (clone $base)->selectRaw('status, COUNT(*) as total')->groupBy('status')->pluck('total', 'status');
         $byLocation = (clone $base)->with('location.translations', 'location.parent.translations')
@@ -128,14 +129,14 @@ class CustomerRequestController extends Controller
             'byLocation' => $byLocation,
             'monthly' => $monthly,
             'total' => (clone $base)->count(),
-            'counts' => $this->statusCounts(),
+            'counts' => $this->statusCounts($request->user()),
             'locations' => $this->locationOptions(),
         ]);
     }
 
-    private function filteredQuery(Request $request)
+    private function filteredQuery(Request $request, ?\Illuminate\Database\Eloquent\Builder $base = null)
     {
-        return CustomerRequest::query()
+        return ($base ?: CustomerRequest::query())
             ->when($request->filled('q'), function ($q) use ($request): void {
                 $term = trim((string) $request->input('q'));
                 $q->where(fn ($x) => $x->where('customer_name', 'like', "%{$term}%")
@@ -153,17 +154,17 @@ class CustomerRequestController extends Controller
     }
 
     /** @return array<string,int> */
-    private function statusCounts(): array
+    private function statusCounts(\App\Models\User $user): array
     {
-        $counts = CustomerRequest::query()->selectRaw('status, COUNT(*) as total')->groupBy('status')->pluck('total', 'status')->all();
+        $counts = CustomerRequest::query()->visibleTo($user)->selectRaw('status, COUNT(*) as total')->groupBy('status')->pluck('total', 'status')->all();
 
         return collect(CustomerRequest::STATUSES)->mapWithKeys(fn ($label, $key) => [$key => (int) ($counts[$key] ?? 0)])->all();
     }
 
     /** @return \Illuminate\Support\Collection<int,array{id:int,label:string,total:int}> */
-    private function locationCounts()
+    private function locationCounts(\App\Models\User $user)
     {
-        return CustomerRequest::query()
+        return CustomerRequest::query()->visibleTo($user)
             ->whereNotNull('location_id')
             ->with('location.translations', 'location.parent.translations')
             ->selectRaw('location_id, COUNT(*) as total')
@@ -196,6 +197,17 @@ class CustomerRequestController extends Controller
     }
 
     /** @return array<string,mixed> */
+    private function guardVisible(CustomerRequest $customerRequest): void
+    {
+        $user = request()->user();
+
+        abort_unless(
+            $user && ($user->isAdmin() || $user->id === $customerRequest->created_by),
+            403,
+            'لا يمكنك الوصول إلى طلب أنشأه حساب آخر.'
+        );
+    }
+
     private function validated(Request $request): array
     {
         $data = $request->validate([

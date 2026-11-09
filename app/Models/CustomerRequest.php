@@ -23,6 +23,12 @@ class CustomerRequest extends Model
         'status', 'notes', 'created_by', 'updated_by',
     ];
 
+    /** الأدمن/السوبر أدمن يرون الكل، وأي حساب آخر يرى طلباته فقط. */
+    public function scopeVisibleTo($query, User $user)
+    {
+        return $user->isAdmin() ? $query : $query->where('created_by', $user->id);
+    }
+
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);

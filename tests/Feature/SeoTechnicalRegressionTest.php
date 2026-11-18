@@ -120,6 +120,10 @@ class SeoTechnicalRegressionTest extends TestCase
         $graph = json_decode(end($matches[1]), true, flags: JSON_THROW_ON_ERROR);
         $listing = collect($graph)->firstWhere('@type', 'RealEstateListing');
         $this->assertArrayNotHasKey('price', $listing['offers']);
+        $this->assertSame('Place', $listing['mainEntity']['@type']);
+        $this->assertArrayHasKey('address', $listing['mainEntity']);
+        $this->assertArrayNotHasKey('address', $listing);
+        $this->assertArrayHasKey('businessFunction', $listing['offers']);
         $this->assertNotNull(collect($graph)->firstWhere('@type', 'BreadcrumbList'));
     }
 }

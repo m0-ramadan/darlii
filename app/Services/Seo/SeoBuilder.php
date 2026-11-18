@@ -253,14 +253,15 @@ class SeoBuilder
             'description' => $meta['description'],
             'url' => $meta['canonical'],
             'image' => [$meta['image']],
-            'address' => array_filter([
+            'mainEntity' => ['@type' => 'Place', '@id' => $meta['canonical'] . '#property', 'name' => $name, 'address' => array_filter([
                 '@type' => 'PostalAddress',
                 'addressLocality' => $location,
                 'streetAddress' => $tr?->address_text,
                 'addressCountry' => 'EG',
-            ]),
+            ])],
             'offers' => [
                 '@type' => 'Offer',
+                'businessFunction' => $property->purpose === 'rent' ? 'http://purl.org/goodrelations/v1#LeaseOut' : 'http://purl.org/goodrelations/v1#Sell',
                 'price' => (float) $property->price,
                 'priceCurrency' => $property->currency?->code ?: 'EGP',
                 'availability' => $property->isSold()
@@ -274,18 +275,19 @@ class SeoBuilder
         }
 
         if ($property->latitude !== null && $property->longitude !== null) {
-            $jsonLd['geo'] = [
+            $jsonLd['mainEntity']['geo'] = [
                 '@type' => 'GeoCoordinates',
                 'latitude' => (float) $property->latitude,
                 'longitude' => (float) $property->longitude,
             ];
         }
         if ($property->bedrooms) {
-            $jsonLd['numberOfRooms'] = (int) $property->bedrooms;
+            $jsonLd['mainEntity']['additionalProperty'][] = ['@type' => 'PropertyValue', 'name' => $this->t($locale, 'غرف النوم', 'Bedrooms'), 'value' => (int) $property->bedrooms];
         }
         if ($property->area) {
-            $jsonLd['floorSize'] = [
-                '@type' => 'QuantitativeValue',
+            $jsonLd['mainEntity']['additionalProperty'][] = [
+                '@type' => 'PropertyValue',
+                'name' => $this->t($locale, 'المساحة', 'Area'),
                 'value' => (float) $property->area,
                 'unitCode' => in_array((string) $property->area_unit, ['ft2', 'ft²'], true) ? 'FTK' : 'MTK',
             ];

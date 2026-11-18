@@ -22,6 +22,13 @@ class SeoFavoritesAndPropertyPageTest extends TestCase
         $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
     }
 
+    public function test_www_redirect_preserves_path_and_pagination(): void
+    {
+        $this->get('https://www.darlii.com/properties?page=2')
+            ->assertStatus(301)
+            ->assertRedirect('https://darlii.com/properties?page=2');
+    }
+
     private function publishedProperty(array $attributes = []): Property
     {
         $currency = Currency::where('code', 'EGP')->firstOrFail();

@@ -30,6 +30,7 @@ class ContentController extends Controller
         $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
 
         $post = Post::with('translations')
+            ->where('status', 'published')
             ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->firstOrFail();
 
@@ -89,6 +90,7 @@ class ContentController extends Controller
         $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
 
         $career = Career::with('translations')
+            ->where('status', 'published')
             ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->firstOrFail();
 

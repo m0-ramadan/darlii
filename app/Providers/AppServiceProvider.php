@@ -26,6 +26,13 @@ class AppServiceProvider extends ServiceProvider
     }
     public function boot(): void
     {
+        // Keep CLI-generated sitemaps and robots on the same production origin.
+        if (in_array(parse_url((string) config('app.url'), PHP_URL_HOST), ['darlii.com', 'www.darlii.com'], true)) {
+            config(['app.url' => 'https://darlii.com']);
+            \Illuminate\Support\Facades\URL::forceRootUrl('https://darlii.com');
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Use the custom darli pagination view everywhere — one clean bar, no duplicates
         Paginator::defaultView('vendor.pagination.darli');
         Paginator::defaultSimpleView('vendor.pagination.darli');

@@ -86,11 +86,13 @@ class AgentController
          * هيدر وفوتر تصميم هومزن. ولو التصميم غير متاح نرجع للعرض البسيط.
          */
         if ($agent) {
+            abort_unless($agent->getRawOriginal('status') === 'active', 404);
+
             PageViewTracker::track('agents', [$slug]);
 
             return response(view('agents.show', [
                 'agent' => $agent,
-                'properties' => $agent->user?->properties()->with(['translations', 'media', 'currency'])->latest()->limit(9)->get() ?? collect(),
+                'properties' => $agent->user?->properties()->whereIn('status', ['published', 'sold'])->with(['translations', 'media', 'currency'])->latest()->limit(9)->get() ?? collect(),
                 'shell' => $this->shell($locale, $slug),
             ]));
         }

@@ -62,7 +62,7 @@ class SitemapGenerator
             (string) Project::query()->max('updated_at'),
             (string) Post::query()->max('updated_at')
         );
-        $add(url('/'), $homeLastmod ?: now(), 'daily', '1.0');
+        $add(url('/'), $homeLastmod ?: null, 'daily', '1.0');
 
         foreach ([
             ['/properties', '0.9', 'daily'],

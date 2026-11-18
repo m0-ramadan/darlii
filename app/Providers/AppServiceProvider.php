@@ -100,6 +100,11 @@ class AppServiceProvider extends ServiceProvider
                 $app['url']->setRoutes($routes);
             });
 
+            if (parse_url((string) config('app.url'), PHP_URL_HOST) === 'darlii.com') {
+                $custom->forceRootUrl('https://darlii.com');
+                $custom->forceScheme('https');
+            }
+
             return $custom;
         });
         Gate::policy(Property::class, PropertyPolicy::class);
@@ -110,7 +115,26 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasPermission($ability) ? true : null;
         });
 
+        $this->registerTranslationUpdates();
         $this->registerSitemapRefresh();
+    }
+
+    private function registerTranslationUpdates(): void
+    {
+        foreach ([
+            [\App\Models\PropertyTranslation::class, Property::class, 'property_id'],
+            [\App\Models\ProjectTranslation::class, Project::class, 'project_id'],
+            [\App\Models\PostTranslation::class, Post::class, 'post_id'],
+            [\App\Models\CareerTranslation::class, Career::class, 'career_id'],
+            [\App\Models\PageTranslation::class, Page::class, 'page_id'],
+            [\App\Models\AgentProfileTranslation::class, \App\Models\AgentProfile::class, 'agent_profile_id'],
+        ] as [$translation, $parent, $foreignKey]) {
+            $touch = static function ($model) use ($parent, $foreignKey): void {
+                $parent::find($model->getAttribute($foreignKey))?->touch();
+            };
+            $translation::saved($touch);
+            $translation::deleted($touch);
+        }
     }
 
     /**
@@ -133,7 +157,7 @@ class AppServiceProvider extends ServiceProvider
             GenerateSitemapJob::dispatchAfterResponse();
         };
 
-        foreach ([Property::class, Project::class, Post::class, Career::class, Page::class] as $model) {
+        foreach ([Property::class, Project::class, Post::class, Career::class, Page::class, \App\Models\AgentProfile::class] as $model) {
             $model::saved($refresh);
             $model::deleted($refresh);
         }

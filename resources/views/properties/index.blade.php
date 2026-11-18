@@ -665,16 +665,8 @@
                                 $url = $slug ? route('properties.show', ['locale' => $locale, 'slug' => $slug]) : '#';
                                 $image = $property->primaryImageUrl($locale);
                                 $cardImages = $property->media
-                                    ->map(function ($media) {
-                                        $path = ltrim((string) $media->path, '/');
-                                        if (str_starts_with($path, 'http')) {
-                                            return $path;
-                                        }
-
-                                        return ($media->disk ?? 'public') === 'legacy'
-                                            ? asset('legacy/' . $path)
-                                            : asset('storage/' . $path);
-                                    })
+                                    ->reject(fn ($media) => in_array((string) $media->type, ['video', 'floor_plan'], true))
+                                    ->map(fn ($media) => app(\App\Services\Seo\PublicMedia::class)->url($media->path, $media->disk ?? 'public'))
                                     ->filter()
                                     ->values();
                                 if ($cardImages->isEmpty()) {

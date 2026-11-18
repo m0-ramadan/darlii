@@ -19,6 +19,7 @@ class SeoFavoritesAndPropertyPageTest extends TestCase
     {
         parent::setUp();
         $this->seed();
+        \Illuminate\Support\Facades\Storage::fake('public');
         $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
     }
 
@@ -54,6 +55,8 @@ class SeoFavoritesAndPropertyPageTest extends TestCase
             'slug' => 'seo-test-apartment',
             'description' => 'شقة واسعة للبيع في بني سويف بمساحة 120 مترًا.',
         ]);
+
+        \Illuminate\Support\Facades\Storage::disk('public')->put('properties/seo-test-image.jpg', 'image');
 
         PropertyMedia::create([
             'property_id' => $property->id,

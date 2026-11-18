@@ -142,14 +142,6 @@ class LegacyFrontendRenderer
     {
         $html = $this->normalizeSeoHead($html);
 
-        // الموبايل يستخدم h2 داخل .darli-mobile-hero-copy بينما H1 المكتبي مخفي.
-        $html = preg_replace(
-            '/(<div class="darli-mobile-hero-copy">\s*)<h2>(.*?)<\/h2>/is',
-            '$1<h1>$2</h1>',
-            $html,
-            1
-        ) ?? $html;
-
         // ترتيب العناوين: h4/h6 بعد h2 كان يسبب heading-order.
         $html = preg_replace('/(<div class="darli-feature-text">\s*)<h4>(.*?)<\/h4>/is', '$1<h3>$2</h3>', $html) ?? $html;
         $html = preg_replace('/<h4 class="darli-location-card-name">(.*?)<\/h4>/is', '<h3 class="darli-location-card-name">$1</h3>', $html) ?? $html;
@@ -200,8 +192,17 @@ class LegacyFrontendRenderer
             $html
         ) ?? $html;
 
+        // The mirrored Saudi flag contains over 100KB of paths and occurs twice.
+        $html = preg_replace_callback('/<svg\b[^>]*>.*?<\/svg>/is', static function (array $match): string {
+            if (! str_contains($match[0], 'flags_sa_a')) {
+                return $match[0];
+            }
+            preg_match('/class=["\']([^"\']*)["\']/i', $match[0], $class);
+            return '<img src="' . asset('themes/darlii/images/flags/sa.svg') . '" class="' . e($class[1] ?? 'flag') . '" width="20" height="15" alt="العربية" decoding="async">';
+        }, $html) ?? $html;
+
         if (! str_contains($html, 'darli-seo-a11y.css')) {
-            $link = '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-seo-a11y.css') . '?v=1.0.5">';
+            $link = '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-seo-a11y.css') . '?v=1.0.6">';
             $html = preg_replace('/<\/head>/i', $link . '</head>', $html, 1) ?? ($html . $link);
         }
         if (! str_contains($html, 'speculationrules')) {
@@ -1312,7 +1313,7 @@ HTML;
                 'icon' => $agent->icon,
                 'icon_color' => $agent->icon_color,
                 'custom_logo' => (!empty($agent->avatar_path) && !str_contains($agent->avatar_path, 'default') && !str_contains($agent->avatar_path, 'placeholder'))
-                    ? (str_starts_with($agent->avatar_path, 'http') ? $agent->avatar_path : asset($agent->avatar_path))
+                    ? app(\App\Services\Seo\PublicMedia::class)->url($agent->avatar_path)
                     : null,
             ];
         });
@@ -1358,7 +1359,7 @@ HTML;
             ->map(function (AgentProfile $agent) use ($locale): array {
                 $translation = $agent->translation($locale);
                 $name = $translation?->display_name ?? $agent->user?->name ?? $agent->slug;
-                $avatar = $agent->avatar_path ? asset($agent->avatar_path) : '/themes/darlii/images/darli-placeholder.png';
+                $avatar = $agent->avatar_url;
 
                 return [
                     'name' => $name,
@@ -1385,7 +1386,7 @@ HTML;
                     'name' => $translation?->name ?? '',
                     'position' => $translation?->position ?? 'مستثمر عقاري',
                     'content' => $translation?->content ?? '',
-                    'image' => $testimonial->image_path ? asset($testimonial->image_path) : '/storage/avatars/1.jpg',
+                    'image' => app(\App\Services\Seo\PublicMedia::class)->url($testimonial->image_path) ?: asset('themes/darlii/images/avatar-placeholder.svg'),
                     'rating' => min(max($testimonial->rating, 1), 5),
                 ];
             });
@@ -1512,7 +1513,7 @@ HTML;
                     'name' => $trans?->name ?: $fallback['name'],
                     'position' => $trans?->position ?: $fallback['position'],
                     'content' => $trans?->content ?: $fallback['content'],
-                    'image' => $model->image_path ? asset($model->image_path) : $fallback['image'],
+                    'image' => app(\App\Services\Seo\PublicMedia::class)->url($model->image_path) ?: asset('themes/darlii/images/avatar-placeholder.svg'),
                     'rating' => min(max($model->rating, 1), 5),
                 ];
             } else {
@@ -1636,7 +1637,7 @@ HTML;
 
                 if (! $isBrandContainer) {
                     if (str_contains($surrounding, 'avatar')) {
-                        return '<img src="/storage/avatars/1.jpg" alt="User" class="w-100 h-100 object-fit-cover" onerror="this.onerror=null;this.src=\'' . $placeholder . '\';">';
+                        return '<img src="/themes/darlii/images/avatar-placeholder.svg" alt="User" class="w-100 h-100 object-fit-cover" onerror="this.onerror=null;this.src=\'' . $placeholder . '\';">';
                     }
 
                     return '<img src="' . $placeholder . '" alt="Property" loading="lazy" class="w-100 h-100 object-fit-cover" onerror="this.onerror=null;this.src=\'' . $placeholder . '\';">';

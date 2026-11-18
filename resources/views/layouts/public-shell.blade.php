@@ -31,7 +31,7 @@
         : '';
     $darliCss = $verificationMeta
         . '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-public.min.css') . '?v=1.0.1">'
-        . '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-seo-a11y.css') . '?v=1.0.5">'
+        . '<link rel="stylesheet" href="' . asset('themes/darlii/css/darli-seo-a11y.css') . '?v=1.0.6">'
         . '<script type="speculationrules">{"prefetch":[{"source":"list","eagerness":"moderate","urls":["/properties","/projects","/blog","/agents"]}]}</script>';
     if ($isDashboardPage) {
         $darliCss .= '<link rel="stylesheet" href="' . asset('themes/darlii/css/dashboard-responsive.css') . '?v=1.0.0">';

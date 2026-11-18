@@ -47,11 +47,45 @@ class SeoBuilder
             // لا نكسر الصفحة بسبب SEO.
         }
 
+        if ($this->hasListingFilters()) {
+            $meta['robots'] = 'noindex,follow';
+        }
+
         if ($this->shouldNoIndex()) {
             $meta['robots'] = 'noindex,nofollow';
         }
 
+        $meta = $this->withBreadcrumbs($meta, $locale);
+
         return $this->meta = $meta;
+    }
+
+    private function withBreadcrumbs(array $meta, string $locale): array
+    {
+        $path = trim(request()->path(), '/');
+        if ($path === '' || $this->shouldNoIndex() || ! request()->route()?->getName()) {
+            return $meta;
+        }
+
+        $sections = [
+            'properties' => $this->t($locale, 'العقارات', 'Properties'),
+            'projects' => $this->t($locale, 'المشروعات', 'Projects'),
+            'agents' => $this->t($locale, 'الوكلاء', 'Agents'),
+            'blog' => $this->t($locale, 'المدونة', 'Blog'),
+            'careers' => $this->t($locale, 'الوظائف', 'Careers'),
+        ];
+        $parts = explode('/', $path);
+        $items = [['@type' => 'ListItem', 'position' => 1, 'name' => $this->t($locale, 'الرئيسية', 'Home'), 'item' => url('/')]];
+        if (count($parts) > 1 && isset($sections[$parts[0]])) {
+            $items[] = ['@type' => 'ListItem', 'position' => 2, 'name' => $sections[$parts[0]], 'item' => url('/' . $parts[0])];
+        }
+        $items[] = ['@type' => 'ListItem', 'position' => count($items) + 1, 'name' => explode(' | ', $meta['title'])[0], 'item' => $meta['canonical']];
+        $schema = $meta['json_ld'] ?? [];
+        $graph = isset($schema['@type']) ? [$schema] : $schema;
+        $graph[] = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $items];
+        $meta['json_ld'] = $graph;
+
+        return $meta;
     }
 
     private function buildForRoute(array $meta, string $locale): array
@@ -89,12 +123,7 @@ class SeoBuilder
         $meta['title'] = (string) setting("seo.title_{$locale}", $meta['site_name']);
         $meta['description'] = (string) setting("seo.description_{$locale}", $meta['description']);
         $meta['canonical'] = url('/');
-        $alternates = [];
-        foreach ((array) config('locales.supported', ['ar']) as $code) {
-            $alternates[$code] = $meta['canonical'];
-        }
-        $alternates['x-default'] = $meta['canonical'];
-        $meta['alternates'] = $alternates;
+        $meta['alternates'] = [$locale => $meta['canonical'], 'x-default' => $meta['canonical']];
 
         $orgId = url('/') . '#organization';
         $siteId = url('/') . '#website';
@@ -127,7 +156,7 @@ class SeoBuilder
                     '@type' => 'SearchAction',
                     'target' => [
                         '@type' => 'EntryPoint',
-                        'urlTemplate' => url('/properties') . '?keyword={search_term_string}',
+                        'urlTemplate' => url('/properties') . '?q={search_term_string}',
                     ],
                     'query-input' => 'required name=search_term_string',
                 ],
@@ -240,6 +269,10 @@ class SeoBuilder
             ],
         ];
 
+        if ($property->isPriceOnContact()) {
+            unset($jsonLd['offers']['price']);
+        }
+
         if ($property->latitude !== null && $property->longitude !== null) {
             $jsonLd['geo'] = [
                 '@type' => 'GeoCoordinates',
@@ -254,7 +287,7 @@ class SeoBuilder
             $jsonLd['floorSize'] = [
                 '@type' => 'QuantitativeValue',
                 'value' => (float) $property->area,
-                'unitCode' => 'MTK',
+                'unitCode' => in_array((string) $property->area_unit, ['ft2', 'ft²'], true) ? 'FTK' : 'MTK',
             ];
         }
         if ($property->published_at) {
@@ -473,11 +506,19 @@ class SeoBuilder
             '@context' => 'https://schema.org',
             '@type' => 'JobPosting',
             'title' => $title,
-            'description' => $meta['description'],
+            'description' => (string) ($tr?->description ?: $tr?->summary ?: $meta['description']),
             'url' => $meta['canonical'],
             'datePosted' => optional($career->created_at)->toIso8601String(),
             'validThrough' => optional($career->deadline)->toIso8601String(),
-            'employmentType' => $career->employment_type,
+            'employmentType' => match ($career->employment_type) {
+                'دوام كامل', 'full_time', 'FULL_TIME' => 'FULL_TIME',
+                'دوام جزئي', 'دوام جزئي / استشاري', 'part_time', 'PART_TIME' => 'PART_TIME',
+                'تعاقد', 'عقد', 'contract', 'CONTRACTOR' => 'CONTRACTOR',
+                'تدريب', 'internship', 'INTERN' => 'INTERN',
+                'مؤقت', 'temporary', 'TEMPORARY' => 'TEMPORARY',
+                'تطوع', 'volunteer', 'VOLUNTEER' => 'VOLUNTEER',
+                default => null,
+            },
             'hiringOrganization' => ['@type' => 'Organization', 'name' => $meta['site_name']],
             'jobLocation' => $career->location ? [
                 '@type' => 'Place',
@@ -485,12 +526,16 @@ class SeoBuilder
             ] : null,
         ]);
 
+        if ($career->deadline?->isPast()) {
+            $meta['json_ld'] = null;
+        }
+
         return $meta;
     }
 
     private function staticPage(array $meta, string $locale, string $key, string $url, string $fallbackTitle): array
     {
-        $page = Page::with('translations')->where('key', $key)->first();
+        $page = Page::with('translations')->where('status', 'published')->where('key', $key)->first();
         $tr = $page?->translation($locale);
 
         $title = $tr?->seo_title ?: $tr?->title ?: $fallbackTitle;
@@ -630,7 +675,7 @@ HTML;
         }
 
         if (! empty($meta['json_ld'])) {
-            $json = json_encode($meta['json_ld'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $json = json_encode($meta['json_ld'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
             if ($json !== false) {
                 $html .= "\n" . '<script type="application/ld+json">' . $json . '</script>';
             }
@@ -641,50 +686,42 @@ HTML;
 
     private function propertyAlternates(Property $property, string $canonical): array
     {
-        $alternates = [];
-        foreach ((array) config('locales.supported', ['ar']) as $code) {
-            $translation = $property->translations->firstWhere('locale', $code);
-            $alternates[$code] = $translation?->slug ? url('/properties/' . $translation->slug) : $canonical;
-        }
-        $alternates['x-default'] = $canonical;
-
-        return $alternates;
+        return $this->currentAlternates($canonical);
     }
 
     private function projectAlternates(Project $project, string $canonical): array
     {
-        $alternates = [];
-        foreach ((array) config('locales.supported', ['ar']) as $code) {
-            $translation = $project->translations->firstWhere('locale', $code);
-            $alternates[$code] = $translation?->slug ? url('/projects/' . $translation->slug) : $canonical;
-        }
-        $alternates['x-default'] = $canonical;
-
-        return $alternates;
+        return $this->currentAlternates($canonical);
     }
 
     private function postAlternates(Post $post, string $canonical): array
     {
-        $alternates = [];
-        foreach ((array) config('locales.supported', ['ar']) as $code) {
-            $translation = $post->translations->firstWhere('locale', $code);
-            $alternates[$code] = $translation?->slug ? url('/blog/' . $translation->slug) : $canonical;
-        }
-        $alternates['x-default'] = $canonical;
-
-        return $alternates;
+        return $this->currentAlternates($canonical);
     }
 
     private function agentAlternates(AgentProfile $agent, string $canonical): array
     {
-        $alternates = [];
-        foreach ((array) config('locales.supported', ['ar']) as $code) {
-            $translation = $agent->translations->firstWhere('locale', $code);
-            $alternates[$code] = $translation ? $canonical : $canonical;
-        }
-        $alternates['x-default'] = $canonical;
+        return $this->currentAlternates($canonical);
+    }
 
-        return $alternates;
+    private function currentAlternates(string $canonical): array
+    {
+        return [(app()->getLocale() ?: 'ar') => $canonical, 'x-default' => $canonical];
+    }
+
+    private function hasListingFilters(): bool
+    {
+        if (! request()->routeIs('properties.index', 'projects.index', 'agents.index', 'careers.index', 'blog.index')) {
+            return false;
+        }
+
+        foreach (['q', 'k', 'keyword', 'purpose', 'type', 'category_id', 'category_group', 'student', 'location_id', 'location', 'min_price', 'max_price', 'bedrooms', 'bathrooms', 'furnished', 'nearby', 'nearby_location_id', 'features', 'sort', 'specialty', 'department'] as $key) {
+            if (request()->filled($key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function canonicalUrl(): string
@@ -730,18 +767,7 @@ HTML;
 
     private function mediaUrl(?string $path): ?string
     {
-        $path = trim((string) $path);
-        if ($path === '') {
-            return null;
-        }
-        if (str_starts_with($path, 'http')) {
-            return $path;
-        }
-        if (str_starts_with($path, 'themes/') || str_starts_with($path, 'legacy/') || str_starts_with($path, 'storage/')) {
-            return asset($path);
-        }
-
-        return asset('storage/' . ltrim($path, '/'));
+        return app(PublicMedia::class)->url($path);
     }
 
     private function absolute(?string $url): string

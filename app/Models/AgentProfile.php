@@ -45,22 +45,8 @@ class AgentProfile extends Model
 
     public function getAvatarUrlAttribute(): string
     {
-        $path = $this->avatar_path ?: $this->user?->avatar_path;
-
-        if (! $path) {
-            return asset('themes/darlii/images/avatar-placeholder.svg');
-        }
-
-        if (str_starts_with((string) $path, 'http')) {
-            return (string) $path;
-        }
-
-        $path = ltrim((string) $path, '/');
-        $relative = str_starts_with($path, 'storage/') ? substr($path, 8) : $path;
-
-        return is_file(storage_path('app/public/' . $relative))
-            ? asset('storage/' . $relative)
-            : asset('themes/darlii/images/avatar-placeholder.svg');
+        return app(\App\Services\Seo\PublicMedia::class)->url($this->avatar_path ?: $this->user?->avatar_path)
+            ?: asset('themes/darlii/images/avatar-placeholder.svg');
     }
 
     public function getDisplayNameAttribute(): string

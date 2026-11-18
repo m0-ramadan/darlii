@@ -8,14 +8,9 @@
     $isRent = $property->purpose === 'rent';
 
     /** Public URL for a media row */
-    $mediaUrl = function ($media): string {
-        $path = ltrim((string) $media->path, '/');
-
-        if (str_starts_with($path, 'http')) {
-            return $path;
-        }
-
-        return ($media->disk ?? 'public') === 'legacy' ? asset('legacy/' . $path) : asset('storage/' . $path);
+    $mediaUrl = function ($media) use ($property): string {
+        return app(\App\Services\Seo\PublicMedia::class)->url($media->path, $media->disk ?? 'public')
+            ?: $property->placeholderUrl();
     };
 
     /** 88.00 -> 88 ، 88.50 -> 88.5 ، null -> — */
@@ -31,7 +26,7 @@
 
     $heroImage = $property->primaryImageUrl($locale);
     $placeholder = $property->placeholderUrl($locale);
-    $gallery = $property->media->filter(fn ($item) => ! in_array((string) $item->type, ['video', 'floor_plan'], true))->values();
+    $gallery = $property->media->filter(fn ($item) => ! in_array((string) $item->type, ['video', 'floor_plan'], true) && app(\App\Services\Seo\PublicMedia::class)->url($item->path, $item->disk ?? 'public'))->values();
     $videoSource = $property->videoSource();
 
     $address =

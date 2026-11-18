@@ -108,6 +108,7 @@ class ContentController extends Controller
         PageViewTracker::track('faqs');
 
         $page = Page::with('translations')->where('key', 'faqs')->first();
+        abort_if($page && $page->status !== 'published', 404);
         $translation = $page?->translation($locale);
 
         $rawContent = $translation?->content ?? '';
@@ -132,6 +133,7 @@ class ContentController extends Controller
         PageViewTracker::track('privacy-policy');
 
         $page = Page::with('translations')->where('key', 'privacy-policy')->first();
+        abort_if($page && $page->status !== 'published', 404);
 
         return view('pages.privacy-policy', [
             'page' => $page,
@@ -145,6 +147,7 @@ class ContentController extends Controller
         PageViewTracker::track('terms-and-conditions');
 
         $page = Page::with('translations')->where('key', 'terms-and-conditions')->first();
+        abort_if($page && $page->status !== 'published', 404);
 
         return view('pages.terms-and-conditions', [
             'page' => $page,
@@ -157,6 +160,7 @@ class ContentController extends Controller
         PageViewTracker::track('about-us');
 
         $page = Page::with('translations')->where('key', 'about-us')->first();
+        abort_if($page && $page->status !== 'published', 404);
 
         return view('about.index', [
             'page' => $page,
@@ -170,6 +174,7 @@ class ContentController extends Controller
         PageViewTracker::track('contact-us');
 
         $page = Page::with('translations')->where('key', 'contact-us')->first();
+        abort_if($page && $page->status !== 'published', 404);
 
         $contactInfo = [
             'phone' => (string) setting('contact.phone', '+20 10 34905812'),

@@ -11,7 +11,7 @@ class PropertySearchQuery
     public function build(array $filters): Builder
     {
         $q = Property::query()
-            ->with(['translations', 'currency', 'media', 'amenities.translations'])
+            ->with(['translations', 'currency', 'media', 'amenities.translations', 'category.translations', 'location.translations'])
             ->whereIn('status', ['published', 'sold']);
 
         if (!empty($filters['q'])) {

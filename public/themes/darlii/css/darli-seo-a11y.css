@@ -52,3 +52,12 @@ html body .darli-vision-content .darli-about-eyebrow,
 html body .darli-about-eyebrow{color:#7a5718!important}
 .darli-agents-join-btn{background:#7a5718!important;background-image:none!important}
 .darli-agents-join-btn>span{color:#fff!important}
+
+/* One shared, visible H1 on desktop and mobile; keep the mobile form spacing. */
+@media(max-width:991px){
+ .darli-hero-stage>.darli-desktop-hero-copy{display:block;top:38px;width:calc(100% - 28px)}
+ .darli-desktop-hero-copy h1{font-size:clamp(1.72rem,7.6vw,2.15rem);line-height:1.35;letter-spacing:-.045em}
+ .darli-desktop-hero-copy p{font-size:.94rem;font-weight:600;margin:8px 0 16px}
+ .darli-mobile-hero-copy{visibility:hidden}
+}
+@media(max-width:380px){.darli-desktop-hero-copy h1{font-size:1.65rem}}

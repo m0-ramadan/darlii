@@ -169,6 +169,9 @@
                         </div>
                     @endif
 
+                    @if ($career->deadline?->isPast())
+                        <div class="alert alert-info">{{ $isAr ? 'انتهى موعد التقديم لهذه الوظيفة. تصفح الوظائف الحالية لمعرفة الفرص المتاحة.' : 'Applications for this vacancy have closed. Browse current vacancies for available opportunities.' }}</div>
+                    @else
                     <form method="post" action="{{ route('leads.store', ['locale' => $locale]) }}">
                         @csrf
                         <input type="hidden" name="source" value="career">
@@ -213,6 +216,7 @@
                             {{ $isAr ? 'إرسال طلب التقديم' : 'Submit application' }}
                         </button>
                     </form>
+                    @endif
                 </div>
 
                 {{-- ------- بيانات التواصل ------- --}}

@@ -27,9 +27,14 @@ class SitemapGenerator
         $xml = $this->xml($urls);
 
         $path = public_path('sitemap.xml');
-        $tmp = $path . '.tmp';
+        $tmp = tempnam(dirname($path), 'sitemap-');
+        if ($tmp === false) {
+            return 0;
+        }
 
-        if (file_put_contents($tmp, $xml) === false) {
+        if (file_put_contents($tmp, $xml) === false || ! chmod($tmp, 0644)) {
+            @unlink($tmp);
+
             return 0;
         }
 
@@ -58,9 +63,9 @@ class SitemapGenerator
         };
 
         $homeLastmod = max(
-            (string) Property::query()->max('updated_at'),
-            (string) Project::query()->max('updated_at'),
-            (string) Post::query()->max('updated_at')
+            (string) Property::query()->whereIn('status', ['published', 'sold'])->max('updated_at'),
+            (string) Project::query()->where('status', 'published')->max('updated_at'),
+            (string) Post::query()->where('status', 'published')->max('updated_at')
         );
         $add(url('/'), $homeLastmod ?: null, 'daily', '1.0');
 
@@ -76,7 +81,11 @@ class SitemapGenerator
             ['/privacy-policy', '0.3', 'yearly'],
             ['/terms-and-conditions', '0.3', 'yearly'],
         ] as [$path, $priority, $frequency]) {
-            $add(url($path), null, $frequency, $priority);
+            $page = \App\Models\Page::query()->where('key', ltrim($path, '/'))->first();
+            if ($page && $page->status !== 'published') {
+                continue;
+            }
+            $add(url($path), $page?->updated_at, $frequency, $priority);
         }
 
         Property::query()
@@ -85,8 +94,7 @@ class SitemapGenerator
             ->orderBy('id')
             ->chunk(200, function ($properties) use ($add): void {
                 foreach ($properties as $property) {
-                    $slug = $property->translations->firstWhere('locale', 'ar')?->slug
-                        ?: $property->reference_code;
+                    $slug = $property->translations->firstWhere('locale', 'ar')?->slug;
 
                     if ($slug) {
                         $add(url('/properties/' . $slug), $property->updated_at, 'weekly', '0.8');
@@ -144,7 +152,7 @@ class SitemapGenerator
                 }
             });
 
-        return $urls;
+        return array_values(collect($urls)->unique('loc')->all());
     }
 
     /** @param list<array{loc:string,lastmod:?string,changefreq:string,priority:string}> $urls */

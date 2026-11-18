@@ -42,18 +42,8 @@ class User extends Authenticatable implements MustVerifyEmail {
  // ---------------------------------------------------------------- accessors
  public function getAvatarUrlAttribute():string
  {
-  if ($this->avatar_path) {
-   if (str_starts_with($this->avatar_path, 'http')) {
-    return $this->avatar_path;
-   }
-   $trimmed = ltrim($this->avatar_path, '/');
-   $relative = str_starts_with($trimmed, 'storage/') ? substr($trimmed, 8) : $trimmed;
-   if (is_file(storage_path('app/public/' . $relative))) {
-    return asset('storage/' . $relative);
-   }
-  }
-
-  return asset('themes/darlii/images/avatar-placeholder.svg');
+  return app(\App\Services\Seo\PublicMedia::class)->url($this->avatar_path)
+   ?: asset('themes/darlii/images/avatar-placeholder.svg');
  }
 
  public function getPrimaryRoleAttribute():?Role

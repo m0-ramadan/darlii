@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(\App\Http\Middleware\CanonicalHost::class);
-        $middleware->web(append: [ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class, SecurityHeaders::class]);
+        $middleware->web(append: [\App\Http\Middleware\ValidatePublicPagination::class, ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class, SecurityHeaders::class]);
 
         $middleware->redirectTo(
             guests: fn (\Illuminate\Http\Request $request) => $request->is('admin/*') || $request->is('admin')
@@ -43,5 +43,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Central exception customization can be added here.
+        $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response) {
+            if ($response->getStatusCode() >= 400) {
+                $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
+            }
+            return $response;
+        });
     })->create();

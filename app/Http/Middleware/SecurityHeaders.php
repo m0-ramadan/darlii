@@ -24,6 +24,10 @@ class SecurityHeaders
             $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
         }
 
+        if ($response->getStatusCode() >= 400 || preg_match('#^(admin|dashboard|login|register|password|email|api|favorites|wishlist|reset-password)(/|$)#', trim($request->path(), '/'))) {
+            $headers['X-Robots-Tag'] = 'noindex, nofollow';
+        }
+
         foreach ($headers as $name => $value) {
             if (! $response->headers->has($name)) {
                 $response->headers->set($name, $value);

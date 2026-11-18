@@ -41,21 +41,14 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
     public function primaryImageUrl(?string $locale = null): string {
         $media = $this->relationLoaded('media') ? $this->media : $this->media()->get();
         $images = $media->filter(fn ($item) => ! in_array((string) $item->type, ['video', 'floor_plan'], true));
-        $primary = $images->firstWhere('is_primary', true) ?: $images->first();
-
-        if (! $primary) {
-            return $this->placeholderUrl($locale);
+        $resolver = app(\App\Services\Seo\PublicMedia::class);
+        foreach ($images->sortByDesc('is_primary') as $image) {
+            if ($url = $resolver->url($image->path, $image->disk ?? 'public')) {
+                return $url;
+            }
         }
 
-        if (str_starts_with((string) $primary->path, 'http')) {
-            return $primary->path;
-        }
-
-        if (($primary->disk ?? 'public') === 'legacy') {
-            return asset('legacy/' . ltrim($primary->path, '/'));
-        }
-
-        return asset('storage/' . ltrim($primary->path, '/'));
+        return $this->placeholderUrl($locale);
     }
 
     public function firstImageUrl(?string $locale = null): string {
@@ -308,16 +301,8 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
         }
 
         foreach ($plans as &$plan) {
-            $img = $plan['image'] ?? null;
-            if ($img) {
-                if (str_starts_with($img, 'http') || str_starts_with($img, '/')) {
-                    $plan['image_url'] = $img;
-                } else {
-                    $plan['image_url'] = asset('storage/' . ltrim($img, '/'));
-                }
-            } else {
-                $plan['image_url'] = asset('storage/properties/floor.png');
-            }
+            $plan['image_url'] = app(\App\Services\Seo\PublicMedia::class)->url($plan['image'] ?? null)
+                ?: $this->placeholderUrl();
         }
         unset($plan);
 
@@ -381,7 +366,7 @@ class Property extends Model {use SoftDeletes; protected $guarded=[];
 
         $url = $setting && filled($setting->value) ? trim((string) $setting->value) : null;
 
-        return static::$videoCache[$this->id] = ($url !== '' ? $url : null);
+        return static::$videoCache[$this->id] = app(\App\Services\Seo\PublicMedia::class)->url($url);
     }
 
     public function setVideoUrl(?string $url): void

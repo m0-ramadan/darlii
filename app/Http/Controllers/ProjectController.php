@@ -48,6 +48,7 @@ class ProjectController extends Controller
         $locale = $param2 ? $param1 : (app()->getLocale() ?: config('locales.default', 'ar'));
 
         $project = Project::with(['translations', 'amenities.translations', 'units', 'location.translations'])
+            ->where('status', 'published')
             ->whereHas('translations', fn ($q) => $q->where('slug', $slug))
             ->firstOrFail();
 

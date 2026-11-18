@@ -12,7 +12,7 @@
           $role = $t->translation($locale)?->role ?: ($t->role ?: ($locale === 'ar' ? 'عميل موثق' : 'Verified Client'));
           $content = $t->translation($locale)?->content ?: $t->content;
           $stars = str_repeat('★', max(1, min(5, (int)($t->rating ?: 5))));
-          $avatar = $t->image_path ? '/' . ltrim($t->image_path, '/') : '/storage/avatars/' . ($loop->iteration) . '.jpg';
+          $avatar = app(\App\Services\Seo\PublicMedia::class)->url($t->image_path) ?: asset('themes/darlii/images/avatar-placeholder.svg');
         @endphp
         <div class="darli-testimonial-card">
           <div>

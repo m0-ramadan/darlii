@@ -31,6 +31,8 @@ class ProjectController extends Controller
             ->paginate(18)
             ->withQueryString();
 
+        abort_if($projects->currentPage() > $projects->lastPage(), 404);
+
         return view('projects.index', [
             'projects' => $projects,
             'locations' => Location::query()

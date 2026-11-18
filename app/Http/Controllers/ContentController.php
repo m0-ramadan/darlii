@@ -18,8 +18,11 @@ class ContentController extends Controller
     {
         PageViewTracker::track('blog');
 
+        $posts = Post::with(['translations', 'author'])->where('status', 'published')->latest('published_at')->paginate(12);
+        abort_if($posts->currentPage() > $posts->lastPage(), 404);
+
         return view('blog.index', [
-            'posts' => Post::with(['translations', 'author'])->where('status', 'published')->latest('published_at')->paginate(12),
+            'posts' => $posts,
             'shell' => $this->shell('blog'),
         ]);
     }
@@ -76,8 +79,11 @@ class ContentController extends Controller
         $departments = Career::query()->where('status', 'published')->whereNotNull('department')->distinct()->pluck('department')->filter();
         $locations = Career::query()->where('status', 'published')->whereNotNull('location')->distinct()->pluck('location')->filter();
 
+        $careers = $query->paginate(12)->withQueryString();
+        abort_if($careers->currentPage() > $careers->lastPage(), 404);
+
         return view('careers.index', [
-            'careers' => $query->paginate(12)->withQueryString(),
+            'careers' => $careers,
             'departments' => $departments,
             'locations' => $locations,
             'shell' => $this->shell('careers'),

@@ -47,6 +47,8 @@ class PropertyController extends Controller
             ->paginate(12)
             ->withQueryString();
 
+        abort_if($properties->currentPage() > $properties->lastPage(), 404);
+
         // Data for map pins matching the search filters
         $mapProperties = (clone $search->build(array_merge($filterData, ['sort' => 'newest'])))
             ->whereNotNull('latitude')

@@ -9,7 +9,7 @@
       ? ($locale === 'ar' ? 'السعر عند التواصل' : 'Price on request')
       : money_eg($property->price);
   $locationText = $tr?->address_text ?: ($property->location?->translation($locale)?->name ?? ($locale === 'ar' ? 'بني سويف' : 'Beni Suef'));
-  $images = $property->media->pluck('path')->map(fn($p) => '/' . ltrim($p, '/'))->filter()->values()->all();
+  $images = $property->media->reject(fn($media) => in_array((string) $media->type, ['video', 'floor_plan'], true))->map(fn($media) => app(\App\Services\Seo\PublicMedia::class)->url($media->path, $media->disk ?? 'public'))->filter()->values()->all();
   if (empty($images)) {
       $images = ['/themes/darlii/images/darli-placeholder.png'];
   }

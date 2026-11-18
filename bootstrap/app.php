@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(\App\Http\Middleware\CanonicalHost::class);
-        $middleware->web(append: [\App\Http\Middleware\ValidatePublicPagination::class, ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class, SecurityHeaders::class]);
+        $middleware->web(append: [ApplyVisitorLocale::class, ShowMaintenancePage::class, CompressResponse::class, SecurityHeaders::class, \App\Http\Middleware\ValidatePublicPagination::class]);
 
         $middleware->redirectTo(
             guests: fn (\Illuminate\Http\Request $request) => $request->is('admin/*') || $request->is('admin')

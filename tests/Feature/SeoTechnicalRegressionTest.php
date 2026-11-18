@@ -21,7 +21,7 @@ class SeoTechnicalRegressionTest extends TestCase
     public function test_out_of_range_and_malformed_pagination_returns_real_404(): void
     {
         foreach (['properties', 'projects', 'agents', 'blog', 'careers'] as $section) {
-            $this->get('/' . $section . '?page=9999')->assertNotFound()->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+            $this->withHeaders(['Accept-Encoding' => 'gzip'])->get('/' . $section . '?page=9999')->assertNotFound()->assertHeader('X-Robots-Tag', 'noindex, nofollow');
         }
         foreach (['0', '-1', 'abc', '1.5', '%5B%5D'] as $value) {
             $this->get('/properties?page=' . $value)->assertNotFound();

@@ -66,6 +66,8 @@ class AgentController
 
         $agents = $query->paginate(12)->withQueryString();
 
+        abort_if($agents->currentPage() > $agents->lastPage(), 404);
+
         return view('agents.index', [
             'agents' => $agents,
             'shell' => $this->shell($locale),

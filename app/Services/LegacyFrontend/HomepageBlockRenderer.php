@@ -313,22 +313,13 @@ class HomepageBlockRenderer
 
     private function storageUrl(?string $path): ?string
     {
-        if (! is_string($path) || trim($path) === '') {
-            return null;
-        }
-
-        return '/storage/' . ltrim(preg_replace('~^storage/~', '', $path), '/');
+        return app(\App\Services\Seo\PublicMedia::class)->url($path);
     }
 
     private function mediaUrl(?string $path): string
     {
-        if (! is_string($path) || trim($path) === '') {
-            return app()->getLocale() === 'ar'
-                ? '/themes/darlii/images/darli-placeholder.png'
-                : '/themes/darlii/images/darli-placeholder-en.png';
-        }
-
-        return '/' . ltrim($path, '/');
+        return app(\App\Services\Seo\PublicMedia::class)->url($path)
+            ?: asset(\App\Models\Property::defaultPlaceholderPath());
     }
 
     private function serviceIcon(string $icon, int $index): string

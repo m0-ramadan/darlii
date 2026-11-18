@@ -11,7 +11,7 @@ class CanonicalHostTest extends TestCase
 {
     public function test_other_hosts_and_post_requests_are_passed_through(): void
     {
-        foreach ([['https://darlii.com/properties', 'GET'], ['http://localhost/properties', 'GET'], ['https://www.darlii.com/contact-us', 'POST']] as [$url, $method]) {
+        foreach ([['https://darlii.com/properties', 'GET'], ['http://localhost/properties', 'GET'], ['https://www.darlii.com/contact-us', 'POST'], ['https://www.darlii.com/properties', 'OPTIONS']] as [$url, $method]) {
             $expected = new Response('passed');
             $actual = (new CanonicalHost)->handle(Request::create($url, $method), fn () => $expected);
             $this->assertSame($expected, $actual);

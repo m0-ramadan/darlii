@@ -10,7 +10,7 @@ class CanonicalHost
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->getHost() === 'www.darlii.com' && $request->isMethodSafe()) {
+        if ($request->getHost() === 'www.darlii.com' && in_array($request->method(), ['GET', 'HEAD'], true)) {
             return redirect()->away('https://darlii.com' . $request->getRequestUri(), 301);
         }
 

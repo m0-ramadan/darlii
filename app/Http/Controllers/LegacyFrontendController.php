@@ -35,7 +35,9 @@ class LegacyFrontendController extends Controller
         $seo = app(\App\Services\Seo\SeoBuilder::class);
         $html = $seo->applyToHead($html, $seo->forCurrentRequest());
 
-        PageViewTracker::track('home');
+        $html = app(\App\Services\Performance\HomepagePerformance::class)->optimize($html);
+
+        \Illuminate\Support\defer(static fn () => PageViewTracker::track('home'));
 
         return response($html)->header('Content-Type', 'text/html; charset=UTF-8');
     }

@@ -2203,7 +2203,7 @@ HTML;
          * per-page generated `.page_speed_*` inline rules.
          */
         $customStyles = <<<'HTML'
-<link rel="stylesheet" href="/themes/darlii/css/rtl-custom.min.css?v=2.0.1">
+<link rel="stylesheet" href="/themes/darlii/css/rtl-custom.min.css?v=2.0.2">
 <link rel="stylesheet" href="/themes/darlii/css/locale-switcher.min.css?v=1.0.0">
 <!-- <link rel="stylesheet" href="/themes/darlii/css/dark-mode.css?v=2.0.1"> -->
 <link rel="stylesheet" href="/themes/darlii/css/darli-unified.min.css?v=2.1.11">

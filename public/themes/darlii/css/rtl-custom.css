@@ -3,7 +3,7 @@
     font-style: normal;
     font-weight: 300;
     font-display: swap;
-    src: url("../fonts/almarai/almarai-300.ttf") format("truetype");
+    src: url("/themes/darlii/performance/fonts/almarai-300.d90d96400ac7.woff2") format("woff2");
 }
 
 @font-face {
@@ -11,7 +11,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url("../fonts/almarai/almarai-400.ttf") format("truetype");
+    src: url("/themes/darlii/performance/fonts/almarai-400.b120d1d0cd05.woff2") format("woff2");
 }
 
 @font-face {
@@ -19,7 +19,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url("../fonts/almarai/almarai-700.ttf") format("truetype");
+    src: url("/themes/darlii/performance/fonts/almarai-700.18d5ef696949.woff2") format("woff2");
 }
 
 @font-face {
@@ -27,7 +27,7 @@
     font-style: normal;
     font-weight: 800;
     font-display: swap;
-    src: url("../fonts/almarai/almarai-800.ttf") format("truetype");
+    src: url("/themes/darlii/performance/fonts/almarai-800.b6fb52e1123b.woff2") format("woff2");
 }
 
 html[lang="ar"],

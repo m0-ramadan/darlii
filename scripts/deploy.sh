@@ -90,6 +90,13 @@ rsync -az --human-readable --chmod=D755,F644 \
     "$PROJECT_ROOT/server.php" \
     "$REMOTE_HOST:$REMOTE_DIR/"
 
+# This directory is owned by the performance build; do not alter the site's
+# existing root or public .htaccess rules.
+if [ -f "$PROJECT_ROOT/public/themes/darlii/performance/.htaccess" ]; then
+    rsync -az --chmod=F644 "$PROJECT_ROOT/public/themes/darlii/performance/.htaccess" \
+        "$REMOTE_HOST:$REMOTE_DIR/public/themes/darlii/performance/.htaccess"
+fi
+
 echo "   ✓ Files synced (uploads & .env untouched)."
 
 # 4. Rebuild caches, autoload, sitemap

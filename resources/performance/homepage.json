@@ -1,0 +1,25 @@
+{
+  "images": {
+    "/themes/darlii/images/darli-hero-cairo-photo-clean.webp": "/themes/darlii/performance/hero-desktop.4a3cd8f32dd6.webp",
+    "/themes/darlii/images/darli-hero-cairo-photo-clean-900.webp": "/themes/darlii/performance/hero-mobile.4c4c01ce6b31.webp",
+    "/themes/darlii/images/logo/darli-logo-ar.png": "/themes/darlii/performance/logo-ar.b39371f0dc3a.png"
+  },
+  "styles": [
+    "/vendor/fonts/fonts.css",
+    "/themes/darlii/css/darli-design-system.min.css",
+    "/vendor/core/plugins/language/css/language-public.css",
+    "/themes/darlii/plugins/bootstrap/css/bootstrap.rtl.min.css",
+    "/themes/darlii/css/style.css",
+    "/vendor/core/plugins/real-estate/css/front-auth.css",
+    "/vendor/core/plugins/announcement/css/announcement.css",
+    "/themes/darlii/css/darli-home.min.css",
+    "/themes/darlii/css/rtl-custom.min.css",
+    "/themes/darlii/css/locale-switcher.min.css",
+    "/themes/darlii/css/darli-unified.min.css",
+    "/themes/darlii/css/darli-seo-a11y.css"
+  ],
+  "bundle": "/themes/darlii/performance/homepage.4eda4df7ceee.css",
+  "critical": "/themes/darlii/performance/critical.3ec867003896.css",
+  "icons": 31,
+  "sourceHash": "aa0c1343b6f2"
+}
